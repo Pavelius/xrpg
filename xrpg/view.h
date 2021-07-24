@@ -1,17 +1,53 @@
+#include "point.h"
 #include "rect.h"
 #include "variant.h"
 
 #pragma once
 
 enum color_s : unsigned char {
-	ColorRed, ColorGreen, ColorBlue,
+	ColorRed, ColorGreen, ColorBlue, ColorYellow, ColorOrange,
+	ColorDarkGray, ColorLightBlue, ColorLightGreen,
 	ColorBlack, ColorWhite, ColorGray,
+	NoColor,
 };
 enum figure_s : unsigned char {
 	FigureCircle, FigureCircleFill, FigureClose, FigureCross,
 	FigureRect, FigureTrianlge, FigureTrianlgeUp,
 };
-typedef adat<variant, 128>	varianta;
+namespace draw {
+class form {
+	void					paint_footer(rect& rc);
+	void					paint_title(rect& rc);
+public:
+	constexpr form() {}
+	virtual ~form() {}
+	static bool				equal(const char* s1, const char* s2);
+	virtual const char*		getvalue(const char* id, stringbuilder& sb) const { return 0; }
+	virtual long			getvalue(const char* id) const { return 0; }
+	virtual void			paint(const rect& rc) const {}
+	virtual void			setvalue(const char* id, long value) {}
+};
+extern point				hilite_grid;
+extern variant				hilite_object;
+void						avatar(int x, int y, const char* id, color_s color, rect* rc_result = 0, unsigned char alpha = 0xFF);
+void						application();
+void						bar(rect rc, color_s color, color_s border, color_s back, int value, int maximum);
+void						buttonr(int& x, int y, const char* title, fnevent proc, unsigned key = 0);
+void						paint(int x, int y, figure_s type, int size);
+void						paint(int x, int y, figure_s type, color_s color, int size);
+void						paint(int x, int y, const char* name, figure_s type, int size);
+void						paint(int x, int y, const char* name, figure_s type, color_s color, int size);
+void						fog(int x, int y, int n);
+point						gethiliteback();
+void						grid();
+bool						ishilite(int x, int y, int r, variant v);
+void						initialize();
+void						scene(fnevent timer, fnevent mouseclick);
+void						setnext(fnevent v);
+void						tooltips(int x1, int y1, int width, const char* format, ...);
+bool						window(rect rc, bool hilight, int border);
+bool						window(int x, int& y, int width, bool hilite, const char* string, const char* resid);
+}
 struct guii {
 	int						border;
 	int						hero_size;
@@ -22,25 +58,8 @@ struct guii {
 	int						tips_width;
 	int						window_width;
 	int						grid;
+	const char*				bitmap;
+	fnevent					background;
 	void					initialize();
 };
 extern guii					gui;
-namespace draw {
-extern point				hilite_grid;
-extern variant				hilite_object;
-void						application();
-void						paint(int x, int y, figure_s type, int size);
-void						paint(int x, int y, figure_s type, color_s color, int size);
-void						paint(int x, int y, const char* name, figure_s type, int size);
-void						paint(int x, int y, const char* name, figure_s type, color_s color, int size);
-void						fog(int x, int y, int n);
-fnevent						getbackground();
-point						gethiliteback();
-void						grid();
-bool						ishilite(int x, int y, int r, variant v);
-void						initialize();
-void						scene(fnevent proc, fnevent timer, fnevent mouseclick);
-void						setbackground(fnevent proc);
-void						setbitmap(const char* id);
-void						setnext(fnevent v);
-}

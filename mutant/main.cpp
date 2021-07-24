@@ -11,11 +11,9 @@ static locationi* addloc(const char* id, const char* name, point v) {
 }
 
 static void test_answers() {
-	draw::setbitmap("map");
 	addloc("Covcheg", "Ковчег", worldmap::getp(15, 10));
 	game.setposition(worldmap::getp(15, 10));
 	game.setexplored(worldmap::geti(15, 10), 2);
-	//game.setmovement(worldmap::getp(10, 4));
 	draw::setnext(game.playworld);
 }
 

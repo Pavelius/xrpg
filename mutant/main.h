@@ -1,4 +1,5 @@
 #include "answers.h"
+#include "datamap.h"
 #include "point.h"
 #include "moveable.h"
 #include "view.h"
@@ -16,14 +17,6 @@ enum skill_s : unsigned char {
 };
 typedef short unsigned	indext;
 const indext			Blocked = 0xFFFF;
-template<int count>
-class datamap {
-	constexpr static unsigned perbyte = 4;
-	unsigned char		data[(count + perbyte - 1) / perbyte];
-public:
-	int					get(short unsigned i) const { return (data[i / perbyte] >> ((i % perbyte) * 2)) & 0x03; }
-	void				set(short unsigned i, int v) { data[i / perbyte] |= (v & 0x03) << ((i % perbyte) * 2); }
-};
 class worldmap : public datamap<25 * 20> {
 public:
 	static constexpr int xmax = 25;
@@ -38,7 +31,7 @@ public:
 	void				set(indext i, int v);
 	void				set(indext i, int r, int v, bool check);
 };
-struct locationi : public moveable {
+struct locationi : public posable {
 	static constexpr int kind = Location;
 	const char*			id;
 	const char*			name;
@@ -56,7 +49,8 @@ class gamei {
 	static void			click_order();
 public:
 	static indext		geti(point v) { return worldmap::geti(v.x / gui.grid, v.y / gui.grid); }
-	static void			playworld() { draw::scene(render_world, update_moving, click_order); }
+	static point		getp(indext v);
+	static void			playworld();
 	void				setexplored(indext i) { setexplored(i, 1); }
 	void				setexplored(indext i, int r);
 	void				setmovement(point v) { party.setmovement(v, rounds); }

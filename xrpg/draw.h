@@ -112,32 +112,19 @@ extern color			form;
 extern color			focus;
 extern color			window;
 extern color			border;
-extern color			text, edit, h1, h2, h3, special;
+extern color			text, h1, h2, h3, special;
 namespace tips {
-extern color			back;
-extern color			text;
-}
-namespace tabs {
 extern color			back;
 extern color			text;
 }
 }
 namespace metrics {
-extern rect				edit;
 extern sprite*			font;
 extern sprite*			h1;
 extern sprite*			h2;
 extern sprite*			h3;
-extern int				padding;
-extern int				scroll;
 }
 namespace draw {
-namespace dialog {
-bool					color(struct color& result, struct color* custom = 0);
-bool					folder(const char* title, char* path);
-bool					open(const char* title, char* path, const char* filter, int filter_index = 0, const char* ext = 0);
-bool					save(const char* title, char* path, const char* filter, int filter_index = 0);
-}
 struct hoti {
 	cursor_s			cursor; // set this mouse cursor
 	unsigned			key; // if pressed key or mouse this field has key
@@ -201,46 +188,11 @@ struct textplugin {
 	textplugin(const char* name, proc e);
 	static textplugin*	find(const char* name);
 };
-struct initplugin {
-	initplugin*			next;
-	int					priority;
-	static initplugin*	first;
-	initplugin(int priority = 10);
-	virtual void		initialize() {}
-	virtual void		after_initialize() {}
-};
-struct plugin {
-	plugin*				next;
-	int					priority;
-	static plugin*		first;
-	plugin(int priority = 10);
-	virtual void		after() {}
-	virtual void		before() {}
-};
 struct shortcut {
 	fnevent				proc;
 	const char*			name;
 	unsigned			key;
 	constexpr operator bool() const { return proc != 0; }
-};
-class scroll {
-	int*				origin;
-	int					page, maximum, wheel;
-	rect				work, client;
-	bool				horizontal;
-	static void			callback();
-public:
-	typedef void (scroll::*proc)(int param);
-	constexpr scroll() : origin(0), page(), maximum(), wheel(1), work(), client(), horizontal(false) {}
-	scroll(int& origin, int page, int maximum, const rect& client, bool horizontal = false, int wheel = 1);
-	void				correct();
-	void				execute(proc p, int param) const;
-	rect				getslide() const;
-	void				input();
-	bool				ishilite() const;
-	bool				isvisible() const { return origin && work; }
-	void				setorigin(int v) { if(origin) { *origin = v; correct(); } }
-	void				view(bool focused);
 };
 extern rect				clipping; // Clipping area
 extern color			fore; // Foreground color (curently selected color)
@@ -283,10 +235,6 @@ void					gradh(rect rc, const color c1, const color c2, int skip = 0);
 const sprite*			gres(const char* name, const char* folder = 0, point size = {});
 int						hittest(int x, int test_x, const char* string, int lenght);
 int						hittest(rect rc, const char* string, unsigned state, point mouse);
-inline bool				ischecked(unsigned flags) { return (flags&Checked) != 0; }
-inline bool				isdisabled(unsigned flags) { return (flags&Disabled) != 0; }
-bool					isfocused();
-inline bool				isfocused(unsigned flags) { return (flags&Focused) != 0; }
 bool					ishilite(const rect& rc);
 bool					ismodal();
 void					image(int x, int y, const sprite* e, int id, int flags, unsigned char alpha = 0xFF);
@@ -302,7 +250,6 @@ extern char				link[4096];
 extern color*			palt;
 void					pixel(int x, int y);
 void					pixel(int x, int y, unsigned char alpha);
-void					post(const char* id, const char* url, unsigned p2); // Extern message handlers
 unsigned char*			ptr(int x, int y);
 int						rawinput();
 void					rectb(rect rc); // Draw rectangle border
@@ -340,24 +287,4 @@ void					triangle(point v1, point v2, point v3);
 void					triangle(point v1, point v2, point v3, color c1);
 void					updatewindow();
 void					write(const char* url, unsigned char* bits, int width, int height, int bpp, int scanline, color* pallette);
-}
-namespace draw {
-int						addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const char* tt1, const char* t2, unsigned k2, const char* tt2);
-bool					addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const char* tt1);
-bool					buttonh(rect rc, bool checked, bool focused, bool disabled, bool border, color value, const char* string, unsigned key, bool press, const char* tips = 0);
-bool					buttonh(rect rc, bool checked, bool focused, bool disabled, bool border, const char* string, unsigned key = 0, bool press = false, const char* tips = 0);
-bool					buttonv(rect rc, bool checked, bool focused, bool disabled, bool border, const char* string, unsigned key = 0, bool press = false);
-int						clipart(int x, int y, int width, unsigned flags, const char* string);
-int						sheetline(rect rc, bool background);
-void					splitv(int x, int y, int& value, int height, int size, int minimum, int maximum, bool right_align);
-void					splith(int x, int y, int width, int& value, int size, int minimum, int maximum, bool down_align);
-void					statusbar(const char* format, ...);
-void					statusbarv(const char* format, const char* format_param);
-int						statusbardw();
-int						tabs(int x, int y, int width, bool show_close, bool right_side, void** data, int start, int count, int current, int* hilite, fntext gtext = 0, rect position = {0, 0, 0, 0});
-int						tabs(rect rc, bool show_close, bool right_side, void** data, int start, int count, int current, int* hilite, fntext gtext, rect position = {0, 0, 0, 0}, int* result_x1 = 0);
-bool					tool(const rect& rc, bool disabled, bool checked, bool press, bool focused = false, int key = 0);
-void					tooltips(const char* format, ...);
-void					tooltips(int x, int y, int width, const char* format, ...);
-void					tooltipsv(int x, int y, int width, const char* format, const char* format_param);
 }

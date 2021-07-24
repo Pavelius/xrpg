@@ -20,15 +20,12 @@ color				colors::form;
 color				colors::window;
 color				colors::text;
 color				colors::border;
-color				colors::edit;
 color				colors::h1;
 color				colors::h2;
 color				colors::h3;
 color				colors::special;
 color				colors::tips::text;
 color				colors::tips::back;
-color				colors::tabs::text;
-color				colors::tabs::back;
 // Color context and font context
 color				draw::fore;
 color				draw::fore_stroke;
@@ -49,13 +46,10 @@ static bool			line_antialiasing = true;
 static const void*	drag_object;
 point				draw::dragmouse;
 // Metrics
-rect				metrics::edit = {2, 2, -2, -2};
 sprite*				metrics::font = (sprite*)loadb("art/fonts/font.pma");
 sprite*				metrics::h1 = (sprite*)loadb("art/fonts/h1.pma");
 sprite*				metrics::h2 = (sprite*)loadb("art/fonts/h2.pma");
 sprite*				metrics::h3 = (sprite*)loadb("art/fonts/h3.pma");
-int					metrics::scroll = 16;
-int					metrics::padding = 4;
 
 long distance(point p1, point p2) {
 	auto dx = p1.x - p2.x;
@@ -1496,8 +1490,15 @@ void draw::text(int x, int y, const char* string, int count, unsigned flags) {
 	}
 }
 
+class pushclip {
+	rect			value;
+public:
+	pushclip() : value(draw::clipping) {}
+	~pushclip() { draw::clipping = value; }
+};
+
 int draw::textc(int x, int y, int width, const char* string, int count, unsigned flags, bool* clipped) {
-	state push;
+	pushclip push;
 	setclip({x, y, x + width, y + texth()});
 	auto w = textw(string, count);
 	if(clipped)
@@ -1541,7 +1542,7 @@ int	draw::text(rect rc, const char* string, unsigned state, int* max_width) {
 	if(max_width)
 		*max_width = 0;
 	if(state & TextSingleLine) {
-		draw::state push;
+		pushclip push;
 		draw::setclip(rc);
 		text(aligned(x1, rc.width(), state, draw::textw(string)), y1,
 			string, -1, state);
@@ -1597,7 +1598,7 @@ static void hilite_text_line(int x, int y, int width, int height, const char* st
 			rx1 = x0 + 1 + draw::textw(string, i1);
 		if(i2 >= 0 && i2 <= count)
 			rx2 = x0 + 1 + draw::textw(string, i2);
-		draw::rectf({rx1, y, rx2, y + height}, colors::edit);
+		draw::rectf({rx1, y, rx2, y + height}, colors::button);
 	}
 	// Вывод текста
 	draw::text(x0, y, string, count);
@@ -1869,11 +1870,13 @@ void draw::stroke(int x, int y, const sprite* e, int id, int flags, unsigned cha
 	surface canvas(rc.width() + 2, rc.height() + 2, 32);
 	x--; y--;
 	if(true) {
-		draw::state push;
+		pushclip push;
+		auto push_canvas = draw::canvas;
 		draw::canvas = &canvas;
 		draw::setclip();
 		draw::rectf({0, 0, canvas.width, canvas.height}, tr);
 		draw::image(1, 1, e, id, ImageNoOffset);
+		draw::canvas = push_canvas;
 	}
 	for(int y1 = 0; y1 < canvas.height; y1++) {
 		bool inside = false;

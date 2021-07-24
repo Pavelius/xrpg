@@ -145,6 +145,7 @@
     <ClInclude Include="color.h" />
     <ClInclude Include="converter.h" />
     <ClInclude Include="crt.h" />
+    <ClInclude Include="datamap.h" />
     <ClInclude Include="dataset.h" />
     <ClInclude Include="draw.h" />
     <ClInclude Include="io.h" />
@@ -152,6 +153,7 @@
     <ClInclude Include="moveable.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="pointl.h" />
+    <ClInclude Include="posable.h" />
     <ClInclude Include="rect.h" />
     <ClInclude Include="stringbuilder.h" />
     <ClInclude Include="variant.h" />

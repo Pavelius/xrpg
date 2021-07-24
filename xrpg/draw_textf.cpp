@@ -297,7 +297,7 @@ int draw::textf(int x, int y, int width, const char* string, int* max_width,
 		{
 			p = skipcr(p);
 			font = metrics::font;
-			color c1 = colors::window.mix(colors::edit, 256 - 32);
+			color c1 = colors::window.mix(colors::border, 256 - 32);
 			y += texth() / 2;
 			while(p[0]) {
 				int c = textbc(p, width);

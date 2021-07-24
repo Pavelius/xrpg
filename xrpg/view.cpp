@@ -13,20 +13,18 @@ static rect				last_board;
 static point			tooltips_point;
 static short			tooltips_width;
 static char				tooltips_text[4096];
-static fnevent			background;
 fnevent					draw::domodal;
 extern rect				sys_static_area;
 guii					gui; template<> array bsdata<guii>::source(&gui, sizeof(gui), 1, 1);
-static sprite*			sprite_shields = (sprite*)loadb("art/sprites/shields.pma");
 static sprite*			small_font = (sprite*)loadb("art/fonts/small.pma");
 static char				answer_hotkeys[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-static const char*		background_bitmap;
 point					draw::hilite_grid;
 variant					draw::hilite_object;
 static fnevent			next_proc;
 static void*			current_focus;
-static color theme_colors[] = {
-	{235, 90, 70}, {97, 189, 79}, {0, 121, 191},
+static color			theme_colors[] = {
+	{235, 90, 70}, {97, 189, 79}, {0, 121, 191}, {242, 214, 0}, {255, 159, 26},
+	{52, 69, 99}, {0, 194, 224}, {81, 232, 152},
 	{0, 0, 0}, {255, 255, 255}, {179, 186, 197},
 };
 
@@ -67,7 +65,7 @@ static void keyparam() {
 	hot.param = 0;
 }
 
-static bool window(rect rc, bool hilight, int border) {
+bool draw::window(rect rc, bool hilight, int border) {
 	if(border == 0)
 		border = gui.border;
 	rc.offset(-border, -border);
@@ -93,7 +91,7 @@ static int render_text(int x, int y, int width, const char* string) {
 	return result;
 }
 
-static bool window(int x, int& y, int width, bool hilite, const char* string, const char* resid) {
+bool draw::window(int x, int& y, int width, bool hilite, const char* string, const char* resid) {
 	if(!string && !resid)
 		return false;
 	auto text_height = 0;
@@ -230,6 +228,7 @@ static void render_tooltips() {
 }
 
 void guii::initialize() {
+	memset(&gui, 0, sizeof(gui));
 	gui.window_width = 320;
 	gui.border = 8;
 	gui.padding = 4;
@@ -244,24 +243,20 @@ void guii::initialize() {
 void draw::initialize() {
 	colors::active = color::create(172, 128, 0);
 	colors::border = color::create(73, 73, 80);
-	colors::button = color::create(0, 122, 204);
+	colors::button = color::create(0, 38, 77);
 	colors::form = color::create(32, 32, 32);
 	colors::window = color::create(64, 64, 64);
 	colors::text = color::create(255, 255, 255);
-	colors::edit = color::create(38, 79, 120);
 	colors::special = color::create(255, 244, 32);
-	colors::border = colors::window.mix(colors::text, 128);
+	colors::border = color::create(0, 83, 166);
 	colors::tips::text = color::create(255, 255, 255);
 	colors::tips::back = color::create(100, 100, 120);
-	colors::tabs::back = color::create(255, 204, 0);
-	colors::tabs::text = colors::black;
-	colors::h1 = colors::text.mix(colors::edit, 64);
-	colors::h2 = colors::text.mix(colors::edit, 96);
-	colors::h3 = colors::text.mix(colors::edit, 128);
+	colors::h1 = colors::text.mix(colors::button, 64);
+	colors::h2 = colors::text.mix(colors::button, 96);
+	colors::h3 = colors::text.mix(colors::button, 128);
 	draw::font = metrics::font;
 	draw::fore = colors::text;
 	draw::fore_stroke = colors::blue;
-	draw::setbackground(0);
 	gui.initialize();
 	create(-1, -1, 800, 600, 0, 32);
 	setcaption("Space 4X");
@@ -275,12 +270,16 @@ static void standart_domodal() {
 		exit(0);
 }
 
-bool draw::ismodal() {
-	domodal = standart_domodal;
+static void clear_hot() {
 	hot.cursor = CursorArrow;
 	hot.hilite.clear();
 	hilite_object.clear();
 	hilite_grid = {-100, -100};
+	domodal = standart_domodal;
+}
+
+bool draw::ismodal() {
+	clear_hot();
 	if(hot.mouse.x < 0 || hot.mouse.y < 0)
 		sys_static_area.clear();
 	else
@@ -354,23 +353,13 @@ static void variant_tips() {
 	}
 }
 
-static void static_image() {
-	if(background_bitmap)
-		image(0, 0, gres(background_bitmap, "art/background"), 0, 0);
+static void paint_gui() {
+	if(gui.bitmap)
+		image(0, 0, gres(gui.bitmap, "art/background"), 0, 0);
 	else
 		rectf({0, 0, getwidth(), getheight()}, colors::gray);
-}
-
-void draw::setbackground(fnevent proc) {
-	background = proc;
-}
-
-fnevent draw::getbackground() {
-	return background;
-}
-
-void draw::setbitmap(const char* id) {
-	background_bitmap = szdup(id);
+	if(gui.background)
+		gui.background();
 }
 
 static void answer_button(int x, int& y, long id, const char* string, unsigned key) {
@@ -399,9 +388,7 @@ long answers::choosev(const char* title, const char* cancel_text, bool interacti
 	if(!interactive)
 		return random();
 	while(ismodal()) {
-		static_image();
-		if(background)
-			background();
+		paint_gui();
 		setwindow(x, y);
 		if(portraits)
 			windowp(x, y, gui.window_width, false, title, resid);
@@ -422,13 +409,9 @@ long answers::choosev(const char* title, const char* cancel_text, bool interacti
 	return getresult();
 }
 
-void draw::scene(fnevent proc, fnevent timer, fnevent mouseclick) {
+void draw::scene(fnevent timer, fnevent mouseclick) {
 	while(ismodal()) {
-		static_image();
-		if(background)
-			background();
-		if(proc)
-			proc();
+		paint_gui();
 		variant_tips();
 		domodal();
 		control_standart();
@@ -545,4 +528,107 @@ point draw::gethiliteback() {
 	if(hot.hilite)
 		return {-100, -100};
 	return hot.mouse;
+}
+
+void draw::avatar(int x, int y, const char* id, color_s color, rect* rc_result, unsigned char alpha) {
+	auto p = gres(id, "art/portraits");
+	if(!p) {
+		if(rc_result)
+			rc_result->clear();
+		return;
+	}
+	rect rc;
+	rc.x1 = x - p->width / 2;
+	rc.x2 = rc.x1 + p->width;
+	rc.y1 = y - p->height / 2;
+	rc.y2 = rc.y1 + p->height;
+	image(rc.x1, rc.y1, p, 0, 0, alpha);
+	rectb(rc, getcolor(color));
+	if(rc_result)
+		*rc_result = rc;
+}
+
+void draw::bar(rect rc, color_s color, color_s border, color_s back, int value, int maximum) {
+	if(!value || !maximum)
+		return;
+	rect r1 = rc; r1.x1++; r1.y1++;
+	if(value != maximum)
+		r1.x2 = r1.x1 + (rc.width() - 2) * value / maximum;
+	auto push = fore;
+	if(back != NoColor) {
+		fore = getcolor(back);
+		rectf(rc);
+	}
+	fore = getcolor(color);
+	rectf(r1);
+	fore = getcolor(border);
+	rectb(rc);
+	fore = push;
+}
+
+static bool button(const rect& rc, const char* title, const char* tips, unsigned key, color value, bool focused, bool checked, bool press, bool border) {
+	draw::state push;
+	bool result = false;
+	struct rect rcb = {rc.x1 + 1, rc.y1 + 1, rc.x2, rc.y2};
+	auto a = ishilite(rcb);
+	if(key && hot.key == key)
+		result = true;
+	if(a && hot.key == MouseLeft && hot.pressed == press)
+		result = true;
+	if(checked)
+		a = true;
+	color c0 = value;
+	if(a) {
+		if(c0.gray().r >= 100)
+			c0 = c0.mix(colors::black, 160);
+		else
+			c0 = c0.mix(colors::white, 160);
+	}
+	color b1 = c0;
+	color b2 = c0.mix(colors::black);
+	if(a && hot.pressed)
+		gradv(rcb, b2, b1);
+	else
+		gradv(rcb, b1, b2);
+	if(border) {
+		auto bc = focused ? colors::active : c0;
+		if(bc.gray().r >= 100)
+			bc = bc.mix(colors::black, 160);
+		else
+			bc = bc.mix(colors::white, 160);
+		rectb(rc, bc);
+	}
+	auto rco = rc; rco.offset(2, 2);
+	if(focused)
+		rectx(rco, fore);
+	if(title) {
+		rect r1 = rc;
+		if(a && hot.pressed)
+			r1.y1 += 2;
+		text(r1, title, AlignCenterCenter);
+	}
+	if(a && (tips || key) && !hot.pressed) {
+		uptop_tooltips();
+		stringbuilder sb(tooltips_text);
+		sb.add(tips);
+		if(key) {
+			sb.addn("Горячая клавиша: [");
+			key2str(sb, key);
+			sb.add("]");
+		}
+	}
+	return result;
+}
+
+void draw::buttonr(int& x, int y, const char* title, fnevent proc, unsigned key) {
+	if(!title || !proc)
+		return;
+	auto h = texth() + 6;
+	auto w = textw(title) + 8;
+	x -= w;
+	rect r = {x, y, x + w, y + h};
+	auto result = button(r, title, 0, key, colors::button, false, false, false, true);
+	if(result)
+		execute(proc);
+	x -= gui.padding;
 }

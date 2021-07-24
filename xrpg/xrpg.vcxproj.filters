@@ -66,6 +66,12 @@
     <ClInclude Include="view.h">
       <Filter>Графика</Filter>
     </ClInclude>
+    <ClInclude Include="datamap.h">
+      <Filter>Поддержка</Filter>
+    </ClInclude>
+    <ClInclude Include="posable.h">
+      <Filter>Поддержка</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">

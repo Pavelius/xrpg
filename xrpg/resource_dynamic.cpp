@@ -17,7 +17,7 @@ static vector<resei> source;
 
 static resei* find(const char* name, const char* folder) {
 	for(auto& e : source) {
-		if(e.name == name && e.folder == folder)
+		if(strcmp(e.name, name) == 0 && strcmp(e.folder, folder) == 0)
 			return &e;
 	}
 	return 0;
@@ -42,15 +42,6 @@ const sprite* draw::gres(const char* name, const char* folder, point maxsize) {
 			for(auto pg = surface::plugin::first; pg; pg = pg->next) {
 				szurl(temp, p->folder, p->name, pg->name);
 				if(dc.read(temp, 0, 32)) {
-					unsigned size = sizeof(sprite) + dc.width * dc.height * 3;
-					p->data = (sprite*)new char[size]; memset(p->data, 0, size);
-					p->data->frames[0].encode = sprite::RAW;
-					p->data->frames[0].sx = dc.width;
-					p->data->frames[0].sy = dc.height;
-					p->data->frames[0].offset = sizeof(sprite);
-					p->data->count = 1;
-					// Дешевый и простой алгоритм сжатия без прозрачности
-					auto pd = (unsigned char*)p->data->ptr(p->data->frames[0].offset);
 					rect rc = {0, 0, dc.width, dc.height};
 					if(maxsize.x && rc.width() > maxsize.x) {
 						rc.x1 = (rc.width() - maxsize.x) / 2;
@@ -60,6 +51,18 @@ const sprite* draw::gres(const char* name, const char* folder, point maxsize) {
 						rc.y1 = (rc.width() - maxsize.y) / 2;
 						rc.y2 = rc.y1 + maxsize.y;
 					}
+					unsigned size = sizeof(sprite) + rc.height() * rc.width() * 3;
+					// Вывод на экран
+					p->data = (sprite*)new char[size]; memset(p->data, 0, size);
+					p->data->width = rc.width();
+					p->data->height = rc.height();
+					p->data->frames[0].encode = sprite::RAW;
+					p->data->frames[0].sx = rc.width();
+					p->data->frames[0].sy = rc.height();
+					p->data->frames[0].offset = sizeof(sprite);
+					p->data->count = 1;
+					// Дешевый и простой алгоритм сжатия без прозрачности
+					auto pd = (unsigned char*)p->data->ptr(p->data->frames[0].offset);
 					for(auto y = rc.y1; y < rc.y2; y++) {
 						for(auto x = rc.x1; x < rc.x2; x++) {
 							auto input = dc.ptr(x, y);
