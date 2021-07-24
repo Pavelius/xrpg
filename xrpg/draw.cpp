@@ -1,7 +1,6 @@
 #include "color.h"
 #include "crt.h"
 #include "draw.h"
-#include "draw_input.h"
 
 #ifndef __GNUC__
 #pragma optimize("t", on)

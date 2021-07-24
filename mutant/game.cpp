@@ -43,33 +43,41 @@ void gamei::update_moving() {
 	game.rounds++;
 }
 
-void gamei::click_order() {
-	auto pt = draw::gethiliteback();
-	if(pt.x < 0 && draw::hilite_object) {
-		locationi* p1 = draw::hilite_object;
-		if(p1)
-			pt = p1->getposition();
+void gamei::worldmap_input() {
+	switch(draw::hot.key) {
+	case InputTimer: update_moving(); break;
+	case MouseLeft:
+		if(draw::hot.pressed) {
+			auto pt = draw::gethiliteback();
+			if(pt.x < 0 && draw::hilite_object) {
+				locationi* p1 = draw::hilite_object;
+				if(p1)
+					pt = p1->getposition();
+			}
+			if(pt.x < 0)
+				return;
+			game.setmovement(getp(geti(pt)));
+		}
+		break;
 	}
-	if(pt.x < 0)
-		return;
-	game.setmovement(getp(geti(pt)));
 }
 
 void gamei::playworld() {
-	//struct buyform : draw::list {
-	//	const char* getvalue(const char* id, stringbuilder& sb) const override {
-	//		if(equal(id, "text"))
-	//			return "Покупка предметов и артефактов";
-	//		return 0;
-	//	}
-	//	static void apply() {}
-	//	static void cancel() {}
-	//};
+	struct testi : answers::control {
+		const char* getlabel(stringbuilder& sb) const override {
+			return "Листок персонажа";
+		}
+		void paint(const rect& rc) {
+		}
+	};
+	testi test;
 	gui.bitmap = "map";
 	gui.background = render_world;
-	draw::scene(update_moving, click_order);
-	//buyform list;
-	//list.choose({100, 100, 800 - 100, 600 - 100});
+	answers an;
+	an.add(1, "Тест");
+	an.add(2, "Два");
+	an.add(3, "Печаль третья");
+	an.choosev("Что делать?", "Отмена", true, 0, false, &test);
 }
 
 void gamei::setexplored(indext i, int r) {

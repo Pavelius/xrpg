@@ -72,9 +72,6 @@
     <ClInclude Include="posable.h">
       <Filter>Поддержка</Filter>
     </ClInclude>
-    <ClInclude Include="draw_input.h">
-      <Filter>Поддержка</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">

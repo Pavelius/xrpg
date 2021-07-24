@@ -386,12 +386,29 @@ static void answer_button(int x, int& y, long id, const char* string, unsigned k
 		execute(breakparam, id);
 }
 
-long answers::choosev(const char* title, const char* cancel_text, bool interactive, const char* resid, bool portraits) const {
-	int x, y;
+void answers::control::view(rect rc) const {
+	char temp[260]; stringbuilder sb(temp);
+	window(rc, false, 0);
+	auto p = getlabel(sb);
+	if(p) {
+		auto push_font = font;
+		auto push_fore = fore;
+		font = metrics::h3;
+		fore = colors::h3;
+		text(rc.x1, rc.y1, p);
+		rc.y1 += texth() + 4;
+		fore = push_fore;
+		font = push_font;
+	}
+}
+
+long answers::choosev(const char* title, const char* cancel_text, bool interactive, const char* resid, bool portraits, control* pc) const {
 	if(!interactive)
 		return random();
+	int x, y;
 	while(ismodal()) {
 		paint_gui();
+		variant_tips();
 		setwindow(x, y);
 		if(portraits)
 			windowp(x, y, gui.window_width, false, title, resid);
@@ -405,41 +422,24 @@ long answers::choosev(const char* title, const char* cancel_text, bool interacti
 		}
 		if(cancel_text)
 			answer_button(x, y, 0, cancel_text, KeyEscape);
-		variant_tips();
+		if(pc) {
+			rect rc = {gui.border * 2, gui.border * 2, getwidth() - gui.window_width - gui.border * 4 - gui.padding, getheight() / 2};
+			pc->view(rc);
+		}
 		domodal();
 		control_standart();
 	}
 	return getresult();
 }
 
-void draw::scene(fnevent timer, fnevent mouseclick) {
+int draw::scene(fnevent input) {
 	while(ismodal()) {
 		paint_gui();
 		variant_tips();
 		domodal();
 		control_standart();
-		switch(hot.key) {
-		case InputTimer:
-			if(timer)
-				timer();
-			break;
-		case MouseLeft:
-			if(mouseclick && hot.pressed)
-				mouseclick();
-			break;
-		}
-	}
-}
-
-int	form::choose() {
-	while(isrunning() && ismodal()) {
-		paint_gui();
-		variant_tips();
-		domodal();
-		control_standart();
-		switch(hot.key) {
-		case InputTimer: timer(); break;
-		}
+		if(input)
+			input();
 	}
 	return getresult();
 }

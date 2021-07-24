@@ -1,4 +1,4 @@
-#include "draw_input.h"
+#include "draw.h"
 #include "point.h"
 #include "rect.h"
 #include "variant.h"
@@ -22,17 +22,6 @@ struct hotkey {
 	unsigned				key;
 	constexpr operator bool() const { return proc != 0; }
 };
-class form {
-public:
-	constexpr form() {}
-	virtual ~form() {}
-	int						choose();
-	static bool				equal(const char* s1, const char* s2);
-	virtual const char*		getvalue(const char* id, stringbuilder& sb) const { return 0; }
-	virtual bool			isrunning() const { return true; }
-	virtual void			paint(const rect& rc) const {}
-	virtual void			timer() {}
-};
 extern point				hilite_grid;
 extern variant				hilite_object;
 void						avatar(int x, int y, const char* id, color_s color, rect* rc_result = 0, unsigned char alpha = 0xFF);
@@ -55,7 +44,7 @@ point						gethiliteback();
 void						grid();
 bool						ishilite(int x, int y, int r, variant v);
 void						initialize();
-void						scene(fnevent timer, fnevent mouseclick);
+int							scene(fnevent input);
 void						setnext(fnevent v);
 void						tooltips(int x1, int y1, int width, const char* format, ...);
 bool						window(rect rc, bool hilight, int border);

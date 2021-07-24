@@ -46,11 +46,12 @@ class gamei {
 	unsigned			rounds;
 	static void			render_world();
 	static void			update_moving();
-	static void			click_order();
+	static void			worldmap_input();
 public:
 	static indext		geti(point v) { return worldmap::geti(v.x / gui.grid, v.y / gui.grid); }
 	static point		getp(indext v);
 	static void			playworld();
+	static void			main_menu();
 	void				setexplored(indext i) { setexplored(i, 1); }
 	void				setexplored(indext i, int r);
 	void				setmovement(point v) { party.setmovement(v, rounds); }

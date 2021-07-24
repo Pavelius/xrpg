@@ -1,5 +1,4 @@
 #include "draw.h"
-#include "draw_input.h"
 
 inline short* fwidth(const sprite* font) {
 	return (short*)((char*)font + font->size - font->count * sizeof(short));
