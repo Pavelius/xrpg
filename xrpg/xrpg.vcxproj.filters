@@ -60,6 +60,9 @@
     <ClInclude Include="view.h">
       <Filter>Поддержка</Filter>
     </ClInclude>
+    <ClInclude Include="moveable.h">
+      <Filter>Поддержка</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -129,6 +132,9 @@
       <Filter>Поддержка</Filter>
     </ClCompile>
     <ClCompile Include="view.cpp">
+      <Filter>Поддержка</Filter>
+    </ClCompile>
+    <ClCompile Include="moveable.cpp">
       <Filter>Поддержка</Filter>
     </ClCompile>
   </ItemGroup>

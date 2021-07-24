@@ -1,5 +1,6 @@
 #include "answers.h"
-#include "variant.h"
+#include "point.h"
+#include "moveable.h"
 #include "view.h"
 
 #pragma once
@@ -13,10 +14,28 @@ enum attribute_s : unsigned char {
 enum skill_s : unsigned char {
 	Endure, Force, Fight, Sneak, Move, Shoot, Scout, Comprehend, KnowTheZone, SenceEmotion, Manipulate, Heal, Intimidate,
 };
+typedef short unsigned	indext;
+const indext			Blocked = 0xFFFF;
 template<int count>
-struct datamap {
+class datamap {
 	constexpr static unsigned perbyte = 4;
 	unsigned char		data[(count + perbyte - 1) / perbyte];
+public:
 	int					get(short unsigned i) const { return (data[i / perbyte] >> ((i % perbyte) * 2)) & 0x03; }
 	void				set(short unsigned i, int v) { data[i / perbyte] |= (v & 0x03) << ((i % perbyte) * 2); }
+};
+class worldmap : public datamap<25*20> {
+	static constexpr int xmax = 25;
+	static constexpr int ymax = 20;
+public:
+	static int			geti(int x, int y) { return y * xmax + x; }
+	static int			getx(indext i) { return i % xmax; }
+	static int			gety(indext i) { return i / ymax; }
+	void				explore(indext i);
+	void				fow();
+	void				set(indext i, int v);
+	void				set(indext i, int r, int v, bool check);
+};
+struct locationi : public moveable {
+	const char*			name;
 };

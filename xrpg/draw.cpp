@@ -57,7 +57,7 @@ sprite*				metrics::h3 = (sprite*)loadb("art/fonts/h3.pma");
 int					metrics::scroll = 16;
 int					metrics::padding = 4;
 
-int distance(point p1, point p2) {
+long distance(point p1, point p2) {
 	auto dx = p1.x - p2.x;
 	auto dy = p1.y - p2.y;
 	return isqrt(dx * dx + dy * dy);

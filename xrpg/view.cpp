@@ -476,6 +476,21 @@ long answers::choosev(const char* title, const char* cancel_text, bool interacti
 	return getresult();
 }
 
+void draw::scene(varianta& objects) {
+	while(ismodal()) {
+		static_image();
+		if(background)
+			background();
+		for(auto& v : objects) {
+
+		}
+		status_panel(false);
+		variant_tips();
+		domodal();
+		control_standart();
+	}
+}
+
 void draw::application() {
 	while(next_proc) {
 		auto p = next_proc;
@@ -505,4 +520,20 @@ void draw::fog(int x, int y, int n) {
 		rectf({x1, y1, x1 + gui.grid, y1 + gui.grid}, colors::black);
 	else
 		rectf({x1, y1, x1 + gui.grid, y1 + gui.grid}, colors::black, n);
+}
+
+void draw::figure(int x, int y, figure_s figure, int size) {
+	switch(figure) {
+	case FigureCircle:
+		circle(x, y, size);
+		break;
+	case FigureRect:
+		rectb({x - size, y - size, x + size, y + size});
+		break;
+	case FigureTrianlge:
+		triangle({(short)(x - size), (short)(y + size)}, {(short)(x + size), (short)(y + size)}, {(short)x, (short)(y - size)}, fore);
+		break;
+	default:
+		break;
+	}
 }
