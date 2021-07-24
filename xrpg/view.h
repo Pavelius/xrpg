@@ -8,7 +8,7 @@ enum color_s : unsigned char {
 	ColorBlack, ColorWhite, ColorGray,
 };
 enum figure_s : unsigned char {
-	FigureCircle, FigureCross, FigureRect, FigureTrianlge, FigureTrianlgeUp,
+	FigureCircle, FigureCircleFill, FigureCross, FigureRect, FigureTrianlge, FigureTrianlgeUp,
 };
 typedef adat<variant, 128>	varianta;
 struct guii {

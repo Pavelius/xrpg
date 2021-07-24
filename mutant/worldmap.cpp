@@ -1,14 +1,14 @@
 #include "main.h"
 
 void worldmap::set(indext i, int r, int v, bool check) {
-	auto x1 = getx(i) - r - 1;
+	auto x1 = getx(i) - r;
 	auto x2 = getx(i) + r;
-	auto y1 = gety(i) - r - 1;
+	auto y1 = gety(i) - r;
 	auto y2 = gety(i) + r;
-	for(auto x = x1; x < x2; x++) {
+	for(auto x = x1; x <= x2; x++) {
 		if(x < 0 || x >= xmax)
 			continue;
-		for(auto y = y1; y < y2; y++) {
+		for(auto y = y1; y <= y2; y++) {
 			if(y < 0 || y >= ymax)
 				continue;
 			auto i0 = geti(x, y);
@@ -46,4 +46,13 @@ void worldmap::fow() {
 			}
 		}
 	}
+}
+
+void worldmap::paint() {
+	draw::grid();
+	for(auto& e : bsdata<locationi>()) {
+		if(e)
+			e.paint();
+	}
+	fow();
 }

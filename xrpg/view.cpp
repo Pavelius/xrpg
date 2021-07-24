@@ -506,6 +506,10 @@ void draw::paint(int x, int y, figure_s type, int size) {
 	case FigureCircle:
 		circle(x, y, size);
 		break;
+	case FigureCircleFill:
+		circlef(x, y, size, fore, 128);
+		circle(x, y, size);
+		break;
 	case FigureRect:
 		rectb({x - size, y - size, x + size, y + size});
 		break;

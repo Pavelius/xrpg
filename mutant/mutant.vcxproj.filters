@@ -1,15 +1,42 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="main.h" />
+    <ClCompile Include="information.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
+    <ClCompile Include="location.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
+    <ClCompile Include="property.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
+    <ClCompile Include="worldmap.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrpg\png.cpp">
+      <Filter>Плагины</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrpg\zip.cpp">
+      <Filter>Плагины</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="property.cpp" />
-    <ClCompile Include="information.cpp" />
-    <ClCompile Include="..\xrpg\png.cpp" />
-    <ClCompile Include="..\xrpg\zip.cpp" />
-    <ClCompile Include="worldmap.cpp" />
-    <ClCompile Include="location.cpp" />
+    <Filter Include="Логика">
+      <UniqueIdentifier>{a1d37642-a90f-4ebe-91fe-ceb2a028f89d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Плагины">
+      <UniqueIdentifier>{681e0acf-3c6f-406e-9771-a317e044b4b3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>Логика</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

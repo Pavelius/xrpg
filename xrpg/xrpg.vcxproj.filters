@@ -7,6 +7,9 @@
     <Filter Include="Поддержка">
       <UniqueIdentifier>{4cad7b33-4e35-42c7-b710-147d337a166f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Графика">
+      <UniqueIdentifier>{2f36f947-1aa6-466f-a94f-ed071f4265a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="win.h">
@@ -57,11 +60,11 @@
     <ClInclude Include="variant.h">
       <Filter>Поддержка</Filter>
     </ClInclude>
-    <ClInclude Include="view.h">
-      <Filter>Поддержка</Filter>
-    </ClInclude>
     <ClInclude Include="moveable.h">
       <Filter>Поддержка</Filter>
+    </ClInclude>
+    <ClInclude Include="view.h">
+      <Filter>Графика</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -122,20 +125,20 @@
     <ClCompile Include="stringbuilder.cpp">
       <Filter>Поддержка</Filter>
     </ClCompile>
-    <ClCompile Include="surface_serial.cpp">
-      <Filter>Поддержка</Filter>
-    </ClCompile>
     <ClCompile Include="szdup.cpp">
       <Filter>Поддержка</Filter>
     </ClCompile>
     <ClCompile Include="variant.cpp">
       <Filter>Поддержка</Filter>
     </ClCompile>
-    <ClCompile Include="view.cpp">
-      <Filter>Поддержка</Filter>
-    </ClCompile>
     <ClCompile Include="moveable.cpp">
       <Filter>Поддержка</Filter>
+    </ClCompile>
+    <ClCompile Include="view.cpp">
+      <Filter>Графика</Filter>
+    </ClCompile>
+    <ClCompile Include="surface_serial.cpp">
+      <Filter>Графика</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

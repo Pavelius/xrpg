@@ -34,6 +34,7 @@ public:
 	static int			gety(indext i) { return i / xmax; }
 	void				explore(indext i);
 	void				fow();
+	void				paint();
 	void				set(indext i, int v);
 	void				set(indext i, int r, int v, bool check);
 };
@@ -44,3 +45,15 @@ struct locationi : public moveable {
 	int					getvelocity() const { return 50; }
 	void				paint() const;
 };
+class gamei {
+	static constexpr unsigned rounds_per_day = 24 * 3;
+	worldmap			world;
+	unsigned			rounds;
+	static void			render_world();
+	static void			update_moving();
+public:
+	static void			playworld() { draw::scene(render_world, update_moving); }
+	void				setexplored(indext i) { setexplored(i, 1); }
+	void				setexplored(indext i, int r);
+};
+extern gamei			game;
