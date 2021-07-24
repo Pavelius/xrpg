@@ -1,4 +1,3 @@
-//#include "main.h"
 #include "answers.h"
 #include "draw.h"
 #include "variant.h"
@@ -14,7 +13,6 @@ static rect				last_board;
 static point			tooltips_point;
 static short			tooltips_width;
 static char				tooltips_text[4096];
-static surface			map_image;
 static fnevent			background;
 fnevent					draw::domodal;
 extern rect				sys_static_area;
@@ -23,10 +21,14 @@ static sprite*			sprite_shields = (sprite*)loadb("art/sprites/shields.pma");
 static sprite*			small_font = (sprite*)loadb("art/fonts/small.pma");
 static char				answer_hotkeys[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 static const char*		background_bitmap;
-variant					draw::hilite_object;
 point					draw::hilite_grid;
+variant					draw::hilite_object;
 static fnevent			next_proc;
 static void*			current_focus;
+static color theme_colors[] = {
+	{235, 90, 70}, {97, 189, 79}, {0, 121, 191},
+	{0, 0, 0}, {255, 255, 255}, {179, 186, 197},
+};
 
 int						distance(point p1, point p2);
 extern void				sleep(unsigned ms); // Set random seed
@@ -263,7 +265,7 @@ void draw::initialize() {
 	gui.initialize();
 	create(-1, -1, 800, 600, 0, 32);
 	setcaption("Space 4X");
-	settimer(70);
+	settimer(100);
 }
 
 static void standart_domodal() {
@@ -274,11 +276,11 @@ static void standart_domodal() {
 }
 
 bool draw::ismodal() {
-	hilite_object.clear();
-	hilite_grid = {-100, -100};
 	domodal = standart_domodal;
 	hot.cursor = CursorArrow;
 	hot.hilite.clear();
+	hilite_object.clear();
+	hilite_grid = {-100, -100};
 	if(hot.mouse.x < 0 || hot.mouse.y < 0)
 		sys_static_area.clear();
 	else
@@ -359,41 +361,6 @@ static void static_image() {
 		rectf({0, 0, getwidth(), getheight()}, colors::gray);
 }
 
-static void render_map() {
-	draw::state push;
-	rect rc = {0, 0, getwidth(), getheight()};
-	last_board = rc;
-	ishilite(last_board); // Drag and drop analize this result
-	int w = rc.width();
-	int h = rc.height();
-	int x1 = camera.x - w / 2;
-	int y1 = camera.y - h / 2;
-	int x2 = x1 + w;
-	int y2 = y1 + h;
-	point last_mouse = {
-		(short)(hot.mouse.x - rc.x1 - rc.width() / 2 + camera.x),
-		(short)(hot.mouse.y - rc.y1 - rc.height() / 2 + camera.y)};
-	if(x1 < 0) {
-		rc.x1 -= x1;
-		x1 = 0;
-	}
-	if(x2 > map_image.width) {
-		rc.x2 -= x2 - map_image.width;
-		x2 = map_image.width;
-	}
-	if(y1 < 0) {
-		rc.y1 -= y1;
-		y1 = 0;
-	}
-	if(y2 > map_image.height) {
-		rc.y2 -= y2 - map_image.height;
-		y2 = map_image.height;
-	}
-	draw::rectf(last_board, colors::gray);
-	if(rc.width() > 0 && rc.height() > 0)
-		blit(*draw::canvas, rc.x1, rc.y1, rc.width(), rc.height(), 0, map_image, x1, y1);
-}
-
 void draw::setbackground(fnevent proc) {
 	background = proc;
 }
@@ -455,7 +422,7 @@ long answers::choosev(const char* title, const char* cancel_text, bool interacti
 	return getresult();
 }
 
-void draw::scene(fnevent proc, fnevent timer) {
+void draw::scene(fnevent proc, fnevent timer, fnevent mouseclick) {
 	while(ismodal()) {
 		static_image();
 		if(background)
@@ -465,8 +432,16 @@ void draw::scene(fnevent proc, fnevent timer) {
 		variant_tips();
 		domodal();
 		control_standart();
-		if(timer && hot.key == InputTimer)
-			timer();
+		switch(hot.key) {
+		case InputTimer:
+			if(timer)
+				timer();
+			break;
+		case MouseLeft:
+			if(mouseclick && hot.pressed)
+				mouseclick();
+			break;
+		}
 	}
 }
 
@@ -501,6 +476,10 @@ void draw::fog(int x, int y, int n) {
 		rectf({x1, y1, x1 + gui.grid, y1 + gui.grid}, colors::black, n);
 }
 
+static color getcolor(color_s v) {
+	return theme_colors[v];
+}
+
 void draw::paint(int x, int y, figure_s type, int size) {
 	switch(type) {
 	case FigureCircle:
@@ -523,6 +502,10 @@ void draw::paint(int x, int y, figure_s type, int size) {
 		line(x + size, y + size, x, y - size);
 		line(x, y - size, x, y + size);
 		break;
+	case FigureClose:
+		line(x - size, y - size, x + size, y + size);
+		line(x - size, y + size, x + size, y - size);
+		break;
 	case FigureCross:
 		line(x - size, y, x + size, y);
 		line(x, y - size, x, y + size);
@@ -539,9 +522,27 @@ void draw::paint(int x, int y, const char* name, figure_s type, int size) {
 	text(x - textw(name) / 2, y + size + 2, name);
 }
 
-bool draw::ishilited(int x, int y, int size, variant v) {
+void draw::paint(int x, int y, figure_s type, color_s color, int size) {
+	auto push = fore; fore = getcolor(color);
+	paint(x, y, type, size);
+	fore = push;
+}
+
+void draw::paint(int x, int y, const char* name, figure_s type, color_s color, int size) {
+	auto push = fore; fore = getcolor(color);
+	paint(x, y, name, type, size);
+	fore = push;
+}
+
+bool draw::ishilite(int x, int y, int size, variant v) {
 	auto r = ishilite({x - size, y - size, x + size, y + size});
 	if(r)
 		hilite_object = v;
 	return r;
+}
+
+point draw::gethiliteback() {
+	if(hot.hilite)
+		return {-100, -100};
+	return hot.mouse;
 }

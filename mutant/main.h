@@ -25,10 +25,10 @@ public:
 	void				set(short unsigned i, int v) { data[i / perbyte] |= (v & 0x03) << ((i % perbyte) * 2); }
 };
 class worldmap : public datamap<25 * 20> {
+public:
 	static constexpr int xmax = 25;
 	static constexpr int ymax = 20;
-public:
-	static int			geti(int x, int y) { return y * xmax + x; }
+	static indext		geti(int x, int y) { return y * xmax + x; }
 	static point		getp(int x, int y);
 	static int			getx(indext i) { return i % xmax; }
 	static int			gety(indext i) { return i / xmax; }
@@ -39,6 +39,7 @@ public:
 	void				set(indext i, int r, int v, bool check);
 };
 struct locationi : public moveable {
+	static constexpr int kind = Location;
 	const char*			id;
 	const char*			name;
 	explicit constexpr operator bool() const { return name != 0; }
@@ -46,14 +47,19 @@ struct locationi : public moveable {
 	void				paint() const;
 };
 class gamei {
-	static constexpr unsigned rounds_per_day = 24 * 3;
+	static constexpr unsigned rounds_per_day = 24 * 4;
 	worldmap			world;
+	moveable			party;
 	unsigned			rounds;
 	static void			render_world();
 	static void			update_moving();
+	static void			click_order();
 public:
-	static void			playworld() { draw::scene(render_world, update_moving); }
+	static indext		geti(point v) { return worldmap::geti(v.x / gui.grid, v.y / gui.grid); }
+	static void			playworld() { draw::scene(render_world, update_moving, click_order); }
 	void				setexplored(indext i) { setexplored(i, 1); }
 	void				setexplored(indext i, int r);
+	void				setmovement(point v) { party.setmovement(v, rounds); }
+	void				setposition(point v) { party.setposition(v); }
 };
 extern gamei			game;

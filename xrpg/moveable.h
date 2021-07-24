@@ -10,6 +10,7 @@ public:
 	bool			ismoving() const;
 	bool			moving(int pixels_per_unit, unsigned tick, unsigned ticks_per_unit);
 	point			getposition() const { return position; }
+	point			getdestination() const { return target_position; }
 	void			setposition(point v);
 	void			setmovement(point v, unsigned tick);
 	void			stop();
