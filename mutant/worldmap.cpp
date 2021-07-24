@@ -19,6 +19,11 @@ void worldmap::set(indext i, int r, int v, bool check) {
 	}
 }
 
+point worldmap::getp(int x, int y) { return {
+	(short)(x * gui.grid + gui.grid/2), (short)(y * gui.grid + gui.grid / 2)};
+}
+
+
 void worldmap::set(indext i, int v) {
 	if(i == Blocked)
 		return;

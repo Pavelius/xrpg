@@ -151,6 +151,7 @@
     <ClCompile Include="..\xrpg\png.cpp" />
     <ClCompile Include="..\xrpg\zip.cpp" />
     <ClCompile Include="information.cpp" />
+    <ClCompile Include="location.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="property.cpp" />
     <ClCompile Include="worldmap.cpp" />

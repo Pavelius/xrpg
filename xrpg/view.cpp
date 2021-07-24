@@ -23,7 +23,8 @@ static sprite*			sprite_shields = (sprite*)loadb("art/sprites/shields.pma");
 static sprite*			small_font = (sprite*)loadb("art/fonts/small.pma");
 static char				answer_hotkeys[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 static const char*		background_bitmap;
-static variant			hilite_object;
+variant					draw::hilite_object;
+point					draw::hilite_grid;
 static fnevent			next_proc;
 static void*			current_focus;
 
@@ -274,6 +275,7 @@ static void standart_domodal() {
 
 bool draw::ismodal() {
 	hilite_object.clear();
+	hilite_grid = {-100, -100};
 	domodal = standart_domodal;
 	hot.cursor = CursorArrow;
 	hot.hilite.clear();
@@ -350,23 +352,6 @@ static void variant_tips() {
 	}
 }
 
-static void show_menu() {
-}
-
-static void status_panel(bool allow_pause) {
-	//const int button_width = 64;
-	//rect rc = {0, getheight() - texth() - gui.border * 2, 184 + gui.border * 3, getheight()};
-	//if(allow_pause)
-	//	rc.x2 += button_width + gui.border;
-	//shadow(rc, colors::form);
-	//auto x1 = rc.x1 + gui.border;
-	//auto y1 = rc.y1 + gui.border;
-	//x1 = status(x1, y1, 120, game.getdate().getname(), "Текущая дата");
-	//auto player = game.getplayer();
-	//if(player)
-	//	x1 = status(x1, y1, 64, player->get(Credits), "Ваши кредиты");
-}
-
 static void static_image() {
 	if(background_bitmap)
 		image(0, 0, gres(background_bitmap, "art/background"), 0, 0);
@@ -407,11 +392,6 @@ static void render_map() {
 	draw::rectf(last_board, colors::gray);
 	if(rc.width() > 0 && rc.height() > 0)
 		blit(*draw::canvas, rc.x1, rc.y1, rc.width(), rc.height(), 0, map_image, x1, y1);
-}
-
-void play_area() {
-	render_map();
-	int x = gui.border * 2, y = gui.border * 2;
 }
 
 void draw::setbackground(fnevent proc) {
@@ -455,7 +435,6 @@ long answers::choosev(const char* title, const char* cancel_text, bool interacti
 		static_image();
 		if(background)
 			background();
-		status_panel(false);
 		setwindow(x, y);
 		if(portraits)
 			windowp(x, y, gui.window_width, false, title, resid);
@@ -476,18 +455,18 @@ long answers::choosev(const char* title, const char* cancel_text, bool interacti
 	return getresult();
 }
 
-void draw::scene(varianta& objects) {
+void draw::scene(fnevent proc, fnevent timer) {
 	while(ismodal()) {
 		static_image();
 		if(background)
 			background();
-		for(auto& v : objects) {
-
-		}
-		status_panel(false);
+		if(proc)
+			proc();
 		variant_tips();
 		domodal();
 		control_standart();
+		if(timer && hot.key == InputTimer)
+			timer();
 	}
 }
 
@@ -516,24 +495,49 @@ void draw::grid() {
 
 void draw::fog(int x, int y, int n) {
 	auto x1 = x * gui.grid, y1 = y * gui.grid;
-	if(n==0xFF)
+	if(n == 0xFF)
 		rectf({x1, y1, x1 + gui.grid, y1 + gui.grid}, colors::black);
 	else
 		rectf({x1, y1, x1 + gui.grid, y1 + gui.grid}, colors::black, n);
 }
 
-void draw::figure(int x, int y, figure_s figure, int size) {
-	switch(figure) {
+void draw::paint(int x, int y, figure_s type, int size) {
+	switch(type) {
 	case FigureCircle:
 		circle(x, y, size);
 		break;
 	case FigureRect:
 		rectb({x - size, y - size, x + size, y + size});
 		break;
+	case FigureTrianlgeUp:
+		line(x - size, y - size, x + size, y - size);
+		line(x + size, y - size, x, y + size);
+		line(x - size, y - size, x, y + size);
+		break;
 	case FigureTrianlge:
-		triangle({(short)(x - size), (short)(y + size)}, {(short)(x + size), (short)(y + size)}, {(short)x, (short)(y - size)}, fore);
+		line(x - size, y + size, x + size, y + size);
+		line(x + size, y + size, x, y - size);
+		line(x, y - size, x, y + size);
+		break;
+	case FigureCross:
+		line(x - size, y, x + size, y);
+		line(x, y - size, x, y + size);
 		break;
 	default:
 		break;
 	}
+}
+
+void draw::paint(int x, int y, const char* name, figure_s type, int size) {
+	if(!name)
+		return;
+	paint(x, y, type, size);
+	text(x - textw(name) / 2, y + size + 2, name);
+}
+
+bool draw::ishilited(int x, int y, int size, variant v) {
+	auto r = ishilite({x - size, y - size, x + size, y + size});
+	if(r)
+		hilite_object = v;
+	return r;
 }

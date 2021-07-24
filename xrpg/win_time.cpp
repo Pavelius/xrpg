@@ -3,3 +3,7 @@
 void sleep(unsigned v) {
 	Sleep(v);
 }
+
+unsigned long gettickcount() {
+	return GetTickCount();
+}

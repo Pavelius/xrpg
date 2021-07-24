@@ -1137,8 +1137,7 @@ static void triangle_top(point v1, point v2, point v3) {
 	}
 }
 
-void draw::triangle(point v1, point v2, point v3, color c1) {
-	auto pf = fore; fore = c1;
+void draw::triangle(point v1, point v2, point v3) {
 	if(v2.y < v1.y)
 		iswap(v1, v2);
 	if(v3.y < v1.y)
@@ -1154,6 +1153,11 @@ void draw::triangle(point v1, point v2, point v3, color c1) {
 		triangle_bottom(v1, v2, v4);
 		triangle_top(v2, v4, v3);
 	}
+}
+
+void draw::triangle(point v1, point v2, point v3, color c1) {
+	auto pf = fore; fore = c1;
+	triangle(v1, v2, v3);
 	fore = pf;
 }
 

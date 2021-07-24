@@ -10,5 +10,6 @@
     <ClCompile Include="..\xrpg\png.cpp" />
     <ClCompile Include="..\xrpg\zip.cpp" />
     <ClCompile Include="worldmap.cpp" />
+    <ClCompile Include="location.cpp" />
   </ItemGroup>
 </Project>

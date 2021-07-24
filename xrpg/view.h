@@ -8,7 +8,7 @@ enum color_s : unsigned char {
 	ColorBlack, ColorWhite, ColorGray,
 };
 enum figure_s : unsigned char {
-	FigureCircle, FigureRect, FigureTrianlge
+	FigureCircle, FigureCross, FigureRect, FigureTrianlge, FigureTrianlgeUp,
 };
 typedef adat<variant, 128>	varianta;
 struct guii {
@@ -25,13 +25,17 @@ struct guii {
 };
 extern guii					gui;
 namespace draw {
+extern point				hilite_grid;
+extern variant				hilite_object;
 void						application();
-void						figure(int x, int y, figure_s figure, int size);
+void						paint(int x, int y, figure_s type, int size);
+void						paint(int x, int y, const char* name, figure_s type, int size);
 void						fog(int x, int y, int n);
 fnevent						getbackground();
 void						grid();
+bool						ishilited(int x, int y, int r, variant v);
 void						initialize();
-void						scene(varianta& objects);
+void						scene(fnevent proc, fnevent timer);
 void						setbackground(fnevent proc);
 void						setbitmap(const char* id);
 void						setfore(color_s v);

@@ -31,7 +31,7 @@ bool moveable::moving(int pixels_per_part, unsigned tick, unsigned ticks_per_par
 		position = target_position;
 		return false;
 	}
-	long passed_time = tick - start_tick;
+	long passed_time = tick - start_tick; 
 	long current = pixels_per_part * passed_time / ticks_per_part;
 	if(current >= maximum)
 		position = target_position;
