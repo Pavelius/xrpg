@@ -22,14 +22,17 @@ point					draw::hilite_grid;
 variant					draw::hilite_object;
 static fnevent			next_proc;
 static void*			current_focus;
-static color			theme_colors[] = {
-	{235, 90, 70}, {97, 189, 79}, {0, 121, 191}, {242, 214, 0}, {255, 159, 26},
-	{52, 69, 99}, {0, 194, 224}, {81, 232, 152},
-	{0, 0, 0}, {255, 255, 255}, {179, 186, 197},
-};
 
-int						distance(point p1, point p2);
-extern void				sleep(unsigned ms); // Set random seed
+long					distance(point p1, point p2);
+
+static color getcolor(color_s v) {
+	static color theme_colors[] = {
+		{235, 90, 70}, {97, 189, 79}, {0, 121, 191}, {242, 214, 0}, {255, 159, 26},
+		{52, 69, 99}, {0, 194, 224}, {81, 232, 152},
+		{0, 0, 0}, {255, 255, 255}, {179, 186, 197},
+	};
+	return theme_colors[v];
+}
 
 void draw::execute(fnevent proc, int value, int value2, void* object) {
 	domodal = proc;
@@ -98,9 +101,9 @@ bool draw::window(int x, int& y, int width, bool hilite, const char* string, con
 	auto image_height = 0;
 	const sprite* image_surface = 0;
 	if(string) {
-		state push;
-		clipping.clear();
+		auto push_clipping = clipping; clipping.clear();
 		text_height = draw::textf(0, 0, width, string);
+		clipping = push_clipping;
 	}
 	if(resid) {
 		image_surface = gres(resid, "art/images");
@@ -131,9 +134,9 @@ static bool windowp(int x, int& y, int width, bool hilite, const char* string, c
 	auto x0 = x + gui.hero_size + gui.border; width -= x0 - x;
 	auto text_height = 0;
 	if(string) {
-		state push;
-		clipping.clear();
+		auto push_clipping = clipping; clipping.clear();
 		text_height = draw::textf(0, 0, width, string);
+		clipping = push_clipping;
 	}
 	rect rc = {x, y, x0 + width, y + imax(text_height, gui.hero_size)};
 	auto rs = window(rc, hilite, 0);
@@ -459,10 +462,6 @@ void draw::fog(int x, int y, int n) {
 		rectf({x1, y1, x1 + gui.grid, y1 + gui.grid}, colors::black, n);
 }
 
-static color getcolor(color_s v) {
-	return theme_colors[v];
-}
-
 void draw::paint(int x, int y, figure_s type, int size) {
 	switch(type) {
 	case FigureCircle:
@@ -567,7 +566,7 @@ void draw::bar(rect rc, color_s color, color_s border, color_s back, int value, 
 }
 
 static bool button(const rect& rc, const char* title, const char* tips, unsigned key, color value, bool focused, bool checked, bool press, bool border) {
-	draw::state push;
+	auto push_fore = fore;
 	bool result = false;
 	struct rect rcb = {rc.x1 + 1, rc.y1 + 1, rc.x2, rc.y2};
 	auto a = ishilite(rcb);
@@ -617,6 +616,7 @@ static bool button(const rect& rc, const char* title, const char* tips, unsigned
 			sb.add("]");
 		}
 	}
+	fore = push_fore; 
 	return result;
 }
 
@@ -631,4 +631,14 @@ void draw::buttonr(int& x, int y, const char* title, fnevent proc, unsigned key)
 	if(result)
 		execute(proc);
 	x -= gui.padding;
+}
+
+bool draw::execute(const hotkey* source) {
+	for(auto p = source; *p; p++) {
+		if(hot.key == p->key) {
+			p->proc();
+			return true;
+		}
+	}
+	return false;
 }

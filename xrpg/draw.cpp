@@ -86,46 +86,6 @@ static bool correct(int& x1, int& y1, int& x2, int& y2, const rect& clip, bool i
 	return true;
 }
 
-char* key2str(char* result, int key) {
-	result[0] = 0;
-	if(key & Ctrl)
-		zcat(result, "Ctrl+");
-	if(key & Alt)
-		zcat(result, "Alt+");
-	if(key & Shift)
-		zcat(result, "Shift+");
-	key = key & 0xFFFF;
-	switch(key) {
-	case KeyDown: zcat(result, "Down"); break;
-	case KeyDelete: zcat(result, "Del"); break;
-	case KeyEnd: zcat(result, "End"); break;
-	case KeyEnter: zcat(result, "Enter"); break;
-	case KeyHome: zcat(result, "Home"); break;
-	case KeyLeft: zcat(result, "Left"); break;
-	case KeyPageDown: zcat(result, "Page Down"); break;
-	case KeyPageUp: zcat(result, "Page Up"); break;
-	case KeyRight: zcat(result, "Right"); break;
-	case KeyUp: zcat(result, "Up"); break;
-	case F1: zcat(result, "F1"); break;
-	case F2: zcat(result, "F2"); break;
-	case F3: zcat(result, "F3"); break;
-	case F4: zcat(result, "F4"); break;
-	case F5: zcat(result, "F5"); break;
-	case F6: zcat(result, "F6"); break;
-	case F7: zcat(result, "F7"); break;
-	case F8: zcat(result, "F8"); break;
-	case F9: zcat(result, "F9"); break;
-	case F10: zcat(result, "F10"); break;
-	case F11: zcat(result, "F11"); break;
-	case F12: zcat(result, "F12"); break;
-	case KeySpace: zcat(result, "Space"); break;
-	default:
-		zcat(result, char(szupper(key)));
-		break;
-	}
-	return result;
-}
-
 static void set32(color* p, unsigned count) {
 	auto p2 = p + count;
 	while(p < p2)
@@ -811,28 +771,6 @@ static void cpy32t(unsigned char* d, int d_scan, unsigned char* s, int s_scan, i
 	} while(--height);
 }
 
-draw::state::state() :
-	fore(draw::fore),
-	fore_stroke(draw::fore_stroke),
-	font(draw::font),
-	linw(draw::linw),
-	canvas(draw::canvas),
-	clip(clipping) {
-}
-
-draw::state::~state() {
-	draw::font = this->font;
-	draw::fore = this->fore;
-	draw::fore_stroke = this->fore_stroke;
-	draw::linw = this->linw;
-	draw::clipping = this->clip;
-	draw::canvas = this->canvas;
-}
-
-rect draw::getarea() {
-	return sys_static_area;
-}
-
 void draw::dragbegin(const void* p) {
 	drag_object = p;
 	dragmouse = hot.mouse;
@@ -869,24 +807,6 @@ int draw::getheight() {
 
 unsigned char* draw::ptr(int x, int y) {
 	return canvas ? (canvas->bits + y * canvas->scanline + x * canvas->bpp / 8) : 0;
-}
-
-color draw::getcolor(color normal, unsigned flags) {
-	if(flags & Disabled)
-		return normal.mix(colors::window);
-	return normal;
-}
-
-color draw::getcolor(rect rc, color normal, color active, unsigned flags) {
-	if(flags & Disabled)
-		return normal.mix(colors::window);
-	if(ishilite(rc))
-		return active;
-	return normal;
-}
-
-void draw::decortext(unsigned flags) {
-	draw::fore = getcolor(colors::text, flags);
 }
 
 void draw::pixel(int x, int y) {
@@ -1490,20 +1410,13 @@ void draw::text(int x, int y, const char* string, int count, unsigned flags) {
 	}
 }
 
-class pushclip {
-	rect			value;
-public:
-	pushclip() : value(draw::clipping) {}
-	~pushclip() { draw::clipping = value; }
-};
-
 int draw::textc(int x, int y, int width, const char* string, int count, unsigned flags, bool* clipped) {
-	pushclip push;
-	setclip({x, y, x + width, y + texth()});
+	auto push_clip = clipping; setclip({x, y, x + width, y + texth()});
 	auto w = textw(string, count);
 	if(clipped)
 		*clipped = w > width;
 	text(aligned(x, width, flags, w), y, string, count, flags);
+	clipping = push_clip;
 	return texth();
 }
 
@@ -1542,10 +1455,10 @@ int	draw::text(rect rc, const char* string, unsigned state, int* max_width) {
 	if(max_width)
 		*max_width = 0;
 	if(state & TextSingleLine) {
-		pushclip push;
-		draw::setclip(rc);
+		auto push_clip = clipping; setclip(rc);
 		text(aligned(x1, rc.width(), state, draw::textw(string)), y1,
 			string, -1, state);
+		clipping = push_clip;
 		return dy;
 	} else {
 		int w1 = rc.width();
@@ -1867,21 +1780,19 @@ void draw::stroke(int x, int y, const sprite* e, int id, int flags, unsigned cha
 	tr.b = 255;
 	auto fr = e->get(id);
 	rect rc = fr.getrect(x, y, flags);
-	surface canvas(rc.width() + 2, rc.height() + 2, 32);
+	surface sf(rc.width() + 2, rc.height() + 2, 32);
 	x--; y--;
-	if(true) {
-		pushclip push;
-		auto push_canvas = draw::canvas;
-		draw::canvas = &canvas;
-		draw::setclip();
-		draw::rectf({0, 0, canvas.width, canvas.height}, tr);
-		draw::image(1, 1, e, id, ImageNoOffset);
-		draw::canvas = push_canvas;
-	}
-	for(int y1 = 0; y1 < canvas.height; y1++) {
+	auto push_clip = clipping;
+	auto push_canvas = canvas; canvas = &sf;
+	setclip();
+	rectf({0, 0, sf.width, sf.height}, tr);
+	image(1, 1, e, id, ImageNoOffset);
+	canvas = push_canvas;
+	clipping = push_clip;
+	for(int y1 = 0; y1 < sf.height; y1++) {
 		bool inside = false;
-		for(int x1 = 0; x1 < canvas.width; x1++) {
-			auto m = (color*)canvas.ptr(x1, y1);
+		for(int x1 = 0; x1 < sf.width; x1++) {
+			auto m = (color*)sf.ptr(x1, y1);
 			if(!inside) {
 				if(*m == tr)
 					continue;
@@ -1909,10 +1820,10 @@ void draw::stroke(int x, int y, const sprite* e, int id, int flags, unsigned cha
 			}
 		}
 	}
-	for(int x1 = 0; x1 < canvas.width; x1++) {
+	for(int x1 = 0; x1 < sf.width; x1++) {
 		bool inside = false;
-		for(int y1 = 0; y1 < canvas.height; y1++) {
-			auto m = (color*)canvas.ptr(x1, y1);
+		for(int y1 = 0; y1 < sf.height; y1++) {
+			auto m = (color*)sf.ptr(x1, y1);
 			if(!inside) {
 				if(*m == tr)
 					continue;
@@ -2135,7 +2046,7 @@ void draw::key2str(stringbuilder& sb, int key) {
 		sb.add("Alt+");
 	if(key & Shift)
 		sb.add("Shift+");
-	key = key & 0xFFFF;
+	key = key & CommandMask;
 	switch(key) {
 	case KeyDown: sb.add("Down"); break;
 	case KeyDelete: sb.add("Del"); break;
@@ -2162,14 +2073,4 @@ void draw::key2str(stringbuilder& sb, int key) {
 	case KeySpace: sb.add("Space"); break;
 	default: sb.add(char(szupper(key))); break;
 	}
-}
-
-bool draw::execute(const shortcut* pf) {
-	for(auto p = pf; *p; p++) {
-		if(hot.key == p->key) {
-			p->proc();
-			return true;
-		}
-	}
-	return false;
 }

@@ -3,23 +3,10 @@
 
 using namespace draw;
 
-textplugin*	draw::textplugin::first;
 static void(*draw_icon)(int& x, int& y, int x0, int x2, int* max_width, int& w, const char* name);
 
 void draw::set(void(*proc)(int& x, int& y, int x0, int x2, int* max_width, int& w, const char* id)) {
 	draw_icon = proc;
-}
-
-textplugin::textplugin(const char* name, proc e) : name(name), render(e) {
-	seqlink(this);
-}
-
-textplugin* textplugin::textplugin::find(const char* name) {
-	for(auto p = first; p; p = p->next) {
-		if(strcmp(p->name, name) == 0)
-			return p;
-	}
-	return 0;
 }
 
 static bool match(const char** string, const char* name) {
@@ -28,63 +15,6 @@ static bool match(const char** string, const char* name) {
 		return false;
 	(*string) += n;
 	return true;
-}
-
-static int render_control(const char** result, int x, int y, int width) {
-	struct element {
-		const char*	id;
-		const char*	label;
-		const char*	tips;
-		int			value;
-	};
-	element e = {0};
-	char type[64];
-	char name[64];
-	char buffer[4096];
-	auto p = *result;
-	auto pb = buffer;
-	auto pe = buffer + sizeof(buffer) - 1;
-	p = stringbuilder::read(p, type, type + sizeof(type) - 1);
-	p = skipsp(p);
-	while(*p && *p != ')') {
-		p = stringbuilder::read(p, name, name + sizeof(name) - 1);
-		p = skipsp(p);
-		int value_number = 1;
-		const char* value_text = 0;
-		if(*p == '=') {
-			p = skipsp(p + 1);
-			if(isnum(*p) || *p == '-')
-				p = stringbuilder::read(p, value_number);
-			else if(*p == '\"' || *p == '\'') {
-				value_text = pb;
-				p = psstr(p + 1, pb, p[0]);
-				pb = zend(pb);
-				if(pb < pe)
-					pb = pb + 1;
-			} else {
-				// Error
-				while(*p != ')' && *p)
-					p++;
-			}
-			p = skipsp(p);
-		}
-		if(strcmp("id", name) == 0)
-			e.id = value_text;
-		else if(strcmp("tips", name) == 0)
-			e.tips = value_text;
-		else if(strcmp("label", name) == 0)
-			e.label = value_text;
-		else if(strcmp("value", name) == 0)
-			e.value = value_number;
-	}
-	if(*p == ')')
-		p++;
-	p = skipcr(p);
-	*result = p;
-	auto pm = draw::textplugin::find(type);
-	if(pm)
-		return pm->render(x, y, width, e.id, e.value, e.label, e.tips);
-	return 0;
 }
 
 static const char* glink(const char* p, char* result, unsigned result_maximum) {
@@ -262,7 +192,8 @@ static int textfln(int x0, int y0, int width, const char** string, color c1, int
 
 int draw::textf(int x, int y, int width, const char* string, int* max_width,
 	int min_height, int* cashe_height, const char** cashe_string, int tab_width) {
-	state push;
+	auto push_fore = fore;
+	auto push_font = font;
 	color color_text = fore;
 	const char* p = string;
 	int y0 = y;
@@ -320,9 +251,6 @@ int draw::textf(int x, int y, int width, const char* string, int* max_width,
 			circlef(x + dx + 2, y + dx, rd, color_text);
 			circle(x + dx + 2, y + dx, rd, color_text);
 			y += textfln(x + texth(), y, width - texth(), &p, color_text, &mw2, tab_width);
-		} else if(p[0] == '$' && p[1] == '(') {
-			p = skipsp(p + 2);
-			y += render_control(&p, x, y, width);
 		} else {
 			y += textfln(x, y, width, &p, color_text, &mw2, tab_width);
 			if(p[0]) {
@@ -340,13 +268,16 @@ int draw::textf(int x, int y, int width, const char* string, int* max_width,
 				*max_width = mw2;
 		}
 	}
+	fore = push_fore;
+	font = push_font;
 	return y - y0;
 }
 
 int draw::textf(rect& rc, const char* string, int tab_width) {
-	state push;
+	auto push_clipping = clipping;
 	clipping.clear();
 	rc.y2 = rc.y1 + draw::textf(0, 0, rc.width(), string, &rc.x2, 0, 0, 0, tab_width);
 	rc.x2 += rc.x1;
+	clipping = push_clipping;
 	return rc.height();
 }

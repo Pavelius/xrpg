@@ -8,31 +8,20 @@ typedef void(*fnevent)();
 extern "C" int strcmp(const char* s1, const char* s2); // Compare two strings
 
 enum draw_event_s {
+	KeyBackspace = 8, KeyTab = 9, KeyEnter = 10, KeyEscape = 0x1B, KeySpace = 0x20, KeyDelete = 46,
 	// input events
 	InputSymbol = 0x80, InputTimer, InputIdle, InputUpdate, InputNoUpdate,
 	// Keyboard and mouse input (can be overrided by flags)
 	MouseLeft, MouseLeftDBL, MouseRight,
 	MouseMove, MouseWheelUp, MouseWheelDown,
 	KeyLeft, KeyRight, KeyUp, KeyDown, KeyPageUp, KeyPageDown, KeyHome, KeyEnd,
-	KeyBackspace, KeyEnter, KeyDelete, KeyEscape, KeySpace, KeyTab,
 	F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
-	// named keys range
-	FirstKey = MouseLeft,
-	FirstMouse = MouseLeft, LastMouse = MouseWheelDown,
 	// support
 	CommandMask = 0x000000FF,
 	// misc events can be combination with previous
 	Ctrl = 0x00000100,
 	Alt = 0x00000200,
 	Shift = 0x00000400,
-	// columns flags
-	SmallHilite = 0x00001000,
-	HideZero = 0x00002000,
-	// state flags
-	Focused = 0x10000000, // Control has keyboard input and can change visual form.
-	Checked = 0x20000000, // Use in background virtual method.
-	Disabled = 0x40000000, // Control not grant any input.
-	FirstInput = InputSymbol,
 };
 enum window_flags {
 	WFResize = 0x0010,
@@ -168,32 +157,6 @@ struct surface {
 	void				resize(int width, int height, int bpp, bool alloc_memory);
 	void				write(const char* url, color* pallette);
 };
-// Push state in stack
-struct state {
-	state();
-	~state();
-private:
-	color				fore, fore_stroke;
-	const sprite*		font; // glyph font
-	float				linw;
-	surface*			canvas;
-	rect				clip;
-};
-struct textplugin {
-	typedef int(*proc)(int x, int y, int width, const char* id, int value, const char* label, const char* tips);
-	const char*			name;
-	proc				render;
-	textplugin*			next;
-	static textplugin*	first;
-	textplugin(const char* name, proc e);
-	static textplugin*	find(const char* name);
-};
-struct shortcut {
-	fnevent				proc;
-	const char*			name;
-	unsigned			key;
-	constexpr operator bool() const { return proc != 0; }
-};
 extern rect				clipping; // Clipping area
 extern color			fore; // Foreground color (curently selected color)
 extern color			fore_stroke; // foreground stroke color
@@ -205,26 +168,18 @@ void					bezier(int x0, int y0, int x1, int y1, int x2, int y2);
 void					bezierseg(int x0, int y0, int x1, int y1, int x2, int y2);
 void					blit(surface& dest, int x, int y, int width, int height, unsigned flags, surface& dc, int xs, int ys);
 void					blit(surface& dest, int x, int y, int width, int height, unsigned flags, surface& source, int x_source, int y_source, int width_source, int height_source);
-void					breakmodal(int result);
-void					buttoncancel();
-void					buttonok();
 extern surface*			canvas;
 void					circle(int x, int y, int radius);
 void					circle(int x, int y, int radius, const color c1);
 void					circlef(int x, int y, int radius, const color c1, unsigned char alpha = 0xFF);
 void					create(int x, int y, int width, int height, unsigned flags, int bpp);
-void					decortext(unsigned flags);
 extern fnevent			domodal;
 bool					dragactive(const void* p);
 bool					dragactive();
 void					dragbegin(const void* p);
 extern point			dragmouse;
 void					execute(fnevent proc, int value = 0, int value2 = 0, void* object = 0);
-bool					execute(const shortcut* p);
-rect					getarea();
 int						getbpp();
-color					getcolor(color normal, unsigned flags);
-color					getcolor(rect rc, color normal, color hilite, unsigned flags);
 int						getheight();
 int						getresult();
 int						getwidth();
@@ -258,7 +213,6 @@ void					rectf(rect rc); // Draw rectangle area. Right and bottom side is one pi
 void					rectf(rect rc, color c1);
 void					rectf(rect rc, color c1, unsigned char alpha);
 void					rectx(rect rc, color c1);
-void					savefocus();
 void					set(void(*proc)(int& x, int& y, int x0, int x2, int* max_width, int& w, const char* id));
 void					setcaption(const char* string);
 void					setclip(rect rc);

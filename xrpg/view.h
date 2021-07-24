@@ -15,6 +15,12 @@ enum figure_s : unsigned char {
 	FigureRect, FigureTrianlge, FigureTrianlgeUp,
 };
 namespace draw {
+struct hotkey {
+	fnevent					proc;
+	const char*				name;
+	unsigned				key;
+	constexpr operator bool() const { return proc != 0; }
+};
 class form {
 	void					paint_footer(rect& rc);
 	void					paint_title(rect& rc);
@@ -32,7 +38,11 @@ extern variant				hilite_object;
 void						avatar(int x, int y, const char* id, color_s color, rect* rc_result = 0, unsigned char alpha = 0xFF);
 void						application();
 void						bar(rect rc, color_s color, color_s border, color_s back, int value, int maximum);
+void						breakmodal(int result);
 void						buttonr(int& x, int y, const char* title, fnevent proc, unsigned key = 0);
+void						buttoncancel();
+void						buttonok();
+bool						execute(const hotkey* source);
 void						paint(int x, int y, figure_s type, int size);
 void						paint(int x, int y, figure_s type, color_s color, int size);
 void						paint(int x, int y, const char* name, figure_s type, int size);
