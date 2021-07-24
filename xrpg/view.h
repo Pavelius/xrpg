@@ -1,3 +1,4 @@
+#include "draw_input.h"
 #include "point.h"
 #include "rect.h"
 #include "variant.h"
@@ -22,16 +23,15 @@ struct hotkey {
 	constexpr operator bool() const { return proc != 0; }
 };
 class form {
-	void					paint_footer(rect& rc);
-	void					paint_title(rect& rc);
 public:
 	constexpr form() {}
 	virtual ~form() {}
+	int						choose();
 	static bool				equal(const char* s1, const char* s2);
 	virtual const char*		getvalue(const char* id, stringbuilder& sb) const { return 0; }
-	virtual long			getvalue(const char* id) const { return 0; }
+	virtual bool			isrunning() const { return true; }
 	virtual void			paint(const rect& rc) const {}
-	virtual void			setvalue(const char* id, long value) {}
+	virtual void			timer() {}
 };
 extern point				hilite_grid;
 extern variant				hilite_object;
@@ -39,10 +39,13 @@ void						avatar(int x, int y, const char* id, color_s color, rect* rc_result = 
 void						application();
 void						bar(rect rc, color_s color, color_s border, color_s back, int value, int maximum);
 void						breakmodal(int result);
+void						breakparam();
 void						buttonr(int& x, int y, const char* title, fnevent proc, unsigned key = 0);
 void						buttoncancel();
 void						buttonok();
+void						execute(fnevent proc, int value = 0, int value2 = 0, void* object = 0);
 bool						execute(const hotkey* source);
+int							getresult();
 void						paint(int x, int y, figure_s type, int size);
 void						paint(int x, int y, figure_s type, color_s color, int size);
 void						paint(int x, int y, const char* name, figure_s type, int size);

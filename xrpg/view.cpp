@@ -59,7 +59,7 @@ int draw::getresult() {
 	return break_result;
 }
 
-static void breakparam() {
+void draw::breakparam() {
 	breakmodal(hot.param);
 }
 
@@ -429,6 +429,19 @@ void draw::scene(fnevent timer, fnevent mouseclick) {
 			break;
 		}
 	}
+}
+
+int	form::choose() {
+	while(isrunning() && ismodal()) {
+		paint_gui();
+		variant_tips();
+		domodal();
+		control_standart();
+		switch(hot.key) {
+		case InputTimer: timer(); break;
+		}
+	}
+	return getresult();
 }
 
 void draw::application() {

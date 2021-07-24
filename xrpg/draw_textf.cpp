@@ -1,5 +1,6 @@
 #include "crt.h"
 #include "draw.h"
+#include "draw_input.h"
 
 using namespace draw;
 

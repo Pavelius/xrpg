@@ -1,6 +1,7 @@
 #include "color.h"
 #include "crt.h"
 #include "draw.h"
+#include "draw_input.h"
 
 #ifndef __GNUC__
 #pragma optimize("t", on)
@@ -784,7 +785,7 @@ bool draw::dragactive(const void* p) {
 	if(drag_object == p) {
 		if(!hot.pressed || hot.key == KeyEscape) {
 			drag_object = 0;
-			hot.zero();
+			hot.key = InputUpdate;
 			hot.cursor = CursorArrow;
 			return false;
 		}
@@ -1908,7 +1909,7 @@ const pma* pma::getheader(const char* id) const {
 
 const char* pma::getstring(int id) const {
 	auto p = getheader("STR");
-	if(!p || id > count)
+	if(!p || id > p->count)
 		return "";
 	return (char*)p + ((unsigned*)((char*)p + sizeof(*p)))[id];
 }

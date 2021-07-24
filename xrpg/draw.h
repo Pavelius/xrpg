@@ -7,22 +7,6 @@
 typedef void(*fnevent)();
 extern "C" int strcmp(const char* s1, const char* s2); // Compare two strings
 
-enum draw_event_s {
-	KeyBackspace = 8, KeyTab = 9, KeyEnter = 10, KeyEscape = 0x1B, KeySpace = 0x20, KeyDelete = 46,
-	// input events
-	InputSymbol = 0x80, InputTimer, InputIdle, InputUpdate, InputNoUpdate,
-	// Keyboard and mouse input (can be overrided by flags)
-	MouseLeft, MouseLeftDBL, MouseRight,
-	MouseMove, MouseWheelUp, MouseWheelDown,
-	KeyLeft, KeyRight, KeyUp, KeyDown, KeyPageUp, KeyPageDown, KeyHome, KeyEnd,
-	F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
-	// support
-	CommandMask = 0x000000FF,
-	// misc events can be combination with previous
-	Ctrl = 0x00000100,
-	Alt = 0x00000200,
-	Shift = 0x00000400,
-};
 enum window_flags {
 	WFResize = 0x0010,
 	WFMinmax = 0x0020,
@@ -31,31 +15,6 @@ enum window_flags {
 };
 enum cursor_s {
 	CursorArrow, CursorHand, CursorLeftRight, CursorUpDown, CursorAll, CursorNo, CursorEdit, CursorWait,
-};
-enum image_flag_s {
-	ImageMirrorV = 0x0001,
-	ImageMirrorH = 0x0002,
-	ImageGrayscale = 0x0004,
-	ImageNoOffset = 0x0008,
-	ImageTransparent = 0x0010,
-	ImageColor = 0x0020,
-	ImagePallette = 0x0040,
-	TextStroke = 0x0080,
-	TextItalic = 0x0100,
-	TextBold = 0x0200,
-	TextUscope = 0x0400,
-	TextSingleLine = 0x0800, // Text would be showed as single line
-	AlignLeft = 0x0000,
-	AlignCenter = 0x1000,
-	AlignRight = 0x2000,
-	AlignLeftCenter = 0x3000,
-	AlignCenterCenter = 0x4000,
-	AlignRightCenter = 0x5000,
-	AlignLeftBottom = 0x6000,
-	AlignCenterBottom = 0x7000,
-	AlignRightBottom = 0x8000,
-	AlignWidth = 0xE000,
-	AlignMask = 0xF000,
 };
 struct pma {
 	char				name[4]; // Identifier of current block
@@ -92,7 +51,6 @@ struct sprite : pma {
 	cicle*				gcicle(int index) { return (cicle*)ptr(cicles_offset) + index; }
 	int					glyph(unsigned sym) const;
 	const unsigned char* ptr(unsigned o) const { return (unsigned char*)this + o; }
-	point				getminsize() const;
 };
 namespace colors {
 extern color			active;
@@ -123,7 +81,6 @@ struct hoti {
 	void*				object; // command object
 	rect				hilite;
 	explicit operator bool() const { return key != 0; }
-	void				zero() { key = InputUpdate; }
 };
 extern hoti				hot;
 struct surface {
@@ -132,9 +89,7 @@ struct surface {
 		const char*		filter;
 		plugin*			next;
 		static plugin*	first;
-		//
 		plugin(const char* name, const char* filter);
-		//
 		virtual bool	decode(unsigned char* output, int output_bpp, const unsigned char* input, unsigned input_size) = 0;
 		virtual bool	inspect(int& w, int& h, int& bpp, const unsigned char* input, unsigned size) = 0;
 	};
@@ -157,31 +112,31 @@ struct surface {
 	void				resize(int width, int height, int bpp, bool alloc_memory);
 	void				write(const char* url, color* pallette);
 };
+extern surface*			canvas;
 extern rect				clipping; // Clipping area
+extern fnevent			domodal;
+extern point			dragmouse;
 extern color			fore; // Foreground color (curently selected color)
 extern color			fore_stroke; // foreground stroke color
 extern const sprite*	font; // Currently selected font
-//
+extern float			linw;
+extern char				link[4096];
+extern color*			palt;
 int						aligned(int x, int width, unsigned state, int string_width);
 int						alignedh(const rect& rc, const char* string, unsigned state);
 void					bezier(int x0, int y0, int x1, int y1, int x2, int y2);
 void					bezierseg(int x0, int y0, int x1, int y1, int x2, int y2);
 void					blit(surface& dest, int x, int y, int width, int height, unsigned flags, surface& dc, int xs, int ys);
 void					blit(surface& dest, int x, int y, int width, int height, unsigned flags, surface& source, int x_source, int y_source, int width_source, int height_source);
-extern surface*			canvas;
 void					circle(int x, int y, int radius);
 void					circle(int x, int y, int radius, const color c1);
 void					circlef(int x, int y, int radius, const color c1, unsigned char alpha = 0xFF);
 void					create(int x, int y, int width, int height, unsigned flags, int bpp);
-extern fnevent			domodal;
 bool					dragactive(const void* p);
 bool					dragactive();
 void					dragbegin(const void* p);
-extern point			dragmouse;
-void					execute(fnevent proc, int value = 0, int value2 = 0, void* object = 0);
 int						getbpp();
 int						getheight();
-int						getresult();
 int						getwidth();
 void					getwindowpos(point& pos, point& size, unsigned* flags);
 void					glyph(int x, int y, int sym, unsigned flags);
@@ -200,9 +155,6 @@ void					line(int x1, int y1, int x2, int y2, color c1); // Draw line
 inline void				line(point p1, point p2, color c1) { line(p1.x, p1.y, p2.x, p2.y, c1); }
 void					linet(int x1, int y1, int x2, int y2);
 inline void				linet(point p1, point p2) { linet(p1.x, p1.y, p2.x, p2.y); }
-extern float			linw;
-extern char				link[4096];
-extern color*			palt;
 void					pixel(int x, int y);
 void					pixel(int x, int y, unsigned char alpha);
 unsigned char*			ptr(int x, int y);
