@@ -37,16 +37,17 @@ static void test_window() {
 void gamei::main_menu() {
 	form.bitmap = "mutant_title";
 	form.window = test_window;
-	answers an;
-	an.add(1, "Начать новую игру");
-	an.add(2, "Загрузить сохраненную игру");
-	an.add(3, "Перейти на сайт игры");
-	auto r = an.choose(0, "Выход", true, "city");
-	switch(r) {
-	case 1: new_character(); break;
-	default:
-		break;
-	}
+	menui::choose("main", "city", 0);
+	//answers an;
+	//an.add(1, "Начать новую игру");
+	//an.add(2, "Загрузить сохраненную игру");
+	//an.add(3, "Перейти на сайт игры");
+	//auto r = an.choose(0, "Выход", true, "city");
+	//switch(r) {
+	//case 1: new_character(); break;
+	//default:
+	//	break;
+	//}
 }
 
 int main() {

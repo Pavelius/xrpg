@@ -17,6 +17,7 @@ public:
 	void				add(long id, const char* name, ...) { addv(id, name, xva_start(name)); }
 	void				addv(long id, const char* name, const char* format);
 	long				choose(const char* title, const char* cancel_text, bool interactive, const char* resid) const;
+	void				clear();
 	static int			compare(const void* v1, const void* v2);
 	const char*			getname(long v);
 	long				random() const;

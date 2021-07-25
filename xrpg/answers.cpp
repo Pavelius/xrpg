@@ -29,3 +29,8 @@ const char* answers::getname(long v) {
 	}
 	return 0;
 }
+
+void answers::clear() {
+	elements.clear();
+	sc.clear();
+}
