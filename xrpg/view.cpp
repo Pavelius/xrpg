@@ -395,7 +395,7 @@ void draw::header(int x, int& y, int width, const char* title, ...) {
 	font = metrics::h2;
 	fore = colors::h2;
 	text(x, y, temp);
-	y += texth();
+	y += texth() + 2;
 	fore = push_fore;
 	font = push_font;
 }

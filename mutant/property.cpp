@@ -6,7 +6,7 @@
 
 BSDATA(varianti) = {
 	{""},
-	{"Attributes"},
+	{"Attributes", 0, VRAR(attributei), VRNT(attributei)},
 	{"Items", 0, VRAR(itemi), VRNT(itemi)},
 	{"Genders", 0, VRAR(genderi), VRNT(genderi)},
 	{"Locations", 0, VRAR(locationi), VRNT(locationi)},

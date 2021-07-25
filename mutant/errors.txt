@@ -1,1 +1,1 @@
-﻿Can't find file locale/ru/Skills.txt
+﻿Can't find file locale/ru/Attributes.txt

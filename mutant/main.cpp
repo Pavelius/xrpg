@@ -25,28 +25,8 @@ static void new_character() {
 	an.choose(0, "Выход", true, "new_character");
 }
 
-static void test_window() {
-	auto player = game.getplayer();
-	if(!player)
-		return;
-	auto gender = player->getgender();
-	if(!gender)
-		return;
-	int x, y, width;
-	dialogul(x, y, width);
-	header(x, y, width, "%1 - %-3 %-2",
-		player->getname(),
-		bsdata<rolei>::elements[player->getrole()].name,
-		bsdata<genderi>::elements[gender].name);
-	for(auto& e : bsdata<attributei>()) {
-		text(x, y, e.name);
-		y += texth();
-	}
-}
-
 void gamei::main_menu() {
 	form.bitmap = "mutant_title";
-	form.window = test_window;
 	menui::choose("main", "city", 0);
 }
 

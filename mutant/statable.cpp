@@ -6,3 +6,10 @@ int statable::getskillpoints() const {
 		r += e;
 	return r;
 }
+
+int statable::getattributepoints() const {
+	auto r = 0;
+	for(auto& e : attributes)
+		r += e;
+	return r;
+}

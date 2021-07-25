@@ -6,17 +6,49 @@ character* gamei::getplayer() {
 	return current_character;
 }
 
+static void character_sheet() {
+	auto player = game.getplayer();
+	if(!player)
+		return;
+	auto gender = player->getgender();
+	if(!gender)
+		return;
+	int x, y, width;
+	draw::dialogul(x, y, width);
+	draw::header(x, y, width, "%+2 %1",
+		player->getname(),
+		bsdata<rolei>::elements[player->getrole()].name,
+		bsdata<genderi>::elements[gender].name);
+	char temp[2048]; stringbuilder sb(temp);
+	sb.addn("###Атрибуты");
+	for(auto& e : bsdata<attributei>()) {
+		auto id = (attribute_s)variant(&e).getvalue();
+		sb.addn("%1\t%2i", e.name, player->get(id));
+	}
+	sb.addn("###Навыки");
+	for(auto& e : bsdata<skilli>()) {
+		auto id = (skill_s)variant(&e).getvalue();
+		auto value = player->get(id);
+		if(!value)
+			continue;
+		sb.addn("%1\t%2i", e.name, value);
+	}
+	auto x1 = x + gui.padding;
+	auto w1 = width / 2 - gui.padding * 2;
+	draw::textf(x1, y, w1, temp, 0, 0, 0, 0, 120);
+}
+
 static role_s choose_role() {
 	varianta source;
 	source.select(bsdata<rolei>::source);
 	return (role_s)source.choose("Какова ваша роль?", 0, true, "new_character").getvalue();
 }
 
-static void choose_skills(character& e, int score) {
+static void choose_attribute(character& e, int score) {
 	char temp[260]; stringbuilder sb(temp);
 	answers an;
 	while(true) {
-		auto current = e.getskillpoints();
+		auto current = e.getattributepoints();
 		auto left = score - current;
 		an.clear();
 		if(left > 0)
@@ -26,42 +58,76 @@ static void choose_skills(character& e, int score) {
 		if(left == 0)
 			an.add(100, "Готово");
 		sb.clear();
+		sb.add("У вас есть [%1i] очков, которые необходимо распределить на характеристики.", left);
+		auto type = an.choose(temp, 0, true, "skills");
+		if(type == 100)
+			break;
+		an.clear();
+		for(auto& ei : bsdata<attributei>()) {
+			auto v = (attribute_s)(&ei - bsdata<attributei>::elements);
+			auto value = e.get(v) + type;
+			auto maximum = e.getmaximum(v);
+			if(value > maximum || value < 2)
+				continue;
+			an.add((long)&ei, bsdata<attributei>::elements[v].name);
+		}
+		auto id = (attribute_s)variant((void*)an.choose(0, 0, true, "skills")).getvalue();
+		e.set(id, e.get(id) + type);
+	}
+}
+
+static void choose_skills(character& e, int score, int maximum) {
+	char temp[260]; stringbuilder sb(temp);
+	answers an;
+	while(true) {
+		auto current = e.getskillpoints();
+		auto left = score - current;
+		an.clear();
+		if(left > 0)
+			an.add(1, "Повысить навык");
+		if(current > 0)
+			an.add(-1, "Понизить навык");
+		if(left == 0)
+			an.add(100, "Готово");
+		sb.clear();
 		sb.add("У вас есть [%1i] очков, которые необходимо распределить на ваши навыки.", left);
 		auto type = an.choose(temp, 0, true, "skills");
 		if(type == 100)
 			break;
 		an.clear();
-		for(auto skill = Endure; skill <= Intimidate; skill = (skill_s)(skill + 1)) {
-			auto value = e.get(skill);
-			if(type > 0) {
-				if(!value && left < 2)
-					continue;
-				if(value >= 4)
-					continue;
-			} else {
-				if(!value)
-					continue;
-			}
-			an.add(skill, bsdata<skilli>::elements[skill].name);
+		for(auto& ei : bsdata<skilli>()) {
+			auto v = (skill_s)(&ei - bsdata<skilli>::elements);
+			auto value = e.get(v) + type;
+			if(value > maximum || value < 0)
+				continue;
+			an.add((long)&ei, bsdata<skilli>::elements[v].name);
 		}
-		auto skill = (skill_s)an.choose(0, 0, true, "skills");
-		auto value = e.get(skill);
-		auto maximum = 4;
-		auto minimum = 2;
-		value += type;
-		if(value < minimum)
-			value = minimum;
-		if(value > maximum)
-			value = maximum;
-		e.set(skill, value);
+		auto id = (skill_s)variant((void*)an.choose(0, 0, true, "skills")).getvalue();
+		e.set(id, e.get(id)+type);
 	}
 }
 
+void character::clear() {
+	memset(this, 0, sizeof(*this));
+}
+
+int	character::getmaximum(attribute_s v) const {
+	if(getkind() != Role)
+		return 0;
+	auto& e = bsdata<rolei>::elements[getvalue()];
+	return (e.attribute == v) ? 5 : 4;
+}
+
 void character::create_new() {
+	draw::form.window = character_sheet;
 	current_character = bsdata<character>::add();
+	current_character->clear();
+	for(auto id = Strenght; id <= Empathy; id = (attribute_s)(id + 1))
+		current_character->set(id, 2);
 	current_character->setvariant(Role, choose_role());
 	current_character->setname(choose_name(current_character->getrole(), NoGender, true));
-	choose_skills(*current_character, 14);
+	choose_attribute(*current_character, 14);
+	choose_skills(*current_character, 10, 3);
 }
 
 role_s character::getrole() const {

@@ -41,6 +41,7 @@ const indext			Blocked = 0xFFFF;
 struct attributei {
 	const char*			id;
 	const char*			name;
+	const char*			text;
 };
 struct itemi {
 	const char*			id;
@@ -52,6 +53,7 @@ struct itemi {
 };
 struct rolei {
 	const char*			id;
+	attribute_s			attribute;
 	skill_s				skill;
 	const char*			name;
 	const char*			text;
@@ -90,6 +92,7 @@ class statable {
 public:
 	int					get(attribute_s i) const { return attributes.get(i); }
 	int					get(skill_s i) const { return skills.get(i); }
+	int					getattributepoints() const;
 	int					getskillpoints() const;
 	void				set(attribute_s i, int v) { attributes.set(i, v); }
 	void				set(skill_s i, int v) { skills.set(i, v); }
@@ -97,7 +100,9 @@ public:
 class character : public nameable, public statable {
 public:
 	constexpr character() : nameable(), statable() {}
+	void				clear();
 	static void			create_new();
+	int					getmaximum(attribute_s v) const;
 	role_s				getrole() const;
 };
 class worldmap : public datamap<25 * 20> {
