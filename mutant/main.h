@@ -1,6 +1,7 @@
 #include "answers.h"
 #include "datamap.h"
 #include "point.h"
+#include "menu.h"
 #include "moveable.h"
 #include "view.h"
 
@@ -17,6 +18,10 @@ enum skill_s : unsigned char {
 };
 typedef short unsigned	indext;
 const indext			Blocked = 0xFFFF;
+struct attributei {
+	const char*			id;
+	const char*			name;
+};
 class worldmap : public datamap<25 * 20> {
 public:
 	static constexpr int xmax = 25;

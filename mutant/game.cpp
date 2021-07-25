@@ -37,7 +37,6 @@ void gamei::render_world() {
 }
 
 void gamei::update_moving() {
-	auto tick = game.rounds;
 	game.party.moving(gui.grid * 4, game.rounds, game.rounds_per_day);
 	game.setexplored(game.geti(game.party.getposition()), 1);
 	game.rounds++;
@@ -63,21 +62,13 @@ void gamei::worldmap_input() {
 }
 
 void gamei::playworld() {
-	struct testi : answers::control {
-		const char* getlabel(stringbuilder& sb) const override {
-			return "Листок персонажа";
-		}
-		void paint(const rect& rc) {
-		}
-	};
-	testi test;
-	gui.bitmap = "map";
-	gui.background = render_world;
+	draw::form.bitmap = "map";
+	draw::form.background = render_world;
 	answers an;
 	an.add(1, "Тест");
 	an.add(2, "Два");
 	an.add(3, "Печаль третья");
-	an.choosev("Что делать?", "Отмена", true, 0, false, &test);
+	an.choose("Что делать?", "Отмена", true, 0);
 }
 
 void gamei::setexplored(indext i, int r) {

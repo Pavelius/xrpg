@@ -25,6 +25,9 @@
     <ClCompile Include="game.cpp">
       <Filter>Логика</Filter>
     </ClCompile>
+    <ClCompile Include="attribute.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Логика">

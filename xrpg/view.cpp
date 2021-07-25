@@ -20,6 +20,7 @@ static sprite*			small_font = (sprite*)loadb("art/fonts/small.pma");
 static char				answer_hotkeys[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 point					draw::hilite_grid;
 variant					draw::hilite_object;
+formi					draw::form;
 static fnevent			next_proc;
 static void*			current_focus;
 
@@ -348,21 +349,23 @@ static int status(int x, int y, int width, int value, const char* title) {
 	return status(x, y, width, temp, title);
 }
 
-static void variant_tips() {
+void formi::before() const {
+	if(bitmap)
+		image(0, 0, gres(bitmap, "art/background"), 0, 0);
+	else
+		rectf({0, 0, getwidth(), getheight()}, colors::gray);
+	if(background)
+		background();
+	if(window)
+		window();
+}
+
+void formi::after() const {
 	if(hilite_object) {
 		uptop_tooltips();
 		stringbuilder sb(tooltips_text);
 		hilite_object.getinfo(sb);
 	}
-}
-
-static void paint_gui() {
-	if(gui.bitmap)
-		image(0, 0, gres(gui.bitmap, "art/background"), 0, 0);
-	else
-		rectf({0, 0, getwidth(), getheight()}, colors::gray);
-	if(gui.background)
-		gui.background();
 }
 
 static void answer_button(int x, int& y, long id, const char* string, unsigned key) {
@@ -386,34 +389,32 @@ static void answer_button(int x, int& y, long id, const char* string, unsigned k
 		execute(breakparam, id);
 }
 
-void answers::control::view(rect rc) const {
-	char temp[260]; stringbuilder sb(temp);
-	window(rc, false, 0);
-	auto p = getlabel(sb);
-	if(p) {
+void draw::dialogul(int& x, int& y, int& w, const char* header) {
+	x = gui.border * 2;
+	y = gui.border * 2;
+	w = getwidth() - gui.window_width - gui.border * 4 - gui.padding - x;
+	auto h = getheight() / 2;
+	window({x, y, x + w, y + h}, false, 0);
+	if(header) {
 		auto push_font = font;
 		auto push_fore = fore;
 		font = metrics::h3;
 		fore = colors::h3;
-		text(rc.x1, rc.y1, p);
-		rc.y1 += texth() + 4;
+		text(x, y, header);
+		y += texth() + 4;
 		fore = push_fore;
 		font = push_font;
 	}
 }
 
-long answers::choosev(const char* title, const char* cancel_text, bool interactive, const char* resid, bool portraits, control* pc) const {
+long answers::choose(const char* title, const char* cancel_text, bool interactive, const char* resid) const {
 	if(!interactive)
 		return random();
 	int x, y;
 	while(ismodal()) {
-		paint_gui();
-		variant_tips();
+		form.before();
 		setwindow(x, y);
-		if(portraits)
-			windowp(x, y, gui.window_width, false, title, resid);
-		else
-			window(x, y, gui.window_width, false, title, resid);
+		window(x, y, gui.window_width, false, title, resid);
 		y += gui.padding;
 		auto index = 0;
 		for(auto& e : elements) {
@@ -422,10 +423,7 @@ long answers::choosev(const char* title, const char* cancel_text, bool interacti
 		}
 		if(cancel_text)
 			answer_button(x, y, 0, cancel_text, KeyEscape);
-		if(pc) {
-			rect rc = {gui.border * 2, gui.border * 2, getwidth() - gui.window_width - gui.border * 4 - gui.padding, getheight() / 2};
-			pc->view(rc);
-		}
+		form.after();
 		domodal();
 		control_standart();
 	}
@@ -434,8 +432,8 @@ long answers::choosev(const char* title, const char* cancel_text, bool interacti
 
 int draw::scene(fnevent input) {
 	while(ismodal()) {
-		paint_gui();
-		variant_tips();
+		form.before();
+		form.after();
 		domodal();
 		control_standart();
 		if(input)

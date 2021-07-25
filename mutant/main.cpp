@@ -1,6 +1,6 @@
 #include "main.h"
 
-unsigned long gettickcount();
+using namespace draw;
 
 static locationi* addloc(const char* id, const char* name, point v) {
 	auto p = bsdata<locationi>::add();
@@ -22,16 +22,26 @@ static void new_character() {
 	an.add(1, "Начать новую игру");
 	an.add(2, "Загрузить сохраненную игру");
 	an.add(3, "Перейти на сайт игры");
-	an.choosev(0, "Выход", true, "new_character", false);
+	an.choose(0, "Выход", true, "new_character");
+}
+
+static void test_window() {
+	int x, y, width;
+	dialogul(x, y, width, "Тестовое окно");
+	for(auto& e : bsdata<attributei>()) {
+		text(x, y, e.name);
+		y += texth();
+	}
 }
 
 void gamei::main_menu() {
-	gui.bitmap = "mutant_title";
+	form.bitmap = "mutant_title";
+	form.window = test_window;
 	answers an;
 	an.add(1, "Начать новую игру");
 	an.add(2, "Загрузить сохраненную игру");
 	an.add(3, "Перейти на сайт игры");
-	auto r = an.choosev(0, "Выход", true, "city", false);
+	auto r = an.choose(0, "Выход", true, "city");
 	switch(r) {
 	case 1: new_character(); break;
 	default:

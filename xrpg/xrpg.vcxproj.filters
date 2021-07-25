@@ -72,6 +72,9 @@
     <ClInclude Include="posable.h">
       <Filter>Поддержка</Filter>
     </ClInclude>
+    <ClInclude Include="menu.h">
+      <Filter>Поддержка</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -145,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="surface_serial.cpp">
       <Filter>Графика</Filter>
+    </ClCompile>
+    <ClCompile Include="menu.cpp">
+      <Filter>Поддержка</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

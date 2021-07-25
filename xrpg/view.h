@@ -16,6 +16,14 @@ enum figure_s : unsigned char {
 	FigureRect, FigureTrianlge, FigureTrianlgeUp,
 };
 namespace draw {
+struct formi {
+	const char*				bitmap;
+	fnevent					background;
+	fnevent					window;
+	void					after() const;
+	void					before() const;
+};
+extern formi				form;
 struct hotkey {
 	fnevent					proc;
 	const char*				name;
@@ -32,6 +40,7 @@ void						breakparam();
 void						buttonr(int& x, int y, const char* title, fnevent proc, unsigned key = 0);
 void						buttoncancel();
 void						buttonok();
+void						dialogul(int& x, int& y, int& width, const char* header);
 void						execute(fnevent proc, int value = 0, int value2 = 0, void* object = 0);
 bool						execute(const hotkey* source);
 int							getresult();
@@ -60,8 +69,6 @@ struct guii {
 	int						tips_width;
 	int						window_width;
 	int						grid;
-	const char*				bitmap;
-	fnevent					background;
 	void					initialize();
 };
 extern guii					gui;
