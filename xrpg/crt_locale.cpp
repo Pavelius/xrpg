@@ -14,6 +14,9 @@ static const char* read_string_v1(const char* p, char* ps, const char* pe) {
 			sym = *p;
 			p++;
 		}
+		switch(sym) {
+		case 17: sym = '-'; break;
+		}
 		if(ps < pe)
 			*ps++ = sym;
 	}

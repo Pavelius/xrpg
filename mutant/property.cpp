@@ -11,7 +11,7 @@ BSDATA(varianti) = {
 	{"Genders", 0, VRAR(genderi), VRNT(genderi)},
 	{"Locations", 0, VRAR(locationi), VRNT(locationi)},
 	{"Roles", 0, VRAR(rolei), VRNT(rolei)},
-	{"Skills"},
+	{"Skills", 0, VRAR(skilli), VRNT(skilli)},
 };
 assert_enum(varianti, Skill)
 

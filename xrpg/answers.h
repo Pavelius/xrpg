@@ -16,9 +16,12 @@ public:
 	answers() : sc(buffer) {}
 	void				add(long id, const char* name, ...) { addv(id, name, xva_start(name)); }
 	void				addv(long id, const char* name, const char* format);
+	const element*		begin() const { return elements.data; }
 	long				choose(const char* title, const char* cancel_text, bool interactive, const char* resid) const;
 	void				clear();
 	static int			compare(const void* v1, const void* v2);
+	const element*		end() const { return elements.end(); }
+	int					getcount() const { return elements.getcount(); }
 	const char*			getname(long v);
 	long				random() const;
 	void				sort();

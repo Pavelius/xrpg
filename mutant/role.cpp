@@ -1,7 +1,7 @@
 #include "main.h"
 
 BSDATA(rolei) = {
-	{"Enforcer"},
+	{"Enforcer", Intimidate},
 	{"Gearhead"},
 	{"Stalker"},
 	{"Fixer"},

@@ -43,6 +43,12 @@
     <ClCompile Include="nameable.cpp">
       <Filter>Логика</Filter>
     </ClCompile>
+    <ClCompile Include="statable.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
+    <ClCompile Include="skill.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Логика">
@@ -68,6 +74,12 @@
       <Filter>Локализация</Filter>
     </Text>
     <Text Include="locale\ru\Roles.txt">
+      <Filter>Локализация</Filter>
+    </Text>
+    <Text Include="locale\ru\Genders.txt">
+      <Filter>Локализация</Filter>
+    </Text>
+    <Text Include="locale\ru\Skills.txt">
       <Filter>Локализация</Filter>
     </Text>
   </ItemGroup>

@@ -40,10 +40,11 @@ void						breakparam();
 void						buttonr(int& x, int y, const char* title, fnevent proc, unsigned key = 0);
 void						buttoncancel();
 void						buttonok();
-void						dialogul(int& x, int& y, int& width, const char* header);
+void						dialogul(int& x, int& y, int& width);
 void						execute(fnevent proc, int value = 0, int value2 = 0, void* object = 0);
 bool						execute(const hotkey* source);
 int							getresult();
+void						header(int x, int& y, int width, const char* title, ...);
 void						paint(int x, int y, figure_s type, int size);
 void						paint(int x, int y, figure_s type, color_s color, int size);
 void						paint(int x, int y, const char* name, figure_s type, int size);
@@ -55,7 +56,7 @@ bool						ishilite(int x, int y, int r, variant v);
 void						initialize();
 int							scene(fnevent input);
 void						setnext(fnevent v);
-void						tooltips(int x1, int y1, int width, const char* format, ...);
+void						tooltips(const char* format, ...);
 }
 struct guii {
 	int						border;

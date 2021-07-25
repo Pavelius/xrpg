@@ -10,8 +10,6 @@ static int				break_result;
 static point			camera;
 static point			camera_drag;
 static rect				last_board;
-static point			tooltips_point;
-static short			tooltips_width;
 static char				tooltips_text[4096];
 fnevent					draw::domodal;
 extern rect				sys_static_area;
@@ -23,6 +21,7 @@ variant					draw::hilite_object;
 formi					draw::form;
 static fnevent			next_proc;
 static void*			current_focus;
+static int				dialog_y;
 
 long					distance(point p1, point p2);
 
@@ -92,7 +91,7 @@ static int render_text(int x, int y, int width, const char* string) {
 	draw::link[0] = 0;
 	auto result = textf(x, y, width, string);
 	if(draw::link[0])
-		tooltips(x, y, width, draw::link);
+		tooltips(draw::link);
 	return result;
 }
 
@@ -197,10 +196,7 @@ void control_standart() {
 		return;
 }
 
-void draw::tooltips(int x1, int y1, int width, const char* format, ...) {
-	tooltips_point.x = x1;
-	tooltips_point.y = y1;
-	tooltips_width = width;
+void draw::tooltips(const char* format, ...) {
 	stringbuilder sb(tooltips_text);
 	sb.addv(format, xva_start(format));
 }
@@ -209,16 +205,11 @@ static void render_tooltips() {
 	if(!tooltips_text[0])
 		return;
 	rect rc;
-	rc.x1 = tooltips_point.x + tooltips_width + gui.border * 2 + gui.padding;
-	rc.y1 = tooltips_point.y;
+	rc.x1 = gui.border * 2;
+	rc.y1 = dialog_y;
 	rc.x2 = rc.x1 + gui.left_window_width;
 	rc.y2 = rc.y1;
 	draw::textf(rc, tooltips_text, gui.tips_tab);
-	if(rc.x2 > getwidth() - gui.border - gui.padding) {
-		auto w = rc.width();
-		rc.x1 = tooltips_point.x - gui.border * 2 - gui.padding - w;
-		rc.x2 = rc.x1 + w;
-	}
 	// Correct border
 	int height = draw::getheight();
 	int width = draw::getwidth();
@@ -230,6 +221,7 @@ static void render_tooltips() {
 	draw::fore = colors::tips::text;
 	draw::textf(rc.x1, rc.y1, rc.width(), tooltips_text, 0, 0, 0, 0, gui.tips_tab);
 	tooltips_text[0] = 0;
+	dialog_y += rc.height() + gui.border*2;
 }
 
 static void gui_initialize(int width) {
@@ -280,6 +272,7 @@ static void clear_hot() {
 	hot.hilite.clear();
 	hilite_object.clear();
 	hilite_grid = {-100, -100};
+	dialog_y = gui.border * 2;
 	domodal = standart_domodal;
 }
 
@@ -309,11 +302,6 @@ static void shadow(const rect& rc, color c) {
 	rectf(rc, c, op);
 }
 
-static void uptop_tooltips() {
-	tooltips_point.x = 0;
-	tooltips_point.y = gui.border * 2;
-}
-
 static int status(int x, int y, int width, const char* format, const char* title, fnevent proc = 0, unsigned key = 0) {
 	rect rc = {x - 1, y - 1, x + width + 1, y + 1 + texth()};
 	auto hilite = ishilite(rc);
@@ -331,7 +319,6 @@ static int status(int x, int y, int width, const char* format, const char* title
 		shadow(rc, colors::form);
 	text(x + (width - textw(format)) / 2, y, format);
 	if(hilite) {
-		uptop_tooltips();
 		stringbuilder sb(tooltips_text);
 		sb.add(title);
 		if(key) {
@@ -363,16 +350,15 @@ void formi::before() const {
 
 void formi::after() const {
 	if(hilite_object) {
-		uptop_tooltips();
 		stringbuilder sb(tooltips_text);
 		hilite_object.getinfo(sb);
 	}
 }
 
-static void answer_button(int x, int& y, long id, const char* string, unsigned key) {
+static void answer_button(int x, int& y, int width, long id, const char* string, unsigned key) {
 	auto text_height = 0;
-	text_height = texth(string, gui.window_width);
-	rect rc = {x, y, x + gui.window_width, y + text_height};
+	text_height = texth(string, width);
+	rect rc = {x, y, x + width, y + text_height};
 	auto rs = window(rc, true, 0);
 	text(rc, string, AlignCenterCenter);
 	y += rc.height() + gui.border * 2;
@@ -390,40 +376,72 @@ static void answer_button(int x, int& y, long id, const char* string, unsigned k
 		execute(breakparam, id);
 }
 
-void draw::dialogul(int& x, int& y, int& w, const char* header) {
+void draw::dialogul(int& x, int& y, int& w) {
 	x = gui.border * 2;
-	y = gui.border * 2;
+	y = dialog_y;
 	w = getwidth() - gui.window_width - gui.border * 4 - gui.padding - x;
 	auto h = getheight() / 2;
 	window({x, y, x + w, y + h}, false, 0);
-	if(header) {
-		auto push_font = font;
-		auto push_fore = fore;
-		font = metrics::h3;
-		fore = colors::h3;
-		text(x, y, header);
-		y += texth() + 4;
-		fore = push_fore;
-		font = push_font;
+	dialog_y += h + gui.border * 2 + gui.padding;
+}
+
+void draw::header(int x, int& y, int width, const char* title, ...) {
+	if(!title || !title[0])
+		return;
+	char temp[260]; stringbuilder sb(temp);
+	sb.addv(title, xva_start(title));
+	auto push_font = font;
+	auto push_fore = fore;
+	font = metrics::h2;
+	fore = colors::h2;
+	text(x, y, temp);
+	y += texth();
+	fore = push_fore;
+	font = push_font;
+}
+
+int getcolumns(const answers& an, bool allow_cancel) {
+	auto divider = an.getcount() % 2;
+	if(allow_cancel && an.getcount() <= 4 && divider > 0)
+		return 1;
+	for(auto& e : an) {
+		auto len = zlen(e.text);
+		if(len > 20)
+			return 1;
 	}
+	return 2;
 }
 
 long answers::choose(const char* title, const char* cancel_text, bool interactive, const char* resid) const {
 	if(!interactive)
 		return random();
 	int x, y;
+	auto columns = getcolumns(*this, cancel_text != 0);
+	auto column_width = gui.window_width / columns - gui.border;
 	while(ismodal()) {
 		form.before();
 		setwindow(x, y);
 		window(x, y, gui.window_width, false, title, resid);
 		y += gui.padding;
 		auto index = 0;
+		auto next_column = (elements.getcount() + columns - 1) / columns;
+		auto x1 = x;
+		auto y1 = y;
+		auto y2 = y;
 		for(auto& e : elements) {
 			auto i = imin(sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]), (size_t)index);
-			answer_button(x, y, e.id, e.text, answer_hotkeys[i]);
+			answer_button(x, y, column_width, e.id, e.text, answer_hotkeys[i]);
+			if(y > y2)
+				y2 = y;
+			if((index % next_column) == next_column - 1) {
+				y = y1;
+				x += column_width + gui.border * 2;
+			}
+			index++;
 		}
+		x = x1; y = y2;
 		if(cancel_text)
-			answer_button(x, y, 0, cancel_text, KeyEscape);
+			answer_button(x, y, gui.window_width, 0, cancel_text, KeyEscape);
 		form.after();
 		domodal();
 		control_standart();
@@ -619,7 +637,6 @@ static bool button(const rect& rc, const char* title, const char* tips, unsigned
 		text(r1, title, AlignCenterCenter);
 	}
 	if(a && (tips || key) && !hot.pressed) {
-		uptop_tooltips();
 		stringbuilder sb(tooltips_text);
 		sb.add(tips);
 		if(key) {
@@ -628,7 +645,7 @@ static bool button(const rect& rc, const char* title, const char* tips, unsigned
 			sb.add("]");
 		}
 	}
-	fore = push_fore; 
+	fore = push_fore;
 	return result;
 }
 

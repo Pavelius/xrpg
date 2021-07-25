@@ -52,6 +52,13 @@ struct itemi {
 };
 struct rolei {
 	const char*			id;
+	skill_s				skill;
+	const char*			name;
+	const char*			text;
+};
+struct skilli {
+	const char*			id;
+	attribute_s			attribute;
 	const char*			name;
 	const char*			text;
 };
@@ -83,6 +90,7 @@ class statable {
 public:
 	int					get(attribute_s i) const { return attributes.get(i); }
 	int					get(skill_s i) const { return skills.get(i); }
+	int					getskillpoints() const;
 	void				set(attribute_s i, int v) { attributes.set(i, v); }
 	void				set(skill_s i, int v) { skills.set(i, v); }
 };
@@ -127,6 +135,7 @@ class gamei {
 public:
 	static indext		geti(point v) { return worldmap::geti(v.x / gui.grid, v.y / gui.grid); }
 	static point		getp(indext v);
+	static character*	getplayer();
 	static void			playworld();
 	static void			main_menu();
 	void				setexplored(indext i) { setexplored(i, 1); }
