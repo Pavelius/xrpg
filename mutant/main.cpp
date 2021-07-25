@@ -6,7 +6,7 @@ static locationi* addloc(const char* id, const char* name, point v) {
 	auto p = bsdata<locationi>::add();
 	p->id = id;
 	p->name = name;
-	p->setposition(v);
+	p->world.setposition(v);
 	return p;
 }
 
@@ -51,6 +51,8 @@ void gamei::main_menu() {
 }
 
 int main() {
+	if(!varianti::localization("ru", false))
+		return -1;
 	draw::initialize();
 	draw::setnext(game.main_menu);
 	draw::application();

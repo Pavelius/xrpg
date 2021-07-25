@@ -213,6 +213,7 @@ public:
 	void							setcount(unsigned value) { count = value; }
 	void							setup(unsigned size);
 	void							sort(int i1, int i2, pcompare compare, void* param);
+	void							sort(pcompare compare, void* param) { sort(-1, -1, compare, param); }
 	void							swap(int i1, int i2);
 	void							reserve(unsigned count);
 };

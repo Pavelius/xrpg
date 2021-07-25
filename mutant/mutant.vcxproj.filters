@@ -31,6 +31,15 @@
     <ClCompile Include="mainmenu.cpp">
       <Filter>Логика</Filter>
     </ClCompile>
+    <ClCompile Include="character.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
+    <ClCompile Include="item.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
+    <ClCompile Include="role.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Логика">

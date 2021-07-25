@@ -56,8 +56,6 @@ void						initialize();
 int							scene(fnevent input);
 void						setnext(fnevent v);
 void						tooltips(int x1, int y1, int width, const char* format, ...);
-bool						window(rect rc, bool hilight, int border);
-bool						window(int x, int& y, int width, bool hilite, const char* string, const char* resid);
 }
 struct guii {
 	int						border;

@@ -151,12 +151,15 @@
     <ClCompile Include="..\xrpg\png.cpp" />
     <ClCompile Include="..\xrpg\zip.cpp" />
     <ClCompile Include="attribute.cpp" />
+    <ClCompile Include="character.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="information.cpp" />
+    <ClCompile Include="item.cpp" />
     <ClCompile Include="location.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainmenu.cpp" />
     <ClCompile Include="property.cpp" />
+    <ClCompile Include="role.cpp" />
     <ClCompile Include="worldmap.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

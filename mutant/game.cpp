@@ -51,7 +51,7 @@ void gamei::worldmap_input() {
 			if(pt.x < 0 && draw::hilite_object) {
 				locationi* p1 = draw::hilite_object;
 				if(p1)
-					pt = p1->getposition();
+					pt = p1->world.getposition();
 			}
 			if(pt.x < 0)
 				return;

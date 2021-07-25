@@ -69,18 +69,19 @@ static void keyparam() {
 	hot.param = 0;
 }
 
-bool draw::window(rect rc, bool hilight, int border) {
+static bool window(rect rc, bool hilight, int border) {
 	if(border == 0)
 		border = gui.border;
 	rc.offset(-border, -border);
 	color c = colors::form;
 	color b = colors::form;
-	auto rs = ishilite(rc);
+	rect r1 = rc; r1.offset(1, 1);
+	auto rs = ishilite(r1);
 	auto op = gui.opacity;
 	if(hilight && rs) {
 		op = gui.opacity_hilighted;
 		if(hot.pressed)
-			op = op + op / 2;
+			op = 0xFF;
 	}
 	rectf(rc, c, op);
 	rectb(rc, b);
@@ -95,7 +96,7 @@ static int render_text(int x, int y, int width, const char* string) {
 	return result;
 }
 
-bool draw::window(int x, int& y, int width, bool hilite, const char* string, const char* resid) {
+static bool window(int x, int& y, int width, bool hilite, const char* string, const char* resid) {
 	if(!string && !resid)
 		return false;
 	auto text_height = 0;
@@ -236,8 +237,8 @@ void guii::initialize() {
 	gui.window_width = 320;
 	gui.border = 8;
 	gui.padding = 4;
-	gui.opacity = 192;
-	gui.opacity_hilighted = 96;
+	gui.opacity = 186;
+	gui.opacity_hilighted = 210;
 	gui.hero_size = 64;
 	gui.tips_width = 320;
 	gui.tips_tab = 24;

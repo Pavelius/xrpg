@@ -403,6 +403,10 @@ int array::find(int i1, int i2, void* value, unsigned offset, unsigned size) con
 }
 
 void array::sort(int i1, int i2, pcompare compare, void* param) {
+	if(i2 == -1)
+		i2 = count;
+	if(i1 == -1)
+		i1 = 0;
 	for(int i = i2; i > i1; i--) {
 		for(int j = i1; j < i; j++) {
 			auto t1 = ptr(j);
