@@ -5,11 +5,12 @@
 #include "menu.h"
 #include "moveable.h"
 #include "view.h"
+#include "varianta.h"
 
 #pragma once
 
 enum variant_s : unsigned char {
-	None, Attribute, Location, Role, Skill,
+	None, Attribute, Item, Location, Role, Skill,
 };
 enum attribute_s : unsigned char {
 	Strenght, Agility, Wits, Empathy
@@ -18,14 +19,22 @@ enum skill_s : unsigned char {
 	Endure, Force, Fight, Sneak, Move, Shoot, Scout, Comprehend, KnowTheZone, SenceEmotion, Manipulate, Heal, Intimidate,
 };
 enum item_s : unsigned char {
-	NoItem, Knife, Club, Sword, Battleaxe,
+	NoItem,
+	BluntInstrument, BicycleChain, BrassKnuckles, ScrapKnife, BaseballBat, BatWithSpikes, Machete, ScrapSpear, ScrapAxe,
 };
 enum role_s : unsigned char {
 	Enforcer, Gearhead, Stalker, Fixer, DogHandler, Chronicler, Boss, Slave,
 };
+enum range_s : unsigned char {
+	ArmsLenght,
+};
+enum tag_s : unsigned char {
+	Scrap, Magasine, Clip, Autofire, Light, Heavy,
+};
 typedef short unsigned	indext;
 typedef dataset<attribute_s, Empathy> attributea;
 typedef dataset<skill_s, Intimidate> skilla;
+typedef cflags<tag_s>	taga;
 const indext			Blocked = 0xFFFF;
 struct attributei {
 	const char*			id;
@@ -33,6 +42,9 @@ struct attributei {
 };
 struct itemi {
 	const char*			id;
+	taga				tags;
+	char				quality;
+	char				damage;
 	const char*			name;
 	const char*			text;
 };
@@ -63,6 +75,8 @@ public:
 	void				set(skill_s i, int v) { skills.set(i, v); }
 };
 class character : public statable {
+public:
+	static void			choose_role();
 };
 class worldmap : public datamap<25 * 20> {
 public:

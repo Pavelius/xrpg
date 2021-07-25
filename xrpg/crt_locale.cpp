@@ -130,7 +130,7 @@ bool savel(const char* url, array& source, unsigned* fields, int fields_count, u
 	vector<void*> sorted;
 	for(auto i = 0; i < count; i++)
 		sorted.add(source.ptr(i));
-	sorted.sort(sort_by_id, 0);
+	//sorted.sort(sort_by_id, 0);
 	for(auto i = 0; i < count; i++) {
 		auto p = sorted[i];
 		auto id = *((const char**)p);

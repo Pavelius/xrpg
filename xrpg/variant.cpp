@@ -27,6 +27,14 @@ variant::variant(const char* v) : u(0) {
 	}
 }
 
+const char* variant::getdescription() const {
+	const int text_index = sizeof(varianti::locale) / sizeof(varianti::locale[0]) - 1;
+	auto& e = bsdata<varianti>::elements[getkind()];
+	if(!e.locale[text_index])
+		return 0;
+	return *(const char**)((char*)getpointer() + e.locale[text_index]);
+}
+
 const char* variant::getname() const {
 	auto& e = bsdata<varianti>::elements[getkind()];
 	if(!e.locale[0])
@@ -38,7 +46,6 @@ bool savel(const char* url, array& source, unsigned* fields, int fields_count, u
 bool readl(const char* url, array& source, unsigned* fields, int fields_count, unsigned* special, int special_count);
 
 static void checklocalization(varianti& e, const char* url) {
-#ifdef _DEBUG
 	for(unsigned i = 0; i < e.source->getcount(); i++) {
 		auto p = (char*)e.source->ptr(i);
 		auto id = *((const char**)(p));
@@ -51,7 +58,6 @@ static void checklocalization(varianti& e, const char* url) {
 			log::error("Missing name for '%1'", id);
 		}
 	}
-#endif
 }
 
 bool varianti::localization(const char* locale_id, bool writemode) {

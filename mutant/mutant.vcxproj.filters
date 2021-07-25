@@ -48,10 +48,24 @@
     <Filter Include="Плагины">
       <UniqueIdentifier>{681e0acf-3c6f-406e-9771-a317e044b4b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Локализация">
+      <UniqueIdentifier>{8fc1abca-414e-4f4c-a7fb-0ac4341005f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
       <Filter>Логика</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="locale\ru\Items.txt">
+      <Filter>Локализация</Filter>
+    </Text>
+    <Text Include="locale\ru\Locations.txt">
+      <Filter>Локализация</Filter>
+    </Text>
+    <Text Include="locale\ru\Roles.txt">
+      <Filter>Локализация</Filter>
+    </Text>
   </ItemGroup>
 </Project>

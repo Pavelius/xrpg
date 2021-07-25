@@ -64,9 +64,7 @@ struct guii {
 	int						opacity;
 	int						opacity_hilighted;
 	int						tips_tab;
-	int						tips_width;
-	int						window_width;
+	int						window_width, left_window_width;
 	int						grid;
-	void					initialize();
 };
 extern guii					gui;

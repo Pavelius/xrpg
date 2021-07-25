@@ -2,12 +2,12 @@
 #include "main.h"
 
 #define VRAR(T) bsdata<T>::source_ptr
-#define VRNX(T) {FO(T, name)}
-#define VRNT(T) {FO(T, name), FO(T, text)}
+#define VRNT(T) {FO(T, name), 0, 0, FO(T, text)}
 
 BSDATA(varianti) = {
 	{""},
 	{"Attributes"},
+	{"Items", 0, VRAR(itemi), VRNT(itemi)},
 	{"Locations", 0, VRAR(locationi), VRNT(locationi)},
 	{"Roles", 0, VRAR(rolei), VRNT(rolei)},
 	{"Skills"},

@@ -159,6 +159,7 @@
     <ClInclude Include="rect.h" />
     <ClInclude Include="stringbuilder.h" />
     <ClInclude Include="variant.h" />
+    <ClInclude Include="varianta.h" />
     <ClInclude Include="view.h" />
     <ClInclude Include="win.h" />
   </ItemGroup>
@@ -186,6 +187,7 @@
     <ClCompile Include="surface_serial.cpp" />
     <ClCompile Include="szdup.cpp" />
     <ClCompile Include="variant.cpp" />
+    <ClCompile Include="varianta.cpp" />
     <ClCompile Include="view.cpp" />
     <ClCompile Include="win_draw.cpp" />
     <ClCompile Include="win_io_file.cpp" />

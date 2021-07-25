@@ -211,7 +211,7 @@ static void render_tooltips() {
 	rect rc;
 	rc.x1 = tooltips_point.x + tooltips_width + gui.border * 2 + gui.padding;
 	rc.y1 = tooltips_point.y;
-	rc.x2 = rc.x1 + gui.tips_width;
+	rc.x2 = rc.x1 + gui.left_window_width;
 	rc.y2 = rc.y1;
 	draw::textf(rc, tooltips_text, gui.tips_tab);
 	if(rc.x2 > getwidth() - gui.border - gui.padding) {
@@ -232,7 +232,7 @@ static void render_tooltips() {
 	tooltips_text[0] = 0;
 }
 
-void guii::initialize() {
+static void gui_initialize(int width) {
 	memset(&gui, 0, sizeof(gui));
 	gui.window_width = 320;
 	gui.border = 8;
@@ -240,7 +240,7 @@ void guii::initialize() {
 	gui.opacity = 186;
 	gui.opacity_hilighted = 210;
 	gui.hero_size = 64;
-	gui.tips_width = 320;
+	gui.left_window_width = width - gui.window_width - gui.border * 4 - gui.padding - gui.border * 3;
 	gui.tips_tab = 24;
 	gui.grid = 32;
 }
@@ -262,7 +262,7 @@ void draw::initialize() {
 	draw::font = metrics::font;
 	draw::fore = colors::text;
 	draw::fore_stroke = colors::blue;
-	gui.initialize();
+	gui_initialize(800);
 	create(-1, -1, 800, 600, 0, 32);
 	setcaption("Space 4X");
 	settimer(100);

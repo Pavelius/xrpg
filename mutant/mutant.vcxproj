@@ -162,6 +162,11 @@
     <ClCompile Include="role.cpp" />
     <ClCompile Include="worldmap.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="locale\ru\Items.txt" />
+    <Text Include="locale\ru\Locations.txt" />
+    <Text Include="locale\ru\Roles.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

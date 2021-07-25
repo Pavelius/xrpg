@@ -1,0 +1,10 @@
+﻿NoItem: Нет предмета
+BluntInstrument: Импровизированная дубика
+BicycleChain: Мотоциклетная цепь
+BrassKnuckles: Кастет
+ScrapKnife: Самодельный нож
+BaseballBat: Бейсбольная бита
+BatWithSpikes: Шипованная бита
+Machete: Мачете
+ScrapSpear: Самодельное копье
+ScrapAxe: Самодельный топор

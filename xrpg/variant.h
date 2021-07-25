@@ -29,6 +29,7 @@ public:
 	constexpr bool operator!=(const variant& v) const { return u != v.u; }
 	template<class T> operator T*() const { return (T*)((T::kind == c[3]) ? getpointer() : 0); }
 	void				clear() { u = 0; }
+	const char*			getdescription() const;
 	int					getindex(int t) const { return (getkind() == t) ? getvalue() : 0; }
 	void				getinfo(stringbuilder& sb) const;
 	void*				getpointer() const { return bsdata<varianti>::elements[c[3]].source->ptr(u & 0xFFFFFF); }
