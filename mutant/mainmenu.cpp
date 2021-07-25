@@ -1,7 +1,7 @@
 #include "main.h"
 
 BSDATA(menui) = {
-	{"main", "Новая игра", {0, character::choose_role}},
+	{"main", "Новая игра", {0, character::create_new}},
 	{"main", "Загрузить игру"},
 	{"main", "Настройки", {"setting"}, "Что хотите настроить?", "machine", {MenuBack}},
 	{"main", "Об авторах"},

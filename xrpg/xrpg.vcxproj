@@ -148,6 +148,7 @@
     <ClInclude Include="datamap.h" />
     <ClInclude Include="dataset.h" />
     <ClInclude Include="draw.h" />
+    <ClInclude Include="gender.h" />
     <ClInclude Include="io.h" />
     <ClInclude Include="io_plugin.h" />
     <ClInclude Include="log.h" />
@@ -171,6 +172,7 @@
     <ClCompile Include="converter.cpp" />
     <ClCompile Include="crt.cpp" />
     <ClCompile Include="crt_locale.cpp" />
+    <ClCompile Include="gender.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="draw_text.cpp" />

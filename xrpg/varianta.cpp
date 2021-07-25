@@ -12,5 +12,5 @@ variant varianta::choose(const char* title, const char* cancel, bool interactive
 	for(auto v : *this)
 		an.add((long)v.getpointer(), v.getname());
 	an.sort();
-	return an.choose(title, cancel, interactive, resid);
+	return (void*)an.choose(title, cancel, interactive, resid);
 }

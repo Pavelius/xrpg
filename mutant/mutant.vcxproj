@@ -158,6 +158,7 @@
     <ClCompile Include="location.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainmenu.cpp" />
+    <ClCompile Include="nameable.cpp" />
     <ClCompile Include="property.cpp" />
     <ClCompile Include="role.cpp" />
     <ClCompile Include="worldmap.cpp" />

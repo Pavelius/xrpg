@@ -1,6 +1,7 @@
 #include "answers.h"
 #include "datamap.h"
 #include "dataset.h"
+#include "gender.h"
 #include "point.h"
 #include "menu.h"
 #include "moveable.h"
@@ -10,7 +11,7 @@
 #pragma once
 
 enum variant_s : unsigned char {
-	None, Attribute, Item, Location, Role, Skill,
+	None, Attribute, Item, Gender, Location, Role, Skill,
 };
 enum attribute_s : unsigned char {
 	Strenght, Agility, Wits, Empathy
@@ -24,6 +25,7 @@ enum item_s : unsigned char {
 };
 enum role_s : unsigned char {
 	Enforcer, Gearhead, Stalker, Fixer, DogHandler, Chronicler, Boss, Slave,
+	Commoner,
 };
 enum range_s : unsigned char {
 	ArmsLenght,
@@ -65,6 +67,16 @@ class item {
 public:
 	constexpr item() : type(NoItem), count(0) {}
 };
+class nameable : public variant {
+	short unsigned		name;
+public:
+	constexpr nameable(variant_s k = Role) : variant(k, 0), name(0) {}
+	void				actv(stringbuilder& sb, const char* format, const char* format_param);
+	static short unsigned choose_name(role_s role, gender_s gender, bool interactive);
+	gender_s			getgender() const;
+	const char*			getname() const;
+	void				setname(short unsigned v) { name = v; }
+};
 class statable {
 	attributea			attributes;
 	skilla				skills;
@@ -74,9 +86,11 @@ public:
 	void				set(attribute_s i, int v) { attributes.set(i, v); }
 	void				set(skill_s i, int v) { skills.set(i, v); }
 };
-class character : public statable {
+class character : public nameable, public statable {
 public:
-	static void			choose_role();
+	constexpr character() : nameable(), statable() {}
+	static void			create_new();
+	role_s				getrole() const;
 };
 class worldmap : public datamap<25 * 20> {
 public:

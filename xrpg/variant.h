@@ -37,5 +37,5 @@ public:
 	const char*			getname() const;
 	constexpr int		getvalue() const { return u & 0xFFFFFF; }
 	void				paint() const;
-	void				setvariant(unsigned char t, unsigned char v) { c[3] = t; c[0] = v; }
+	void				setvariant(unsigned char t, unsigned char v) { c[3] = t; c[1] = 0; c[2] = 0; c[0] = v; }
 };
