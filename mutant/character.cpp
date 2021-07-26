@@ -6,12 +6,8 @@ character* gamei::getplayer() {
 	return current_character;
 }
 
-static void close_game() {
-
-}
-
-static void test_game() {
-
+static void close_window() {
+	draw::form.window = 0;
 }
 
 static void character_sheet() {
@@ -45,8 +41,8 @@ static void character_sheet() {
 	auto w1 = width / 2 - gui.padding * 2;
 	draw::textf(x1, y, w1, temp, 0, 0, 0, 0, 120);
 	auto x2 = x + width;
-	draw::buttonr(x2, y, "Тестирование", test_game);
-	draw::buttonr(x2, y, "Закрыть", close_game);
+	auto y2 = 300 - gui.border;
+	draw::buttonr(x2, y2, "Закрыть", close_window);
 }
 
 static role_s choose_role() {
@@ -133,10 +129,9 @@ void character::create_new() {
 	draw::form.window = character_sheet;
 	current_character = bsdata<character>::add();
 	current_character->clear();
-	for(auto id = Strenght; id <= Empathy; id = (attribute_s)(id + 1))
-		current_character->set(id, 2);
 	current_character->kind.setvariant(Role, choose_role());
 	current_character->setname(choose_name(current_character->getrole(), NoGender, true));
+	current_character->create(current_character->getrole());
 	choose_attribute(*current_character, 14);
 	choose_skills(*current_character, 10, 3);
 }

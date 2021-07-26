@@ -91,6 +91,7 @@ class statable {
 	attributea			attributes;
 	skilla				skills;
 public:
+	void				create(role_s v);
 	int					get(attribute_s i) const { return attributes.get(i); }
 	int					get(skill_s i) const { return skills.get(i); }
 	int					getattributepoints() const;

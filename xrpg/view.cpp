@@ -422,7 +422,9 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 		return random();
 	int x, y;
 	auto columns = getcolumns(*this, cancel_text != 0);
-	auto column_width = gui.window_width / columns - gui.border;
+	auto column_width = gui.window_width;
+	if(columns>1)
+		column_width = column_width / columns - gui.border;
 	while(ismodal()) {
 		form.before();
 		setwindow(x, y);
@@ -655,7 +657,7 @@ static bool button(const rect& rc, const char* title, const char* tips, unsigned
 void draw::buttonr(int& x, int y, const char* title, fnevent proc, unsigned key) {
 	if(!title || !proc)
 		return;
-	auto h = texth() + 6;
+	auto h = texth() + 8;
 	auto w = textw(title) + 8;
 	x -= w;
 	rect r = {x, y, x + w, y + h};
