@@ -21,6 +21,7 @@ private:
 	const T* last;
 };
 }
+//#include <initializer_list>
 #else
 #include <initializer_list>
 typedef unsigned long size_t;
