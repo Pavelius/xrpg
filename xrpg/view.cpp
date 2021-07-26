@@ -364,14 +364,8 @@ static void answer_button(int x, int& y, int width, long id, const char* string,
 	auto text_height = 0;
 	text_height = texth(string, width);
 	rect rc = {x, y, x + width, y + text_height};
-	auto focus = isfocused(rc, (void*)id);
 	auto rs = window(rc, true, 0);
 	text(rc, string, AlignCenterCenter);
-	if(focus) {
-		rect r1 = rc;
-		r1.offset(-gui.border/2);
-		rectx(r1, fore);
-	}
 	y += rc.height() + gui.border * 2;
 	auto need_execute = false;
 	if(rs) {
