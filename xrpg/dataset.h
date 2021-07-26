@@ -11,5 +11,5 @@ public:
 	void			clear() { for(auto& e : data) e = 0; }
 	const DT*		end() const { return data + sizeof(data)/sizeof(data[0]); }
 	constexpr int	get(T i) const { return data[i]; }
-	void			set(T i, int v) { data[i] = v; }
+	constexpr void	set(T i, int v) { data[i] = v; }
 };

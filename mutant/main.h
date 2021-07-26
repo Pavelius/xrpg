@@ -27,6 +27,29 @@ enum role_s : unsigned char {
 	Enforcer, Gearhead, Stalker, Fixer, DogHandler, Chronicler, Boss, Slave,
 	Commoner,
 };
+enum talent_s : unsigned char {
+	BargeThrought, MeanStreak, SuckerPunch,
+	Inventor, Motorhead, Tinkerer,
+	MonsterHunter, RotFinder, Scavenger,
+	JuicyInfo, ViciousCreep, WheelerDealer,
+	BloodHound, FightDog, MutantsBestFriend,
+	Agitator, BoneSaw, Perfomer,
+	Commander, Gunslingers, Racketeer,
+	Cynic, Rebel, Resilent,
+	Admirer, Archeologist, BadOmens, Bodyguard, Butcher,
+	CombatVeteran, CoolHead, Counselor, Coward, FastDraw,
+	Flyweight, Gadgeteer, GoodFootwork, HardHitter, Workhorse,
+	JackOfAllTrade, LightEater, Loner, NeverSurrender, PackMule,
+	PersonalArithmetic, Sharpshooter, Sleepless, Stoic, Therapist,
+	WeaponSpecialist, ZoneCook,
+};
+enum mutation_s : unsigned char {
+	AcidSpit, Amphibian, CorpseEater, ExtreamReflexes, FlameBreather,
+	FourArmed, FrogLegs, HumanMagnet, HumanPlant, Insectoid,
+	InsectWings, Luminescence, Manbeast, MindTerror, Puppeteer,
+	Parasite, Pathokinesis, Pyrokinesis, Reptilian, RatEater,
+	Sonar, Spores, Sprinter, Telepathy, Tracker,
+};
 enum range_s : unsigned char {
 	ArmsLenght,
 };
@@ -37,6 +60,7 @@ typedef short unsigned	indext;
 typedef dataset<attribute_s, Empathy> attributea;
 typedef dataset<skill_s, Intimidate> skilla;
 typedef cflags<tag_s>	taga;
+typedef cflags<mutation_s> mutaniona;
 const indext			Blocked = 0xFFFF;
 struct attributei {
 	const char*			id;
@@ -90,14 +114,16 @@ public:
 class statable {
 	attributea			attributes;
 	skilla				skills;
+	mutaniona			mutation;
 public:
 	void				create(role_s v);
-	int					get(attribute_s i) const { return attributes.get(i); }
-	int					get(skill_s i) const { return skills.get(i); }
+	constexpr int		get(attribute_s i) const { return attributes.get(i); }
+	constexpr int		get(skill_s i) const { return skills.get(i); }
 	int					getattributepoints() const;
 	int					getskillpoints() const;
-	void				set(attribute_s i, int v) { attributes.set(i, v); }
-	void				set(skill_s i, int v) { skills.set(i, v); }
+	constexpr bool		is(mutation_s v) const { return mutation.is(v); }
+	constexpr void		set(attribute_s i, int v) { attributes.set(i, v); }
+	constexpr void		set(skill_s i, int v) { skills.set(i, v); }
 };
 class character : public nameable, public statable {
 public:
@@ -105,6 +131,7 @@ public:
 	void				clear();
 	static void			create_new();
 	int					getmaximum(attribute_s v) const;
+	int					getminimum(skill_s v) const;
 	role_s				getrole() const;
 };
 class worldmap : public datamap<25 * 20> {

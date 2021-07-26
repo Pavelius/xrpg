@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="answers.h" />
+    <ClInclude Include="archive.h" />
     <ClInclude Include="bsreq.h" />
     <ClInclude Include="bstream.h" />
     <ClInclude Include="color.h" />
@@ -167,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="answers.cpp" />
+    <ClCompile Include="archive.cpp" />
     <ClCompile Include="bsreq.cpp" />
     <ClCompile Include="bstream.cpp" />
     <ClCompile Include="color.cpp" />
