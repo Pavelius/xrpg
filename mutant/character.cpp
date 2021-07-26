@@ -6,6 +6,14 @@ character* gamei::getplayer() {
 	return current_character;
 }
 
+static void close_game() {
+
+}
+
+static void test_game() {
+
+}
+
 static void character_sheet() {
 	auto player = game.getplayer();
 	if(!player)
@@ -36,6 +44,9 @@ static void character_sheet() {
 	auto x1 = x + gui.padding;
 	auto w1 = width / 2 - gui.padding * 2;
 	draw::textf(x1, y, w1, temp, 0, 0, 0, 0, 120);
+	auto x2 = x + width;
+	draw::buttonr(x2, y, "Тестирование", test_game);
+	draw::buttonr(x2, y, "Закрыть", close_game);
 }
 
 static role_s choose_role() {

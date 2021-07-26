@@ -1,4 +1,5 @@
 #include "draw.h"
+#include "draw_focus.h"
 #include "point.h"
 #include "rect.h"
 #include "variant.h"
@@ -41,7 +42,6 @@ void						buttonr(int& x, int y, const char* title, fnevent proc, unsigned key =
 void						buttoncancel();
 void						buttonok();
 void						dialogul(int& x, int& y, int& width);
-void						execute(fnevent proc, int value = 0, int value2 = 0, void* object = 0);
 bool						execute(const hotkey* source);
 int							getresult();
 void						header(int x, int& y, int width, const char* title, ...);

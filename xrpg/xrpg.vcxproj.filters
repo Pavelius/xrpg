@@ -84,6 +84,9 @@
     <ClInclude Include="gender.h">
       <Filter>Поддержка</Filter>
     </ClInclude>
+    <ClInclude Include="draw_focus.h">
+      <Filter>Поддержка</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -171,6 +174,9 @@
       <Filter>Поддержка</Filter>
     </ClCompile>
     <ClCompile Include="gender.cpp">
+      <Filter>Поддержка</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_focus.cpp">
       <Filter>Поддержка</Filter>
     </ClCompile>
   </ItemGroup>

@@ -265,6 +265,8 @@ static void standart_domodal() {
 	hot.key = draw::rawinput();
 	if(!hot.key)
 		exit(0);
+	if(inputfocus())
+		return;
 }
 
 static void clear_hot() {
@@ -278,17 +280,20 @@ static void clear_hot() {
 
 bool draw::ismodal() {
 	clear_hot();
+	clearfocus();
 	if(hot.mouse.x < 0 || hot.mouse.y < 0)
 		sys_static_area.clear();
 	else
 		sys_static_area = {0, 0, draw::getwidth(), draw::getheight()};
 	if(next_proc) {
 		break_modal = false;
+		setfocus(0, 0, true);
 		return false;
 	}
 	if(!break_modal)
 		return true;
 	break_modal = false;
+	setfocus(0, 0, true);
 	return false;
 }
 
@@ -359,8 +364,14 @@ static void answer_button(int x, int& y, int width, long id, const char* string,
 	auto text_height = 0;
 	text_height = texth(string, width);
 	rect rc = {x, y, x + width, y + text_height};
+	auto focus = isfocused(rc, (void*)id);
 	auto rs = window(rc, true, 0);
 	text(rc, string, AlignCenterCenter);
+	if(focus) {
+		rect r1 = rc;
+		r1.offset(-gui.border/2);
+		rectx(r1, fore);
+	}
 	y += rc.height() + gui.border * 2;
 	auto need_execute = false;
 	if(rs) {
@@ -628,8 +639,6 @@ static bool button(const rect& rc, const char* title, const char* tips, unsigned
 		rectb(rc, bc);
 	}
 	auto rco = rc; rco.offset(2, 2);
-	if(focused)
-		rectx(rco, fore);
 	if(title) {
 		rect r1 = rc;
 		if(a && hot.pressed)
@@ -656,7 +665,8 @@ void draw::buttonr(int& x, int y, const char* title, fnevent proc, unsigned key)
 	auto w = textw(title) + 8;
 	x -= w;
 	rect r = {x, y, x + w, y + h};
-	auto result = button(r, title, 0, key, colors::button, false, false, false, true);
+	auto focus = isfocused(r, proc);
+	auto result = button(r, title, 0, key, colors::button, focus, false, false, true);
 	if(result)
 		execute(proc);
 	x -= gui.padding;
