@@ -33,7 +33,7 @@ void gamei::main_menu() {
 static bool test_overload() {
 	variant m1("Enforcer");
 	variant m2(Enforcer);
-	return m2.getkind() == Role;
+	return m2.type == Role;
 }
 
 int main() {

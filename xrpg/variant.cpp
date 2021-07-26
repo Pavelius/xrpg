@@ -7,8 +7,8 @@ template<> variant::variant(const void* v) : u(0) {
 			continue;
 		auto i = e.source->indexof(v);
 		if(i != -1) {
-			u = i;
-			c[3] = &e - bsdata<varianti>::elements;
+			value = i;
+			type = (variant_s)(&e - bsdata<varianti>::elements);
 			break;
 		}
 	}
@@ -20,8 +20,8 @@ template<> variant::variant(const char* v) : u(0) {
 			continue;
 		auto i = e.source->find(v, 0);
 		if(i != -1) {
-			u = i;
-			c[3] = &e - bsdata<varianti>::elements;
+			value = i;
+			type = (variant_s)(&e - bsdata<varianti>::elements);
 			break;
 		}
 	}
@@ -29,14 +29,14 @@ template<> variant::variant(const char* v) : u(0) {
 
 const char* variant::getdescription() const {
 	const int text_index = sizeof(varianti::locale) / sizeof(varianti::locale[0]) - 1;
-	auto& e = bsdata<varianti>::elements[getkind()];
+	auto& e = bsdata<varianti>::elements[type];
 	if(!e.locale[text_index])
 		return 0;
 	return *(const char**)((char*)getpointer() + e.locale[text_index]);
 }
 
 const char* variant::getname() const {
-	auto& e = bsdata<varianti>::elements[getkind()];
+	auto& e = bsdata<varianti>::elements[type];
 	if(!e.locale[0])
 		return "No name";
 	return *(const char**)((char*)getpointer() + e.locale[0]);

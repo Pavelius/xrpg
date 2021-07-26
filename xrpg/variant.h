@@ -13,14 +13,15 @@ struct varianti {
 	unsigned*			special;
 	static bool			localization(const char* locale_id, bool writemode);
 };
-class variant {
-	union {
-		unsigned char	c[4];
-		unsigned		u;
+union variant{
+	unsigned char		uc[4];
+	unsigned			u;
+	struct {
+		unsigned short	value;
+		variant_s		type;
 	};
-public:
 	constexpr variant() : u(0) {}
-	constexpr variant(unsigned char t, unsigned char n) : c{n, 0, 0, t} {}
+	constexpr variant(variant_s t, unsigned short n) : type(t), value(n) {}
 	constexpr variant(int u) : u(u) {}
 	template<class T> static constexpr variant_s kind();
 	template<class T> variant(T* v) : variant((const void*)v) {}
@@ -31,15 +32,13 @@ public:
 	constexpr explicit operator bool() const { return u != 0; }
 	constexpr bool operator==(const variant& v) const { return u == v.u; }
 	constexpr bool operator!=(const variant& v) const { return u != v.u; }
-	template<class T> operator T*() const { return (T*)((T::kind == c[3]) ? getpointer() : 0); }
+	template<class T> operator T*() const { return (T*)((T::kind == type) ? getpointer() : 0); }
 	void				clear() { u = 0; }
 	const char*			getdescription() const;
-	int					getindex(int t) const { return (getkind() == t) ? getvalue() : 0; }
+	int					getindex(int t) const { return (type == t) ? value : 0; }
 	void				getinfo(stringbuilder& sb) const;
-	void*				getpointer() const { return bsdata<varianti>::elements[c[3]].source->ptr(u & 0xFFFFFF); }
-	constexpr int		getkind() const { return c[3]; }
+	void*				getpointer() const { return bsdata<varianti>::elements[type].source->ptr(value); }
 	const char*			getname() const;
-	constexpr int		getvalue() const { return u & 0xFFFFFF; }
 	void				paint() const;
-	void				setvariant(unsigned char t, unsigned char v) { c[3] = t; c[1] = 0; c[2] = 0; c[0] = v; }
+	void				setvariant(variant_s t, unsigned short v) { type = t; value = v; }
 };

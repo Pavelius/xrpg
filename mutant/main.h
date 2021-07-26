@@ -76,10 +76,11 @@ class item {
 public:
 	constexpr item() : type(NoItem), count(0) {}
 };
-class nameable : public variant {
+class nameable {
 	short unsigned		name;
 public:
-	constexpr nameable(variant_s k = Role) : variant(k, 0), name(0) {}
+	variant				kind;
+	constexpr nameable(variant_s k = Role) : kind(k, 0), name(0) {}
 	void				actv(stringbuilder& sb, const char* format, const char* format_param);
 	static short unsigned choose_name(role_s role, gender_s gender, bool interactive);
 	gender_s			getgender() const;

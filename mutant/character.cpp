@@ -30,12 +30,12 @@ static void character_sheet() {
 	char temp[2048]; stringbuilder sb(temp);
 	sb.addn("###Атрибуты");
 	for(auto& e : bsdata<attributei>()) {
-		auto id = (attribute_s)variant(&e).getvalue();
+		auto id = (attribute_s)variant(&e).value;
 		sb.addn("%1\t%2i", e.name, player->get(id));
 	}
 	sb.addn("###Навыки");
 	for(auto& e : bsdata<skilli>()) {
-		auto id = (skill_s)variant(&e).getvalue();
+		auto id = (skill_s)variant(&e).value;
 		auto value = player->get(id);
 		if(!value)
 			continue;
@@ -52,7 +52,7 @@ static void character_sheet() {
 static role_s choose_role() {
 	varianta source;
 	source.select(bsdata<rolei>::source);
-	return (role_s)source.choose("Какова ваша роль?", 0, true, "new_character").getvalue();
+	return (role_s)source.choose("Какова ваша роль?", 0, true, "new_character").value;
 }
 
 static void choose_attribute(character& e, int score) {
@@ -82,7 +82,7 @@ static void choose_attribute(character& e, int score) {
 				continue;
 			an.add((long)&ei, bsdata<attributei>::elements[v].name);
 		}
-		auto id = (attribute_s)variant((void*)an.choose(0, 0, true, "skills")).getvalue();
+		auto id = (attribute_s)variant((void*)an.choose(0, 0, true, "skills")).value;
 		e.set(id, e.get(id) + type);
 	}
 }
@@ -113,7 +113,7 @@ static void choose_skills(character& e, int score, int maximum) {
 				continue;
 			an.add((long)&ei, bsdata<skilli>::elements[v].name);
 		}
-		auto id = (skill_s)variant((void*)an.choose(0, 0, true, "skills")).getvalue();
+		auto id = (skill_s)variant((void*)an.choose(0, 0, true, "skills")).value;
 		e.set(id, e.get(id)+type);
 	}
 }
@@ -123,9 +123,9 @@ void character::clear() {
 }
 
 int	character::getmaximum(attribute_s v) const {
-	if(getkind() != Role)
+	if(kind.type != Role)
 		return 0;
-	auto& e = bsdata<rolei>::elements[getvalue()];
+	auto& e = bsdata<rolei>::elements[kind.value];
 	return (e.attribute == v) ? 5 : 4;
 }
 
@@ -135,15 +135,15 @@ void character::create_new() {
 	current_character->clear();
 	for(auto id = Strenght; id <= Empathy; id = (attribute_s)(id + 1))
 		current_character->set(id, 2);
-	current_character->setvariant(Role, choose_role());
+	current_character->kind.setvariant(Role, choose_role());
 	current_character->setname(choose_name(current_character->getrole(), NoGender, true));
 	choose_attribute(*current_character, 14);
 	choose_skills(*current_character, 10, 3);
 }
 
 role_s character::getrole() const {
-	switch(getkind()) {
-	case Role: return (role_s)getvalue();
+	switch(kind.type) {
+	case Role: return (role_s)kind.value;
 	default: return Commoner;
 	}
 }
