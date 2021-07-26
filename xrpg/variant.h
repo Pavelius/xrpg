@@ -3,6 +3,8 @@
 
 #pragma once
 
+#define VKIND(T, V) template<> static constexpr variant_s variant::kind<T>() { return V; }
+
 enum variant_s : unsigned char;
 struct bsreq;
 struct varianti {
@@ -32,7 +34,7 @@ union variant{
 	constexpr explicit operator bool() const { return u != 0; }
 	constexpr bool operator==(const variant& v) const { return u == v.u; }
 	constexpr bool operator!=(const variant& v) const { return u != v.u; }
-	template<class T> operator T*() const { return (T*)((T::kind == type) ? getpointer() : 0); }
+	template<class T> operator T*() const { return (T*)((kind<T>() == type) ? getpointer() : 0); }
 	void				clear() { u = 0; }
 	const char*			getdescription() const;
 	int					getindex(int t) const { return (type == t) ? value : 0; }

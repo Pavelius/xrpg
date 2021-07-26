@@ -121,7 +121,6 @@ public:
 	void				set(indext i, int r, int v, bool check);
 };
 struct locationi {
-	static constexpr int kind = Location;
 	const char*			id;
 	posable				world;
 	const char*			name;
@@ -151,6 +150,8 @@ public:
 };
 extern gamei			game;
 
-template<> static constexpr variant_s variant::kind<attribute_s>() { return Attribute; }
-template<> static constexpr variant_s variant::kind<gender_s>() { return Gender; }
-template<> static constexpr variant_s variant::kind<role_s>() { return Role; }
+VKIND(attribute_s, Attribute)
+VKIND(gender_s, Gender)
+VKIND(role_s, Role)
+
+VKIND(locationi, Location)
