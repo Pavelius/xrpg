@@ -10,7 +10,7 @@ extern "C" int strcmp(const char* s1, const char* s2); // Compare two strings
 enum draw_event_s {
 	KeyBackspace = 8, KeyTab = 9, KeyEnter = 10, KeyEscape = 0x1B, KeySpace = 0x20, KeyDelete = 46,
 	// input events
-	InputSymbol = 0x80, InputTimer, InputIdle, InputUpdate, InputNoUpdate,
+	InputSymbol = 0x80, InputTimer, InputIdle, InputKeyUp, InputUpdate, InputNoUpdate,
 	// Keyboard and mouse input (can be overrided by flags)
 	MouseLeft, MouseLeftDBL, MouseRight,
 	MouseMove, MouseWheelUp, MouseWheelDown,

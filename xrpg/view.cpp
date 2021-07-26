@@ -191,11 +191,6 @@ static bool control_board() {
 	return true;
 }
 
-void control_standart() {
-	if(control_board())
-		return;
-}
-
 void draw::tooltips(const char* format, ...) {
 	stringbuilder sb(tooltips_text);
 	sb.addv(format, xva_start(format));
@@ -221,7 +216,7 @@ static void render_tooltips() {
 	draw::fore = colors::tips::text;
 	draw::textf(rc.x1, rc.y1, rc.width(), tooltips_text, 0, 0, 0, 0, gui.tips_tab);
 	tooltips_text[0] = 0;
-	dialog_y += rc.height() + gui.border*2;
+	dialog_y += rc.height() + gui.border * 2;
 }
 
 static void gui_initialize(int width) {
@@ -266,6 +261,8 @@ static void standart_domodal() {
 	if(!hot.key)
 		exit(0);
 	if(inputfocus())
+		return;
+	if(control_board())
 		return;
 }
 
@@ -423,7 +420,7 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 	int x, y;
 	auto columns = getcolumns(*this, cancel_text != 0);
 	auto column_width = gui.window_width;
-	if(columns>1)
+	if(columns > 1)
 		column_width = column_width / columns - gui.border;
 	while(ismodal()) {
 		form.before();
@@ -451,7 +448,6 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 			answer_button(x, y, gui.window_width, 0, cancel_text, KeyEscape);
 		form.after();
 		domodal();
-		control_standart();
 	}
 	return getresult();
 }
@@ -461,7 +457,6 @@ int draw::scene(fnevent input) {
 		form.before();
 		form.after();
 		domodal();
-		control_standart();
 		if(input)
 			input();
 	}
@@ -603,14 +598,26 @@ void draw::bar(rect rc, color_s color, color_s border, color_s back, int value, 
 }
 
 static bool button(const rect& rc, const char* title, const char* tips, unsigned key, color value, bool focused, bool checked, bool press, bool border) {
+	static rect rc_pressed;
+	static int rc_key_event;
 	auto push_fore = fore;
 	bool result = false;
 	struct rect rcb = {rc.x1 + 1, rc.y1 + 1, rc.x2, rc.y2};
 	auto a = ishilite(rcb);
-	if(key && hot.key == key)
+	if((key && hot.key == key) || (focused && hot.key == KeyEnter) || (a && hot.key == MouseLeft && hot.pressed)) {
+		rc_key_event = hot.key;
+		rc_pressed = rc;
+	}
+	if((rc_pressed == rc) && rc_key_event == MouseLeft && !a) {
+		rc_key_event = 0;
+		rc_pressed.clear();
+	}
+	auto button_pressed = (rc_pressed == rc);
+	if(button_pressed && (hot.key == InputKeyUp || (hot.key == MouseLeft && !hot.pressed))) {
 		result = true;
-	if(a && hot.key == MouseLeft && hot.pressed == press)
-		result = true;
+		rc_key_event = 0;
+		rc_pressed.clear();
+	}
 	if(checked)
 		a = true;
 	color c0 = value;
@@ -622,7 +629,7 @@ static bool button(const rect& rc, const char* title, const char* tips, unsigned
 	}
 	color b1 = c0;
 	color b2 = c0.mix(colors::black);
-	if(a && hot.pressed)
+	if(button_pressed)
 		gradv(rcb, b2, b1);
 	else
 		gradv(rcb, b1, b2);
@@ -637,7 +644,7 @@ static bool button(const rect& rc, const char* title, const char* tips, unsigned
 	auto rco = rc; rco.offset(2, 2);
 	if(title) {
 		rect r1 = rc;
-		if(a && hot.pressed)
+		if(button_pressed)
 			r1.y1 += 2;
 		text(r1, title, AlignCenterCenter);
 	}

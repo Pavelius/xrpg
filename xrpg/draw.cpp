@@ -2071,6 +2071,12 @@ void draw::key2str(stringbuilder& sb, int key) {
 	case F11: sb.add("F11"); break;
 	case F12: sb.add("F12"); break;
 	case KeySpace: sb.add("Space"); break;
-	default: sb.add(char(szupper(key))); break;
+	case KeyEscape: sb.add("Esc"); break;
+	default:
+		if(key >= 0x20) {
+			char temp[2] = {(char)szupper(key), 0};
+			sb.add(temp);
+		}
+		break;
 	}
 }

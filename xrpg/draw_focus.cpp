@@ -14,11 +14,12 @@ struct focusable {
 
 static const void*		current_focus;
 static unsigned			current_bits;
+static const void*		hilite_focus;
+static unsigned			hilite_bits;
 static adat<focusable>	elements;
 
 static void setfocus_callback() {
 	setfocus(hot.object, hot.param, true);
-	hot.key = 0;
 }
 
 static focusable* getby(const void* value, unsigned bits) {
@@ -43,6 +44,8 @@ static focusable* getlast() {
 
 void draw::clearfocus() {
 	elements.clear();
+	hilite_focus = 0;
+	hilite_bits = 0;
 }
 
 void draw::setfocusable(const rect& rc, const void* value, unsigned bits) {
@@ -104,21 +107,16 @@ bool draw::isfocused() {
 }
 
 bool draw::isfocused(const void* value, unsigned bits) {
-	return current_focus == value && current_bits == bits;
+	return (current_focus == value) && (current_bits == bits);
 }
 
 bool draw::isfocused(const rect& rc, const void* value, unsigned bits) {
 	setfocusable(rc, value, bits);
 	if(!isfocused())
 		setfocus(value, bits, true);
-	else if(ishilite(rc)) {
-		switch(hot.key) {
-		case MouseLeft:
-		case MouseRight:
-			if(hot.pressed)
-				setfocus(value, bits, false);
-			break;
-		}
+	if(ishilite(rc)) {
+		hilite_focus = value;
+		hilite_bits = bits;
 	}
 	return isfocused(value, bits);
 }
@@ -129,11 +127,8 @@ void draw::setfocus(const void* value, unsigned bits, bool instant) {
 	if(instant) {
 		current_focus = value;
 		current_bits = bits;
-	} else {
-		auto push_key = hot.key;
+	} else
 		execute(setfocus_callback, bits, 0, (void*)value);
-		hot.key = push_key;
-	}
 }
 
 bool draw::inputfocus() {
@@ -149,6 +144,14 @@ bool draw::inputfocus() {
 		if(!p)
 			return false;
 		setfocus(p->value, p->bits, true);
+		break;
+	case MouseLeft:
+	case MouseRight:
+		if(!hilite_focus || !hot.pressed)
+			return false;
+		if(hilite_focus == current_focus && hilite_bits == current_bits)
+			return false;
+		setfocus(hilite_focus, hilite_bits, true);
 		break;
 	default: return false;
 	}
