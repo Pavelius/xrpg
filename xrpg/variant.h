@@ -3,6 +3,7 @@
 
 #pragma once
 
+enum variant_s : unsigned char;
 struct bsreq;
 struct varianti {
 	const char*			id;
@@ -21,8 +22,11 @@ public:
 	constexpr variant() : u(0) {}
 	constexpr variant(unsigned char t, unsigned char n) : c{n, 0, 0, t} {}
 	constexpr variant(int u) : u(u) {}
-	variant(const char* v);
-	variant(const void* v);
+	template<class T> static constexpr variant_s kind();
+	template<class T> variant(T* v) : variant((const void*)v) {}
+	template<class T> constexpr variant(T v) : variant(kind<T>(), v) {}
+	template<> variant(const char* v);
+	template<> variant(const void* v);
 	constexpr operator int() const { return u; }
 	constexpr explicit operator bool() const { return u != 0; }
 	constexpr bool operator==(const variant& v) const { return u == v.u; }

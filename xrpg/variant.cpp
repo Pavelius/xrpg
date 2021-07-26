@@ -1,7 +1,7 @@
 #include "log.h"
 #include "variant.h"
 
-variant::variant(const void* v) : u(0) {
+template<> variant::variant(const void* v) : u(0) {
 	for(auto& e : bsdata<varianti>()) {
 		if(!e.source)
 			continue;
@@ -14,7 +14,7 @@ variant::variant(const void* v) : u(0) {
 	}
 }
 
-variant::variant(const char* v) : u(0) {
+template<> variant::variant(const char* v) : u(0) {
 	for(auto& e : bsdata<varianti>()) {
 		if(!e.source || !e.locale[0])
 			continue;

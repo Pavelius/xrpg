@@ -149,3 +149,7 @@ public:
 	void				setposition(point v) { party.setposition(v); }
 };
 extern gamei			game;
+
+template<> static constexpr variant_s variant::kind<attribute_s>() { return Attribute; }
+template<> static constexpr variant_s variant::kind<gender_s>() { return Gender; }
+template<> static constexpr variant_s variant::kind<role_s>() { return Role; }
