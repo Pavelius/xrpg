@@ -72,6 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath />
+    <ExternalIncludePath />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -144,6 +146,7 @@
     <ClInclude Include="bsreq.h" />
     <ClInclude Include="bstream.h" />
     <ClInclude Include="color.h" />
+    <ClInclude Include="command.h" />
     <ClInclude Include="converter.h" />
     <ClInclude Include="crt.h" />
     <ClInclude Include="datamap.h" />
@@ -151,7 +154,7 @@
     <ClInclude Include="draw.h" />
     <ClInclude Include="draw_focus.h" />
     <ClInclude Include="gender.h" />
-    <ClInclude Include="io.h" />
+    <ClInclude Include="io_stream.h" />
     <ClInclude Include="io_plugin.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="menu.h" />
@@ -181,7 +184,7 @@
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="draw_text.cpp" />
     <ClCompile Include="draw_textf.cpp" />
-    <ClCompile Include="io.cpp" />
+    <ClCompile Include="io_stream.cpp" />
     <ClCompile Include="io_plugin.cpp" />
     <ClCompile Include="io_plugin_bsreq.cpp" />
     <ClCompile Include="io_plugin_json.cpp" />

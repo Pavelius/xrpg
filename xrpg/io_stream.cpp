@@ -1,5 +1,5 @@
 #include "crt.h"
-#include "io.h"
+#include "io_stream.h"
 #include "stringbuilder.h"
 
 io::stream& io::stream::operator<<(const int n) {

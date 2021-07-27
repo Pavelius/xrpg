@@ -36,7 +36,7 @@
     <ClInclude Include="dataset.h">
       <Filter>Поддержка</Filter>
     </ClInclude>
-    <ClInclude Include="io.h">
+    <ClInclude Include="io_stream.h">
       <Filter>Поддержка</Filter>
     </ClInclude>
     <ClInclude Include="io_plugin.h">
@@ -90,6 +90,9 @@
     <ClInclude Include="draw_focus.h">
       <Filter>Графика</Filter>
     </ClInclude>
+    <ClInclude Include="command.h">
+      <Filter>Поддержка</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -119,7 +122,7 @@
     <ClCompile Include="crt.cpp">
       <Filter>Поддержка</Filter>
     </ClCompile>
-    <ClCompile Include="io.cpp">
+    <ClCompile Include="io_stream.cpp">
       <Filter>Поддержка</Filter>
     </ClCompile>
     <ClCompile Include="io_plugin.cpp">

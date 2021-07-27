@@ -6,7 +6,7 @@ character* gamei::getplayer() {
 	return current_character;
 }
 
-static void close_window() {
+static void close_active_window() {
 	draw::form.window = 0;
 }
 
@@ -46,7 +46,7 @@ static void character_sheet() {
 	draw::textf(x1, y, w1, temp, 0, 0, 0, 0, 120);
 	auto x2 = x + width;
 	auto y2 = 300 - gui.border;
-	draw::buttonr(x2, y2, "Закрыть", close_window, KeyEscape);
+	draw::buttonr(x2, y2, "Закрыть", close_active_window, KeyEscape);
 	draw::buttonr(x2, y2, "Далее", next_window, 'N');
 }
 

@@ -1,5 +1,5 @@
 #include "crt.h"
-#include "io.h"
+#include "io_stream.h"
 
 static_assert(sizeof(anyreq) == sizeof(int), "Size anyreq class can't be different from integer size");
 

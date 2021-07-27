@@ -1,6 +1,7 @@
 #include "answers.h"
 #include "datamap.h"
 #include "dataset.h"
+#include "command.h"
 #include "gender.h"
 #include "point.h"
 #include "menu.h"
