@@ -193,6 +193,7 @@
     <ClCompile Include="stringbuilder.cpp" />
     <ClCompile Include="surface_serial.cpp" />
     <ClCompile Include="szdup.cpp" />
+    <ClCompile Include="translate.cpp" />
     <ClCompile Include="variant.cpp" />
     <ClCompile Include="varianta.cpp" />
     <ClCompile Include="view.cpp" />

@@ -220,8 +220,8 @@ template<typename T> struct bsdata {
 	static constexpr array*			source_ptr = &source;
 	//
 	static T*						add() { return (T*)source.add(); }
-	static constexpr T*				begin() { return elements; }
-	static constexpr T*				end() { return elements + source.getcount(); }
+	static constexpr T*				begin() { return (T*)source.data; }
+	static constexpr T*				end() { return (T*)source.data + source.getcount(); }
 };
 template<> struct bsdata<int> { static constexpr array* source_ptr = 0; };
 NOBSDATA(unsigned)

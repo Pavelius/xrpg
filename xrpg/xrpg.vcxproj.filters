@@ -188,5 +188,8 @@
     <ClCompile Include="draw_textf.cpp">
       <Filter>Графика</Filter>
     </ClCompile>
+    <ClCompile Include="translate.cpp">
+      <Filter>Поддержка</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

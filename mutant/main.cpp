@@ -37,6 +37,7 @@ static bool test_overload() {
 }
 
 int main() {
+	inittranslate();
 	test_overload();
 	varianti::localization("debug", true);
 	if(!varianti::localization("ru", false))
