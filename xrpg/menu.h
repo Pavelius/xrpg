@@ -8,14 +8,9 @@ enum menu_flag_s : unsigned char {
 
 struct menui {
 	typedef cflags<menu_flag_s>	flaga;
-	struct resulti {
-		const char*		next;
-		fnevent			proc;
-	};
 	const char*			parent;
-	const char*			name;
-	resulti				result;
-	const char*			text;
+	const char*			id;
+	fnevent				proc;
 	const char*			resid;
 	flaga				flags;
 	static void			choose(const char* parent, const char* resid, const char* title);

@@ -17,17 +17,9 @@ static void test_answers() {
 	draw::setnext(game.playworld);
 }
 
-static void new_character() {
-	answers an;
-	an.add(1, "Начать новую игру");
-	an.add(2, "Загрузить сохраненную игру");
-	an.add(3, "Перейти на сайт игры");
-	an.choose(0, "Выход", true, "new_character");
-}
-
 void gamei::main_menu() {
 	form.bitmap = "mutant_title";
-	menui::choose("main", "city", 0);
+	menui::choose("Main", "city", 0);
 }
 
 static bool test_overload() {
@@ -37,11 +29,9 @@ static bool test_overload() {
 }
 
 int main() {
-	inittranslate();
-	test_overload();
-	varianti::localization("debug", true);
-	if(!varianti::localization("ru", false))
+	if(!translate_initialize("ru"))
 		return -1;
+	test_overload();
 	draw::initialize();
 	draw::setnext(game.main_menu);
 	draw::application();

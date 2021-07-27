@@ -39,6 +39,7 @@ const codepages						code = codepages::W1251;
 }
 //
 bool								equal(const char* s1, const char* s2);
+const char*							getdescription(const char* id);
 int									getdigitscount(unsigned number); // Get digits count of number. For example if number=100, result be 3.
 bool								ischa(unsigned u); // is alphabetical character?
 inline bool							isnum(unsigned u) { return u >= '0' && u <= '9'; } // is numeric character?
@@ -68,10 +69,12 @@ bool								szpmatch(const char* text, const char* pattern);
 void								szput(char** output, unsigned u, codepages page = metrics::code);
 char*								szput(char* output, unsigned u, codepages page = metrics::code); // Fast symbol put function. Return 'output'.
 bool								szstart(const char* text, const char* name);
+const char*							szt(const char* id);
 unsigned							szupper(unsigned u);
 void								szupper(char* p); // to upper reg
 char*								szurl(char* p, const char* path, const char* name, const char* ext = 0, const char* suffix = 0);
 char*								szurlc(char* p1);
+bool								translate_initialize(const char* locale);
 inline int							xrand(int n1, int n2) { return n1 + rand() % (n2 - n1 + 1); }
 // Common used templates
 inline int							ifloor(double n) { return (int)n; }
@@ -92,26 +95,6 @@ template<class T> inline void		zcat(T* p1, const T e) { p1 = zend(p1); p1[0] = e
 template<class T> inline void		zcat(T* p1, const T* p2) { zcpy(zend(p1), p2); }
 template<class T> constexpr int		zlen(T* p) { return zend(p) - p; }
 template<class T> inline void		zshuffle(T* p, int count) { for(int i = 0; i < count; i++) iswap(p[i], p[rand() % count]); }
-// Light-weaight proxy container
-template<class T>
-class aref {
-	T*								data;
-	unsigned						count;
-public:
-	constexpr aref() : data(0), count(0) {}
-	constexpr aref(T* data, unsigned count) : data(data), count(count) {}
-	constexpr const T& operator[](unsigned index) const { return data[index]; }
-	constexpr T& operator[](unsigned index) { return data[index]; }
-	explicit operator bool() const { return count != 0; }
-	constexpr T*					begin() { return data; }
-	constexpr const T*				begin() const { return data; }
-	constexpr T*					end() { return data + count; }
-	constexpr const T*				end() const { return data + count; }
-	constexpr unsigned				getcount() const { return count; }
-	constexpr int					indexof(const T* e) const { if(e >= data && e < data + count) return e - data; return -1; }
-	constexpr int					indexof(const T t) const { for(unsigned i = 0; i < count; i++) if(data[i] == t) return i; return -1; }
-	constexpr bool					is(const T t) const { return indexof(t) != -1; }
-};
 // Storge like vector
 template<class T, int count_max = 128>
 struct adat {
@@ -150,6 +133,17 @@ public:
 	constexpr bool					is(const T id) const { return (data & (1 << id)) != 0; }
 	constexpr void					remove(T id) { data &= ~(1 << id); }
 };
+// Simple slice object
+template<class T>
+class slice {
+	T*								data;
+	unsigned						count;
+public:
+	constexpr slice(T* data, unsigned count) : data(data), count(count) {}
+	constexpr T*					begin() const { return data; }
+	constexpr T*					end() const { return data + count; }
+	constexpr unsigned				size() const { return count; }
+};
 // Abstract array vector
 class array {
 	unsigned						count_maximum;
@@ -179,10 +173,10 @@ public:
 	unsigned						getsize() const { return size; }
 	int								indexof(const void* element) const;
 	void*							insert(int index, const void* element);
-	bool							is(const void* e) const { return e >= data && e < (char*)data + count*size; }
+	bool							is(const void* e) const { return e >= data && e < (char*)data + count * size; }
 	bool							isgrowable() const { return (count_maximum & 0x80000000) == 0; }
 	void*							ptr(int index) const { return (char*)data + size * index; }
-	template<class T> aref<T> records() const { return aref<T>((T*)data, count); }
+	template<class T> slice<T> records() const { return slice<T>((T*)data, count); }
 	void							remove(int index, int elements_count = 1);
 	void							shift(int i1, int i2, unsigned c1, unsigned c2);
 	void							setcount(unsigned value) { count = value; }
@@ -201,7 +195,6 @@ public:
 	constexpr T& operator[](int index) { return ((T*)data)[index]; }
 	constexpr const T& operator[](int index) const { return ((T*)data)[index]; }
 	constexpr explicit operator bool() const { return count != 0; }
-	constexpr operator aref<T>() const { return aref<T>((T*)data, count); }
 	T*								add() { return (T*)array::add(); }
 	void							add(const T& v) { *((T*)array::add()) = v; }
 	constexpr const T*				begin() const { return (T*)data; }

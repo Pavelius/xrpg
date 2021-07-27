@@ -3,9 +3,9 @@
 #include "dataset.h"
 #include "command.h"
 #include "gender.h"
-#include "point.h"
 #include "menu.h"
 #include "moveable.h"
+#include "point.h"
 #include "view.h"
 #include "varianta.h"
 
@@ -65,29 +65,21 @@ typedef cflags<mutation_s> mutaniona;
 const indext			Blocked = 0xFFFF;
 struct attributei {
 	const char*			id;
-	const char*			name;
-	const char*			text;
 };
 struct itemi {
 	const char*			id;
 	taga				tags;
 	char				quality;
 	char				damage;
-	const char*			name;
-	const char*			text;
 };
 struct rolei {
 	const char*			id;
 	attribute_s			attribute;
 	skill_s				skill;
-	const char*			name;
-	const char*			text;
 };
 struct skilli {
 	const char*			id;
 	attribute_s			attribute;
-	const char*			name;
-	const char*			text;
 };
 class item {
 	item_s				type;

@@ -69,5 +69,3 @@ struct guii {
 	int						grid;
 };
 extern guii					gui;
-void						inittranslate();
-const char*					szt(const char* id);

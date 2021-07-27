@@ -652,7 +652,7 @@ static bool button(const rect& rc, const char* title, const char* tips, unsigned
 		stringbuilder sb(tooltips_text);
 		sb.add(tips);
 		if(key) {
-			sb.addn("Горячая клавиша: [");
+			sb.addn("%1: [", szt("HotKey"));
 			key2str(sb, key);
 			sb.add("]");
 		}

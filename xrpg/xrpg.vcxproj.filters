@@ -161,9 +161,6 @@
     <ClCompile Include="menu.cpp">
       <Filter>Поддержка</Filter>
     </ClCompile>
-    <ClCompile Include="crt_locale.cpp">
-      <Filter>Поддержка</Filter>
-    </ClCompile>
     <ClCompile Include="log.cpp">
       <Filter>Поддержка</Filter>
     </ClCompile>
@@ -188,7 +185,7 @@
     <ClCompile Include="draw_textf.cpp">
       <Filter>Графика</Filter>
     </ClCompile>
-    <ClCompile Include="translate.cpp">
+    <ClCompile Include="crt_translate.cpp">
       <Filter>Поддержка</Filter>
     </ClCompile>
   </ItemGroup>

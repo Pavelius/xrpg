@@ -25,29 +25,29 @@ static void character_sheet() {
 	draw::dialogul(x, y, width);
 	draw::header(x, y, width, "%+2 %1",
 		player->getname(),
-		bsdata<rolei>::elements[player->getrole()].name,
-		bsdata<genderi>::elements[gender].name);
+		szt(bsdata<rolei>::elements[player->getrole()].id),
+		szt(bsdata<genderi>::elements[gender].name));
 	char temp[2048]; stringbuilder sb(temp);
-	sb.addn("###Атрибуты");
+	sb.addn("###%1", szt("Attributes"));
 	for(auto& e : bsdata<attributei>()) {
 		auto id = (attribute_s)variant(&e).value;
-		sb.addn("%1\t%2i", e.name, player->get(id));
+		sb.addn("%1\t%2i", szt(e.id), player->get(id));
 	}
-	sb.addn("###Навыки");
+	sb.addn("###%1", szt("Skills"));
 	for(auto& e : bsdata<skilli>()) {
 		auto id = (skill_s)variant(&e).value;
 		auto value = player->get(id);
 		if(!value)
 			continue;
-		sb.addn("%1\t%2i", e.name, value);
+		sb.addn("%1\t%2i", szt(e.id), value);
 	}
 	auto x1 = x + gui.padding;
 	auto w1 = width / 2 - gui.padding * 2;
 	draw::textf(x1, y, w1, temp, 0, 0, 0, 0, 120);
 	auto x2 = x + width;
 	auto y2 = 300 - gui.border;
-	draw::buttonr(x2, y2, "Закрыть", close_active_window, KeyEscape);
-	draw::buttonr(x2, y2, "Далее", next_window, 'N');
+	draw::buttonr(x2, y2, szt("Close"), close_active_window, KeyEscape);
+	draw::buttonr(x2, y2, szt("Next"), next_window, 'N');
 }
 
 static role_s choose_role() {
@@ -81,7 +81,7 @@ static void choose_attribute(character& e, int score) {
 			auto maximum = e.getmaximum(v);
 			if(value > maximum || value < 2)
 				continue;
-			an.add((long)&ei, bsdata<attributei>::elements[v].name);
+			an.add((long)&ei, szt(bsdata<attributei>::elements[v].id));
 		}
 		auto id = (attribute_s)variant((void*)an.choose(0, 0, true, "skills")).value;
 		e.set(id, e.get(id) + type);
@@ -112,7 +112,7 @@ static void choose_skills(character& e, int score, int maximum) {
 			auto value = e.get(v) + type;
 			if(value > maximum || value < e.getminimum(v))
 				continue;
-			an.add((long)&ei, bsdata<skilli>::elements[v].name);
+			an.add((long)&ei, szt(bsdata<skilli>::elements[v].id));
 		}
 		auto id = (skill_s)variant((void*)an.choose(0, 0, true, "skills")).value;
 		e.set(id, e.get(id) + type);

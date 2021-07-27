@@ -166,11 +166,8 @@
     <ClCompile Include="worldmap.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="locale\ru\Genders.txt" />
-    <Text Include="locale\ru\Items.txt" />
-    <Text Include="locale\ru\Locations.txt" />
-    <Text Include="locale\ru\Roles.txt" />
-    <Text Include="locale\ru\Skills.txt" />
+    <Text Include="locale\ru\Descriptions.txt" />
+    <Text Include="locale\ru\Names.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

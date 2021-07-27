@@ -1,1 +1,2 @@
-﻿Can't find file locale/ru/Attributes.txt
+﻿Errors occurs in locale/ru/Names.txt.txt
+Define translate for 'HotKey'

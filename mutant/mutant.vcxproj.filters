@@ -67,19 +67,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="locale\ru\Items.txt">
+    <Text Include="locale\ru\Descriptions.txt">
       <Filter>Локализация</Filter>
     </Text>
-    <Text Include="locale\ru\Locations.txt">
-      <Filter>Локализация</Filter>
-    </Text>
-    <Text Include="locale\ru\Roles.txt">
-      <Filter>Локализация</Filter>
-    </Text>
-    <Text Include="locale\ru\Genders.txt">
-      <Filter>Локализация</Filter>
-    </Text>
-    <Text Include="locale\ru\Skills.txt">
+    <Text Include="locale\ru\Names.txt">
       <Filter>Локализация</Filter>
     </Text>
   </ItemGroup>
