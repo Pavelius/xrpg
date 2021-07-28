@@ -152,6 +152,7 @@
     <ClCompile Include="..\xrpg\zip.cpp" />
     <ClCompile Include="attribute.cpp" />
     <ClCompile Include="character.cpp" />
+    <ClCompile Include="commands.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="information.cpp" />
     <ClCompile Include="item.cpp" />

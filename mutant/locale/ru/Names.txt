@@ -7,6 +7,7 @@ BicycleChain: Мотоциклетная цепь
 BluntInstrument: Импровизированная дубика
 Boss: Босс
 BrassKnuckles: Кастет
+CharacterSheet: Лист пресонажа
 Chronicler: Хронист
 Close: Закрыть
 Comprehend: Понимание

@@ -118,7 +118,7 @@ struct hoti {
 	unsigned			key; // if pressed key or mouse this field has key
 	point				mouse; // current mouse coordinates
 	bool				pressed; // flag if any of mouse keys is pressed
-	int					param, param2; // command context or parameters
+	long				param, param2; // command context or parameters
 	const void*			object; // command object
 	rect				hilite;
 	explicit operator bool() const { return key != 0; }

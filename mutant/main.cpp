@@ -2,16 +2,15 @@
 
 using namespace draw;
 
-static locationi* addloc(const char* id, const char* name, point v) {
+static locationi* addloc(const char* id, point v) {
 	auto p = bsdata<locationi>::add();
 	p->id = id;
-	p->name = name;
 	p->world.setposition(v);
 	return p;
 }
 
 static void test_answers() {
-	addloc("Covcheg", "Ковчег", worldmap::getp(15, 10));
+	addloc("Covcheg", worldmap::getp(15, 10));
 	game.setposition(worldmap::getp(15, 10));
 	game.setexplored(worldmap::geti(15, 10), 2);
 	draw::setnext(game.playworld);
@@ -29,7 +28,7 @@ static bool test_overload() {
 }
 
 int main() {
-	if(!translate_initialize("ru"))
+	if(!initialize_translation("ru"))
 		return -1;
 	test_overload();
 	draw::initialize();

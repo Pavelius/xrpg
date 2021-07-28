@@ -76,8 +76,10 @@ int szcmpi(const char* p1, const char* p2, int max_count) {
 }
 
 bool equal(const char* p, const char* s) {
+	if(!p || !s)
+		return false;
 	while(*s && *p)
-		if(szupper(szget(&s)) != szupper(szget(&p)))
+		if(*p++ != *s++)
 			return false;
 	return true;
 }

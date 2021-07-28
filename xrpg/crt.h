@@ -37,45 +37,6 @@ enum class codepages { None, W1251, UTF8, U16BE, U16LE };
 namespace metrics {
 const codepages						code = codepages::W1251;
 }
-//
-bool								equal(const char* s1, const char* s2);
-const char*							getdescription(const char* id);
-int									getdigitscount(unsigned number); // Get digits count of number. For example if number=100, result be 3.
-bool								ischa(unsigned u); // is alphabetical character?
-inline bool							isnum(unsigned u) { return u >= '0' && u <= '9'; } // is numeric character?
-int									isqrt(const int x); // Return aquare root of 'x'
-void*								loadb(const char* url, int* size = 0, int additional_bytes_alloated = 0); // Load binary file.
-char*								loadt(const char* url, int* size = 0); // Load text file and decode it to system codepage.
-bool								matchuc(const char* name, const char* filter);
-const char*							psstr(const char* p, char* value, char end_symbol = '\"'); // Parse string from string (like c format "Some\nstring")
-unsigned							rmoptimal(unsigned need_count);
-float								sqrt(const float x); // Return aquare root of 'x'
-inline const char*					skipsp(const char* p) { if(p) while(*p == ' ' || *p == '\t') p++; return p; }
-inline const char*					skipspcr(const char* p) { if(p) while(*p == ' ' || *p == '\t' || *p == '\n' || *p == '\r') p++; return p; }
-const char*							skipcr(const char* p);
-void								szchange(char* p, char s1, char s2);
-void								szencode(char* output, int output_count, codepages output_code, const char* input, int input_count, codepages input_code);
-unsigned							szget(const char** input, codepages page = metrics::code);
-int									szcmpi(const char* p1, const char* p2);
-int									szcmpi(const char* p1, const char* p2, int count);
-const char*							szdup(const char* text);
-const char*							szext(const char* path);
-const char*							szfname(const char* text); // Get file name from string (no fail, always return valid value)
-char*								szfnamewe(char* result, const char* name); // get file name without extension (no fail)
-unsigned							szlower(unsigned u); // to lower reg
-void								szlower(char* p); // to lower reg
-bool								szmatch(const char* text, const char* name); //
-bool								szpmatch(const char* text, const char* pattern);
-void								szput(char** output, unsigned u, codepages page = metrics::code);
-char*								szput(char* output, unsigned u, codepages page = metrics::code); // Fast symbol put function. Return 'output'.
-bool								szstart(const char* text, const char* name);
-const char*							szt(const char* id);
-unsigned							szupper(unsigned u);
-void								szupper(char* p); // to upper reg
-char*								szurl(char* p, const char* path, const char* name, const char* ext = 0, const char* suffix = 0);
-char*								szurlc(char* p1);
-bool								translate_initialize(const char* locale);
-inline int							xrand(int n1, int n2) { return n1 + rand() % (n2 - n1 + 1); }
 // Common used templates
 inline int							ifloor(double n) { return (int)n; }
 template<class T> inline T			imax(T a, T b) { return a > b ? a : b; }
@@ -236,6 +197,46 @@ typedef bool(*fnvisible)(const void* object);
 typedef void(*fncommand)(void* object);
 // Callback function of source identification. Return property filled 'source'.
 typedef void(*fnsource)(const void* object, array& source);
+// Common functions
+bool								equal(const char* s1, const char* s2);
+const char*							getdescription(const char* id);
+fnevent								getcommand(const char* id);
+int									getdigitscount(unsigned number); // Get digits count of number. For example if number=100, result be 3.
+bool								initialize_translation(const char* locale);
+bool								ischa(unsigned u); // is alphabetical character?
+inline bool							isnum(unsigned u) { return u >= '0' && u <= '9'; } // is numeric character?
+int									isqrt(const int x); // Return aquare root of 'x'
+void*								loadb(const char* url, int* size = 0, int additional_bytes_alloated = 0); // Load binary file.
+char*								loadt(const char* url, int* size = 0); // Load text file and decode it to system codepage.
+bool								matchuc(const char* name, const char* filter);
+const char*							psstr(const char* p, char* value, char end_symbol = '\"'); // Parse string from string (like c format "Some\nstring")
+unsigned							rmoptimal(unsigned need_count);
+float								sqrt(const float x); // Return aquare root of 'x'
+inline const char*					skipsp(const char* p) { if(p) while(*p == ' ' || *p == '\t') p++; return p; }
+inline const char*					skipspcr(const char* p) { if(p) while(*p == ' ' || *p == '\t' || *p == '\n' || *p == '\r') p++; return p; }
+const char*							skipcr(const char* p);
+void								szchange(char* p, char s1, char s2);
+void								szencode(char* output, int output_count, codepages output_code, const char* input, int input_count, codepages input_code);
+unsigned							szget(const char** input, codepages page = metrics::code);
+int									szcmpi(const char* p1, const char* p2);
+int									szcmpi(const char* p1, const char* p2, int count);
+const char*							szdup(const char* text);
+const char*							szext(const char* path);
+const char*							szfname(const char* text); // Get file name from string (no fail, always return valid value)
+char*								szfnamewe(char* result, const char* name); // get file name without extension (no fail)
+unsigned							szlower(unsigned u); // to lower reg
+void								szlower(char* p); // to lower reg
+bool								szmatch(const char* text, const char* name); //
+bool								szpmatch(const char* text, const char* pattern);
+void								szput(char** output, unsigned u, codepages page = metrics::code);
+char*								szput(char* output, unsigned u, codepages page = metrics::code); // Fast symbol put function. Return 'output'.
+bool								szstart(const char* text, const char* name);
+const char*							szt(const char* id);
+unsigned							szupper(unsigned u);
+void								szupper(char* p); // to upper reg
+char*								szurl(char* p, const char* path, const char* name, const char* ext = 0, const char* suffix = 0);
+char*								szurlc(char* p1);
+inline int							xrand(int n1, int n2) { return n1 + rand() % (n2 - n1 + 1); }
 // Requisit descriptor
 struct anyreq {
 	unsigned short					offset;

@@ -1,4 +1,5 @@
 #include "answers.h"
+#include "command.h"
 #include "datamap.h"
 #include "dataset.h"
 #include "command.h"
@@ -144,9 +145,7 @@ public:
 struct locationi {
 	const char*			id;
 	posable				world;
-	const char*			name;
-	const char*			text;
-	explicit constexpr operator bool() const { return name != 0; }
+	explicit constexpr operator bool() const { return id != 0; }
 	int					getvelocity() const { return 50; }
 	void				paint() const;
 };

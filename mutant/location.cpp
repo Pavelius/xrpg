@@ -5,5 +5,5 @@ void locationi::paint() const {
 	auto y = world.getposition().y;
 	auto s = 5;
 	auto h = draw::ishilite(x, y, s, this);
-	draw::paint(x, y, name, FigureTrianlgeUp, s);
+	draw::paint(x, y, szt(id), FigureTrianlgeUp, s);
 }

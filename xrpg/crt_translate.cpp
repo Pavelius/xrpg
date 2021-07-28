@@ -132,7 +132,7 @@ static bool check(array& source, const char* locale, const char* url) {
 	return log::geterrors() == 0;
 }
 
-bool translate_initialize(const char* locale) {
+bool initialize_translation(const char* locale) {
 	if(main_locale)
 		return true;
 	main_locale = szdup(locale);
@@ -141,7 +141,7 @@ bool translate_initialize(const char* locale) {
 	if(!setfile(source_text, "Descriptions", main_locale, false))
 		return false;
 #ifdef _DEBUG
-	// Only in debug mode store collected string into locale
+	// Only in debug mode store previously collected string into locale
 	atexit(deinitialize);
 	// Check if all names is valid
 	return check(source_name, main_locale, "Names.txt");

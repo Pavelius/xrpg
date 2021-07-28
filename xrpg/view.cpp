@@ -339,6 +339,105 @@ static int status(int x, int y, int width, int value, const char* title) {
 	return status(x, y, width, temp, title);
 }
 
+static void setptr() {
+	auto p = (long*)hot.object;
+	auto v = hot.param;
+	if(p)
+		*p = v;
+}
+
+static bool button(const rect& rc, const char* title, const char* tips, unsigned key, color value, bool focused, bool checked, bool press, bool border) {
+	static rect rc_pressed;
+	static int rc_key_event;
+	auto push_fore = fore;
+	bool result = false;
+	struct rect rcb = {rc.x1 + 1, rc.y1 + 1, rc.x2, rc.y2};
+	auto a = ishilite(rcb);
+	if((key && hot.key == key) || (focused && hot.key == KeyEnter) || (a && hot.key == MouseLeft && hot.pressed)) {
+		rc_key_event = hot.key;
+		rc_pressed = rc;
+	}
+	if((rc_pressed == rc) && rc_key_event == MouseLeft && !a) {
+		rc_key_event = 0;
+		rc_pressed.clear();
+	}
+	auto button_pressed = (rc_pressed == rc);
+	if(button_pressed && (hot.key == InputKeyUp || (hot.key == MouseLeft && !hot.pressed))) {
+		result = true;
+		rc_key_event = 0;
+		rc_pressed.clear();
+	}
+	if(checked)
+		a = true;
+	color c0 = value;
+	if(a) {
+		if(c0.gray().r >= 100)
+			c0 = c0.mix(colors::black, 160);
+		else
+			c0 = c0.mix(colors::white, 160);
+	}
+	color b1 = c0;
+	color b2 = c0.mix(colors::black);
+	if(button_pressed)
+		gradv(rcb, b2, b1);
+	else
+		gradv(rcb, b1, b2);
+	if(border) {
+		auto bc = focused ? colors::active : c0;
+		if(bc.gray().r >= 100)
+			bc = bc.mix(colors::black, 160);
+		else
+			bc = bc.mix(colors::white, 160);
+		rectb(rc, bc);
+	}
+	auto rco = rc; rco.offset(2, 2);
+	if(title) {
+		rect r1 = rc;
+		if(button_pressed)
+			r1.y1 += 2;
+		text(r1, title, AlignCenterCenter);
+	}
+	if(a && (tips || key) && !hot.pressed) {
+		stringbuilder sb(tooltips_text);
+		sb.add(tips);
+		if(key) {
+			sb.addn("%1: [", szt("HotKey"));
+			key2str(sb, key);
+			sb.add("]");
+		}
+	}
+	fore = push_fore;
+	return result;
+}
+
+static void buttonw(int& x, int y, const char* title, fnevent proc, unsigned key) {
+	auto h = texth() + 8;
+	auto w = textw(title) + 8;
+	rect r = {x, y, x + w, y + h};
+	auto focus = isfocused(r, proc);
+	auto result = button(r, title, 0, key, colors::button, focus, false, false, true);
+	if(result)
+		execute(setptr, (int)proc, 0, &form.window);
+	x += w + gui.padding;
+}
+
+static void paint_commands() {
+	int x = gui.border;
+	int y = getheight() - texth() - 8 - gui.border;
+	if(!form.commands)
+		return;
+	for(auto p = form.commands; *p; p++) {
+		auto id = *p;
+		auto fn = getcommand(id);
+		if(!fn || form.window==fn)
+			continue;
+		auto nm = szt(id);
+		if(!nm)
+			continue;
+		buttonw(x, y, nm, fn, 0);
+	}
+}
+
 void formi::before() const {
 	if(bitmap)
 		image(0, 0, gres(bitmap, "art/background"), 0, 0);
@@ -348,6 +447,7 @@ void formi::before() const {
 		background();
 	if(window)
 		window();
+	paint_commands();
 }
 
 void formi::after() const {
@@ -597,70 +697,6 @@ void draw::bar(rect rc, color_s color, color_s border, color_s back, int value, 
 	fore = push;
 }
 
-static bool button(const rect& rc, const char* title, const char* tips, unsigned key, color value, bool focused, bool checked, bool press, bool border) {
-	static rect rc_pressed;
-	static int rc_key_event;
-	auto push_fore = fore;
-	bool result = false;
-	struct rect rcb = {rc.x1 + 1, rc.y1 + 1, rc.x2, rc.y2};
-	auto a = ishilite(rcb);
-	if((key && hot.key == key) || (focused && hot.key == KeyEnter) || (a && hot.key == MouseLeft && hot.pressed)) {
-		rc_key_event = hot.key;
-		rc_pressed = rc;
-	}
-	if((rc_pressed == rc) && rc_key_event == MouseLeft && !a) {
-		rc_key_event = 0;
-		rc_pressed.clear();
-	}
-	auto button_pressed = (rc_pressed == rc);
-	if(button_pressed && (hot.key == InputKeyUp || (hot.key == MouseLeft && !hot.pressed))) {
-		result = true;
-		rc_key_event = 0;
-		rc_pressed.clear();
-	}
-	if(checked)
-		a = true;
-	color c0 = value;
-	if(a) {
-		if(c0.gray().r >= 100)
-			c0 = c0.mix(colors::black, 160);
-		else
-			c0 = c0.mix(colors::white, 160);
-	}
-	color b1 = c0;
-	color b2 = c0.mix(colors::black);
-	if(button_pressed)
-		gradv(rcb, b2, b1);
-	else
-		gradv(rcb, b1, b2);
-	if(border) {
-		auto bc = focused ? colors::active : c0;
-		if(bc.gray().r >= 100)
-			bc = bc.mix(colors::black, 160);
-		else
-			bc = bc.mix(colors::white, 160);
-		rectb(rc, bc);
-	}
-	auto rco = rc; rco.offset(2, 2);
-	if(title) {
-		rect r1 = rc;
-		if(button_pressed)
-			r1.y1 += 2;
-		text(r1, title, AlignCenterCenter);
-	}
-	if(a && (tips || key) && !hot.pressed) {
-		stringbuilder sb(tooltips_text);
-		sb.add(tips);
-		if(key) {
-			sb.addn("%1: [", szt("HotKey"));
-			key2str(sb, key);
-			sb.add("]");
-		}
-	}
-	fore = push_fore;
-	return result;
-}
-
 void draw::buttonr(int& x, int y, const char* title, fnevent proc, unsigned key) {
 	if(!title || !proc)
 		return;
@@ -673,6 +709,21 @@ void draw::buttonr(int& x, int y, const char* title, fnevent proc, unsigned key)
 	if(result)
 		execute(proc);
 	x -= gui.padding;
+}
+
+void draw::buttonl(int& x, int y, const char* title, fnevent proc, unsigned key, void* focus_value) {
+	if(!title || !proc)
+		return;
+	auto h = texth() + 8;
+	auto w = textw(title) + 8;
+	rect r = {x, y, x + w, y + h};
+	if(!focus_value)
+		focus_value = proc;
+	auto focus = isfocused(r, focus_value);
+	auto result = button(r, title, 0, key, colors::button, focus, false, false, true);
+	if(result)
+		execute(proc);
+	x += w + gui.padding;
 }
 
 bool draw::execute(const hotkey* source) {

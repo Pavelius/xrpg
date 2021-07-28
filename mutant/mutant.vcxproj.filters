@@ -49,6 +49,9 @@
     <ClCompile Include="skill.cpp">
       <Filter>Логика</Filter>
     </ClCompile>
+    <ClCompile Include="commands.cpp">
+      <Filter>Логика</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Логика">
