@@ -143,6 +143,7 @@
     <ClInclude Include="archive.h" />
     <ClInclude Include="bsreq.h" />
     <ClInclude Include="bstream.h" />
+    <ClInclude Include="cflags.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="command.h" />
     <ClInclude Include="converter.h" />

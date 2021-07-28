@@ -1,5 +1,3 @@
-#include <initializer_list>
-
 #pragma once
 
 extern "C" int						atexit(void(*func)(void));
@@ -62,7 +60,6 @@ struct adat {
 	T								data[count_max];
 	unsigned						count;
 	constexpr adat() : data{}, count(0) {}
-	constexpr adat(const std::initializer_list<T> list) : count(0) { for(auto& e : list) add(e); }
 	constexpr const T& operator[](unsigned index) const { return data[index]; }
 	constexpr T& operator[](unsigned index) { return data[index]; }
 	explicit operator bool() const { return count != 0; }
@@ -81,18 +78,6 @@ struct adat {
 	bool							is(const T t) const { return indexof(t) != -1; }
 	void							remove(int index, int remove_count = 1) { if(index < 0) return; if(index<int(count - 1)) memcpy(data + index, data + index + 1, sizeof(data[0]) * (count - index - 1)); count--; }
 	void							remove(const T t) { remove(indexof(t), 1); }
-};
-// Abstract flag data bazed on enumerator
-template<typename T, typename DT = unsigned>
-class cflags {
-	DT								data;
-public:
-	constexpr cflags() : data(0) {}
-	constexpr cflags(const std::initializer_list<T> list) : data() { for(auto e : list) add(e); }
-	constexpr void					add(const T id) { data |= 1 << id; }
-	constexpr void					clear() { data = 0; }
-	constexpr bool					is(const T id) const { return (data & (1 << id)) != 0; }
-	constexpr void					remove(T id) { data &= ~(1 << id); }
 };
 // Simple slice object
 template<class T>
@@ -237,17 +222,6 @@ void								szupper(char* p); // to upper reg
 char*								szurl(char* p, const char* path, const char* name, const char* ext = 0, const char* suffix = 0);
 char*								szurlc(char* p1);
 inline int							xrand(int n1, int n2) { return n1 + rand() % (n2 - n1 + 1); }
-// Requisit descriptor
-struct anyreq {
-	unsigned short					offset;
-	unsigned char					size;
-	unsigned char					bit;
-	constexpr bool operator==(const anyreq& e) { return e.offset == offset; }
-	int								get(const void* object) const;
-	const char*						gets(const void* object) const;
-	constexpr char*					ptr(const void* object) const { return (char*)object + offset; }
-	void							set(void* object, int value) const;
-};
 // Abstract serializer
 struct serializer {
 	enum class kind { Text, Number, Array, Struct };
@@ -287,7 +261,6 @@ template<class T> struct meta_decoy<const T*> : meta_decoy<T> {};
 template<class T, unsigned N> struct meta_decoy<T[N]> : meta_decoy<T> {};
 template<class T> struct meta_decoy<T[]> : meta_decoy<T> {};
 template<class T> struct meta_decoy<const T> : meta_decoy<T> {};
-template<class T> struct meta_decoy<std::initializer_list<T>> : meta_decoy<T> {};
 template<class T> struct meta_decoy<vector<T>> : meta_decoy<T> {};
 template<class T, unsigned N> struct meta_decoy<adat<T, N>> : meta_decoy<T> {};
-template<class T, class DT> struct meta_decoy<cflags<T, DT>> : meta_decoy<T> {};
+//template<class T, class DT> struct meta_decoy<cflags<T, DT>> : meta_decoy<T> {};
