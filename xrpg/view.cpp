@@ -502,9 +502,9 @@ void draw::header(int x, int& y, int width, const char* title, ...) {
 	font = push_font;
 }
 
-int getcolumns(const answers& an, bool allow_cancel) {
+int getcolumns(const answers& an) {
 	auto divider = an.getcount() % 2;
-	if(allow_cancel && an.getcount() <= 4 && divider > 0)
+	if(an.getcount() <= 4 && divider > 0)
 		return 1;
 	for(auto& e : an) {
 		auto len = zlen(e.text);
@@ -518,7 +518,7 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 	if(!interactive)
 		return random();
 	int x, y;
-	auto columns = getcolumns(*this, cancel_text != 0);
+	auto columns = getcolumns(*this);
 	auto column_width = gui.window_width;
 	if(columns > 1)
 		column_width = column_width / columns - gui.border;
@@ -544,8 +544,10 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 			index++;
 		}
 		x = x1; y = y2;
-		if(cancel_text)
+		if(cancel_text) {
+			y += gui.padding;
 			answer_button(x, y, gui.window_width, 0, cancel_text, KeyEscape);
+		}
 		form.after();
 		domodal();
 	}

@@ -1,6 +1,7 @@
 ﻿About: О программе
 Agility: Ловкость
 Attributes: Атрибуты
+Back: Назад
 BaseballBat: Бейсбольная бита
 BatWithSpikes: Шипованная бита
 BicycleChain: Мотоциклетная цепь
@@ -35,6 +36,7 @@ NewGame: Новая игра
 Next: Далее
 NoGender: Безполый
 NoItem: Нет предмета
+Rules: Правила
 Scout: Наблюдательность
 ScrapAxe: Самодельный топор
 ScrapKnife: Самодельный нож
@@ -45,6 +47,8 @@ Shoot: Стрельба
 Skills: Навыки
 Slave: Раб
 Sneak: Скрытность
+Sound: Звук
 Stalker: Разведчик
 Strenght: Телостожение
+Video: Видео
 Wits: Смекалка

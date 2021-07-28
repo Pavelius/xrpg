@@ -1,2 +1,5 @@
 ﻿Errors occurs in locale/ru/Names.txt.txt
-Define translate for 'CharacterSheet'
+Define translate for 'Back'
+Define translate for 'Rules'
+Define translate for 'Sound'
+Define translate for 'Video'
