@@ -8,13 +8,13 @@ static void choose_menu(answers& an, const char* parent, const char* resid, cons
 		for(auto& e : bsdata<menui>()) {
 			if(strcmp(e.parent, parent) != 0)
 				continue;
-			an.add((long)&e, szt(e.id));
+			an.add((long)&e, getnm(e.id));
 		}
 		if(!an.getcount())
 			break;
 		const char* cancel = 0;
 		if(flags.is(MenuBack))
-			cancel = szt("Back");
+			cancel = getnm("Back");
 		auto p = (menui*)an.choose(title, cancel, true, resid);
 		if(!p)
 			parent = 0;

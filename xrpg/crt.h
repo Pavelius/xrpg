@@ -187,6 +187,7 @@ bool								equal(const char* s1, const char* s2);
 const char*							getdescription(const char* id);
 fnevent								getcommand(const char* id);
 int									getdigitscount(unsigned number); // Get digits count of number. For example if number=100, result be 3.
+const char*							getnm(const char* id);
 bool								initialize_translation(const char* locale);
 bool								ischa(unsigned u); // is alphabetical character?
 inline bool							isnum(unsigned u) { return u >= '0' && u <= '9'; } // is numeric character?
@@ -216,7 +217,6 @@ bool								szpmatch(const char* text, const char* pattern);
 void								szput(char** output, unsigned u, codepages page = metrics::code);
 char*								szput(char* output, unsigned u, codepages page = metrics::code); // Fast symbol put function. Return 'output'.
 bool								szstart(const char* text, const char* name);
-const char*							szt(const char* id);
 unsigned							szupper(unsigned u);
 void								szupper(char* p); // to upper reg
 char*								szurl(char* p, const char* path, const char* name, const char* ext = 0, const char* suffix = 0);

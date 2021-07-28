@@ -1,20 +1,20 @@
 #include "crt.h"
 
 // Support class making string copy from strings storage.
-template <class T> struct strcol {
+struct strcol {
 
 	strcol*	next;
 	int		count;
-	T		data[256 * 255 / sizeof(T)]; // Inner buffer
+	char	data[256 * 255]; // Inner buffer
 
-	strcol() : next(0), count(0) {
+	strcol() : next(0), count(0), data() {
 	}
 
 	~strcol() {
 		seqclear(this);
 	}
 
-	bool has(const T* value) {
+	bool has(const char* value) {
 		strcol* e = this;
 		while(e) {
 			if(value >= e->data && value <= e->data + e->count)
@@ -24,10 +24,10 @@ template <class T> struct strcol {
 		return false;
 	}
 
-	const T* find(const T* text, int textc) {
+	const char* find(const char* text, int textc) {
 		if(textc == -1)
 			textc = zlen(text);
-		const T c = text[0];
+		const char c = text[0];
 		for(strcol* t = this; t; t = t->next) {
 			int m = t->count - textc;
 			if(m < 0)
@@ -35,7 +35,7 @@ template <class T> struct strcol {
 			for(int i = 0; i < m; i++) {
 				if(c == data[i]) {
 					int	j = 1;
-					T*	p = &data[i];
+					auto p = &data[i];
 					for(; j < textc; j++)
 						if(p[j] != text[j])
 							break;
@@ -47,14 +47,14 @@ template <class T> struct strcol {
 		return 0;
 	}
 
-	const T* add(const T* text, int textc) {
+	const char* add(const char* text, int textc) {
 		if(!text)
 			return 0;
 		if(has(text))
 			return text;
 		if(textc == -1)
 			textc = zlen(text);
-		const T* r = find(text, textc);
+		auto r = find(text, textc);
 		if(r)
 			return r;
 		strcol* t = this;
@@ -67,7 +67,7 @@ template <class T> struct strcol {
 				t = t->next;
 				continue;
 			}
-			T* result = &t->data[t->count];
+			auto result = &t->data[t->count];
 			memcpy(result, text, textc * sizeof(text[0]));
 			result[textc] = 0;
 			t->count += textc + 1;
@@ -78,8 +78,8 @@ template <class T> struct strcol {
 };
 
 const char* szdup(const char* text) {
-	static strcol<char> small;
-	static strcol<char> big;
+	static strcol small;
+	static strcol big;
 	if(!text)
 		return 0;
 	if(text[0] == 0)

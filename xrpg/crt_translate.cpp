@@ -149,7 +149,7 @@ bool initialize_translation(const char* locale) {
 	return true;
 }
 
-const char* szt(const char* id) {
+const char* getnm(const char* id) {
 	if(!id || id[0]==0)
 		return "";
 	translate key = {id, 0};

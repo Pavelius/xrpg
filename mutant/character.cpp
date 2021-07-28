@@ -37,7 +37,7 @@ static void choose_attribute(character& e, int score) {
 			auto maximum = e.getmaximum(v);
 			if(value > maximum || value < 2)
 				continue;
-			an.add((long)&ei, szt(bsdata<attributei>::elements[v].id));
+			an.add((long)&ei, getnm(bsdata<attributei>::elements[v].id));
 		}
 		auto id = (attribute_s)variant((void*)an.choose(0, 0, true, "skills")).value;
 		e.set(id, e.get(id) + type);
@@ -68,7 +68,7 @@ static void choose_skills(character& e, int score, int maximum) {
 			auto value = e.get(v) + type;
 			if(value > maximum || value < e.getminimum(v))
 				continue;
-			an.add((long)&ei, szt(bsdata<skilli>::elements[v].id));
+			an.add((long)&ei, getnm(bsdata<skilli>::elements[v].id));
 		}
 		auto id = (skill_s)variant((void*)an.choose(0, 0, true, "skills")).value;
 		e.set(id, e.get(id) + type);
