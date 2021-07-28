@@ -13,7 +13,7 @@
 #pragma once
 
 enum variant_s : unsigned char {
-	None, Attribute, Item, Gender, Location, Role, Skill,
+	None, Attribute, Item, Gender, Location, Role, Skill, Talent,
 };
 enum attribute_s : unsigned char {
 	Strenght, Agility, Wits, Empathy
@@ -81,6 +81,9 @@ struct rolei {
 struct skilli {
 	const char*			id;
 	attribute_s			attribute;
+};
+struct talenti {
+	const char*			id;
 };
 class item {
 	item_s				type;

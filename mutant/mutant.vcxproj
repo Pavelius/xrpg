@@ -164,6 +164,7 @@
     <ClCompile Include="role.cpp" />
     <ClCompile Include="skill.cpp" />
     <ClCompile Include="statable.cpp" />
+    <ClCompile Include="talent.cpp" />
     <ClCompile Include="worldmap.cpp" />
   </ItemGroup>
   <ItemGroup>

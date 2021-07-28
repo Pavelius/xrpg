@@ -11,8 +11,9 @@ BSDATA(varianti) = {
 	{"Locations", 0, VRAR(locationi)},
 	{"Roles", 0, VRAR(rolei)},
 	{"Skills", 0, VRAR(skilli)},
+	{"Talents", 0, VRAR(talenti)},
 };
-assert_enum(varianti, Skill)
+assert_enum(varianti, Talent)
 
 BSDATAC(character, 128)
 BSDATAC(locationi, 128)
