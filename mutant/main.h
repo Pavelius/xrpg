@@ -61,7 +61,8 @@ enum tag_s : unsigned char {
 typedef short unsigned	indext;
 typedef dataset<attribute_s, Empathy> attributea;
 typedef dataset<skill_s, Intimidate> skilla;
-typedef cflags<tag_s>	taga;
+typedef cflags<tag_s> taga;
+typedef cflags<talent_s> talenta;
 typedef cflags<mutation_s> mutaniona;
 const indext			Blocked = 0xFFFF;
 struct attributei {
@@ -84,6 +85,7 @@ struct skilli {
 };
 struct talenti {
 	const char*			id;
+	role_s				role;
 };
 class item {
 	item_s				type;
@@ -111,6 +113,7 @@ public:
 class statable {
 	attributea			attributes;
 	skilla				skills;
+	talenta				talents;
 	mutaniona			mutation;
 public:
 	void				create(role_s v);
@@ -121,6 +124,7 @@ public:
 	constexpr bool		is(mutation_s v) const { return mutation.is(v); }
 	constexpr void		set(attribute_s i, int v) { attributes.set(i, v); }
 	constexpr void		set(skill_s i, int v) { skills.set(i, v); }
+	constexpr void		set(talent_s i) { talents.add(i); }
 };
 class character : public nameable, public statable {
 public:

@@ -5,7 +5,6 @@
 #pragma once
 
 typedef void(*fnevent)();
-extern "C" int strcmp(const char* s1, const char* s2); // Compare two strings
 
 enum draw_event_s {
 	KeyBackspace = 8, KeyTab = 9, KeyEnter = 10, KeyEscape = 0x1B, KeySpace = 0x20, KeyDelete = 46,
@@ -94,12 +93,8 @@ struct sprite : pma {
 	const unsigned char* ptr(unsigned o) const { return (unsigned char*)this + o; }
 };
 namespace colors {
-extern color			active;
-extern color			button;
-extern color			form;
-extern color			focus;
-extern color			window;
-extern color			border;
+extern color			button, form, window;
+extern color			border, active;
 extern color			text, h1, h2, h3, special;
 namespace tips {
 extern color			back;
@@ -188,7 +183,6 @@ const sprite*			gres(const char* name, const char* folder = 0, point size = {});
 int						hittest(int x, int test_x, const char* string, int lenght);
 int						hittest(rect rc, const char* string, unsigned state, point mouse);
 bool					ishilite(const rect& rc);
-bool					ismodal();
 void					image(int x, int y, const sprite* e, int id, int flags, unsigned char alpha = 0xFF);
 void					image(int x, int y, const sprite* e, int id, int flags, unsigned char alpha, color* pal);
 void					key2str(stringbuilder& sb, int key);
@@ -203,6 +197,7 @@ unsigned char*			ptr(int x, int y);
 int						rawinput();
 void					rectb(rect rc); // Draw rectangle border
 void					rectb(rect rc, color c1);
+void					rectb(rect rc, int radius);
 void					rectf(rect rc); // Draw rectangle area. Right and bottom side is one pixel less.
 void					rectf(rect rc, color c1);
 void					rectf(rect rc, color c1, unsigned char alpha);
@@ -221,7 +216,7 @@ void					text(int x, int y, const char* string, int count = -1, unsigned flags =
 int						text(rect rc, const char* string, unsigned state = 0, int* max_width = 0);
 int						textc(int x, int y, int width, const char* string, int count = -1, unsigned flags = 0, bool* clipped = 0);
 int						textbc(const char* string, int width);
-int						textlb(const char* string, int index, int width, int* line_index = 0, int* line_count = 0);
+//int					textlb(const char* string, int index, int width, int* line_index = 0, int* line_count = 0);
 int						texte(rect rc, const char* string, unsigned flags, int i1, int i2);
 int						textf(int x, int y, int width, const char* text, int* max_width = 0, int min_height = 0, int* cashe_height = 0, const char** cashe_string = 0, int tab_width = 0);
 int						textf(rect& rc, const char* string, int tab_width = 0);

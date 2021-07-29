@@ -9,8 +9,10 @@ BluntInstrument: Импровизированная дубика
 Boss: Босс
 BrassKnuckles: Кастет
 CharacterSheet: Лист пресонажа
+ChooseTalent: Выбирайте ваше достоинство
 Chronicler: Хронист
 Close: Закрыть
+Commander: Командир
 Comprehend: Понимание
 Covcheg: Ковчег
 DogHandler: Собачник
@@ -23,6 +25,7 @@ Fight: Драка
 Fixer: Делец
 Force: Сила
 Gearhead: Железячник
+Gunslingers: Стрелки
 Heal: Лечение
 HotKey: Горячая клавиша
 Intimidate: Запугивание
@@ -36,6 +39,7 @@ NewGame: Новая игра
 Next: Далее
 NoGender: Безполый
 NoItem: Нет предмета
+Racketeer: Вымогатель
 Rules: Правила
 Scout: Наблюдательность
 ScrapAxe: Самодельный топор

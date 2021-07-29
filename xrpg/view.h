@@ -55,6 +55,7 @@ void						fog(int x, int y, int n);
 point						gethiliteback();
 void						grid();
 bool						ishilite(int x, int y, int r, variant v);
+bool						ismodal();
 void						initialize();
 int							scene(fnevent input);
 void						setnext(fnevent v);

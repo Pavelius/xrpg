@@ -15,7 +15,6 @@ using namespace draw;
 // Default theme colors
 color				colors::active;
 color				colors::button;
-color				colors::focus;
 color				colors::form;
 color				colors::window;
 color				colors::text;
@@ -1082,6 +1081,17 @@ void draw::rectb(rect rc) {
 	line(rc.x1, rc.y2 - 1, rc.x1, rc.y1);
 }
 
+void draw::rectb(rect rc, int radius) {
+	line(rc.x1 + radius, rc.y1, rc.x2 - radius, rc.y1);
+	line(rc.x2, rc.y1 + radius, rc.x2, rc.y2 - radius);
+	line(rc.x2 - radius, rc.y2, rc.x1 + radius, rc.y2);
+	line(rc.x1, rc.y2 - radius, rc.x1, rc.y1 + radius);
+	bezierseg(rc.x1 + radius, rc.y1, rc.x1, rc.y1, rc.x1, rc.y1 + radius);
+	bezierseg(rc.x2 - radius, rc.y1, rc.x2, rc.y1, rc.x2, rc.y1 + radius);
+	bezierseg(rc.x1 + radius, rc.y2, rc.x1, rc.y2, rc.x1, rc.y2 - radius);
+	bezierseg(rc.x2 - radius, rc.y2, rc.x2, rc.y2, rc.x2, rc.y2 - radius);
+}
+
 void draw::rectb(rect rc, color c1) {
 	auto push_fore = fore; fore = c1;
 	rectb(rc);
@@ -1477,28 +1487,28 @@ int	draw::text(rect rc, const char* string, unsigned state, int* max_width) {
 	}
 }
 
-int draw::textlb(const char* string, int index, int width, int* line_index, int* line_count) {
-	auto p = string;
-	if(line_index)
-		*line_index = 0;
-	if(line_count)
-		*line_count = 0;
-	while(true) {
-		int c = textbc(p, width);
-		if(!c)
-			break;
-		if(index < c || p[c] == 0) {
-			if(line_count)
-				*line_count = c;
-			break;
-		}
-		index -= c;
-		if(line_index)
-			*line_index = *line_index + 1;
-		p = skiptr(p + c);
-	}
-	return p - string;
-}
+//int draw::textlb(const char* string, int index, int width, int* line_index, int* line_count) {
+//	auto p = string;
+//	if(line_index)
+//		*line_index = 0;
+//	if(line_count)
+//		*line_count = 0;
+//	while(true) {
+//		int c = textbc(p, width);
+//		if(!c)
+//			break;
+//		if(index < c || p[c] == 0) {
+//			if(line_count)
+//				*line_count = c;
+//			break;
+//		}
+//		index -= c;
+//		if(line_index)
+//			*line_index = *line_index + 1;
+//		p = skiptr(p + c);
+//	}
+//	return p - string;
+//}
 
 static void hilite_text_line(int x, int y, int width, int height, const char* string, int count, unsigned state, int i1, int i2) {
 	int w = draw::textw(string, count);

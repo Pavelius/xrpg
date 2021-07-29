@@ -75,6 +75,20 @@ static void choose_skills(character& e, int score, int maximum) {
 	}
 }
 
+static void choose_talent(character& e, bool filter_by_role) {
+	char temp[260]; stringbuilder sb(temp);
+	answers an;
+	for(auto& ei : bsdata<talenti>()) {
+		if(filter_by_role) {
+			if(ei.role != e.getrole())
+				continue;
+		}
+		an.add((long)&ei, getnm(ei.id));
+	}
+	auto id = (talent_s)variant((void*)an.choose(getnm("ChooseTalent"), 0, true, "skills")).value;
+	e.set(id);
+}
+
 void character::clear() {
 	memset(this, 0, sizeof(*this));
 }
@@ -106,6 +120,7 @@ void character::create_new() {
 	current_character->create(current_character->getrole());
 	choose_attribute(*current_character, 14);
 	choose_skills(*current_character, 10, 3);
+	choose_talent(*current_character, true);
 }
 
 role_s character::getrole() const {
