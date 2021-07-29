@@ -191,5 +191,8 @@
     <ClCompile Include="crt_translate.cpp">
       <Filter>Поддержка</Filter>
     </ClCompile>
+    <ClCompile Include="draw_tabs.cpp">
+      <Filter>Графика</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -27,12 +27,40 @@ static bool test_overload() {
 	return m2.type == Role;
 }
 
+const char* get_tab_text(const void* object, stringbuilder& sb) {
+	return (const char*)object;
+}
+
+static void test_window_proc() {
+	static int current_tab;
+	int x, y, width;
+	dialogul(x, y, width);
+	text(x, y, "Test string for small company and be quite.", -1, 0, 100);
+	y += texth() + gui.padding;
+	static const char* tabs[] = {"Вывод", "Ввод", "Параметры"};
+	int hilite;
+	auto result = draw::tabv({x, y, x + width, y + 260}, false, false, (void**)&tabs, 0, 3, current_tab, &hilite, get_tab_text);
+	if(result == 1)
+		execute(setint, hilite, 0, &current_tab);
+	int x2 = x + width;
+	int y2 = y + 263;
+	buttonr(x2, y2, "Назад", buttoncancel);
+	buttonr(x2, y2, "OK", buttonok);
+}
+
+static void test_window() {
+	form.window = test_window_proc;
+	form.bitmap = "mutant_title";
+	menui::choose("Main", "city", 0);
+}
+
 int main() {
 	if(!initialize_translation("ru"))
 		return -1;
 	test_overload();
 	draw::initialize();
-	draw::setnext(game.main_menu);
+	//draw::setnext(game.main_menu);
+	draw::setnext(test_window);
 	draw::application();
 	return 0;
 }

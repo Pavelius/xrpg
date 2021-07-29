@@ -43,7 +43,6 @@ static void character_sheet() {
 	auto y2 = 300 - gui.border;
 	draw::buttonr(x2, y2, getnm("Close"), close_active_window, KeyEscape);
 	draw::buttonr(x2, y2, getnm("Next"), next_window, 'N');
-	draw::rectb({100, 100, 200, 200}, 8);
 }
 
 BSDATA(commandi) = {

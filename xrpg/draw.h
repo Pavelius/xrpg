@@ -115,7 +115,7 @@ struct hoti {
 	bool				pressed; // flag if any of mouse keys is pressed
 	long				param, param2; // command context or parameters
 	const void*			object; // command object
-	rect				hilite;
+	rect				hilite, focus;
 	explicit operator bool() const { return key != 0; }
 };
 extern hoti				hot;
@@ -198,7 +198,9 @@ int						rawinput();
 void					rectb(rect rc); // Draw rectangle border
 void					rectb(rect rc, color c1);
 void					rectb(rect rc, int radius);
+void					rectb(rect rc, color c1, int radius);
 void					rectf(rect rc); // Draw rectangle area. Right and bottom side is one pixel less.
+void					rectfe(rect rc, int radius, unsigned char alpha);
 void					rectf(rect rc, color c1);
 void					rectf(rect rc, color c1, unsigned char alpha);
 void					rectx(rect rc, color c1);
@@ -213,6 +215,7 @@ void					stroke(int x, int y, const sprite* e, int id, int flags, unsigned char 
 void					syscursor(bool enable);
 void					sysredraw();
 void					text(int x, int y, const char* string, int count = -1, unsigned flags = 0);
+void					text(int x, int y, const char* string, int count, unsigned flags, int maximum_width);
 int						text(rect rc, const char* string, unsigned state = 0, int* max_width = 0);
 int						textc(int x, int y, int width, const char* string, int count = -1, unsigned flags = 0, bool* clipped = 0);
 int						textbc(const char* string, int width);

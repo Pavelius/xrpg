@@ -46,6 +46,7 @@ void draw::clearfocus() {
 	elements.clear();
 	hilite_focus = 0;
 	hilite_bits = 0;
+	hot.focus = {};
 }
 
 void draw::setfocusable(const rect& rc, const void* value, unsigned bits) {
@@ -118,7 +119,10 @@ bool draw::isfocused(const rect& rc, const void* value, unsigned bits) {
 		hilite_focus = value;
 		hilite_bits = bits;
 	}
-	return isfocused(value, bits);
+	auto result = isfocused(value, bits);
+	if(result)
+		hot.focus = rc;
+	return result;
 }
 
 void draw::setfocus(const void* value, unsigned bits, bool instant) {

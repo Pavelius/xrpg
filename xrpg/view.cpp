@@ -63,6 +63,11 @@ void draw::breakparam() {
 	breakmodal(hot.param);
 }
 
+void draw::setint() {
+	auto p = (int*)hot.object;
+	*p = hot.param;
+}
+
 static void keyparam() {
 	hot.key = hot.param;
 	hot.param = 0;

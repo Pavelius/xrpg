@@ -1098,6 +1098,12 @@ void draw::rectb(rect rc, color c1) {
 	fore = push_fore;
 }
 
+void draw::rectb(rect rc, color c1, int radius) {
+	auto push_fore = fore; fore = c1;
+	rectb(rc, radius);
+	fore = push_fore;
+}
+
 void draw::rectf(rect rc) {
 	if(!canvas)
 		return;
@@ -1106,6 +1112,39 @@ void draw::rectf(rect rc) {
 	if(rc.x1 == rc.x2)
 		return;
 	set32(ptr(rc.x1, rc.y1), canvas->scanline, rc.x2 - rc.x1, rc.y2 - rc.y1, set32);
+}
+
+static void rectfpt(int xc1, int yc1, int xc2, int yc2, int r, const color c1, unsigned char alpha) {
+	if(xc1 - r >= clipping.x2 || xc2 + r < clipping.x1 || yc1 - r >= clipping.y2 || yc2 + r < clipping.y1)
+		return;
+	xc1 += r; xc2 -= r;
+	yc1 += r; yc2 -= r + 1;
+	int x = -r, y = 0, err = 2 - 2 * r, yp = -1000;
+	do {
+		if(yp != y) {
+			yp = y;
+			rectf({xc1 + x, yc1 - y, xc1, yc1 - y + 1}, c1, alpha);
+			rectf({xc2 - x, yc1 - y, xc2, yc1 - y + 1}, c1, alpha);
+			if(y != 0) {
+				rectf({xc1 + x, yc2 + y, xc1, yc2 + y + 1}, c1, alpha);
+				rectf({xc2 - x, yc2 + y, xc2, yc2 + y + 1}, c1, alpha);
+			}
+		}
+		r = err;
+		if(r <= y)
+			err += ++y * 2 + 1;
+		if(r > x || err > y)
+			err += ++x * 2 + 1;
+	} while(x < 0);
+}
+
+void draw::rectfe(rect rc, int r, unsigned char alpha) {
+	rectfpt(rc.x1, rc.y1, rc.x2, rc.y2, r, fore, alpha);
+	rectf({rc.x1 + r, rc.y1, rc.x2 - r, rc.y1 + r}, fore, alpha);
+	rectf({rc.x1, rc.y1 + r + 1, rc.x1 + r, rc.y2 - r}, fore, alpha);
+	rectf({rc.x2 - r, rc.y1 + r + 1, rc.x2, rc.y2 - r}, fore, alpha);
+	rectf({rc.x1 + r, rc.y2 - r, rc.x2 - r, rc.y2}, fore, alpha);
+	rectf({rc.x1 + r, rc.y1 + r, rc.x2 - r, rc.y2 - r}, fore, alpha);
 }
 
 void draw::rectf(rect rc, color c1) {
@@ -1405,7 +1444,7 @@ int draw::texth(const char* string, int width) {
 void draw::text(int x, int y, const char* string, int count, unsigned flags) {
 	if(!font)
 		return;
-	int dy = texth();
+	auto dy = texth();
 	if(y >= clipping.y2 || y + dy < clipping.y1)
 		return;
 	if(count == -1)
@@ -1417,6 +1456,30 @@ void draw::text(int x, int y, const char* string, int count, unsigned flags) {
 		if(sm >= 0x21)
 			glyph(x, y, sm, flags);
 		x += textw(sm);
+	}
+}
+
+void draw::text(int x, int y, const char* string, int count, unsigned flags, int maximum_width) {
+	if(!font)
+		return;
+	auto dy = texth();
+	if(y >= clipping.y2 || y + dy < clipping.y1)
+		return;
+	if(count == -1)
+		count = zlen(string);
+	const char *s1 = string;
+	const char *s2 = string + count;
+	auto x2 = x + maximum_width - textw('.') * 3;
+	while(s1 < s2) {
+		int sm = szget(&s1);
+		auto x1 = x + textw(sm);
+		if(x1 >= x2) {
+			text(x, y, "...", -1, flags);
+			break;
+		}
+		if(sm >= 0x21)
+			glyph(x, y, sm, flags);
+		x = x1;
 	}
 }
 
