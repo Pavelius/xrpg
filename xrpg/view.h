@@ -1,4 +1,5 @@
 #include "draw.h"
+#include "draw_control.h"
 #include "draw_focus.h"
 #include "point.h"
 #include "rect.h"

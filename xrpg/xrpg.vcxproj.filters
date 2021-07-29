@@ -96,6 +96,9 @@
     <ClInclude Include="cflags.h">
       <Filter>Поддержка</Filter>
     </ClInclude>
+    <ClInclude Include="draw_control.h">
+      <Filter>Графика</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">

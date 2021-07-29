@@ -151,6 +151,7 @@
     <ClInclude Include="datamap.h" />
     <ClInclude Include="dataset.h" />
     <ClInclude Include="draw.h" />
+    <ClInclude Include="draw_control.h" />
     <ClInclude Include="draw_focus.h" />
     <ClInclude Include="gender.h" />
     <ClInclude Include="io_stream.h" />
