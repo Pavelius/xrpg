@@ -169,6 +169,16 @@ const char* getnm(const char* id) {
 	return p->name;
 }
 
+const char* getunm(const char* id) {
+	if(!id || id[0] == 0)
+		return "";
+	translate key = {id, 0};
+	auto p = (translate*)bsearch(&key, source_name.data, source_name.getcount(), source_name.getsize(), compare);
+	if(!p || !p->name || !p->name[0])
+		return id;
+	return p->name;
+}
+
 const char* getdescription(const char* id) {
 	if(!id || id[0] == 0)
 		return 0;

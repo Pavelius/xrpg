@@ -270,9 +270,14 @@ void stringbuilder::upper() {
 }
 
 void stringbuilder::addidentifier(const char* identifier) {
-	addv("[-", 0);
-	addv(identifier, 0);
-	addv("]", 0);
+	auto p = getunm(identifier);
+	if(p)
+		addv(p, 0);
+	else {
+		addv("[-", 0);
+		addv(identifier, 0);
+		addv("]", 0);
+	}
 }
 
 const char* stringbuilder::read(const char* p, char* ps, const char* pe) {
@@ -347,6 +352,7 @@ const char* stringbuilder::readformat(const char* src, const char* vl) {
 	char prefix = 0;
 	if(*src == '+' || *src == '-')
 		prefix = *src++;
+	auto p0 = p;
 	if(*src >= '0' && *src <= '9') {
 		int pn = 0, pnp = 0;
 		if(isnum(*src))
@@ -372,16 +378,11 @@ const char* stringbuilder::readformat(const char* src, const char* vl) {
 					*p++ = *p1++;
 				if(p < pe)
 					*p = 0;
-				switch(prefix) {
-				case '-': *p0 = lower(*p0); break;
-				case '+': *p0 = upper(*p0); break;
-				default: break;
-				}
 			}
 		}
-	} else {
-		auto p0 = p;
+	} else
 		src = readvariable(src);
+	if(p0 && p0 != p) {
 		switch(prefix) {
 		case '-': *p0 = lower(*p0); break;
 		case '+': *p0 = upper(*p0); break;
@@ -523,40 +524,40 @@ void stringbuilder::add(const char* s, const grammar* source, const char* def) {
 
 void stringbuilder::addof(const char* s) {
 	static grammar map[] = {{"ый", "ого"},
-	{"ий", "ого"},
-	{"ое", "ого"},
-	{"ая", "ой"},
-	{"би", "би"},
-	{"ты", "т"},
-	{"сы", "сов"},
-	{"ны", "н"},
-	{"а", "ы"},
-	{"ь", "и"},
-	{"о", "а"},
-	{"я", "и"},
-	{}};
+		{"ий", "ого"},
+		{"ое", "ого"},
+		{"ая", "ой"},
+		{"би", "би"},
+		{"ты", "т"},
+		{"сы", "сов"},
+		{"ны", "н"},
+		{"а", "ы"},
+		{"ь", "и"},
+		{"о", "а"},
+		{"я", "и"},
+		{}};
 	add(s, map, "а");
 }
 
 void stringbuilder::addby(const char* s) {
 	static grammar map[] = {{"ая", "ой"},
-	{"ый", "ым"}, {"ое", "ым"}, {"ой", "ым"},
-	{"би", "би"},
-	{"ий", "им"},
-	{"ец", "цем"},
-	{"ки", "ками"},
-	{"й", "ем"}, {"ь", "ем"}, {"е", "ем"},
-	{"а", "ой"},
-	{"ч", "чем"},
-	{}};
+		{"ый", "ым"}, {"ое", "ым"}, {"ой", "ым"},
+		{"би", "би"},
+		{"ий", "им"},
+		{"ец", "цем"},
+		{"ки", "ками"},
+		{"й", "ем"}, {"ь", "ем"}, {"е", "ем"},
+		{"а", "ой"},
+		{"ч", "чем"},
+		{}};
 	add(s, map, "ом");
 }
 
 void stringbuilder::addto(const char* s) {
 	static grammar map[] = {{"а", "е"},
-	{"о", "у"},
-	{"ы", "ам"},
-	{}
+		{"о", "у"},
+		{"ы", "ам"},
+		{}
 	};
 	add(s, map, "у");
 }

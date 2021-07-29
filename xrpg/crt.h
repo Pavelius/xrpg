@@ -188,6 +188,7 @@ const char*							getdescription(const char* id);
 fnevent								getcommand(const char* id);
 int									getdigitscount(unsigned number); // Get digits count of number. For example if number=100, result be 3.
 const char*							getnm(const char* id);
+const char*							getunm(const char* id);
 bool								initialize_translation(const char* locale);
 bool								ischa(unsigned u); // is alphabetical character?
 inline bool							isnum(unsigned u) { return u >= '0' && u <= '9'; } // is numeric character?

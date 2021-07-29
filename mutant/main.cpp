@@ -35,7 +35,9 @@ static void test_window_proc() {
 	static int current_tab;
 	int x, y, width;
 	dialogul(x, y, width);
-	text(x, y, "Test string for small company and be quite.", -1, 0, 100);
+	char temp[260]; stringbuilder sb(temp);
+	sb.add("You have %ScrapAxe.");
+	text(x, y, temp);
 	y += texth() + gui.padding;
 	static const char* tabs[] = {"Вывод", "Ввод", "Параметры"};
 	int hilite;
