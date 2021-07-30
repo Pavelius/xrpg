@@ -197,5 +197,11 @@
     <ClCompile Include="draw_tabs.cpp">
       <Filter>Графика</Filter>
     </ClCompile>
+    <ClCompile Include="draw_control.cpp">
+      <Filter>Графика</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_toolbar.cpp">
+      <Filter>Графика</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

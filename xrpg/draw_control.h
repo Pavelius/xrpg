@@ -27,34 +27,36 @@ struct anyreq {
 	constexpr char*			ptr(const void* object) const { return (char*)object + offset; }
 	void					set(void* object, int value) const;
 };
-struct command {
-	class builder {
-		void				render(const control* parent, const command* commands, bool& separator, int& count);
-	public:
-		builder() = default;
-		virtual ~builder() {}
-		virtual void		add(const control* parent, const command& cmd) = 0;
-		virtual void		addseparator() = 0;
-		virtual const command* finish() const { return 0; }
-		void				render(const control* parent, const command* commands);
-		virtual void		start() const {}
-	};
-	const char*				panel;
-	const char**			commands;
+class builder {
+	void					render(const control* parent, const char** commands, bool& separator, int& count);
+public:
+	builder() = default;
+	virtual ~builder() {}
+	virtual void			add(const control* parent, const char* id) = 0;
+	virtual void			addseparator() = 0;
+	virtual const char*		finish() const { return 0; }
+	void					render(const control* parent, const char** commands);
+	virtual void			start() const {}
 };
 struct control {
 	int						splitter;
 	constexpr control() : splitter(0) {}
 	virtual ~control() {}
-	void					contextmenu(const command* source);
-	void					contextmenu(const command* source, command::builder& builder);
-	static command			commands_edit[];
+	void					contextmenu(const char** source);
+	void					contextmenu(const char** source, builder& builder);
+	static const char*		commands_edit[];
+	void					icon(int x, int y, const char* id, bool disabled) const;
 	virtual void			execute(const char* id) {}
-	virtual command*		getcommands() const { return 0; }
+	virtual const char**	getcommands() const { return 0; }
+	virtual const char**	getcommands(const char* parent) const { return 0; }
+	virtual sprite*			getimages() const { return 0; }
 	virtual const char*		getvalue(const char* id, stringbuilder& sb) const {}
 	virtual bool			isallow(const char* id) const {}
+	virtual bool			isfocusable() const { return true; }
 	virtual bool			ismodified() const { return false; }
-	virtual void			paint(const rect& rc) const {}
+	virtual void			paint(const rect& rc) const;
+	void					post(const char* id) const;
+	static sprite*			std_images;
 	int						toolbar(int x, int y, int width, int* next_x = 0) const;
 };
 struct list : public control {
@@ -123,5 +125,8 @@ struct visual {
 	//static const visual*	find(const char* id);
 };
 }
+int							getimage(const char* id);
 void						setposition(int& x, int& y, int& width, int padding = -1);
+void						statusbar(const char* format, ...);
+void						tooltips(const char* format, ...);
 }

@@ -270,7 +270,7 @@ void stringbuilder::upper() {
 }
 
 void stringbuilder::addidentifier(const char* identifier) {
-	auto p = getunm(identifier);
+	auto p = getnm(identifier);
 	if(p)
 		addv(p, 0);
 	else {

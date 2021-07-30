@@ -1,4 +1,3 @@
-#include "draw.h"
 #include "draw_control.h"
 #include "draw_focus.h"
 #include "point.h"
@@ -63,7 +62,6 @@ void						initialize();
 void						setint();
 int							scene(fnevent input);
 void						setnext(fnevent v);
-void						tooltips(const char* format, ...);
 int							sheetline(rect rc, bool background);
 }
 struct guii {

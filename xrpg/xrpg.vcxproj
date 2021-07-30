@@ -177,8 +177,10 @@
     <ClCompile Include="color.cpp" />
     <ClCompile Include="converter.cpp" />
     <ClCompile Include="crt.cpp" />
+    <ClCompile Include="draw_control.cpp" />
     <ClCompile Include="draw_focus.cpp" />
     <ClCompile Include="draw_tabs.cpp" />
+    <ClCompile Include="draw_toolbar.cpp" />
     <ClCompile Include="gender.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="draw.cpp" />

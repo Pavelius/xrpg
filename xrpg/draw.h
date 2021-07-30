@@ -171,7 +171,7 @@ void					create(int x, int y, int width, int height, unsigned flags, int bpp);
 bool					dragactive(const void* p);
 bool					dragactive();
 void					dragbegin(const void* p);
-void					execute(fnevent proc, int value = 0, int value2 = 0, void* object = 0);
+void					execute(fnevent proc, int value = 0, int value2 = 0, const void* object = 0);
 int						getbpp();
 int						getheight();
 int						getwidth();

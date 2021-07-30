@@ -34,7 +34,7 @@ static color getcolor(color_s v) {
 	return theme_colors[v];
 }
 
-void draw::execute(fnevent proc, int value, int value2, void* object) {
+void draw::execute(fnevent proc, int value, int value2, const void* object) {
 	domodal = proc;
 	hot.key = 0;
 	hot.param = value;
@@ -66,11 +66,6 @@ void draw::breakparam() {
 void draw::setint() {
 	auto p = (int*)hot.object;
 	*p = hot.param;
-}
-
-static void keyparam() {
-	hot.key = hot.param;
-	hot.param = 0;
 }
 
 static bool window(rect rc, bool hilight, int border) {

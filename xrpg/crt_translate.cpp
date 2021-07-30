@@ -164,7 +164,7 @@ const char* getnm(const char* id) {
 #endif
 		return id;
 	}
-	if(!p->name)
+	if(!p->name || !p->name[0])
 		return id;
 	return p->name;
 }
