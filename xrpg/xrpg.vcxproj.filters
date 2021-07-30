@@ -203,5 +203,11 @@
     <ClCompile Include="draw_toolbar.cpp">
       <Filter>Графика</Filter>
     </ClCompile>
+    <ClCompile Include="win_menu.cpp">
+      <Filter>Платформа</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_buttons.cpp">
+      <Filter>Графика</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

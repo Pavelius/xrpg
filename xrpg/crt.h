@@ -132,8 +132,7 @@ public:
 	void							swap(int i1, int i2);
 	void							reserve(unsigned count);
 };
-template<class T>
-class vector : public array {
+template<class T> class vector : public array {
 public:
 	typedef T data_type;
 	constexpr vector() : array(sizeof(T)) {}

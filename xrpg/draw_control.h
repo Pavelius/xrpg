@@ -5,6 +5,9 @@
 
 typedef bool(*fnvisible)(const void* object);
 
+namespace metrics {
+extern int					padding;
+}
 namespace draw {
 enum class widthtype : unsigned char { Default, Resized, Fixed, Inner, Auto, };
 enum class selection : unsigned char { Cell, Text, Row, };
@@ -47,10 +50,10 @@ struct control {
 	void					icon(int x, int y, const char* id, bool disabled) const;
 	virtual void			execute(const char* id) {}
 	virtual const char**	getcommands() const { return 0; }
-	virtual const char**	getcommands(const char* parent) const { return 0; }
-	virtual sprite*			getimages() const { return 0; }
-	virtual const char*		getvalue(const char* id, stringbuilder& sb) const {}
-	virtual bool			isallow(const char* id) const {}
+	virtual const char**	getcommands(const char* parent) const;
+	virtual sprite*			getimages() const { return std_images; }
+	virtual const char*		getvalue(const char* id, stringbuilder& sb) const { return 0; }
+	virtual bool			isallow(const char* id) const { return true; }
 	virtual bool			isfocusable() const { return true; }
 	virtual bool			ismodified() const { return false; }
 	virtual void			paint(const rect& rc) const;
@@ -124,8 +127,15 @@ struct visual {
 	//static const visual*	find(const char* id);
 };
 }
+bool						button(const rect& rc, const char* title, const char* tips, unsigned key, color value, bool focused, bool checked, bool press, bool border);
+void						buttonl(int& x, int y, const char* title, fnevent proc, unsigned key = 0, void* focus_value = 0);
+void						buttonr(int& x, int y, const char* title, fnevent proc, unsigned key = 0);
+void						checkbox(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips = 0);
 int							getimage(const char* id);
+unsigned					getkey(const char* id);
+void						radio(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips = 0);
 void						setposition(int& x, int& y, int& width, int padding = -1);
 void						statusbar(const char* format, ...);
+void						titletext(int& x, int y, int& width, const char* label, int title = 128, const char* separator = 0);
 void						tooltips(const char* format, ...);
 }

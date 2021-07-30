@@ -14,7 +14,9 @@ Chronicler: Хронист
 Close: Закрыть
 Commander: Командир
 Comprehend: Понимание
+Copy: Копировать
 Covcheg: Ковчег
+Cut: Вырезать
 DogHandler: Собачник
 Empathy: Эмпатия 
 Endure: Выносливость
@@ -39,6 +41,7 @@ NewGame: Новая игра
 Next: Далее
 NoGender: Безполый
 NoItem: Нет предмета
+Paste: Вставить
 Racketeer: Вымогатель
 Rules: Правила
 Scout: Наблюдательность

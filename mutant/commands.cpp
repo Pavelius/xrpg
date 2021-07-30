@@ -23,12 +23,12 @@ static void character_sheet() {
 		getnm(bsdata<rolei>::elements[player->getrole()].id),
 		getnm(bsdata<genderi>::elements[gender].name));
 	char temp[2048]; stringbuilder sb(temp);
-	sb.addn("###%1", getnm("Attributes"));
+	sb.addn("###%Attributes");
 	for(auto& e : bsdata<attributei>()) {
 		auto id = (attribute_s)variant(&e).value;
 		sb.addn("%1\t%2i", getnm(e.id), player->get(id));
 	}
-	sb.addn("###%1", getnm("Skills"));
+	sb.addn("###%Skills");
 	for(auto& e : bsdata<skilli>()) {
 		auto id = (skill_s)variant(&e).value;
 		auto value = player->get(id);

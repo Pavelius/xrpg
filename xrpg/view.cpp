@@ -10,7 +10,8 @@ static int				break_result;
 static point			camera;
 static point			camera_drag;
 static rect				last_board;
-static char				tooltips_text[4096];
+static char				text_tooltips[4096];
+static stringbuilder	sb_tooltips(text_tooltips);
 fnevent					draw::domodal;
 extern rect				sys_static_area;
 guii					gui; template<> array bsdata<guii>::source(&gui, sizeof(gui), 1, 1);
@@ -184,19 +185,18 @@ static bool control_board() {
 }
 
 void draw::tooltips(const char* format, ...) {
-	stringbuilder sb(tooltips_text);
-	sb.addv(format, xva_start(format));
+	sb_tooltips.addv(format, xva_start(format));
 }
 
 static void render_tooltips() {
-	if(!tooltips_text[0])
+	if(!text_tooltips[0])
 		return;
 	rect rc;
 	rc.x1 = gui.border * 2;
 	rc.y1 = dialog_y;
 	rc.x2 = rc.x1 + gui.left_window_width;
 	rc.y2 = rc.y1;
-	draw::textf(rc, tooltips_text, gui.tips_tab);
+	draw::textf(rc, text_tooltips, gui.tips_tab);
 	// Correct border
 	int height = draw::getheight();
 	int width = draw::getwidth();
@@ -206,8 +206,7 @@ static void render_tooltips() {
 		rc.move(width - 2 - rc.x2, 0);
 	window(rc, false, 0);
 	draw::fore = colors::tips::text;
-	draw::textf(rc.x1, rc.y1, rc.width(), tooltips_text, 0, 0, 0, 0, gui.tips_tab);
-	tooltips_text[0] = 0;
+	draw::textf(rc.x1, rc.y1, rc.width(), text_tooltips, 0, 0, 0, 0, gui.tips_tab);
 	dialog_y += rc.height() + gui.border * 2;
 }
 
@@ -261,6 +260,7 @@ static void standart_domodal() {
 static void clear_hot() {
 	hot.cursor = CursorArrow;
 	hot.hilite.clear();
+	sb_tooltips.clear();
 	hilite_object.clear();
 	hilite_grid = {-100, -100};
 	dialog_y = gui.border * 2;
@@ -312,16 +312,8 @@ static int status(int x, int y, int width, const char* format, const char* title
 	} else
 		shadow(rc, colors::form);
 	text(x + (width - textw(format)) / 2, y, format);
-	if(hilite) {
-		stringbuilder sb(tooltips_text);
-		sb.add(title);
-		if(key) {
-			sb.addn("[");
-			sb.add("%HotKey: ");
-			draw::key2str(sb, key);
-			sb.add("]");
-		}
-	}
+	if(hilite)
+		tooltips(title);
 	return x + width + gui.border;
 }
 
@@ -336,70 +328,6 @@ static void setptr() {
 	auto v = hot.param;
 	if(p)
 		*p = v;
-}
-
-static bool button(const rect& rc, const char* title, const char* tips, unsigned key, color value, bool focused, bool checked, bool press, bool border) {
-	static rect rc_pressed;
-	static int rc_key_event;
-	auto push_fore = fore;
-	bool result = false;
-	struct rect rcb = {rc.x1 + 1, rc.y1 + 1, rc.x2, rc.y2};
-	auto a = ishilite(rcb);
-	if((key && hot.key == key) || (focused && hot.key == KeyEnter) || (a && hot.key == MouseLeft && hot.pressed)) {
-		rc_key_event = hot.key;
-		rc_pressed = rc;
-	}
-	if((rc_pressed == rc) && rc_key_event == MouseLeft && !a) {
-		rc_key_event = 0;
-		rc_pressed.clear();
-	}
-	auto button_pressed = (rc_pressed == rc);
-	if(button_pressed && (hot.key == InputKeyUp || (hot.key == MouseLeft && !hot.pressed))) {
-		result = true;
-		rc_key_event = 0;
-		rc_pressed.clear();
-	}
-	if(checked)
-		a = true;
-	color c0 = value;
-	if(a) {
-		if(c0.gray().r >= 100)
-			c0 = c0.mix(colors::black, 160);
-		else
-			c0 = c0.mix(colors::white, 160);
-	}
-	color b1 = c0;
-	color b2 = c0.mix(colors::black);
-	if(button_pressed)
-		gradv(rcb, b2, b1);
-	else
-		gradv(rcb, b1, b2);
-	if(border) {
-		auto bc = focused ? colors::active : c0;
-		if(bc.gray().r >= 100)
-			bc = bc.mix(colors::black, 160);
-		else
-			bc = bc.mix(colors::white, 160);
-		rectb(rc, bc);
-	}
-	auto rco = rc; rco.offset(2, 2);
-	if(title) {
-		rect r1 = rc;
-		if(button_pressed)
-			r1.y1 += 2;
-		text(r1, title, AlignCenterCenter);
-	}
-	if(a && (tips || key) && !hot.pressed) {
-		stringbuilder sb(tooltips_text);
-		sb.add(tips);
-		if(key) {
-			sb.addn("%HotKey: [");
-			key2str(sb, key);
-			sb.add("]");
-		}
-	}
-	fore = push_fore;
-	return result;
 }
 
 static void buttonw(int& x, int y, const char* title, fnevent proc, unsigned key) {
@@ -443,10 +371,8 @@ void formi::before() const {
 }
 
 void formi::after() const {
-	if(hilite_object) {
-		stringbuilder sb(tooltips_text);
-		hilite_object.getinfo(sb);
-	}
+	if(hilite_object)
+		hilite_object.getinfo(sb_tooltips);
 }
 
 static void answer_button(int x, int& y, int width, long id, const char* string, unsigned key) {
@@ -691,35 +617,6 @@ void draw::bar(rect rc, color_s color, color_s border, color_s back, int value, 
 	fore = getcolor(border);
 	rectb(rc);
 	fore = push;
-}
-
-void draw::buttonr(int& x, int y, const char* title, fnevent proc, unsigned key) {
-	if(!title || !proc)
-		return;
-	auto h = texth() + 8;
-	auto w = textw(title) + 8;
-	x -= w;
-	rect r = {x, y, x + w, y + h};
-	auto focus = isfocused(r, (void*)proc);
-	auto result = button(r, title, 0, key, colors::button, focus, false, false, true);
-	if(result)
-		execute(proc);
-	x -= gui.padding;
-}
-
-void draw::buttonl(int& x, int y, const char* title, fnevent proc, unsigned key, void* focus_value) {
-	if(!title || !proc)
-		return;
-	auto h = texth() + 8;
-	auto w = textw(title) + 8;
-	rect r = {x, y, x + w, y + h};
-	if(!focus_value)
-		focus_value = (void*)proc;
-	auto focus = isfocused(r, focus_value);
-	auto result = button(r, title, 0, key, colors::button, focus, false, false, true);
-	if(result)
-		execute(proc);
-	x += w + gui.padding;
 }
 
 bool draw::execute(const hotkey* source) {

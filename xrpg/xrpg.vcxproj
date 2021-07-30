@@ -178,6 +178,7 @@
     <ClCompile Include="converter.cpp" />
     <ClCompile Include="crt.cpp" />
     <ClCompile Include="draw_control.cpp" />
+    <ClCompile Include="draw_buttons.cpp" />
     <ClCompile Include="draw_focus.cpp" />
     <ClCompile Include="draw_tabs.cpp" />
     <ClCompile Include="draw_toolbar.cpp" />
@@ -203,6 +204,7 @@
     <ClCompile Include="view.cpp" />
     <ClCompile Include="win_draw.cpp" />
     <ClCompile Include="win_io_file.cpp" />
+    <ClCompile Include="win_menu.cpp" />
     <ClCompile Include="win_time.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

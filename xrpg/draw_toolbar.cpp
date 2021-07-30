@@ -18,11 +18,11 @@ static bool tool(const rect& rc, bool disabled, bool checked, bool press, bool f
 		pressed = true;
 	if(a) {
 		if(pressed) {
-			rectf(rc, colors::active);
+			rectf(rc, colors::form.mix(colors::border, 128));
 			rectb(rc, colors::border);
 
 		} else {
-			rectf(rc, colors::active.mix(colors::window, 128));
+			rectf(rc, colors::form.mix(colors::active, 128));
 			rectb(rc, colors::border);
 		}
 	}
@@ -55,7 +55,7 @@ struct toolbar_builder : builder {
 		auto disabled = !parent->isallow(id);
 		if(tool(rc, disabled, false, true, false))
 			parent->post(id);
-		parent->icon(x + size.x / 2, y + size.y / 2, id, disabled);
+		parent->icon(x + size.x / 2 + 1, y + size.y / 2 + 1, id, disabled);
 		x += width;
 	}
 };

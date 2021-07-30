@@ -39,8 +39,6 @@ void						application();
 void						bar(rect rc, color_s color, color_s border, color_s back, int value, int maximum);
 void						breakmodal(int result);
 void						breakparam();
-void						buttonl(int& x, int y, const char* title, fnevent proc, unsigned key = 0, void* focus_value = 0);
-void						buttonr(int& x, int y, const char* title, fnevent proc, unsigned key = 0);
 void						buttoncancel();
 void						buttonok();
 void						dialogul(int& x, int& y, int& width);

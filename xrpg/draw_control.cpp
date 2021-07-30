@@ -5,6 +5,8 @@
 using namespace draw;
 using namespace draw::controls;
 
+sprite* control::std_images = (sprite*)loadb("art/pma/toolbar.pma");
+
 static void command_execute() {
 	auto p = (control*)hot.object;
 	auto n = (const char*)hot.param2;
@@ -85,6 +87,13 @@ void control::contextmenu(const char** source, builder& pm) {
 		if(isallow(id))
 			execute(id);
 	}
+}
+
+const char** control::getcommands(const char* id) const {
+	static const char* cmd_edit[] = {"Cut", "Copy", "Paste", 0};
+	if(equal(id, "Edit"))
+		return cmd_edit;
+	return 0;
 }
 
 const char* control::commands_edit[] = {"Cut", "Copy", "Paste", 0};

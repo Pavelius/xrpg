@@ -31,6 +31,14 @@ const char* get_tab_text(const void* object, stringbuilder& sb) {
 	return (const char*)object;
 }
 
+struct test_control : controls::control {
+	const char** getcommands() const override {
+		static const char* cmd[] = {"#Edit", 0};
+		return cmd;
+	}
+};
+static test_control test;
+
 static void test_window_proc() {
 	static int current_tab;
 	int x, y, width;
@@ -50,10 +58,32 @@ static void test_window_proc() {
 	buttonr(x2, y2, "OK", buttonok);
 }
 
-static void test_window() {
-	form.window = test_window_proc;
-	form.bitmap = "mutant_title";
-	menui::choose("Main", "city", 0);
+//static void test_window() {
+//	form.window = test_window_proc;
+//	form.bitmap = "mutant_title";
+//	menui::choose("Main", "city", 0);
+//}
+
+int draw::getimage(const char* id) {
+	if(equal(id, "Save"))
+		return 2;
+	else if(equal(id, "Open"))
+		return 1;
+	else if(equal(id, "Cut"))
+		return 3;
+	else if(equal(id, "Copy"))
+		return 4;
+	else if(equal(id, "Paste"))
+		return 5;
+	return 0;
+}
+
+void draw::statusbar(const char* format, ...) {
+
+}
+
+unsigned draw::getkey(const char* id) {
+	return 0;
 }
 
 int main() {
@@ -61,8 +91,8 @@ int main() {
 		return -1;
 	test_overload();
 	draw::initialize();
-	//draw::setnext(game.main_menu);
-	draw::setnext(test_window);
+	draw::setnext(game.main_menu);
+	//draw::setnext(test_window);
 	draw::application();
 	return 0;
 }
