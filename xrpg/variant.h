@@ -26,8 +26,6 @@ union variant{
 	template<class T> static constexpr variant_s kind();
 	template<class T> variant(T* v) : variant((const void*)v) {}
 	template<class T> constexpr variant(T v) : variant(kind<T>(), v) {}
-	template<> variant(const char* v);
-	template<> variant(const void* v);
 	constexpr operator int() const { return u; }
 	constexpr explicit operator bool() const { return u != 0; }
 	constexpr bool operator==(const variant& v) const { return u == v.u; }
@@ -42,3 +40,6 @@ union variant{
 	void				paint() const;
 	void				setvariant(variant_s t, unsigned short v) { type = t; value = v; }
 };
+template<> variant::variant(const char* v);
+template<> variant::variant(const void* v);
+	

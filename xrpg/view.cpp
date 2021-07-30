@@ -34,14 +34,6 @@ static color getcolor(color_s v) {
 	return theme_colors[v];
 }
 
-void draw::execute(fnevent proc, int value, int value2, const void* object) {
-	domodal = proc;
-	hot.key = 0;
-	hot.param = value;
-	hot.param2 = value2;
-	hot.object = object;
-}
-
 void draw::breakmodal(int result) {
 	break_modal = true;
 	break_result = result;
@@ -325,7 +317,7 @@ static int status(int x, int y, int width, const char* format, const char* title
 		sb.add(title);
 		if(key) {
 			sb.addn("[");
-			sb.add("Горячая клавиша: ");
+			sb.add("%HotKey: ");
 			draw::key2str(sb, key);
 			sb.add("]");
 		}
@@ -401,7 +393,7 @@ static bool button(const rect& rc, const char* title, const char* tips, unsigned
 		stringbuilder sb(tooltips_text);
 		sb.add(tips);
 		if(key) {
-			sb.addn("%1: [", getnm("HotKey"));
+			sb.addn("%HotKey: [");
 			key2str(sb, key);
 			sb.add("]");
 		}
@@ -414,10 +406,10 @@ static void buttonw(int& x, int y, const char* title, fnevent proc, unsigned key
 	auto h = texth() + 8;
 	auto w = textw(title) + 8;
 	rect r = {x, y, x + w, y + h};
-	auto focus = isfocused(r, proc);
+	auto focus = isfocused(r, (void*)proc);
 	auto result = button(r, title, 0, key, colors::button, focus, false, false, true);
 	if(result)
-		execute(setptr, (int)proc, 0, &form.window);
+		execute(setptr, (long)proc, 0, &form.window);
 	x += w + gui.padding;
 }
 
@@ -533,7 +525,9 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 		auto y1 = y;
 		auto y2 = y;
 		for(auto& e : elements) {
-			auto i = imin(sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]), (size_t)index);
+			auto i = index;
+			if(i>=sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]))
+				i = sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]) - 1;
 			answer_button(x, y, column_width, e.id, e.text, answer_hotkeys[i]);
 			if(y > y2)
 				y2 = y;
@@ -706,7 +700,7 @@ void draw::buttonr(int& x, int y, const char* title, fnevent proc, unsigned key)
 	auto w = textw(title) + 8;
 	x -= w;
 	rect r = {x, y, x + w, y + h};
-	auto focus = isfocused(r, proc);
+	auto focus = isfocused(r, (void*)proc);
 	auto result = button(r, title, 0, key, colors::button, focus, false, false, true);
 	if(result)
 		execute(proc);
@@ -720,7 +714,7 @@ void draw::buttonl(int& x, int y, const char* title, fnevent proc, unsigned key,
 	auto w = textw(title) + 8;
 	rect r = {x, y, x + w, y + h};
 	if(!focus_value)
-		focus_value = proc;
+		focus_value = (void*)proc;
 	auto focus = isfocused(r, focus_value);
 	auto result = button(r, title, 0, key, colors::button, focus, false, false, true);
 	if(result)

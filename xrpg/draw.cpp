@@ -980,7 +980,9 @@ void draw::bezier(int x0, int y0, int x1, int y1, int x2, int y2) {
 
 void draw::spline(point* original_points, int n) {
 	point points[256];
-	n = imin(sizeof(points) / sizeof(points[0]), (size_t)n) - 1;
+	if(n>sizeof(points) / sizeof(points[0]))
+		n = sizeof(points) / sizeof(points[0]);
+	n = n - 1;
 	memcpy(points, original_points, sizeof(points[0]) * (n + 1));
 	const int M_MAX = 6;
 	float mi = 1, m[M_MAX];                    /* diagonal constants of matrix */
@@ -1576,7 +1578,6 @@ int	draw::text(rect rc, const char* string, unsigned state, int* max_width) {
 static void hilite_text_line(int x, int y, int width, int height, const char* string, int count, unsigned state, int i1, int i2) {
 	int w = draw::textw(string, count);
 	auto x0 = draw::aligned(x, width, state, w);
-	// Выделение
 	if(i1 != i2 && ((i1 >= 0 && i1 < count) || (i2 >= 0 && i2 < count) || (i1 < 0 && i2 >= count))) {
 		int rx1 = x0 + 1;
 		int rx2 = x0 + w + 1;
@@ -1586,9 +1587,7 @@ static void hilite_text_line(int x, int y, int width, int height, const char* st
 			rx2 = x0 + 1 + draw::textw(string, i2);
 		draw::rectf({rx1, y, rx2, y + height}, colors::button);
 	}
-	// Вывод текста
 	draw::text(x0, y, string, count);
-	// Вывод курсора
 	if(i1 >= 0 && i1 == i2
 		&& (i1 < count || (i1 == count && string[count] == 0))) {
 		int rx1 = x0 + draw::textw(string, i1);
@@ -2152,4 +2151,12 @@ void draw::key2str(stringbuilder& sb, int key) {
 		}
 		break;
 	}
+}
+
+void draw::execute(fnevent proc, long value, long value2, const void* object) {
+	domodal = proc;
+	hot.key = 0;
+	hot.param = value;
+	hot.param2 = value2;
+	hot.object = object;
 }

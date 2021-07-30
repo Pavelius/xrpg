@@ -6,7 +6,6 @@
 typedef bool(*fnvisible)(const void* object);
 
 namespace draw {
-enum class visibility : unsigned char { Icon, Text, IconAndText };
 enum class widthtype : unsigned char { Default, Resized, Fixed, Inner, Auto, };
 enum class selection : unsigned char { Cell, Text, Row, };
 enum class dock : unsigned char { Left, LeftBottom, Right, RightBottom, Bottom, Workspace };

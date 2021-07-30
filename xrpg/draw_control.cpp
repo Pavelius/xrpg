@@ -13,7 +13,7 @@ static void command_execute() {
 }
 
 void control::post(const char* id) const {
-	draw::execute(command_execute, 0, (int)id, this);
+	draw::execute(command_execute, 0, (long)id, this);
 }
 
 void control::icon(int x, int y, const char* id, bool disabled) const {
