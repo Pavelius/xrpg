@@ -354,15 +354,14 @@ int draw::rawinput() {
 		if(m == InputNoUpdate)
 			continue;
 		if(m) {
-			if(m != MouseMove && m >= (unsigned)MouseLeft) {
+			if(m < InputSymbol || m > InputNoUpdate) {
 				if(GetKeyState(VK_SHIFT) < 0)
 					m |= Shift;
 				if(GetKeyState(VK_MENU) < 0)
 					m |= Alt;
 				if(GetKeyState(VK_CONTROL) < 0)
 					m |= Ctrl;
-			}
-			if(m == InputUpdate) {
+			} else if(m == InputUpdate) {
 				if(canvas) {
 					RECT rc; GetClientRect(hwnd, &rc);
 					canvas->resize(rc.right - rc.left, rc.bottom - rc.top, 32, true);

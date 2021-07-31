@@ -179,6 +179,7 @@
     <ClCompile Include="bsreq.cpp" />
     <ClCompile Include="bstream.cpp" />
     <ClCompile Include="color.cpp" />
+    <ClCompile Include="command.cpp" />
     <ClCompile Include="converter.cpp" />
     <ClCompile Include="crt.cpp" />
     <ClCompile Include="draw_builder.cpp" />

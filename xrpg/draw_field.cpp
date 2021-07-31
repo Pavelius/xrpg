@@ -1,4 +1,5 @@
 #include "crt.h"
+#include "command.h"
 #include "draw.h"
 #include "draw_button.h"
 #include "draw_clipboard.h"
@@ -238,6 +239,17 @@ static void paste() {
 	delete p;
 }
 
+static void select_all() {
+	select(0, -2);
+}
+
+static command field_commands[] = {
+	{"Cut", cut, Ctrl + 'X'},
+	{"Copy", copy, Ctrl + 'C'},
+	{"Paste", paste, Ctrl + 'V'},
+	{"SelectAll", select_all, Ctrl + 'A'},
+};
+
 static void field_focus(const rect& rc, void* source, int size, bool isnumber, unsigned flags) {
 	int n;
 	field_read(source, size, isnumber, i1, i2);
@@ -287,19 +299,16 @@ static void field_focus(const rect& rc, void* source, int size, bool isnumber, u
 			if(!hot.pressed) {
 				static const char* commands[] = {"Cut", "Copy", "Paste", 0};
 				auto id = contextmenu(commands, 0, isallow, 0);
-				if(!id)
-					break;
-				if(equal(id, "Cut"))
-					execute(cut);
-				if(equal(id, "Copy"))
-					execute(copy);
-				if(equal(id, "Paste"))
-					execute(paste);
+				auto p = field_commands->find(id);
+				if(p)
+					execute(p->proc);
 			}
 		}
 		break;
 	case Ctrl + 'A':
 		execute(post_select, 0, -2);
+		break;
+	case Ctrl + 'C':
 		break;
 	case KeyEnter:
 		execute(field_save_and_select);
@@ -322,13 +331,20 @@ static void field_focus(const rect& rc, void* source, int size, bool isnumber, u
 		}
 		break;
 	case InputSymbol:
-		if(hot.param <= 0x20)
+		if(hot.param < 0x20)
 			break;
 		if(isnumber) {
 			if(isnum(hot.param))
 				execute(post_symbol, hot.param);
 		} else
 			execute(post_symbol, hot.param);
+		break;
+	default:
+		if(true) {
+			auto p = field_commands->find(hot.key);
+			if(p)
+				execute(p->proc);
+		}
 		break;
 	}
 }

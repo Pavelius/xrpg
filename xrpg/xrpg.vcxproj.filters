@@ -245,5 +245,8 @@
     <ClCompile Include="win_clipboard.cpp">
       <Filter>Платформа</Filter>
     </ClCompile>
+    <ClCompile Include="command.cpp">
+      <Filter>Поддержка</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
