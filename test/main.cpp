@@ -29,14 +29,16 @@ static void test_fields() {
 	auto name = "Павел";
 	auto lname = "Валентинович";
 	char age = 41;
+	char buffer[2048] = {"В течение игры каждый участник задает действия для своего персонажа, а результаты действий определяются мастером в соответствии с правилами. Все что надо сделать здесь."};
 	while(ismodal()) {
 		rect rc = {0, 0, getwidth(), getheight()};
 		rectf(rc, colors::form);
 		int x = 10, y = 10;
-		field(x, y, 400, "Фамилия", fname, 100, 0);
-		field(x, y, 400, "Имя", name, 100, 0);
-		field(x, y, 400, "Отчество", lname, 100, 0);
-		fieldi(x, y, 400, "Возраст", &age, sizeof(age), 100, 0);
+		//field(x, y, 400, "Фамилия", fname, 100, 0);
+		//field(x, y, 400, "Имя", name, 100, 0);
+		//field(x, y, 400, "Отчество", lname, 100, 0);
+		//fieldi(x, y, 400, "Возраст", &age, sizeof(age), 100, 0);
+		field(x, y, 400, 3, "Отчество", buffer, sizeof(buffer), 100, 0);
 		buttonl(x, y, "OK", buttonok, KeyEnter);
 		buttonl(x, y, getnm("Cancel"), buttoncancel, KeyEscape);
 		domodal();

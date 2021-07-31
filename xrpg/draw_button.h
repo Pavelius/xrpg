@@ -27,6 +27,7 @@ void						checkbox(int x, int& y, int width, void* source, int size, unsigned bi
 const char*					contextmenu(const char** commands, const void* object, fnallowid allowid, fngetcommands getcommands);
 void						fieldi(int x, int& y, int width, const char* label, void* source, int size, int label_width, int digits);
 void						field(int x, int& y, int width, const char* label, char* source, unsigned size, int label_width, fnchoose choosep);
+void						field(int x, int& y, int width, int line_height, const char* label, char* source, unsigned size, int label_width, fnchoose choosep);
 void						field(int x, int& y, int width, const char* label, const char*& source, int label_width, fnchoose choosep);
 int							getimage(const char* id);
 unsigned					getkey(const char* id);

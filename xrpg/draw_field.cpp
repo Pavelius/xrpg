@@ -4,16 +4,47 @@
 #include "draw_button.h"
 #include "draw_clipboard.h"
 #include "draw_focus.h"
+#include "draw_scroll.h"
 #include "handler.h"
 
 using namespace draw;
 
-int				metrics::edit = 2;
-static char		current_buffer[4096];
-static bool		current_isnumber;
-static int		current_size;
-static void*	current_source;
-static int		i1, i2;
+typedef adat<int, 32> fldstra;
+
+int					metrics::edit = 2;
+static char			current_buffer[4096];
+static int			current_width, current_height;
+static int			current_origin_height;
+static int			current_origin_cashe;
+static int			current_maximum_height;
+static bool			current_isnumber;
+static int			current_size;
+static void*		current_source;
+static const char*	current_cashe;
+static int			i1, i2;
+
+static int texth(const char* string, int width, int height_origin, const char** current_cashe) {
+	int dy = texth();
+	int y1 = 0;
+	auto p = string;
+	*current_cashe = 0;
+	while(*p) {
+		auto c = textbc(p, width);
+		if(!c)
+			break;
+		y1 += dy;
+		if(current_cashe && y1 > height_origin) {
+			*current_cashe = p;
+			current_cashe = 0;
+		}
+		p = skiptr(p + c);
+	}
+	return y1;
+}
+
+static void need_update() {
+	current_origin_cashe = -1;
+}
 
 static const char* getsource(void* source, int size, bool istext, stringbuilder& sb) {
 	if(!source)
@@ -71,6 +102,36 @@ static void post_select() {
 	select(hot.param, hot.param2);
 }
 
+static void post_select_mouse() {
+	if(hot.param2 == 1 && hot.param != i2)
+		select(hot.param, (i2 == -1) ? i1 : i2);
+	else
+		select(hot.param, -1);
+}
+
+static bool isspace(char sym) {
+	return sym == ' ' || sym == 10 || sym == 13 || sym == 9;
+}
+
+static int next_right(bool word) {
+	auto n = i1 + 1;
+	if(word) {
+		for(; current_buffer[n] && !isspace(current_buffer[n]); n++);
+		for(; current_buffer[n] && isspace(current_buffer[n]); n++);
+	}
+	return n;
+}
+
+static int next_left(bool word) {
+	auto n = i1;
+	if(word) {
+		for(; n > 0 && isspace(current_buffer[n - 1]); n--);
+		for(; n > 0 && !isspace(current_buffer[n - 1]); n--);
+	} else
+		n = n - 1;
+	return n;
+}
+
 static void post_select_ex() {
 	select(hot.param);
 }
@@ -79,10 +140,10 @@ static void right(bool shift, bool word) {
 	auto n = zlen(current_buffer);
 	if(shift) {
 		if(i1 < n)
-			execute(post_select_ex, i1 + 1, 0);
+			execute(post_select_ex, next_right(word), 0);
 	} else if(i2 == -1) {
 		if(i1 < n)
-			execute(post_select, i1 + 1, -1);
+			execute(post_select, next_right(word), -1);
 	} else if(i1 < i2)
 		execute(post_select, i2, -1);
 	else
@@ -92,10 +153,10 @@ static void right(bool shift, bool word) {
 static void left(bool shift, bool word) {
 	if(shift) {
 		if(i1 > 0)
-			execute(post_select_ex, i1 - 1, 0);
+			execute(post_select_ex, next_left(word), 0);
 	} else if(i2 == -1) {
 		if(i1 > 0)
-			execute(post_select, i1 - 1, -1);
+			execute(post_select, next_left(word), -1);
 	} else if(i1 < i2)
 		execute(post_select, i1, -1);
 	else
@@ -134,6 +195,7 @@ static bool paste(const char* string) {
 	memcpy(current_buffer + i1, string, sn);
 	current_buffer[bn + sn] = 0;
 	select(i1 + sn, -1);
+	need_update();
 	return true;
 }
 
@@ -147,6 +209,7 @@ static void clear() {
 	memmove(current_buffer + i1, current_buffer + i2, bn - i2);
 	current_buffer[bn - sn] = 0;
 	select(i1, -1);
+	need_update();
 }
 
 static void post_symbol() {
@@ -177,7 +240,7 @@ static void field_save_and_select() {
 	select(0, -2);
 }
 
-static void field_read(void* source, int size, bool isnumber, int& i1, int& i2) {
+static void field_read(void* source, int size, bool isnumber, int& i1, int& i2, unsigned flags, int width, int height) {
 	if(current_source == source && current_size == size)
 		return;
 	field_save_and_clear();
@@ -190,6 +253,9 @@ static void field_read(void* source, int size, bool isnumber, int& i1, int& i2) 
 	current_source = source;
 	current_size = size;
 	current_isnumber = isnumber;
+	current_width = width;
+	current_height = height;
+	current_origin_height = 0;
 	auto n = zlen(current_buffer);
 	if(i1 > n)
 		i1 = n;
@@ -197,6 +263,7 @@ static void field_read(void* source, int size, bool isnumber, int& i1, int& i2) 
 		i2 = n;
 	else
 		i2 = -1;
+	need_update();
 }
 
 static void setcedit() {
@@ -243,6 +310,10 @@ static void select_all() {
 	select(0, -2);
 }
 
+static void post_double_click() {
+	select(next_left(true), next_right(true));
+}
+
 static command field_commands[] = {
 	{"Cut", cut, Ctrl + 'X'},
 	{"Copy", copy, Ctrl + 'C'},
@@ -252,8 +323,18 @@ static command field_commands[] = {
 
 static void field_focus(const rect& rc, void* source, int size, bool isnumber, unsigned flags) {
 	int n;
-	field_read(source, size, isnumber, i1, i2);
-	texte(rc, current_buffer, flags, i1, i2);
+	field_read(source, size, isnumber, i1, i2, flags, rc.width(), rc.height());
+	if(current_origin_cashe != current_origin_height) {
+		current_maximum_height = texth(current_buffer, current_width, current_origin_height, &current_cashe);
+		current_origin_cashe = current_origin_height;
+	}
+	if(current_cashe) {
+		draw::scroll scrollh(current_origin_height, rc.height(), current_maximum_height, rc, false, texth());
+		scrollh.correct(); scrollh.input();
+		auto n = current_cashe - current_buffer;
+		texte(rc, current_cashe, flags, i1 - n, (i2==-1) ? -1 : i2 - n);
+		scrollh.view(true);
+	}
 	switch(hot.key) {
 	case KeyLeft:
 	case KeyLeft | Shift:
@@ -281,15 +362,17 @@ static void field_focus(const rect& rc, void* source, int size, bool isnumber, u
 		execute(clear);
 		break;
 	case MouseLeft:
-		if(ishilite(rc)) {
+	case MouseLeft | Shift:
+		if(current_cashe && ishilite(rc)) {
 			if(hot.pressed) {
 				n = zlen(current_buffer);
-				auto ni = hittest(rc, current_buffer, flags, hot.mouse);
+				auto ni = hittest(rc, current_cashe, flags, hot.mouse);
+				auto n2 = ((hot.key & Shift) != 0) ? 1 : -1;
 				switch(ni) {
 				case -1: break;
-				case -2: execute(post_select, 0, -1); break;
-				case -3: execute(post_select, n, -1); break;
-				default: execute(post_select, ni, -1); break;
+				case -2: execute(post_select_mouse, 0, n2); break;
+				case -3: execute(post_select_mouse, n, n2); break;
+				default: execute(post_select_mouse, ni + (current_cashe - current_buffer), n2); break;
 				}
 			}
 		}
@@ -314,10 +397,8 @@ static void field_focus(const rect& rc, void* source, int size, bool isnumber, u
 		execute(field_save_and_select);
 		break;
 	case MouseLeftDBL:
-		if(ishilite(rc)) {
-			n = zlen(current_buffer);
-			execute(post_select, 0, n);
-		}
+		if(ishilite(rc))
+			execute(post_double_click);
 		break;
 	case KeyDelete:
 		if(i2 != -1)
@@ -372,9 +453,9 @@ static void fieldf(const rect& rco, unsigned flags, void* source, int size, int 
 			draw::execute(choosefield, (long)pchoose, size, source);
 	}
 	rc.offset(metrics::edit);
-	if(focused)
+	if(focused) {
 		field_focus(rc, source, size, increment, flags & edit_mask);
-	else {
+	} else {
 		char temp[260]; stringbuilder sb(temp);
 		auto p = getsource(source, size, istext, sb);
 		text(rc, p, flags & edit_mask);
@@ -395,6 +476,15 @@ void draw::field(int x, int& y, int width, const char* label, char* source, unsi
 	rect rc = {x, y, x + width, y + draw::texth() + metrics::edit * 2};
 	fieldf(rc, AlignLeft | TextSingleLine, source, size, -1, false, true, choosep);
 	y += texth() + metrics::padding * 2 + metrics::edit * 2;
+}
+
+void draw::field(int x, int& y, int width, int line_height, const char* label, char* source, unsigned size, int label_width, fnchoose choosep) {
+	setposition(x, y, width);
+	titletext(x, y, width, label, label_width);
+	rect rc = {x, y, x + width, y + draw::texth() * line_height + metrics::edit * 2};
+	auto dy = rc.height();
+	fieldf(rc, AlignLeft, source, size, -1, false, true, choosep);
+	y += dy;
 }
 
 void draw::field(int x, int& y, int width, const char* label, const char*& source, int label_width, fnchoose choosep) {

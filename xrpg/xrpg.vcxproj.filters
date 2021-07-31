@@ -111,6 +111,9 @@
     <ClInclude Include="draw_clipboard.h">
       <Filter>Графика</Filter>
     </ClInclude>
+    <ClInclude Include="draw_scroll.h">
+      <Filter>Графика</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -247,6 +250,9 @@
     </ClCompile>
     <ClCompile Include="command.cpp">
       <Filter>Поддержка</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_scroll.cpp">
+      <Filter>Графика</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
