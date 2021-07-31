@@ -1,5 +1,7 @@
+#include "crt.h"
 #include "draw.h"
-#include "markup.h"
+#include "draw_builder.h"
+#include "handler.h"
 #include "pointl.h"
 
 #pragma once
@@ -23,25 +25,14 @@ struct docki {
 };
 namespace controls {
 struct visual;
-class control;
-class builder {
-	void					render(const control* parent, const char** commands, bool& separator, int& count);
-public:
-	builder() = default;
-	virtual ~builder() {}
-	virtual void			add(const control* parent, const char* id) = 0;
-	virtual void			addseparator() = 0;
-	virtual const char*		finish() const { return 0; }
-	void					render(const control* parent, const char** commands);
-	virtual void			start() const {}
-};
+// Basic control element
 class control {
 	int						splitter;
 public:
 	constexpr control() : splitter(0) {}
 	virtual ~control() {}
 	void					contextmenu(const char** source);
-	void					contextmenu(const char** source, builder& builder);
+	void					contextmenu(const char** source, builder& pm);
 	static const char*		commands_edit[];
 	void					icon(int x, int y, const char* id, bool disabled) const;
 	virtual void			execute(const char* id) {}
@@ -72,6 +63,7 @@ public:
 	void					setmaximum(pointl v) { maximum = v; }
 	void					setwheels(point v) { wheels = v; }
 };
+// Basic list element
 class list : public control {
 	int						origin, current;
 public:
@@ -87,11 +79,13 @@ public:
 	virtual void			rowhilite(const rect& rc, int index) const;
 	virtual void			select(int index, int column);
 };
+// Requisit descriptor
 struct anyreq {
 	unsigned short			offset;
 	unsigned char			size;
 	unsigned char			bit;
 };
+// Column descriptor
 struct column {
 	const char*				id;
 	short					width;
@@ -128,46 +122,6 @@ struct table : control {
 	void					cellpercent(const table* p, const rect& rc, int line, int column);
 	void					celltext(const table* p, const rect& rc, int line, int column);
 };
-class textedit : public scrollable {
-	char*					string;
-	unsigned				maxlenght;
-	int						cashed_width;
-	int						cashed_string;
-	int						cashed_origin;
-	int						p1, p2;
-public:
-	rect					rctext, rcclient;
-	list*					records;
-	unsigned				align;
-	bool					readonly, update_records, show_records, post_escape;
-	textedit(char* string, unsigned maximum_lenght, bool select_text);
-	void					clear();
-	virtual void			cashing(rect rc);
-	void					correct();
-	bool					editing(rect rc);
-	void					ensurevisible(int linenumber);
-	int						getbegin() const;
-	const char**			getcommands() const override;
-	int						getend() const;
-	point					getpos(rect rc, int index, unsigned state) const;
-	int						getrecordsheight() const;
-	int						hittest(rect rc, point pt, unsigned state) const;
-	void					invalidate() override;
-	bool					isshowrecords() const;
-	int						lineb(int index) const;
-	int						linee(int index) const;
-	int						linen(int index) const;
-	bool					left(bool shift, bool ctrl);
-	void					paste(const char* string);
-	void					redraw(const rect& rc) override;
-	bool					right(bool shift, bool ctrl);
-	bool					select(int index, bool shift);
-	unsigned				select_all(bool run);
-	void					setcount(int value) {}
-	void					setrecordlist(const char* string);
-	void					setvalue(const char* id, long v) override;
-	void					updaterecords(bool setfilter);
-};
 struct visual {
 	typedef void (*fnrender)(const table* p, const rect& rc, int line, int column);
 	const char*				id;
@@ -184,34 +138,4 @@ struct visual {
 	//static const visual*	find(const char* id);
 };
 }
-void						application();
-bool						addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const char* tt1);
-int							addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const char* tt1, const char* t2, unsigned k2, const char* tt2);
-void						breakmodal(int result);
-void						breakparam();
-void						buttoncancel();
-void						buttonok();
-bool						button(const rect& rc, const char* title, const char* tips, unsigned key, color value, bool focused, bool checked, bool press, bool border);
-void						buttonl(int& x, int y, const char* title, fnevent proc, unsigned key = 0, void* focus_value = 0);
-void						buttonr(int& x, int y, const char* title, fnevent proc, unsigned key = 0);
-void						cbsetint();
-void						cbsetptr();
-void						cbsetsource();
-void						checkbox(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips = 0);
-void						fieldi(int x, int& y, int width, const char* label, void* source, int size, int label_width, int digits);
-void						field(int x, int& y, int width, const char* label, char* source, unsigned size, int label_width, fnchoose choosep);
-void						field(int x, int& y, int width, const char* label, const char*& source, int label_width, fnchoose choosep);
-int							getimage(const char* id);
-unsigned					getkey(const char* id);
-int							getresult();
-long						getsource(void* source, int size);
-void						initialize(const char* label, int timer = 0);
-bool						ismodal();
-void						radio(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips = 0);
-void						setnext(fnevent v);
-void						setposition(int& x, int& y, int& width, int padding = -1);
-void						setsource(void* source, int size, long value);
-void						statusbar(const char* format, ...);
-void						titletext(int& x, int y, int& width, const char* label, int title = 128, const char* separator = 0);
-void						tooltips(const char* format, ...);
 }

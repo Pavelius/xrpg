@@ -99,6 +99,15 @@
     <ClInclude Include="markup.h">
       <Filter>Поддержка</Filter>
     </ClInclude>
+    <ClInclude Include="handler.h">
+      <Filter>Поддержка</Filter>
+    </ClInclude>
+    <ClInclude Include="draw_button.h">
+      <Filter>Графика</Filter>
+    </ClInclude>
+    <ClInclude Include="draw_builder.h">
+      <Filter>Графика</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -203,7 +212,7 @@
     <ClCompile Include="win_menu.cpp">
       <Filter>Платформа</Filter>
     </ClCompile>
-    <ClCompile Include="draw_buttons.cpp">
+    <ClCompile Include="draw_button.cpp">
       <Filter>Графика</Filter>
     </ClCompile>
     <ClCompile Include="draw_field.cpp">
@@ -219,6 +228,15 @@
       <Filter>Графика</Filter>
     </ClCompile>
     <ClCompile Include="draw_theme.cpp">
+      <Filter>Графика</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_builder.cpp">
+      <Filter>Графика</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_tooltips.cpp">
+      <Filter>Графика</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_statusbar.cpp">
       <Filter>Графика</Filter>
     </ClCompile>
   </ItemGroup>

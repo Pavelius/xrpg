@@ -1,30 +1,27 @@
-#include "draw_control.h"
-#include "draw_focus.h"
+#include "draw.h"
+#include "draw_button.h"
+#include "handler.h"
 
 using namespace draw;
 
-static void standart_domodal() {
-	hot.key = draw::rawinput();
-	if(!hot.key)
-		exit(0);
-	if(inputfocus())
-		return;
+int draw::getimage(const char* id) {
+	if(equal(id, "Cut"))
+		return 3;
+	if(equal(id, "Copy"))
+		return 4;
+	if(equal(id, "Paste"))
+		return 5;
+	return 0;
 }
 
-void ismodal_update() {
-	domodal = standart_domodal;
-}
-
-void ismodal_leaving() {
-}
-
-void field_save_and_clear();
-
-void draw::updatefocus() {
-	field_save_and_clear();
-}
-
-void draw::tooltips(const char* format, ...) {
+unsigned draw::getkey(const char* id) {
+	if(equal(id, "Cut"))
+		return Ctrl + 'X';
+	if(equal(id, "Copy"))
+		return Ctrl + 'C';
+	if(equal(id, "Paste"))
+		return Ctrl + 'V';
+	return 0;
 }
 
 static void test_fields() {

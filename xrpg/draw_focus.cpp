@@ -1,8 +1,12 @@
 #include "crt.h"
 #include "draw.h"
+#include "draw_button.h"
 #include "draw_focus.h"
+#include "handler.h"
 
 using namespace draw;
+
+handler*				before_setfocus;
 
 namespace {
 struct focusable {
@@ -17,6 +21,17 @@ static unsigned			current_bits;
 static const void*		hilite_focus;
 static unsigned			hilite_bits;
 static adat<focusable>	elements;
+
+HANDLER(before_modal) {
+	elements.clear();
+	hilite_focus = 0;
+	hilite_bits = 0;
+	hot.focus = {};
+}
+
+HANDLER(leave_modal) {
+	setfocus(0, 0, true);
+}
 
 static void setfocus_callback() {
 	setfocus(hot.object, hot.param, true);
@@ -40,13 +55,6 @@ static focusable* getlast() {
 	if(!elements)
 		return 0;
 	return elements.end() - 1;
-}
-
-void draw::clearfocus() {
-	elements.clear();
-	hilite_focus = 0;
-	hilite_bits = 0;
-	hot.focus = {};
 }
 
 void draw::setfocusable(const rect& rc, const void* value, unsigned bits) {
@@ -130,14 +138,14 @@ void draw::setfocus(const void* value, unsigned bits, bool instant) {
 		return;
 	if(instant) {
 		if(current_focus != value || current_bits != bits)
-			updatefocus();
+			before_setfocus->execute();
 		current_focus = value;
 		current_bits = bits;
 	} else
 		execute(setfocus_callback, bits, 0, (void*)value);
 }
 
-bool draw::inputfocus() {
+HANDLER(after_input) {
 	const focusable* p;
 	switch(hot.key) {
 	case KeyTab:
@@ -147,19 +155,19 @@ bool draw::inputfocus() {
 	case KeyLeft:
 	case KeyRight:
 		p = getnext(getby(current_focus, current_bits), hot.key);
-		if(!p)
-			return false;
+		if(!p || (p->value==current_focus && p->bits==current_bits))
+			return;
 		setfocus(p->value, p->bits, true);
 		break;
 	case MouseLeft:
 	case MouseRight:
 		if(!hilite_focus || !hot.pressed)
-			return false;
+			return;
 		if(hilite_focus == current_focus && hilite_bits == current_bits)
-			return false;
+			return;
 		setfocus(hilite_focus, hilite_bits, true);
-		break;
-	default: return false;
+		return; // Mouse must be handled
+	default: return;
 	}
-	return true;
+	hot.key = 0;
 }

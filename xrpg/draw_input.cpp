@@ -1,18 +1,31 @@
-#include "draw_control.h"
+#include "draw.h"
+#include "draw_button.h"
 #include "draw_focus.h"
+#include "handler.h"
 
 static bool		break_modal;
 static long		break_result;
 static fnevent	next_proc;
 extern rect		sys_static_area;
+handler*		after_initialize;
+handler*		after_input;
+handler*		before_input;
+handler*		before_modal;
+handler*		leave_modal;
 
-extern void		ismodal_update();
-extern void		ismodal_leaving();
+static void standart_domodal() {
+	before_input->execute();
+	draw::hot.key = draw::rawinput();
+	if(!draw::hot.key)
+		exit(0);
+	after_input->execute();
+}
 
 bool draw::ismodal() {
 	hot.cursor = CursorArrow;
 	hot.hilite.clear();
-	ismodal_update();
+	domodal = standart_domodal;
+	before_modal->execute();
 	if(hot.mouse.x < 0 || hot.mouse.y < 0)
 		sys_static_area.clear();
 	else
@@ -20,7 +33,7 @@ bool draw::ismodal() {
 	if(!next_proc && !break_modal)
 		return true;
 	break_modal = false;
-	ismodal_leaving();
+	leave_modal->execute();
 	return false;
 }
 
@@ -83,6 +96,7 @@ void draw::initialize(const char* label, int timer) {
 	draw::font = metrics::font;
 	draw::fore = colors::text;
 	draw::fore_stroke = colors::blue;
+	after_initialize->execute();
 	create(-1, -1, 800, 600, 0, 32);
 	setcaption(label);
 	if(timer)

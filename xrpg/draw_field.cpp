@@ -1,7 +1,8 @@
 #include "crt.h"
 #include "draw.h"
-#include "draw_control.h"
+#include "draw_button.h"
 #include "draw_focus.h"
+#include "handler.h"
 
 using namespace draw;
 
@@ -87,8 +88,6 @@ static void right(bool shift, bool word) {
 }
 
 static void left(bool shift, bool word) {
-	if(i1 <= 0 && i2 == -1)
-		return;
 	if(shift) {
 		if(i1 > 0)
 			execute(post_select_ex, i1 - 1, 0);
@@ -99,6 +98,25 @@ static void left(bool shift, bool word) {
 		execute(post_select, i1, -1);
 	else
 		execute(post_select, i2, -1);
+}
+
+static void home(bool shift) {
+	if(i1 == 0)
+		return;
+	if(shift)
+		execute(post_select_ex, 0, 0);
+	else
+		execute(post_select, 0, -1);
+}
+
+static void end(bool shift) {
+	auto n = zlen(current_buffer);
+	if(i1 == n)
+		return;
+	if(shift)
+		execute(post_select_ex, n, 0);
+	else
+		execute(post_select, n, -1);
 }
 
 static bool paste(const char* string) {
@@ -206,13 +224,12 @@ static void field_focus(const rect& rc, void* source, int size, bool isnumber, u
 		right((hot.key & Shift) != 0, (hot.key & Ctrl) != 0);
 		break;
 	case KeyHome:
-		if(i1 != 0)
-			execute(post_select, 0, -1);
+	case KeyHome | Shift:
+		home((hot.key & Shift) != 0);
 		break;
 	case KeyEnd:
-		n = zlen(current_buffer);
-		if(i1 != n)
-			execute(post_select, n, -1);
+	case KeyEnd | Shift:
+		end((hot.key & Shift) != 0);
 		break;
 	case KeyBackspace:
 		if(i1 > 0 && i2 == -1)
@@ -228,6 +245,17 @@ static void field_focus(const rect& rc, void* source, int size, bool isnumber, u
 					execute(post_select, ni, -1);
 			}
 		}
+		break;
+	case MouseRight:
+		if(ishilite(rc)) {
+			if(!hot.pressed) {
+				static const char* commands[] = {"Cut", "Copy", "Paste", 0};
+				contextmenu(commands);
+			}
+		}
+		break;
+	case Ctrl + 'A':
+		execute(post_select, 0, -2);
 		break;
 	case KeyEnter:
 		execute(field_save_and_select);
@@ -248,9 +276,6 @@ static void field_focus(const rect& rc, void* source, int size, bool isnumber, u
 				execute(clear, 0, 0);
 			}
 		}
-		break;
-	case Ctrl + 'A':
-		execute(post_select, 0, -2);
 		break;
 	case InputSymbol:
 		if(hot.param <= 0x20)
@@ -274,8 +299,8 @@ static void fieldf(const rect& rco, unsigned flags, void* source, int size, int 
 	auto focused = isfocused(rc, source);
 	if(increment) {
 		auto result = addbutton(rc, focused,
-			"+", Ctrl + KeyUp, "Увеличить",
-			"-", Ctrl + KeyDown, "Уменьшить");
+			"+", Ctrl + KeyUp, getnm("Increase"),
+			"-", Ctrl + KeyDown, getnm("Decrease"));
 		auto value = getsource(source, size);
 		switch(result) {
 		case 1: execute(setcedit, value + 1, size, source); break;
@@ -287,12 +312,9 @@ static void fieldf(const rect& rco, unsigned flags, void* source, int size, int 
 			draw::execute(choosefield, (long)pchoose, size, source);
 	}
 	rc.offset(metrics::edit);
-	if(focused) {
+	if(focused)
 		field_focus(rc, source, size, increment, flags & edit_mask);
-		//cedit.align = flags & edit_mask;
-		//cedit.update(ev, istext, digits);
-		//cedit.view(rc);
-	} else {
+	else {
 		char temp[260]; stringbuilder sb(temp);
 		auto p = getsource(source, size, istext, sb);
 		text(rc, p, flags & edit_mask);
@@ -321,4 +343,8 @@ void draw::field(int x, int& y, int width, const char* label, const char*& sourc
 	rect rc = {x, y, x + width, y + draw::texth() + metrics::edit * 2};
 	fieldf(rc, AlignLeft | TextSingleLine, &source, sizeof(source), -1, false, true, choosep);
 	y += texth() + metrics::padding * 2 + metrics::edit * 2;
+}
+
+HANDLER(before_setfocus) {
+	field_save_and_clear();
 }

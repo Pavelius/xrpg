@@ -1,2 +1,3 @@
 ﻿Errors occurs in locale/ru/Names.txt.txt
-Define translate for 'Cancel'
+Define translate for 'Decrease'
+Define translate for 'Increase'

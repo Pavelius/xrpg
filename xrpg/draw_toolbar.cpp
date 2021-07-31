@@ -1,7 +1,9 @@
+#include "draw.h"
 #include "draw_control.h"
+#include "draw_builder.h"
+#include "draw_button.h"
 
 using namespace draw;
-using namespace draw::controls;
 
 static bool tool(const rect& rc, bool disabled, bool checked, bool press, bool focused, int key = 0) {
 	if(disabled)
@@ -32,12 +34,13 @@ static bool tool(const rect& rc, bool disabled, bool checked, bool press, bool f
 struct toolbar_builder : builder {
 	int		x, y, x2;
 	point	size;
-	constexpr toolbar_builder(int x, int y, int width, const point size) : x(x), y(y), x2(x + width), size(size) {}
+	constexpr toolbar_builder(int x, int y, int width, const point size) : builder(), x(x), y(y), x2(x + width), size(size) {
+	}
 	void addseparator() override {
 		gradv({x + 3, y + 4, x + 5, y + size.y - 4}, colors::border.lighten(), colors::border);
 		x += 7;
 	}
-	void add(const control* parent, const char* id) override {
+	void add(const char* id) override {
 		auto width = size.x;
 		rect rc = {x, y, x + width, y + size.y};
 		if(ishilite(rc)) {
@@ -52,15 +55,18 @@ struct toolbar_builder : builder {
 				statusbar("%ExecuteCommand '%1'", name);
 			}
 		}
-		auto disabled = !parent->isallow(id);
-		if(tool(rc, disabled, false, true, false))
-			parent->post(id);
-		parent->icon(x + size.x / 2 + 1, y + size.y / 2 + 1, id, disabled);
+		auto disabled = allowid && !allowid(object, id);
+		if(tool(rc, disabled, false, true, false)) {
+			//if(object)
+			//	parent->post(id);
+		}
+		//if(parent)
+		//	parent->icon(x + size.x / 2 + 1, y + size.y / 2 + 1, id, disabled);
 		x += width;
 	}
 };
 
-int	control::toolbar(int x, int y, int width, int* next_x) const {
+int	controls::control::toolbar(int x, int y, int width, int* next_x) const {
 	auto commands = getcommands();
 	if(next_x)
 		*next_x = x;
@@ -71,7 +77,7 @@ int	control::toolbar(int x, int y, int width, int* next_x) const {
 		return 0;
 	short height = images->get(0).getrect(0, 0, 0).height() + 4;
 	toolbar_builder e(x, y, width, {height, height});
-	e.render(this, getcommands());
+	e.render(getcommands(), this, 0, 0);
 	if(next_x)
 		*next_x = e.x;
 	if(e.x != x)

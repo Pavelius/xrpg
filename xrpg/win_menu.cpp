@@ -1,4 +1,5 @@
 #include "crt.h"
+#include "draw_button.h"
 #include "draw_control.h"
 #include "win.h"
 
@@ -6,18 +7,15 @@ using namespace draw;
 using namespace draw::controls;
 
 struct menu_builder : builder {
-	void*		hMenu;
-	int			count;
-
-	menu_builder() : hMenu(0), count(0) {
+	void*	hMenu;
+	int		count;
+	menu_builder() : builder(), hMenu(0), count(0) {
 		hMenu = CreatePopupMenu();
 	}
-
 	~menu_builder() {
 		DestroyMenu(hMenu);
 		hMenu = 0;
 	}
-
 	static unsigned get_menu_data(void* handle, unsigned index) {
 		MENUITEMINFO mi = {0};
 		mi.cbSize = sizeof(mi);
@@ -26,7 +24,6 @@ struct menu_builder : builder {
 			return 0;
 		return mi.dwItemData;
 	}
-
 	const char* finish() const override {
 		HWND hwnd = GetActiveWindow();
 		if(!hwnd)
@@ -40,8 +37,7 @@ struct menu_builder : builder {
 		hot.pressed = false;
 		return (const char*)result;
 	}
-
-	void add(const control* source, const char* id) override {
+	void add(const char* id) override {
 		MENUITEMINFO mi = {0};
 		mi.cbSize = sizeof(mi);
 		mi.fMask = MIIM_STRING | MIIM_FTYPE | MIIM_STATE | MIIM_ID | MIIM_SUBMENU | MIIM_DATA;
@@ -55,7 +51,7 @@ struct menu_builder : builder {
 			draw::key2str(sb, key);
 		}
 		temp[0] = szupper(temp[0]);
-		if(source->isallow(id))
+		if(!allowid || allowid(object, id))
 			mi.fState = MFS_ENABLED;
 		else
 			mi.fState = MFS_DISABLED | MFS_GRAYED;
@@ -64,14 +60,21 @@ struct menu_builder : builder {
 		mi.dwItemData = (unsigned)id;
 		InsertMenuItemA(hMenu, mi.wID, 0, &mi);
 	}
-
 	void addseparator() override {
 		AppendMenuA(hMenu, MF_SEPARATOR, ++count, 0);
 	}
-
 };
 
 void control::contextmenu(const char** source) {
 	menu_builder pm;
 	contextmenu(source, pm);
+}
+
+void draw::contextmenu(const char** source) {
+	menu_builder pm;
+	pm.start();
+	pm.render(0, source);
+	auto id = pm.finish();
+	if(id) {
+	}
 }

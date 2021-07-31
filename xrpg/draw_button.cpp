@@ -1,5 +1,6 @@
 #include "crt.h"
-#include "draw_control.h"
+#include "draw.h"
+#include "draw_button.h"
 #include "draw_focus.h"
 
 using namespace draw;
@@ -25,7 +26,7 @@ void draw::setsource(void* source, int size, long value) {
 		*((long*)source) = (int)value;
 }
 
-void draw::cbsetsource() {
+static void cbsetsource() {
 	auto p = (void*)hot.object;
 	auto s = hot.param2;
 	auto v = hot.param;

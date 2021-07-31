@@ -1,4 +1,5 @@
 #include "crt.h"
+#include "draw_button.h"
 #include "draw_control.h"
 #include "draw_focus.h"
 
@@ -47,41 +48,11 @@ void control::paint(const rect& rc) {
 	}
 }
 
-void builder::render(const control* parent, const char** commands, bool& separator, int& count) {
-	if(!commands)
-		return;
-	for(auto p = commands; *p; p++) {
-		auto id = *p;
-		if(id && id[0] == '#') {
-			id = id + 1;
-			if(!parent->isallow(id))
-				continue;
-			separator = true;
-			render(parent, parent->getcommands(id), separator, count);
-			separator = true;
-		} else {
-			if(separator) {
-				if(count > 0)
-					addseparator();
-				separator = false;
-			}
-			add(parent, *p);
-			count++;
-		}
-	}
-}
-
-void builder::render(const control* parent, const char ** commands) {
-	bool separator = false;
-	auto count = 0;
-	render(parent, commands, separator, count);
-}
-
 void control::contextmenu(const char** source, builder& pm) {
 	if(!source)
 		return;
 	pm.start();
-	pm.render(this, source);
+	pm.render(source, this);
 	auto id = pm.finish();
 	if(id) {
 		if(isallow(id))
