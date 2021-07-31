@@ -2,17 +2,13 @@
 #include "crt.h"
 
 // Common used color
-color colors::black = color::create(0, 0, 0);
-color colors::blue = color::create(0, 0, 255);
-color colors::gray = color::create(128, 128, 128);
-color colors::green = color::create(0, 255, 0);
-color colors::red = color::create(255, 0, 0);
-color colors::yellow = color::create(255, 244, 32);
-color colors::white = color::create(255, 255, 255);
-
-color color::create(unsigned char r, unsigned char g, unsigned char b) {
-	return {r, g, b};
-}
+color colors::black(0, 0, 0);
+color colors::blue(0, 0, 255);
+color colors::gray(128, 128, 128);
+color colors::green(0, 255, 0);
+color colors::red(255, 0, 0);
+color colors::yellow(255, 244, 32);
+color colors::white(255, 255, 255);
 
 color color::gray() const {
 	unsigned char level = (r + g + b) / 3;

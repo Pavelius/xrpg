@@ -60,9 +60,6 @@
     <ClInclude Include="moveable.h">
       <Filter>Поддержка</Filter>
     </ClInclude>
-    <ClInclude Include="view.h">
-      <Filter>Графика</Filter>
-    </ClInclude>
     <ClInclude Include="datamap.h">
       <Filter>Поддержка</Filter>
     </ClInclude>
@@ -98,6 +95,9 @@
     </ClInclude>
     <ClInclude Include="draw_control.h">
       <Filter>Графика</Filter>
+    </ClInclude>
+    <ClInclude Include="markup.h">
+      <Filter>Поддержка</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -158,9 +158,6 @@
     <ClCompile Include="moveable.cpp">
       <Filter>Поддержка</Filter>
     </ClCompile>
-    <ClCompile Include="view.cpp">
-      <Filter>Графика</Filter>
-    </ClCompile>
     <ClCompile Include="surface_serial.cpp">
       <Filter>Графика</Filter>
     </ClCompile>
@@ -207,6 +204,21 @@
       <Filter>Платформа</Filter>
     </ClCompile>
     <ClCompile Include="draw_buttons.cpp">
+      <Filter>Графика</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_field.cpp">
+      <Filter>Графика</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_scrollable.cpp">
+      <Filter>Графика</Filter>
+    </ClCompile>
+    <ClCompile Include="markup.cpp">
+      <Filter>Поддержка</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_input.cpp">
+      <Filter>Графика</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_theme.cpp">
       <Filter>Графика</Filter>
     </ClCompile>
   </ItemGroup>

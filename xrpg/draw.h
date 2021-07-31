@@ -6,7 +6,7 @@
 
 typedef void(*fnevent)();
 
-enum draw_event_s {
+enum draw_event_s : unsigned {
 	KeyBackspace = 8, KeyTab = 9, KeyEnter = 10, KeyEscape = 0x1B, KeySpace = 0x20, KeyDelete = 46,
 	// input events
 	InputSymbol = 0x80, InputTimer, InputIdle, InputKeyUp, InputUpdate, InputNoUpdate,

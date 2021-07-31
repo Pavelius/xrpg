@@ -1,0 +1,62 @@
+﻿About: О программе
+Agility: Ловкость
+Attributes: Атрибуты
+Back: Назад
+BaseballBat: Бейсбольная бита
+BatWithSpikes: Шипованная бита
+BicycleChain: Мотоциклетная цепь
+BluntInstrument: Импровизированная дубика
+Boss: Босс
+BrassKnuckles: Кастет
+Cancel: Отмена
+CharacterSheet: Лист пресонажа
+ChooseTalent: Выбирайте ваше достоинство
+Chronicler: Хронист
+Close: Закрыть
+Commander: Командир
+Comprehend: Понимание
+Copy: Копировать
+Covcheg: Ковчег
+Cut: Вырезать
+DogHandler: Собачник
+Empathy: Эмпатия 
+Endure: Выносливость
+Enforcer: Громила
+Exit: Выход
+Female: Женщина
+Fight: Драка
+Fixer: Делец
+Force: Сила
+Gearhead: Железячник
+Gunslingers: Стрелки
+Heal: Лечение
+HotKey: Горячая клавиша
+Intimidate: Запугивание
+KnowTheZone: Знание зоны
+LoadGame: Загрузить игру
+Machete: Мачете
+Male: Мужчина
+Manipulate: Влияние
+Move: Проворство
+NewGame: Новая игра
+Next: Далее
+NoGender: Безполый
+NoItem: Нет предмета
+Paste: Вставить
+Racketeer: Вымогатель
+Rules: Правила
+Scout: Наблюдательность
+ScrapAxe: Самодельный топор
+ScrapKnife: Самодельный нож
+ScrapSpear: Самодельное копье
+SenceEmotion: Проницательность
+Settings: Настройки
+Shoot: Стрельба
+Skills: Навыки
+Slave: Раб
+Sneak: Скрытность
+Sound: Звук
+Stalker: Разведчик
+Strenght: Телостожение
+Video: Видео
+Wits: Смекалка

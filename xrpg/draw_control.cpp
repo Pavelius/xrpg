@@ -30,7 +30,7 @@ static void open_context_menu() {
 	p->contextmenu(p->getcommands());
 }
 
-void control::paint(const rect& rc) const {
+void control::paint(const rect& rc) {
 	auto focused = isfocusable() && isfocused(rc, this);
 	if(ishilite(rc)) {
 		if(!focused) {

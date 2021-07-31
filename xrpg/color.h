@@ -14,7 +14,6 @@ struct color {
 	//
 	inline void				clear() { *((int*)this) = 0; }
 	static void				convert(void* output, int width, int height, int output_bpp, const void* output_pallette, const void* input, int input_bpp, const void* input_pallette = 0, int input_scanline = 0);
-	static color			create(unsigned char r, unsigned char g, unsigned char b);
 	color					darken() const;
 	int						find(const void* pallette, int count) const;
 	static void				flipv(unsigned char* bits, unsigned scanline, int height);

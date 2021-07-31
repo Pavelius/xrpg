@@ -64,8 +64,8 @@ bool bsreq::custom::readf(const char* url) {
 				break;
 			}
 		}
-		static int getnumber(const char* v) {
-			int result; stringbuilder::read(v, result);
+		static long getnumber(const char* v) {
+			long result; stringbuilder::read(v, result);
 			return result;
 		}
 		void set(serializer::node& e, const char* value) override {

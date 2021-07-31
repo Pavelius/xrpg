@@ -6,30 +6,80 @@ using namespace draw;
 
 int metrics::padding = 4;
 
-static long getsource(void* source, int size) {
-	switch(size) {
-	case 1: return *((char*)source);
-	case 2: return *((short*)source);
-	case 4: return *((int*)source);
-	default: return 0;
-	}
+long draw::getsource(void* source, int size) {
+	if(size == sizeof(char))
+		return *((char*)source);
+	else if(size == sizeof(short))
+		return *((short*)source);
+	else if(size == sizeof(long))
+		return *((long*)source);
+	return 0;
 }
 
-static void setsource(void* source, int size, long value) {
-	switch(size) {
-	case 1: *((char*)source) = (char)value; break;
-	case 2: *((short*)source) = (short)value; break;
-	case 4: *((int*)source) = (int)value; break;
-	case 8: *((long long*)source) = value; break;
-	default: break;
-	}
+void draw::setsource(void* source, int size, long value) {
+	if(size == sizeof(char))
+		*((char*)source) = (char)value;
+	else if(size == sizeof(short))
+		*((short*)source) = (short)value;
+	else if(size == sizeof(long))
+		*((long*)source) = (int)value;
 }
 
-static void setvalue() {
+void draw::cbsetsource() {
 	auto p = (void*)hot.object;
 	auto s = hot.param2;
 	auto v = hot.param;
 	setsource(p, s, v);
+}
+
+void draw::setposition(int& x, int& y, int& width, int padding) {
+	if(padding == -1)
+		padding = metrics::padding;
+	x += padding;
+	y += padding;
+	width -= padding * 2;
+}
+
+void draw::titletext(int& x, int y, int& width, const char* label, int label_width, const char* separator) {
+	if(!label || !label[0])
+		return;
+	if(!separator)
+		separator = ":";
+	char temp[1024]; stringbuilder sb(temp);
+	sb.add(label);
+	sb.add(separator);
+	text(x, y + 4, temp);
+	x += label_width;
+	width -= label_width;
+}
+
+bool draw::addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const char* tt1) {
+	const int width = 18;
+	rc.x2 -= width;
+	auto result = button({rc.x2, rc.y1, rc.x2 + width, rc.y2},
+		t1, tt1, k1, colors::button,
+		false, false, false, false);
+	line(rc.x2, rc.y1, rc.x2, rc.y2, colors::border);
+	return result;
+}
+
+int draw::addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const char* tt1, const char* t2, unsigned k2, const char* tt2) {
+	const int width = 20;
+	rc.x2 -= width;
+	auto height = rc.height() / 2;
+	auto result = 0;
+	if(button({rc.x2, rc.y1, rc.x2 + width, rc.y1 + height},
+		t1, tt1, k1, colors::button,
+		false, false, false, false))
+		result = 1;
+	if(button({rc.x2, rc.y1 + height, rc.x2 + width, rc.y1 + height * 2},
+		t2, tt2, k2, colors::button,
+		false, false, false, false))
+		result = 2;
+	if((hot.key == k2 || hot.key == k1) && !focused)
+		result = 0;
+	draw::line(rc.x2, rc.y1, rc.x2, rc.y2, colors::border);
+	return result;
 }
 
 bool draw::button(const rect& rc, const char* title, const char* tips, unsigned key, color value, bool focused, bool checked, bool press, bool border) {
@@ -94,25 +144,6 @@ bool draw::button(const rect& rc, const char* title, const char* tips, unsigned 
 	return result;
 }
 
-void draw::setposition(int& x, int& y, int& width, int padding) {
-	if(padding == -1)
-		padding = metrics::padding;
-	x += padding;
-	y += padding;
-	width -= padding * 2;
-}
-
-void draw::titletext(int& x, int y, int& width, const char* label, int title, const char* separator) {
-	if(!separator)
-		separator = ":";
-	char temp[1024]; stringbuilder sb(temp);
-	sb.add(label);
-	sb.add(separator);
-	text(x, y + 4, temp);
-	x += title;
-	width -= title;
-}
-
 void draw::buttonr(int& x, int y, const char* label, fnevent proc, unsigned key) {
 	if(!label || !proc)
 		return;
@@ -153,7 +184,7 @@ void draw::radio(int x, int& y, int width, void* source, int size, unsigned bits
 	rc.x2 = rc1.x2;
 	auto focused = isfocused(rc, source, bits);
 	auto value = getsource(source, size);
-	auto checked = (value==bits);
+	auto checked = (value == bits);
 	//clipart(x + 2, y + imax((rc1.height() - 14) / 2, 0), width, flags, ":radio");
 	bool need_select = false;
 	auto a = ishilite(rc);
@@ -167,7 +198,7 @@ void draw::radio(int x, int& y, int width, void* source, int size, unsigned bits
 			need_select = true;
 	}
 	if(need_select)
-		execute(setvalue, bits, size, source);
+		execute(cbsetsource, bits, size, source);
 	rc = rc1; rc.offset(2);
 	draw::text(rc, label);
 	if(tips && a && !hot.pressed)
@@ -185,9 +216,8 @@ void draw::checkbox(int x, int& y, int width, void* source, int size, unsigned b
 	rc.x2 = rc1.x2;
 	auto focused = isfocused(rc, source, bits);
 	auto value = getsource(source, size);
-	auto checked = (value & bits) != 0;
-//	clipart(x + 2, y + imax((rc1.height() - 14) / 2, 0), 0, flags, ":check");
-//	decortext(flags);
+	auto checked = (value & (1 << bits)) != 0;
+	//	clipart(x + 2, y + imax((rc1.height() - 14) / 2, 0), 0, flags, ":check");
 	auto a = draw::ishilite(rc);
 	auto need_value = false;
 	if(a && hot.key == MouseLeft) {
@@ -200,7 +230,7 @@ void draw::checkbox(int x, int& y, int width, void* source, int size, unsigned b
 			need_value = true;
 	}
 	if(need_value)
-		execute(setvalue, value^bits, size, source);
+		execute(cbsetsource, (value ^ (1 << bits)), size, source);
 	draw::text(rc1, label);
 	if(tips && a && !hot.pressed)
 		tooltips(tips);

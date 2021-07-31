@@ -35,12 +35,7 @@ struct hotkey {
 extern point				hilite_grid;
 extern variant				hilite_object;
 void						avatar(int x, int y, const char* id, color_s color, rect* rc_result = 0, unsigned char alpha = 0xFF);
-void						application();
 void						bar(rect rc, color_s color, color_s border, color_s back, int value, int maximum);
-void						breakmodal(int result);
-void						breakparam();
-void						buttoncancel();
-void						buttonok();
 void						dialogul(int& x, int& y, int& width);
 bool						execute(const hotkey* source);
 int							getresult();
@@ -55,11 +50,7 @@ void						fog(int x, int y, int n);
 point						gethiliteback();
 void						grid();
 bool						ishilite(int x, int y, int r, variant v);
-bool						ismodal();
-void						initialize();
-void						setint();
 int							scene(fnevent input);
-void						setnext(fnevent v);
 int							sheetline(rect rc, bool background);
 }
 struct guii {
@@ -71,5 +62,6 @@ struct guii {
 	int						tips_tab;
 	int						window_width, left_window_width;
 	int						grid;
+	static void				initialize();
 };
 extern guii					gui;

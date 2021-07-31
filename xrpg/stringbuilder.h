@@ -35,6 +35,7 @@ public:
 	void				change(char s1, char s2);
 	void				change(const char* s1, const char* s2);
 	void				clear() { pb[0] = 0; p = pb; }
+	void				copy(const char* v);
 	const char*			end() const { return pe; }
 	char*				get() const { return p; }
 	unsigned			getlenght() const { return pb - p; }
@@ -45,7 +46,7 @@ public:
 	static unsigned char lower(unsigned char sym);
 	void				lower();
 	static const char*	read(const char* p, char* result, const char* result_end);
-	static const char*	read(const char* p, int& result);
+	static const char*	read(const char* p, long& result);
 	void				set(char* v) { p = v; p[0] = 0; }
 	static unsigned char upper(unsigned char sym);
 	void				upper();

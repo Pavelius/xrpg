@@ -26,6 +26,7 @@ color				colors::special;
 color				colors::tips::text;
 color				colors::tips::back;
 // Color context and font context
+fnevent				draw::domodal;
 color				draw::fore;
 color				draw::fore_stroke;
 const sprite*		draw::font;

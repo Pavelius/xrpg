@@ -145,10 +145,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\xrpg\view.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\xrpg\png.cpp" />
+    <ClCompile Include="..\xrpg\view.cpp" />
     <ClCompile Include="..\xrpg\zip.cpp" />
     <ClCompile Include="attribute.cpp" />
     <ClCompile Include="character.cpp" />

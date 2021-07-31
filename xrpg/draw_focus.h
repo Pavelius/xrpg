@@ -5,6 +5,7 @@
 namespace draw {
 void			clearfocus();
 bool			inputfocus();
+extern void		updatefocus();
 bool			isfocused();
 bool			isfocused(const void* value, unsigned bits = 0);
 bool			isfocused(const rect& rc, const void* value, unsigned bits = 0);

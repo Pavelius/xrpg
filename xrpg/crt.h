@@ -22,8 +22,6 @@ extern "C" long long				time(long long* seconds);
 #define maptbl(t, id) (t[imax((unsigned)0, imin((unsigned)id, (sizeof(t)/sizeof(t[0])-1)))])
 #define maprnd(t) t[rand()%(sizeof(t)/sizeof(t[0]))]
 #define	FO(T,R) ((unsigned long)&((T*)0)->R)
-#define ANREQ(c, f) {FO(c,f), sizeof(c::f)}
-#define ANBIT(c, f, b) {FO(c,f), sizeof(c::f), b}
 #define BSDATA(e) template<> e bsdata<e>::elements[]
 #define BSDATAE(e) template<> array bsdata<e>::source(bsdata<e>::elements, sizeof(bsdata<e>::elements[0]), 0, sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]));
 #define BSDATAF(e) template<> array bsdata<e>::source(bsdata<e>::elements, sizeof(bsdata<e>::elements[0]), sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]), sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]));
@@ -169,15 +167,15 @@ NOBSDATA(char)
 NOBSDATA(unsigned char)
 NOBSDATA(const char*)
 NOBSDATA(bool)
-// Callback function of status probing. Return true if `object` support `index` status.
+// Callback function of any command executing
 typedef void(*fnevent)();
-// Callback function of status probing. Return true if `object` support `index` status.
+// Callback function of status probing. Return true if `object` allow `index` status.
 typedef bool(*fnallow)(const void* object, int index);
 // Callback function of choosing one element from array of many elements and storing it into `pointer`
 typedef bool(*fnchoose)(const void* object, array& source, void* pointer);
 // Callback function of checking some functionality of `object`
 typedef bool(*fnvisible)(const void* object);
-// Callback funtion of object command executing
+// Callback function of object command executing
 typedef void(*fncommand)(void* object);
 // Callback function of source identification. Return property filled 'source'.
 typedef void(*fnsource)(const void* object, array& source);
@@ -262,4 +260,3 @@ template<class T> struct meta_decoy<T[]> : meta_decoy<T> {};
 template<class T> struct meta_decoy<const T> : meta_decoy<T> {};
 template<class T> struct meta_decoy<vector<T>> : meta_decoy<T> {};
 template<class T, unsigned N> struct meta_decoy<adat<T, N>> : meta_decoy<T> {};
-//template<class T, class DT> struct meta_decoy<cflags<T, DT>> : meta_decoy<T> {};

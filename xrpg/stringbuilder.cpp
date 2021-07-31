@@ -3,7 +3,7 @@
 
 static const char spaces[] = " \n\t\r.,!?;:";
 
-static const char* psnum16(const char* p, int& value) {
+static const char* psnum16(const char* p, long& value) {
 	int result = 0;
 	const int radix = 16;
 	while(*p) {
@@ -25,7 +25,7 @@ static const char* psnum16(const char* p, int& value) {
 	return p;
 }
 
-static const char* psnum10(const char* p, int& value) {
+static const char* psnum10(const char* p, long& value) {
 	int result = 0;
 	const int radix = 10;
 	while(*p) {
@@ -42,7 +42,7 @@ static const char* psnum10(const char* p, int& value) {
 }
 
 // Parse string to number
-const char* stringbuilder::read(const char* p, int& value) {
+const char* stringbuilder::read(const char* p, long& value) {
 	value = 0;
 	if(!p)
 		return 0;
@@ -120,7 +120,7 @@ const char* psstr(const char* p, char* r, char end_symbol) {
 			continue;
 		}
 		p++;
-		int value;
+		long value;
 		switch(*p) {
 		case 'n':
 			*r++ = '\n';
@@ -354,7 +354,7 @@ const char* stringbuilder::readformat(const char* src, const char* vl) {
 		prefix = *src++;
 	auto p0 = p;
 	if(*src >= '0' && *src <= '9') {
-		int pn = 0, pnp = 0;
+		long pn = 0, pnp = 0;
 		if(isnum(*src))
 			src = psnum10(src, pn);
 		if(src[0] == '.' && isnum(src[1]))
@@ -458,6 +458,12 @@ void stringbuilder::change(char s1, char s2) {
 		if(*p == s1)
 			*p++ = s2;
 	}
+}
+
+void stringbuilder::copy(const char* v) {
+	while(p < pe && *v)
+		*p++ = *v++;
+	p[0] = 0;
 }
 
 void stringbuilder::change(const char* s1, const char* s2) {

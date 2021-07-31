@@ -129,6 +129,8 @@ void draw::setfocus(const void* value, unsigned bits, bool instant) {
 	if(isfocused(value, bits))
 		return;
 	if(instant) {
+		if(current_focus != value || current_bits != bits)
+			updatefocus();
 		current_focus = value;
 		current_bits = bits;
 	} else

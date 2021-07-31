@@ -5,22 +5,17 @@
 
 using namespace draw;
 
-static bool				break_modal;
-static int				break_result;
 static point			camera;
 static point			camera_drag;
 static rect				last_board;
 static char				text_tooltips[4096];
 static stringbuilder	sb_tooltips(text_tooltips);
-fnevent					draw::domodal;
-extern rect				sys_static_area;
 guii					gui; template<> array bsdata<guii>::source(&gui, sizeof(gui), 1, 1);
 static sprite*			small_font = (sprite*)loadb("art/fonts/small.pma");
 static char				answer_hotkeys[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 point					draw::hilite_grid;
 variant					draw::hilite_object;
 formi					draw::form;
-static fnevent			next_proc;
 static void*			current_focus;
 static int				dialog_y;
 
@@ -33,32 +28,6 @@ static color getcolor(color_s v) {
 		{0, 0, 0}, {255, 255, 255}, {179, 186, 197},
 	};
 	return theme_colors[v];
-}
-
-void draw::breakmodal(int result) {
-	break_modal = true;
-	break_result = result;
-}
-
-void draw::buttoncancel() {
-	breakmodal(0);
-}
-
-void draw::buttonok() {
-	breakmodal(1);
-}
-
-int draw::getresult() {
-	return break_result;
-}
-
-void draw::breakparam() {
-	breakmodal(hot.param);
-}
-
-void draw::setint() {
-	auto p = (int*)hot.object;
-	*p = hot.param;
 }
 
 static bool window(rect rc, bool hilight, int border) {
@@ -210,7 +179,7 @@ static void render_tooltips() {
 	dialog_y += rc.height() + gui.border * 2;
 }
 
-static void gui_initialize(int width) {
+void guii::initialize() {
 	memset(&gui, 0, sizeof(gui));
 	gui.window_width = 320;
 	gui.border = 8;
@@ -218,32 +187,9 @@ static void gui_initialize(int width) {
 	gui.opacity = 186;
 	gui.opacity_hilighted = 210;
 	gui.hero_size = 64;
-	gui.left_window_width = width - gui.window_width - gui.border * 4 - gui.padding - gui.border * 3;
+	gui.left_window_width = 800 - gui.window_width - gui.border * 4 - gui.padding - gui.border * 3;
 	gui.tips_tab = 24;
 	gui.grid = 32;
-}
-
-void draw::initialize() {
-	colors::active = color::create(172, 128, 0);
-	colors::border = color::create(73, 73, 80);
-	colors::button = color::create(0, 38, 77);
-	colors::form = color::create(32, 32, 32);
-	colors::window = color::create(64, 64, 64);
-	colors::text = color::create(255, 255, 255);
-	colors::special = color::create(255, 244, 32);
-	colors::border = color::create(0, 83, 166);
-	colors::tips::text = color::create(255, 255, 255);
-	colors::tips::back = color::create(100, 100, 120);
-	colors::h1 = colors::text.mix(colors::button, 64);
-	colors::h2 = colors::text.mix(colors::button, 96);
-	colors::h3 = colors::text.mix(colors::button, 128);
-	draw::font = metrics::font;
-	draw::fore = colors::text;
-	draw::fore_stroke = colors::blue;
-	gui_initialize(800);
-	create(-1, -1, 800, 600, 0, 32);
-	setcaption("Space 4X");
-	settimer(100);
 }
 
 static void standart_domodal() {
@@ -257,33 +203,17 @@ static void standart_domodal() {
 		return;
 }
 
-static void clear_hot() {
-	hot.cursor = CursorArrow;
-	hot.hilite.clear();
+void ismodal_update() {
 	sb_tooltips.clear();
 	hilite_object.clear();
 	hilite_grid = {-100, -100};
 	dialog_y = gui.border * 2;
 	domodal = standart_domodal;
+	clearfocus();
 }
 
-bool draw::ismodal() {
-	clear_hot();
-	clearfocus();
-	if(hot.mouse.x < 0 || hot.mouse.y < 0)
-		sys_static_area.clear();
-	else
-		sys_static_area = {0, 0, draw::getwidth(), draw::getheight()};
-	if(next_proc) {
-		break_modal = false;
-		setfocus(0, 0, true);
-		return false;
-	}
-	if(!break_modal)
-		return true;
-	break_modal = false;
+void ismodal_leaving() {
 	setfocus(0, 0, true);
-	return false;
 }
 
 static void setwindow(int& x, int& y) {
@@ -323,13 +253,6 @@ static int status(int x, int y, int width, int value, const char* title) {
 	return status(x, y, width, temp, title);
 }
 
-static void setptr() {
-	auto p = (long*)hot.object;
-	auto v = hot.param;
-	if(p)
-		*p = v;
-}
-
 static void buttonw(int& x, int y, const char* title, fnevent proc, unsigned key) {
 	auto h = texth() + 8;
 	auto w = textw(title) + 8;
@@ -337,7 +260,7 @@ static void buttonw(int& x, int y, const char* title, fnevent proc, unsigned key
 	auto focus = isfocused(r, (void*)proc);
 	auto result = button(r, title, 0, key, colors::button, focus, false, false, true);
 	if(result)
-		execute(setptr, (long)proc, 0, &form.window);
+		execute(cbsetptr, (long)proc, 0, &form.window);
 	x += w + gui.padding;
 }
 
@@ -483,17 +406,6 @@ int draw::scene(fnevent input) {
 			input();
 	}
 	return getresult();
-}
-
-void draw::application() {
-	while(next_proc) {
-		auto p = next_proc;
-		next_proc = 0; p();
-	}
-}
-
-void draw::setnext(fnevent v) {
-	next_proc = v;
 }
 
 void draw::grid() {

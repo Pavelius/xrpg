@@ -157,6 +157,7 @@
     <ClInclude Include="io_stream.h" />
     <ClInclude Include="io_plugin.h" />
     <ClInclude Include="log.h" />
+    <ClInclude Include="markup.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="moveable.h" />
     <ClInclude Include="point.h" />
@@ -166,7 +167,6 @@
     <ClInclude Include="stringbuilder.h" />
     <ClInclude Include="variant.h" />
     <ClInclude Include="varianta.h" />
-    <ClInclude Include="view.h" />
     <ClInclude Include="win.h" />
   </ItemGroup>
   <ItemGroup>
@@ -179,8 +179,12 @@
     <ClCompile Include="crt.cpp" />
     <ClCompile Include="draw_control.cpp" />
     <ClCompile Include="draw_buttons.cpp" />
+    <ClCompile Include="draw_field.cpp" />
     <ClCompile Include="draw_focus.cpp" />
+    <ClCompile Include="draw_input.cpp" />
+    <ClCompile Include="draw_scrollable.cpp" />
     <ClCompile Include="draw_tabs.cpp" />
+    <ClCompile Include="draw_theme.cpp" />
     <ClCompile Include="draw_toolbar.cpp" />
     <ClCompile Include="gender.cpp" />
     <ClCompile Include="log.cpp" />
@@ -191,6 +195,7 @@
     <ClCompile Include="io_plugin.cpp" />
     <ClCompile Include="io_plugin_bsreq.cpp" />
     <ClCompile Include="io_plugin_json.cpp" />
+    <ClCompile Include="markup.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="moveable.cpp" />
     <ClCompile Include="point.cpp" />
@@ -201,7 +206,6 @@
     <ClCompile Include="crt_translate.cpp" />
     <ClCompile Include="variant.cpp" />
     <ClCompile Include="varianta.cpp" />
-    <ClCompile Include="view.cpp" />
     <ClCompile Include="win_draw.cpp" />
     <ClCompile Include="win_io_file.cpp" />
     <ClCompile Include="win_menu.cpp" />
