@@ -153,6 +153,7 @@
     <ClInclude Include="draw.h" />
     <ClInclude Include="draw_builder.h" />
     <ClInclude Include="draw_button.h" />
+    <ClInclude Include="draw_clipboard.h" />
     <ClInclude Include="draw_control.h" />
     <ClInclude Include="draw_focus.h" />
     <ClInclude Include="gender.h" />
@@ -212,6 +213,7 @@
     <ClCompile Include="crt_translate.cpp" />
     <ClCompile Include="variant.cpp" />
     <ClCompile Include="varianta.cpp" />
+    <ClCompile Include="win_clipboard.cpp" />
     <ClCompile Include="win_draw.cpp" />
     <ClCompile Include="win_io_file.cpp" />
     <ClCompile Include="win_menu.cpp" />

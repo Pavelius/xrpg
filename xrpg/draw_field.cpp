@@ -1,6 +1,7 @@
 #include "crt.h"
 #include "draw.h"
 #include "draw_button.h"
+#include "draw_clipboard.h"
 #include "draw_focus.h"
 #include "handler.h"
 
@@ -101,7 +102,7 @@ static void left(bool shift, bool word) {
 }
 
 static void home(bool shift) {
-	if(i1 == 0)
+	if(i1 == 0 && i2 == -1)
 		return;
 	if(shift)
 		execute(post_select_ex, 0, 0);
@@ -111,7 +112,7 @@ static void home(bool shift) {
 
 static void end(bool shift) {
 	auto n = zlen(current_buffer);
-	if(i1 == n)
+	if(i1 == n && i2 == -1)
 		return;
 	if(shift)
 		execute(post_select_ex, n, 0);
@@ -136,7 +137,7 @@ static bool paste(const char* string) {
 }
 
 static void clear() {
-	if(i2 == -1 || i1==i2)
+	if(i2 == -1 || i1 == i2)
 		return;
 	if(i1 >= i2)
 		iswap(i1, i2);
@@ -206,6 +207,37 @@ static void setcedit() {
 	setsource(p, s, v);
 }
 
+static bool isallow(const void* object, const char* id) {
+	if(equal(id, "Cut"))
+		return i2 != -1;
+	if(equal(id, "Copy"))
+		return i2 != -1;
+	if(equal(id, "Paste"))
+		return clipboard::isallowpaste();
+	return false;
+}
+
+static void copy() {
+	auto sn = i2 - i1 + 1;
+	if(sn > 0)
+		clipboard::copy(current_buffer + i1, i2 - i1 + 1);
+}
+
+static void cut() {
+	copy();
+	clear();
+}
+
+static void paste() {
+	long size;
+	auto p = clipboard::paste(&size);
+	if(!p)
+		return;
+	clear();
+	paste(p);
+	delete p;
+}
+
 static void field_focus(const rect& rc, void* source, int size, bool isnumber, unsigned flags) {
 	int n;
 	field_read(source, size, isnumber, i1, i2);
@@ -241,8 +273,12 @@ static void field_focus(const rect& rc, void* source, int size, bool isnumber, u
 			if(hot.pressed) {
 				n = zlen(current_buffer);
 				auto ni = hittest(rc, current_buffer, flags, hot.mouse);
-				if(ni >= 0)
-					execute(post_select, ni, -1);
+				switch(ni) {
+				case -1: break;
+				case -2: execute(post_select, 0, -1); break;
+				case -3: execute(post_select, n, -1); break;
+				default: execute(post_select, ni, -1); break;
+				}
 			}
 		}
 		break;
@@ -250,7 +286,15 @@ static void field_focus(const rect& rc, void* source, int size, bool isnumber, u
 		if(ishilite(rc)) {
 			if(!hot.pressed) {
 				static const char* commands[] = {"Cut", "Copy", "Paste", 0};
-				contextmenu(commands);
+				auto id = contextmenu(commands, 0, isallow, 0);
+				if(!id)
+					break;
+				if(equal(id, "Cut"))
+					execute(cut);
+				if(equal(id, "Copy"))
+					execute(copy);
+				if(equal(id, "Paste"))
+					execute(paste);
 			}
 		}
 		break;

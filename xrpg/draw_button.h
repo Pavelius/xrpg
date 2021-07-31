@@ -9,6 +9,8 @@ extern int					padding;
 extern int					edit;
 }
 namespace draw {
+typedef bool (*fnallowid)(const void* object, const char* id);
+typedef const char** (*fngetcommands)(const void* object, const char* id);
 bool						addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const char* tt1);
 int							addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const char* tt1, const char* t2, unsigned k2, const char* tt2);
 void						application();
@@ -22,7 +24,7 @@ void						buttonok();
 void						cbsetint();
 void						cbsetptr();
 void						checkbox(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips = 0);
-void						contextmenu(const char** source);
+const char*					contextmenu(const char** commands, const void* object, fnallowid allowid, fngetcommands getcommands);
 void						fieldi(int x, int& y, int width, const char* label, void* source, int size, int label_width, int digits);
 void						field(int x, int& y, int width, const char* label, char* source, unsigned size, int label_width, fnchoose choosep);
 void						field(int x, int& y, int width, const char* label, const char*& source, int label_width, fnchoose choosep);

@@ -25,11 +25,19 @@ void builder::render(const char** commands) {
 	}
 }
 
-void builder::render(const char ** commands, const void* object, fnallowid allowid, fngetcommands getcommands) {
+void builder::render(const char** commands, const void* object, fnallowid allowid, fngetcommands getcommands) {
 	this->separator = false;
 	this->count = 0;
 	this->object = object;
 	this->allowid = allowid;
 	this->getcommands = getcommands;
 	render(commands);
+}
+
+const char* builder::choose(const char** commands, const void* object, fnallowid allowid, fngetcommands getcommands) {
+	if(!commands)
+		return 0;
+	start();
+	render(commands, object, allowid, getcommands);
+	return finish();
 }

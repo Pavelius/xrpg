@@ -1,6 +1,5 @@
 #include "crt.h"
 #include "draw.h"
-#include "draw_builder.h"
 #include "handler.h"
 #include "pointl.h"
 
@@ -25,14 +24,12 @@ struct docki {
 };
 namespace controls {
 struct visual;
-// Basic control element
 class control {
 	int						splitter;
 public:
 	constexpr control() : splitter(0) {}
 	virtual ~control() {}
 	void					contextmenu(const char** source);
-	void					contextmenu(const char** source, builder& pm);
 	static const char*		commands_edit[];
 	void					icon(int x, int y, const char* id, bool disabled) const;
 	virtual void			execute(const char* id) {}
@@ -49,7 +46,6 @@ public:
 	virtual void			setvalue(const char* id, long value) {}
 	int						toolbar(int x, int y, int width, int* next_x = 0) const;
 };
-// Abstract scrollable element. Scroll apear automatically if needed.
 class scrollable : control {
 	pointl					origin;
 	pointl					maximum;
@@ -63,7 +59,6 @@ public:
 	void					setmaximum(pointl v) { maximum = v; }
 	void					setwheels(point v) { wheels = v; }
 };
-// Basic list element
 class list : public control {
 	int						origin, current;
 public:

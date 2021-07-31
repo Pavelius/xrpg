@@ -1,4 +1,5 @@
 #include "crt.h"
+#include "draw_builder.h"
 #include "draw_button.h"
 #include "draw_control.h"
 #include "draw_focus.h"
@@ -48,16 +49,7 @@ void control::paint(const rect& rc) {
 	}
 }
 
-void control::contextmenu(const char** source, builder& pm) {
-	if(!source)
-		return;
-	pm.start();
-	pm.render(source, this);
-	auto id = pm.finish();
-	if(id) {
-		if(isallow(id))
-			execute(id);
-	}
+void control::contextmenu(const char** source) {
 }
 
 const char** control::getcommands(const char* id) const {

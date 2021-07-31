@@ -1,10 +1,12 @@
 #include "crt.h"
+#include "draw.h"
 #include "draw_button.h"
+#include "draw_builder.h"
 #include "draw_control.h"
 #include "win.h"
 
 using namespace draw;
-using namespace draw::controls;
+//using namespace draw::controls;
 
 struct menu_builder : builder {
 	void*	hMenu;
@@ -65,16 +67,7 @@ struct menu_builder : builder {
 	}
 };
 
-void control::contextmenu(const char** source) {
+const char* draw::contextmenu(const char** commands, const void* object, fnallowid allowid, fngetcommands getcommands) {
 	menu_builder pm;
-	contextmenu(source, pm);
-}
-
-void draw::contextmenu(const char** source) {
-	menu_builder pm;
-	pm.start();
-	pm.render(0, source);
-	auto id = pm.finish();
-	if(id) {
-	}
+	return pm.choose(commands, object, allowid, getcommands);
 }

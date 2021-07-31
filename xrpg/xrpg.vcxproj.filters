@@ -108,6 +108,9 @@
     <ClInclude Include="draw_builder.h">
       <Filter>Графика</Filter>
     </ClInclude>
+    <ClInclude Include="draw_clipboard.h">
+      <Filter>Графика</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -238,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="draw_statusbar.cpp">
       <Filter>Графика</Filter>
+    </ClCompile>
+    <ClCompile Include="win_clipboard.cpp">
+      <Filter>Платформа</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
