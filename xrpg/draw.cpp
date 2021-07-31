@@ -785,7 +785,7 @@ bool draw::dragactive(const void* p) {
 		if(!hot.pressed || hot.key == KeyEscape) {
 			drag_object = 0;
 			hot.key = InputUpdate;
-			hot.cursor = CursorArrow;
+			hot.cursor = cursor::Arrow;
 			return false;
 		}
 		return true;

@@ -8,6 +8,8 @@ const command* command::find(unsigned v) const {
 	return 0;
 }
 const command* command::find(const char* v) const {
+	if(!v)
+		return 0;
 	for(auto p = this; *p; p++)
 		if(strcmp(p->id, v)==0)
 			return p;

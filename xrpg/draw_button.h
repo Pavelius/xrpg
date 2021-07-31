@@ -25,7 +25,7 @@ void						cbsetint();
 void						cbsetptr();
 void						checkbox(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips = 0);
 const char*					contextmenu(const char** commands, const void* object, fnallowid allowid, fngetcommands getcommands);
-void						fieldi(int x, int& y, int width, const char* label, void* source, int size, int label_width, int digits);
+void						fieln(int x, int& y, int width, const char* label, void* source, int size, int label_width, int digits);
 void						field(int x, int& y, int width, const char* label, char* source, unsigned size, int label_width, fnchoose choosep);
 void						field(int x, int& y, int width, int line_height, const char* label, char* source, unsigned size, int label_width, fnchoose choosep);
 void						field(int x, int& y, int width, const char* label, const char*& source, int label_width, fnchoose choosep);
@@ -39,6 +39,8 @@ void						radio(int x, int& y, int width, void* source, int size, unsigned bits,
 void						setnext(fnevent v);
 void						setposition(int& x, int& y, int& width, int padding = -1);
 void						setsource(void* source, int size, long value);
+void						splith(int x, int y, int width, int& value, int size, int minimum, int maximum, bool down_align);
+void						splitv(int x, int y, int& value, int height, int size, int minimum, int maximum, bool right_align);
 void						statusbar(const char* format, ...);
 void						titletext(int& x, int y, int& width, const char* label, int label_width, const char* separator = 0);
 void						tooltips(const char* format, ...);

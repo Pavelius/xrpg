@@ -222,7 +222,9 @@ static void field_save() {
 	if(!current_source)
 		return;
 	if(current_isnumber) {
-
+		long result;
+		stringbuilder::read(current_buffer, result);
+		setsource(current_source, current_size, result);
 	} else if(current_size == sizeof(const char*))
 		setsource(current_source, current_size, (long)szdup(current_buffer));
 	else
@@ -288,7 +290,7 @@ static bool isallow(const void* object, const char* id) {
 static void copy() {
 	auto sn = i2 - i1 + 1;
 	if(sn > 0)
-		clipboard::copy(current_buffer + i1, i2 - i1 + 1);
+		clipboard::copy(current_buffer + i1, i2 - i1);
 }
 
 static void cut() {
@@ -388,11 +390,6 @@ static void field_focus(const rect& rc, void* source, int size, bool isnumber, u
 			}
 		}
 		break;
-	case Ctrl + 'A':
-		execute(post_select, 0, -2);
-		break;
-	case Ctrl + 'C':
-		break;
 	case KeyEnter:
 		execute(field_save_and_select);
 		break;
@@ -462,12 +459,12 @@ static void fieldf(const rect& rco, unsigned flags, void* source, int size, int 
 	}
 }
 
-void draw::fieldi(int x, int& y, int width, const char* label, void* source, int size, int label_width, int digits) {
+void draw::fieln(int x, int& y, int width, const char* label, void* source, int size, int label_width, int digits) {
 	setposition(x, y, width);
 	titletext(x, y, width, label, label_width);
 	rect rc = {x, y, x + width, y + draw::texth() + metrics::edit * 2};
 	fieldf(rc, AlignRight | TextSingleLine, source, size, digits, true, false, 0);
-	y += texth() + metrics::padding * 2 + metrics::edit * 2;
+	y += rc.height() + metrics::padding;
 }
 
 void draw::field(int x, int& y, int width, const char* label, char* source, unsigned size, int label_width, fnchoose choosep) {
@@ -475,16 +472,15 @@ void draw::field(int x, int& y, int width, const char* label, char* source, unsi
 	titletext(x, y, width, label, label_width);
 	rect rc = {x, y, x + width, y + draw::texth() + metrics::edit * 2};
 	fieldf(rc, AlignLeft | TextSingleLine, source, size, -1, false, true, choosep);
-	y += texth() + metrics::padding * 2 + metrics::edit * 2;
+	y += rc.height() + metrics::padding;
 }
 
 void draw::field(int x, int& y, int width, int line_height, const char* label, char* source, unsigned size, int label_width, fnchoose choosep) {
 	setposition(x, y, width);
 	titletext(x, y, width, label, label_width);
 	rect rc = {x, y, x + width, y + draw::texth() * line_height + metrics::edit * 2};
-	auto dy = rc.height();
 	fieldf(rc, AlignLeft, source, size, -1, false, true, choosep);
-	y += dy;
+	y += rc.height() + metrics::padding;
 }
 
 void draw::field(int x, int& y, int width, const char* label, const char*& source, int label_width, fnchoose choosep) {
@@ -492,7 +488,7 @@ void draw::field(int x, int& y, int width, const char* label, const char*& sourc
 	titletext(x, y, width, label, label_width);
 	rect rc = {x, y, x + width, y + draw::texth() + metrics::edit * 2};
 	fieldf(rc, AlignLeft | TextSingleLine, &source, sizeof(source), -1, false, true, choosep);
-	y += texth() + metrics::padding * 2 + metrics::edit * 2;
+	y += rc.height() + metrics::padding;
 }
 
 HANDLER(before_setfocus) {

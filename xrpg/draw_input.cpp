@@ -22,7 +22,7 @@ static void standart_domodal() {
 }
 
 bool draw::ismodal() {
-	hot.cursor = CursorArrow;
+	hot.cursor = cursor::Arrow;
 	hot.hilite.clear();
 	domodal = standart_domodal;
 	before_modal->execute();

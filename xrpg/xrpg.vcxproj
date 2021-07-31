@@ -191,6 +191,7 @@
     <ClCompile Include="draw_input.cpp" />
     <ClCompile Include="draw_scroll.cpp" />
     <ClCompile Include="draw_scrollable.cpp" />
+    <ClCompile Include="draw_splitter.cpp" />
     <ClCompile Include="draw_statusbar.cpp" />
     <ClCompile Include="draw_tabs.cpp" />
     <ClCompile Include="draw_theme.cpp" />

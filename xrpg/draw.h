@@ -53,8 +53,8 @@ enum window_flags {
 	WFMaximized = 0x0040,
 	WFAbsolutePos = 0x0080,
 };
-enum cursor_s {
-	CursorArrow, CursorHand, CursorLeftRight, CursorUpDown, CursorAll, CursorNo, CursorEdit, CursorWait,
+enum class cursor : unsigned char {
+	Arrow, Hand, LeftRight, UpDown, All, No, Edit, Wait,
 };
 struct pma {
 	char				name[4]; // Identifier of current block
@@ -109,7 +109,7 @@ extern sprite*			h3;
 }
 namespace draw {
 struct hoti {
-	cursor_s			cursor; // set this mouse cursor
+	cursor				cursor; // set this mouse cursor
 	unsigned			key; // if pressed key or mouse this field has key
 	point				mouse; // current mouse coordinates
 	bool				pressed; // flag if any of mouse keys is pressed
