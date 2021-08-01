@@ -1,5 +1,7 @@
 #include "answers.h"
 #include "draw.h"
+#include "draw_button.h"
+#include "handler.h"
 #include "variant.h"
 #include "view.h"
 
@@ -143,7 +145,7 @@ static bool control_board() {
 		break;
 	default:
 		if(dragactive(&last_board)) {
-			hot.cursor = CursorAll;
+			hot.cursor = cursor::All;
 			if(hot.mouse.x >= 0 && hot.mouse.y >= 0)
 				camera = camera_drag + (dragmouse - hot.mouse);
 			return true;
@@ -177,19 +179,6 @@ static void render_tooltips() {
 	draw::fore = colors::tips::text;
 	draw::textf(rc.x1, rc.y1, rc.width(), text_tooltips, 0, 0, 0, 0, gui.tips_tab);
 	dialog_y += rc.height() + gui.border * 2;
-}
-
-void guii::initialize() {
-	memset(&gui, 0, sizeof(gui));
-	gui.window_width = 320;
-	gui.border = 8;
-	gui.padding = 4;
-	gui.opacity = 186;
-	gui.opacity_hilighted = 210;
-	gui.hero_size = 64;
-	gui.left_window_width = 800 - gui.window_width - gui.border * 4 - gui.padding - gui.border * 3;
-	gui.tips_tab = 24;
-	gui.grid = 32;
 }
 
 static void standart_domodal() {
@@ -539,4 +528,17 @@ bool draw::execute(const hotkey* source) {
 		}
 	}
 	return false;
+}
+
+HANDLER(after_initialize) {
+	memset(&gui, 0, sizeof(gui));
+	gui.window_width = 320;
+	gui.border = 8;
+	gui.padding = 4;
+	gui.opacity = 186;
+	gui.opacity_hilighted = 210;
+	gui.hero_size = 64;
+	gui.left_window_width = 800 - gui.window_width - gui.border * 4 - gui.padding - gui.border * 3;
+	gui.tips_tab = 24;
+	gui.grid = 32;
 }

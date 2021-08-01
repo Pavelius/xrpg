@@ -189,6 +189,7 @@
     <ClCompile Include="draw_field.cpp" />
     <ClCompile Include="draw_focus.cpp" />
     <ClCompile Include="draw_input.cpp" />
+    <ClCompile Include="draw_list.cpp" />
     <ClCompile Include="draw_scroll.cpp" />
     <ClCompile Include="draw_scrollable.cpp" />
     <ClCompile Include="draw_splitter.cpp" />

@@ -3,21 +3,31 @@
 #include "draw_button.h"
 #include "draw_control.h"
 #include "draw_focus.h"
+#include "handler.h"
 
 using namespace draw;
 using namespace draw::controls;
 
-sprite* control::std_images = (sprite*)loadb("art/pma/toolbar.pma");
+static const control*	hilite_control;
+const sprite*			control::std_images = (sprite*)loadb("art/pma/toolbar.pma");
+
+HANDLER(before_modal) {
+	hilite_control = 0;
+}
 
 static void command_execute() {
 	auto p = (control*)hot.object;
 	auto n = (const char*)hot.param2;
-	if(p->isallow(n))
-		p->execute(n);
+	p->execute(n);
+}
+
+bool control::ishilited() const {
+	return (this == hilite_control);
 }
 
 void control::post(const char* id) const {
-	draw::execute(command_execute, 0, (long)id, this);
+	if(isallow(id)) // Do not post command and do not clear hot.key if our command is disabled.
+		draw::execute(command_execute, 0, (long)id, this);
 }
 
 void control::icon(int x, int y, const char* id, bool disabled) const {
@@ -35,6 +45,7 @@ static void open_context_menu() {
 void control::paint(const rect& rc) {
 	auto focused = isfocusable() && isfocused(rc, this);
 	if(ishilite(rc)) {
+		hilite_control = this;
 		if(!focused) {
 			if(isfocusable() && (hot.key == MouseLeft || hot.key == MouseRight) && !hot.pressed)
 				setfocus(this, 0, false);
@@ -49,14 +60,22 @@ void control::paint(const rect& rc) {
 	}
 }
 
+static bool isallow_proc(const void* object, const char* id) {
+	return ((control*)object)->isallow(id);
+}
+
+static const char** getcommands_proc(const void* object, const char* id) {
+	return ((control*)object)->getcommands(id);
+}
+
 void control::contextmenu(const char** source) {
+	auto id = draw::contextmenu(source, this, isallow_proc, getcommands_proc);
+	if(id == 0)
+		return;
+	execute(id);
 }
 
-const char** control::getcommands(const char* id) const {
-	static const char* cmd_edit[] = {"Cut", "Copy", "Paste", 0};
-	if(equal(id, "Edit"))
-		return cmd_edit;
-	return 0;
+void control::view(const rect& rc) {
+	rectb(rc, colors::border);
+	paint(rc);
 }
-
-const char* control::commands_edit[] = {"Cut", "Copy", "Paste", 0};

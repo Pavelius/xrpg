@@ -528,6 +528,18 @@ void stringbuilder::add(const char* s, const grammar* source, const char* def) {
 		add(def);
 }
 
+void stringbuilder::addsym(int sym) {
+	char temp[16];
+	auto p1 = temp;
+	szput(&p1, sym);
+	auto sz = p1 - temp;
+	if(p + sz < pe) {
+		memcpy(p, temp, sz);
+		p += sz;
+		p[0] = 0;
+	}
+}
+
 void stringbuilder::addof(const char* s) {
 	static grammar map[] = {{"ый", "ого"},
 		{"ий", "ого"},

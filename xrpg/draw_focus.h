@@ -3,6 +3,7 @@
 #pragma once
 
 namespace draw {
+void			blockfocuskeys();
 bool			isfocused();
 bool			isfocused(const void* value, unsigned bits = 0);
 bool			isfocused(const rect& rc, const void* value, unsigned bits = 0);

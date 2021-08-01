@@ -16,6 +16,8 @@ struct focusable {
 };
 }
 
+static bool				block_up_down;
+static bool				block_left_right;
 static const void*		current_focus;
 static unsigned			current_bits;
 static const void*		hilite_focus;
@@ -26,6 +28,8 @@ HANDLER(before_modal) {
 	elements.clear();
 	hilite_focus = 0;
 	hilite_bits = 0;
+	block_left_right = false;
+	block_up_down = false;
 	hot.focus = {};
 }
 
@@ -111,6 +115,11 @@ static const focusable* getnext(const focusable* pc, int key) {
 	}
 }
 
+void draw::blockfocuskeys() {
+	block_up_down = true;
+	block_left_right = true;
+}
+
 bool draw::isfocused() {
 	return static_cast<bool>(current_focus);
 }
@@ -147,6 +156,10 @@ void draw::setfocus(const void* value, unsigned bits, bool instant) {
 
 HANDLER(after_input) {
 	const focusable* p;
+	if(block_left_right && (hot.key == KeyLeft || hot.key == KeyRight))
+		return;
+	if(block_up_down && (hot.key == KeyUp || hot.key == KeyDown))
+		return;
 	switch(hot.key) {
 	case KeyTab:
 	case KeyTab | Ctrl:

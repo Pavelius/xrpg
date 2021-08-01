@@ -26,18 +26,11 @@ struct formi {
 	void					before() const;
 };
 extern formi				form;
-struct hotkey {
-	fnevent					proc;
-	const char*				name;
-	unsigned				key;
-	constexpr operator bool() const { return proc != 0; }
-};
 extern point				hilite_grid;
 extern variant				hilite_object;
 void						avatar(int x, int y, const char* id, color_s color, rect* rc_result = 0, unsigned char alpha = 0xFF);
 void						bar(rect rc, color_s color, color_s border, color_s back, int value, int maximum);
 void						dialogul(int& x, int& y, int& width);
-bool						execute(const hotkey* source);
 int							getresult();
 void						header(int x, int& y, int width, const char* title, ...);
 void						paint(int x, int y, figure_s type, int size);
@@ -62,6 +55,5 @@ struct guii {
 	int						tips_tab;
 	int						window_width, left_window_width;
 	int						grid;
-	static void				initialize();
 };
 extern guii					gui;

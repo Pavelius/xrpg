@@ -235,5 +235,5 @@ void draw::checkbox(int x, int& y, int width, void* source, int size, unsigned b
 	draw::text(rc1, label);
 	if(tips && a && !hot.pressed)
 		tooltips(tips);
-	y += rc1.height() + 2;
+	y += rc1.height() + metrics::padding;
 }

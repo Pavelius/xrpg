@@ -129,8 +129,13 @@ void scroll::input() {
 						}
 					}
 				}
-				hot.key = 0;
+				hot.key = InputNoUpdate;
 			}
+			break;
+		case MouseRight:
+		case MouseLeftDBL:
+			if(ishilite())
+				hot.key = InputNoUpdate;
 			break;
 		case MouseWheelUp:
 			if(draw::ishilite(client))
