@@ -37,8 +37,6 @@ void						paint(int x, int y, figure_s type, int size);
 void						paint(int x, int y, figure_s type, color_s color, int size);
 void						paint(int x, int y, const char* name, figure_s type, int size);
 void						paint(int x, int y, const char* name, figure_s type, color_s color, int size);
-int							tabs(rect rc, bool show_close, bool right_side, void** data, int start, int count, int current, int* hilite, fntext gtext, int* result_x1 = 0);
-int							tabv(rect rc, bool show_close, bool right_side, void** data, int start, int count, int current, int* hilite, fntext gtext);
 void						fog(int x, int y, int n);
 point						gethiliteback();
 void						grid();

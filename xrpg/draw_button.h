@@ -1,6 +1,7 @@
 #include "crt.h"
 #include "color.h"
 #include "rect.h"
+#include "stringbuilder.h"
 
 #pragma once
 
@@ -39,9 +40,12 @@ void						radio(int x, int& y, int width, void* source, int size, unsigned bits,
 void						setnext(fnevent v);
 void						setposition(int& x, int& y, int& width, int padding = -1);
 void						setsource(void* source, int size, long value);
+int							sheetline(rect rc, bool background);
 void						splith(int x, int y, int width, int& value, int size, int minimum, int maximum, bool down_align);
 void						splitv(int x, int y, int& value, int height, int size, int minimum, int maximum, bool right_align);
 void						statusbar(const char* format, ...);
+int							tabs(rect rc, bool show_close, bool right_side, void** data, int start, int count, int current, int* hilite, fntext gtext, int* result_x1 = 0);
+int							tabv(rect rc, bool show_close, bool right_side, void** data, int start, int count, int current, int* hilite, fntext gtext);
 void						titletext(int& x, int y, int& width, const char* label, int label_width, const char* separator = 0);
 void						tooltips(const char* format, ...);
 }

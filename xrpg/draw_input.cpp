@@ -81,13 +81,12 @@ void draw::application() {
 
 void draw::initialize(const char* label, int timer) {
 	colors::active = color(172, 128, 0);
-	colors::border = color(73, 73, 80);
-	colors::button = color(0, 38, 77);
-	colors::form = color(32, 32, 32);
-	colors::window = color(64, 64, 64);
+	colors::border = color(63, 63, 70);
+	colors::button = color(51, 51, 51);
+	colors::form = color(45, 45, 48);
+	colors::window = color(32, 32, 32);
 	colors::text = color(255, 255, 255);
 	colors::special = color(255, 244, 32);
-	colors::border = color(0, 83, 166);
 	colors::tips::text = color(255, 255, 255);
 	colors::tips::back = color(100, 100, 120);
 	colors::h1 = colors::text.mix(colors::button, 64);

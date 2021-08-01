@@ -1,14 +1,11 @@
-#include "crt.h"
-#include "draw.h"
+#include "anyreq.h"
 #include "handler.h"
-#include "pointl.h"
+#include "markup.h"
+#include "point.h"
 
 #pragma once
 
-#define ANREQ(c, f) {FO(c,f), sizeof(c::f)}
-#define ANBIT(c, f, b) {FO(c,f), sizeof(c::f), b}
-
-typedef bool(*fnvisible)(const void* object);
+struct sprite;
 
 namespace metrics {
 extern int					padding;
@@ -19,28 +16,24 @@ enum class widthtype : unsigned char { Default, Resized, Fixed, Inner, Auto };
 enum class selection : unsigned char { Cell, Text, Row };
 enum class dock : unsigned char { Left, LeftBottom, Right, RightBottom, Bottom, Workspace };
 enum class totaltype : unsigned char { None, Summarize, Maximum, Minimum, Average };
+enum class columnf : unsigned char { ReadOnly, Visible };
 struct docki {
 	const char*				id;
 };
-struct anyreq {
-	unsigned short			offset;
-	unsigned char			size;
-	unsigned char			bit;
-};
 namespace controls {
 class control {
-	int						splitter;
 public:
-	constexpr control() : splitter(0) {}
+	int						splitter;
+	rect					client;
+	constexpr control() : splitter(120), client() {}
 	virtual ~control() {}
 	void					contextmenu(const char** source);
-	virtual void			execute(const char* id) {}
+	virtual bool			execute(const char* id, bool run) { return true; }
 	virtual const char**	getcommands() const { return 0; }
 	virtual const char**	getcommands(const char* parent) const { return 0; }
 	virtual const sprite*	getimages() const { return std_images; }
 	virtual const char*		getvalue(const char* id, stringbuilder& sb) const { return 0; }
 	void					icon(int x, int y, const char* id, bool disabled) const;
-	virtual bool			isallow(const char* id) const { return true; }
 	virtual bool			isfocusable() const { return true; }
 	bool					ishilited() const;
 	virtual bool			ismodified() const { return false; }
@@ -49,45 +42,48 @@ public:
 	static const sprite*	std_images;
 	virtual void			setvalue(const char* id, long value) {}
 	int						toolbar(int x, int y, int width, int* next_x = 0) const;
-	void					view(const rect& rc);
 };
 class scrollable : control {
-	pointl					origin;
-	pointl					maximum;
-	point					wheels;
+	int						origin_x, origin_y;
+	int						maximum_x, maximum_y;
+	int						wheel_x, wheel_y;
 public:
-	constexpr scrollable() : control(), origin{}, maximum{}, wheels{} {}
+	constexpr scrollable() : control(), origin_x(), origin_y(), maximum_x(), maximum_y(), wheel_x(), wheel_y() {}
 	rect					centerview(const rect& rc);
-	virtual void			invalidate() { maximum.x = 0; }
+	virtual void			invalidate() { maximum_x = 0; }
 	virtual void			redraw(const rect& rc) {}
 	void					paint(const rect& rc) override;
-	void					setmaximum(pointl v) { maximum = v; }
-	void					setwheels(point v) { wheels = v; }
+	void					setmaximum(int x, int y) { maximum_x = x; maximum_y = y; }
+	void					setwheels(int x, int y) { wheel_x = x; wheel_y = y; }
 };
 class list : public control {
-	int						origin, origin_width, current, current_column;
-	int						pixels_per_width, lines_per_page;
+protected:
+	int						origin, origin_x;
+	int						page, page_x;
+	int						current, current_column;
+	static void				post_select();
 public:
 	int						pixels_per_line;
 	bool					show_header, show_selection, show_grid_lines, hilite_odd_lines, drop_shadow;
-	constexpr list() : control(), origin(0), origin_width(0), current(0), current_column(0), pixels_per_width(0), lines_per_page(0), pixels_per_line(0),
-		show_header(false), show_selection(true), show_grid_lines(true), hilite_odd_lines(true), drop_shadow(false) {}
-	virtual void			cell(const rect& rc, int line, int column) const {}
+	static int				current_hilite_treemark, current_hilite_row, current_hilite_column;
+	constexpr list(bool show_header = false) : control(), origin(0), origin_x(0), current(0), current_column(0), page(0), page_x(0), pixels_per_line(0),
+		show_header(show_header), show_selection(true), show_grid_lines(true), hilite_odd_lines(true), drop_shadow(false) {}
 	virtual void			collapse(int line) {}
 	void					correction();
-	void					ensurevisible();
+	virtual void			ensurevisible();
 	virtual void			expand(int line) {}
 	void					expandall(int max_level);
 	int						find(int line, int column, const char* value, int lenght = -1) const;
 	int						getblockcount(int index) const;
 	int						getcolumn() const { return current_column; }
 	int						getcurrent() const { return current; }
+	virtual int				getident() const { return 0; }
 	virtual int				getlevel(int line) const { return 0; }
 	int						getline() const { return current; }
 	int						getlinesperpage(int height) const;
 	virtual const char*		getname(int line, int column, stringbuilder& sb) const { return 0; }
 	int						getnextblock(int index, int increment) const;
-	virtual int				getmaximum() const { return 0; }
+	virtual int				getmaximum() const = 0;
 	virtual int				getmaximumwidth() const { return 0; }
 	int						getparent(int index) const;
 	int						getroot(int index) const;
@@ -117,48 +113,100 @@ struct column {
 	array*					source;
 	anyreq					value;
 	const visual*			method;
+	unsigned				flags;
+	unsigned				align;
+	fnlist					plist;
 	explicit operator bool() const { return method != 0; }
 	int						get(const void* object) const;
 	const char*				get(const void* object, stringbuilder& sb) const;
+	bool					is(columnf v) const { return flags & (1 << static_cast<int>(v)); }
 	column&					set(widthtype v) { size = v; return *this; }
-	//column&				set(column_s v) { flags.add(v); return *this; }
+	column&					set(columnf v) { flags |= 1 << static_cast<int>(v); return *this; }
 	column&					set(totaltype v) { total = v; return *this; }
 	column&					set(array* v) { source = v; return *this; }
 	column&					set(const anyreq& v) { value = v; return *this; }
-	//column&				set(const fnlist& v) { plist = v; return *this; }
+	void					set(const void* object, int v) const;
 	column&					setwidth(int v) { width = v; return *this; }
 };
-struct table : control {
+class table : public list {
+	array&					rows;
+	int						maximum_x;
+	column&					addcolimp(const char* name, const anyreq* req, const char* visual_id, array* source);
+	int						getvalid(int column, int direction) const;
+	void					update_columns(const rect& rc);
+public:
+	typedef int				(table::*fncompare)(int i1, int i2, int column) const;
+	struct sortparam {
+		int					column;
+		int					multiplier;
+	};
+	vector<column>			columns;
+	bool					no_change_order, no_change_count, read_only, show_totals;
+	selection				select_mode;
+	static const visual		visuals[];
+	constexpr table(array& rows, selection mode = selection::Cell) : list(true), rows(rows), maximum_x(), columns(),
+		no_change_order(false), no_change_count(false), read_only(false), show_totals(false),
+		select_mode(mode) {}
 	column&					addcol(const char* id, const anyreq& req, const char* visual_id, array* source = 0);
 	column&					addcol(const char* id, const char* visual_id);
 	column&					addcolimage();
-	virtual void*			addrow() = 0;
-	void					cell(const rect& rc, int line, int column) const {}
-	void					cellbox(const table* p, const rect& rc, int line, int column);
-	void					celldate(const table* p, const rect& rc, int line, int column);
-	void					celldatetime(const table* p, const rect& rc, int line, int column);
-	void					cellimage(const table* p, const rect& rc, int line, int column);
-	void					cellimagest(const table* p, const rect& rc, int line, int column);
-	void					cellrownumber(const table* p, const rect& rc, int line, int column);
-	void					cellhilite(const table* p, const rect& rc, int line, int columen, const char* text, image_flag_s aling) const;
-	void					cellnumber(const table* p, const rect& rc, int line, int column);
-	void					cellpercent(const table* p, const rect& rc, int line, int column);
-	void					celltext(const table* p, const rect& rc, int line, int column);
+	virtual void*			addrow() { return rows.add(); }
+	void					cell(const rect& rc, int line, int column, const char* label);
+	void					cellbox(const rect& rc, int line, int column);
+	void					celldate(const rect& rc, int line, int column);
+	void					celldatetime(const rect& rc, int line, int column);
+	void					cellimage(const rect& rc, int line, int column);
+	void					cellimagest(const rect& rc, int line, int column);
+	void					cellrownumber(const rect& rc, int line, int column);
+	void					cellhilite(const rect& rc, int line, int columen, const char* text, unsigned aling) const;
+	void					cellnumber(const rect& rc, int line, int column);
+	void					cellpercent(const rect& rc, int line, int column);
+	void					celltext(const rect& rc, int line, int column);
+	bool					change(int row, column& col, bool run);
+	void					changecheck(const rect& rc, int line, int column);
+	bool					changefield(const rect& rc, unsigned flags, stringbuilder& sb);
+	void					changenumber(const rect& rc, int line, int column);
+	void					changeref(const rect& rc, int line, int column);
+	void					changetext(const rect& rc, int line, int column);
+	void					clickcolumn(int column) const;
+	int						comparest(int i1, int i2, int column) const;
+	int						comparenm(int i1, int i2, int column) const;
+	int						comparer(int i1, int i2, const sortparam* param, int count) const;
+	void					ensurevisible() override;
+	bool					execute(const char* id, bool run) override;
+	virtual void*			get(int line) const { return rows.ptr(line); }
+	const char**			getcommands() const override;
+	void*					getcurrent() const { return (current >= getmaximum()) ? 0 : get(current); }
+	const char*				getheader(int column, stringbuilder& sb) const;
+	int						getmaximum() const override { return rows.getcount(); }
+	rect					getrect(int line, int column) const;
+	int						gettotal(int column) const;
+	int						getvalid(int column) const { return column; }
+	virtual const visual**	getvisuals() const;
+	void					paint(const rect& rc) override;
+	void					row(const rect& rc, int index) const override;
+	int						rowheader(const rect& rc) const override;
+	void					rowtotal(const rect& rc) const;
+	void					select(int index, int column) override;
+	void					sort(int column, bool ascending);
+	void					sort(int i1, int i2, sortparam* ps, int count);
+	void					write(serializer& file) const;
+	bool					write(const char* url, bool include_header) const;
 };
 struct visual {
-	typedef void (*fnrender)(const table* p, const rect& rc, int line, int column);
+	typedef void (table::*fnrender)(const rect& rc, int line, int column);
 	const char*				id;
-	//image_flag_s			align;
+	unsigned				align;
 	int						minimal_width, default_width;
 	widthtype				size;
 	totaltype				total;
 	fnrender				render;
 	fnrender				change;
-	//table::fncompare		comparer;
+	table::fncompare		comparer;
 	bool					change_one_click;
-	//fnlist				plist;
+	fnlist					plist;
 	explicit operator bool() const { return render != 0; }
-	//static const visual*	find(const char* id);
+	const visual*			find(const char* id) const;
 };
 }
 }

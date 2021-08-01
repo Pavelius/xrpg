@@ -1,10 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <Text Include="locale\ru\Descriptions.txt">
+      <Filter>Localization</Filter>
+    </Text>
+    <Text Include="locale\ru\Names.txt">
+      <Filter>Localization</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="locale\ru\Descriptions.txt" />
-    <Text Include="locale\ru\Names.txt" />
+    <Filter Include="Localization">
+      <UniqueIdentifier>{19e3fd19-ece9-4672-8b81-a19750f90c7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logic">
+      <UniqueIdentifier>{dff59be6-2315-47ba-be8a-45b8a11450bb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="trait.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

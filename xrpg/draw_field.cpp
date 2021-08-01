@@ -11,7 +11,7 @@ using namespace draw;
 
 typedef adat<int, 32> fldstra;
 
-int					metrics::edit = 2;
+int					metrics::edit = 3;
 static char			current_buffer[4096];
 static int			current_width, current_height;
 static int			current_origin_height;

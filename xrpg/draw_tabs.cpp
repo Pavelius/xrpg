@@ -1,5 +1,6 @@
 #include "crt.h"
-#include "view.h"
+#include "draw.h"
+#include "draw_button.h"
 
 using namespace draw;
 
@@ -73,11 +74,11 @@ int draw::tabs(rect rc, bool show_close, bool right_side, void** data, int start
 			rcx.y2 = rcx.y1 + dy;
 			rcx.x1 = element.x2 - dy - 4;
 			rcx.x2 = rcx.x1 + rcx.height();
-			//if(ishilite(rcx)) {
+			if(ishilite(rcx)) {
 			//	if(buttonh(rcx, false, false, false, true, 0))
 			//		result = 2;
-			//	tooltips("Закрыть");
-			//}
+				tooltips(getnm("Close"));
+			}
 			line(rcx.x1 + 4, rcx.y1 + 4, rcx.x2 - 4, rcx.y2 - 4, fore);
 			line(rcx.x2 - 4, rcx.y1 + 4, rcx.x1 + 4, rcx.y2 - 4, fore);
 		}
@@ -88,7 +89,7 @@ int draw::tabs(rect rc, bool show_close, bool right_side, void** data, int start
 }
 
 int draw::tabv(rect ro, bool show_close, bool right_side, void** data, int start, int count, int current, int* hilite, fntext gtext) {
-	auto dy = draw::texth() + gui.padding;
+	auto dy = draw::texth() + metrics::padding;
 	rect rc = {ro.x1, ro.y1 + dy, ro.x2, ro.y2};
 	rectf(rc, colors::form);
 	rectb(rc, colors::border);

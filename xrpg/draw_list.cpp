@@ -1,4 +1,5 @@
 #include "crt.h"
+#include "draw.h"
 #include "draw_button.h"
 #include "draw_control.h"
 #include "draw_focus.h"
@@ -12,20 +13,21 @@ const sprite*			list::std_tree_images = (sprite*)loadb("art/pma/tree.pma");
 static char				search_text[32];
 static unsigned			search_time;
 static stringbuilder	search_sb(search_text);
-static int				current_hilite_row;
-static int				current_hilite_treemark;
+int						list::current_hilite_treemark;
+int						list::current_hilite_row;
+int						list::current_hilite_column;
 
 HANDLER(before_modal) {
-	current_hilite_row = -1;
-	current_hilite_treemark = -1;
+	list::current_hilite_row = -1;
+	list::current_hilite_treemark = -1;
 }
 
 void list::ensurevisible() {
 	correction();
 	if(current < origin)
 		origin = current;
-	if(current > origin + lines_per_page - 1)
-		origin = current - lines_per_page + 1;
+	if(current > origin + page - 1)
+		origin = current - page + 1;
 }
 
 void list::select(int index, int column) {
@@ -39,18 +41,18 @@ void list::correction() {
 		current = maximum - 1;
 	if(current < 0)
 		current = 0;
-	if(lines_per_page) {
-		if(origin > maximum - lines_per_page)
-			origin = maximum - lines_per_page;
+	if(page) {
+		if(origin > maximum - page)
+			origin = maximum - page;
 		if(origin < 0)
 			origin = 0;
 	}
 	auto maximum_width = getmaximumwidth();
-	if(pixels_per_width) {
-		if(origin_width > maximum_width - pixels_per_width)
-			origin_width = maximum_width - pixels_per_width;
-		if(origin_width < 0)
-			origin_width = 0;
+	if(page_x) {
+		if(origin_x > maximum_width - page_x)
+			origin_x = maximum_width - page_x;
+		if(origin_x < 0)
+			origin_x = 0;
 	}
 }
 
@@ -69,7 +71,7 @@ void list::rowhilite(const rect& rc, int index) const {
 		if(index == current)
 			hilight(rc);
 		else if(a && index == current_hilite_row)
-			rectf(rc, colors::button.mix(colors::window, 96));
+			rectf(rc, colors::button, 64);
 	}
 }
 
@@ -91,8 +93,11 @@ int	list::getrowheight() {
 	return texth() + metrics::edit * 2;
 }
 
-void list::mousehiliting(const rect& screen, point mouse) const {
-	current_hilite_row = origin + (mouse.y - screen.y1) / pixels_per_line;
+void list::mousehiliting(const rect& client, point mouse) const {
+	auto maximum = getmaximum();
+	current_hilite_row = origin + (mouse.y - client.y1) / pixels_per_line;
+	if(current_hilite_row >= maximum)
+		current_hilite_row = -1;
 }
 
 bool list::isopen(int index) const {
@@ -114,7 +119,7 @@ void list::treemark(const rect& rc, int line, int level) const {
 		draw::line(x, y - 4, x, y + 4, c1);
 }
 
-static void post_select() {
+void list::post_select() {
 	auto p = (list*)hot.object;
 	auto r = hot.param;
 	auto c = hot.param2;
@@ -129,26 +134,26 @@ void list::mouseclick() const {
 int list::getlinesperpage(int height) const {
 	if(!pixels_per_line)
 		return 0;
-	return 1 + height / pixels_per_line;
+	return height / pixels_per_line;
 }
 
 void list::paint(const rect& rcorigin) {
 	rect rc = rcorigin;
-	pixels_per_width = rc.width() - 1;
+	page_x = rc.width() - 1;
 	if(show_header)
 		rc.y1 += rowheader(rc);
 	rect rc1 = rc;
 	rc.x1 += 1; rc.y1 += 1; // Padding for first string
 	if(!pixels_per_line)
 		pixels_per_line = getrowheight();
-	lines_per_page = getlinesperpage(rc.height());
+	page = getlinesperpage(rc.height());
 	correction();
 	auto maximum = getmaximum();
-	auto maximum_width = getmaximumwidth();
+	auto maximum_x = getmaximumwidth();
 	if(!pixels_per_line)
 		return;
-	scroll scrollv(origin, lines_per_page, maximum, rc, false);
-	scroll scrollh(origin_width, pixels_per_width, maximum_width, rc, true);
+	scroll scrollv(origin, page, maximum, rc, false);
+	scroll scrollh(origin_x, page_x, maximum_x, rc, true);
 	scrollv.input();
 	scrollh.input();
 	control::paint(rc1);
@@ -173,10 +178,9 @@ void list::paint(const rect& rcorigin) {
 		}
 	}
 	auto push_clip = clipping; setclip(rc);
-	auto x1 = rc.x1 - origin_width, y1 = rc.y1;
+	auto x1 = rc.x1 - origin_x, y1 = rc.y1;
 	auto x2 = rc.x2;
 	auto ix = origin;
-	auto hl = colors::border.mix(colors::window, 12);
 	while(true) {
 		if(y1 >= rc.y2)
 			break;
@@ -185,7 +189,7 @@ void list::paint(const rect& rcorigin) {
 		rect rcm = {x1, y1, x2, y1 + pixels_per_line};
 		if(hilite_odd_lines) {
 			if(ix & 1)
-				rectf({rcm.x1, rcm.y1, rcm.x2, rcm.y2}, hl);
+				rectf({rcm.x1, rcm.y1, rcm.x2, rcm.y2}, colors::border, 16);
 		}
 		if(show_grid_lines)
 			line(rc.x1, rcm.y2 - 1, rc.x2, rcm.y2 - 1, colors::border);
@@ -225,13 +229,13 @@ void list::paint(const rect& rcorigin) {
 			if(current != origin)
 				draw::execute(post_select, origin, getcolumn(), this);
 			else
-				draw::execute(post_select, current - (lines_per_page - 1), getcolumn(), this);
+				draw::execute(post_select, current - (page - 1), getcolumn(), this);
 			break;
 		case KeyPageDown:
-			if(current != (origin + lines_per_page - 1))
-				draw::execute(post_select, origin + lines_per_page - 1, getcolumn(), this);
+			if(current != (origin + page - 1))
+				draw::execute(post_select, origin + page - 1, getcolumn(), this);
 			else
-				draw::execute(post_select, current + lines_per_page - 1, getcolumn(), this);
+				draw::execute(post_select, current + page - 1, getcolumn(), this);
 			break;
 		case KeyEnter:
 			post("Choose");

@@ -1,6 +1,8 @@
 ﻿About: О программе
+Add: Добавить
 Back: Назад
 Cancel: Отмена
+Change: Изменить
 Close: Закрыть
 Copy: Копировать
 Cut: Вырезать
@@ -8,6 +10,9 @@ Decrease: Уменьшить
 Exit: Выход
 HotKey: Горячая клавиша
 Increase: Увеличить
+Name: Наименование
 Next: Далее
 Paste: Вставить
+Remove: Удалить
 Settings: Настройки
+Weight: Вес

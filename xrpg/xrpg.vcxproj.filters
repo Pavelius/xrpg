@@ -1,264 +1,279 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Платформа">
+    <Filter Include="Interface">
+      <UniqueIdentifier>{2f36f947-1aa6-466f-a94f-ed071f4265a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform">
       <UniqueIdentifier>{5530fdcc-9e4e-4d5a-9ca5-02392c40fcf0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Поддержка">
+    <Filter Include="Support">
       <UniqueIdentifier>{4cad7b33-4e35-42c7-b710-147d337a166f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Графика">
-      <UniqueIdentifier>{2f36f947-1aa6-466f-a94f-ed071f4265a6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="win.h">
-      <Filter>Платформа</Filter>
+      <Filter>Platform</Filter>
     </ClInclude>
     <ClInclude Include="answers.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="bsreq.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="bstream.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="color.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="converter.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="crt.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="dataset.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="io_stream.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="io_plugin.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="point.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="pointl.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="rect.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="stringbuilder.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="variant.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="moveable.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="datamap.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="posable.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="menu.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="log.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="varianta.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="gender.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="archive.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="draw.h">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="draw_focus.h">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="command.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="cflags.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="draw_control.h">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="markup.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="handler.h">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="draw_button.h">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="draw_builder.h">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="draw_clipboard.h">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="draw_scroll.h">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="datetime.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="anyreq.h">
+      <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
-      <Filter>Платформа</Filter>
+      <Filter>Platform</Filter>
     </ClCompile>
     <ClCompile Include="win_io_file.cpp">
-      <Filter>Платформа</Filter>
+      <Filter>Platform</Filter>
     </ClCompile>
     <ClCompile Include="win_time.cpp">
-      <Filter>Платформа</Filter>
+      <Filter>Platform</Filter>
     </ClCompile>
     <ClCompile Include="answers.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="bsreq.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="bstream.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="color.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="converter.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="crt.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="io_stream.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="io_plugin.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="io_plugin_bsreq.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="io_plugin_json.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="point.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="resource_dynamic.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="stringbuilder.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="szdup.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="variant.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="moveable.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="surface_serial.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="menu.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="log.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="varianta.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="gender.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="archive.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="draw.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="draw_focus.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="draw_text.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="draw_textf.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="crt_translate.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="draw_tabs.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="draw_control.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="draw_toolbar.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="win_menu.cpp">
-      <Filter>Платформа</Filter>
+      <Filter>Platform</Filter>
     </ClCompile>
     <ClCompile Include="draw_button.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="draw_field.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="draw_scrollable.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="markup.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="draw_input.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="draw_theme.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="draw_builder.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="draw_tooltips.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="draw_statusbar.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="win_clipboard.cpp">
-      <Filter>Платформа</Filter>
+      <Filter>Platform</Filter>
     </ClCompile>
     <ClCompile Include="command.cpp">
-      <Filter>Поддержка</Filter>
+      <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="draw_scroll.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="draw_splitter.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="draw_list.cpp">
-      <Filter>Графика</Filter>
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_table.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="datetime.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="anyreq.cpp">
+      <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

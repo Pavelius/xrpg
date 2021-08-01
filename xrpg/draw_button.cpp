@@ -88,6 +88,7 @@ bool draw::button(const rect& rc, const char* title, const char* tips, unsigned 
 	static int rc_key_event;
 	auto push_fore = fore;
 	bool result = false;
+	bool vertical = rc.height() / 2 > rc.width();
 	struct rect rcb = {rc.x1 + 1, rc.y1 + 1, rc.x2, rc.y2};
 	auto a = ishilite(rcb);
 	if((key && hot.key == key) || (focused && hot.key == KeyEnter) || (a && hot.key == MouseLeft && hot.pressed)) {
@@ -109,16 +110,23 @@ bool draw::button(const rect& rc, const char* title, const char* tips, unsigned 
 	color c0 = value;
 	if(a) {
 		if(c0.gray().r >= 100)
-			c0 = c0.mix(colors::black, 160);
+			c0 = c0.mix(colors::black, 190);
 		else
-			c0 = c0.mix(colors::white, 160);
+			c0 = c0.mix(colors::white, 190);
 	}
 	color b1 = c0;
 	color b2 = c0.mix(colors::black);
-	if(button_pressed)
-		gradv(rcb, b2, b1);
-	else
-		gradv(rcb, b1, b2);
+	if(button_pressed) {
+		if(vertical)
+			gradh(rcb, b2, b1);
+		else
+			gradv(rcb, b2, b1);
+	} else {
+		if(vertical)
+			gradh(rcb, b1, b2);
+		else
+			gradv(rcb, b1, b2);
+	}
 	if(border) {
 		auto bc = focused ? colors::active : c0;
 		if(bc.gray().r >= 100)
