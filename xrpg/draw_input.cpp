@@ -72,14 +72,14 @@ void draw::setnext(fnevent v) {
 	next_proc = v;
 }
 
-void draw::application() {
+void draw::start() {
 	while(next_proc) {
 		auto p = next_proc;
 		next_proc = 0; p();
 	}
 }
 
-void draw::initialize(const char* label, int timer) {
+void draw::initialize(const char* label, int width, int height, bool resize, int timer) {
 	colors::active = color(172, 128, 0);
 	colors::border = color(63, 63, 70);
 	colors::button = color(51, 51, 51);
@@ -96,7 +96,7 @@ void draw::initialize(const char* label, int timer) {
 	draw::fore = colors::text;
 	draw::fore_stroke = colors::blue;
 	after_initialize->execute();
-	create(-1, -1, 800, 600, 0, 32);
+	create(-1, -1, width, height, resize ? (WFResize|WFMinmax) : 0, 32);
 	setcaption(label);
 	if(timer)
 		settimer(timer);

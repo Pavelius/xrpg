@@ -1,3 +1,4 @@
+#include "command.h"
 #include "datetime.h"
 #include "draw.h"
 #include "draw_control.h"
@@ -709,11 +710,11 @@ bool table::execute(const char* id, bool run) {
 		if(!getmaximum())
 			return false;
 		if(run) {
-			//char filter[1024]; stringbuilder sb(filter);
-			//io::plugin::getfilter(sb);
+			char filter[1024]; stringbuilder sb(filter);
+			io::plugin::getfilter(sb);
 			//if(!dialog::save("Сохранить данные таблицы", url, filter, 0))
 			//	return false;
-			//write(url, false);
+			write(url, false);
 		}
 	}
 	return true;

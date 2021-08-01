@@ -111,9 +111,9 @@ static void test_table() {
 int main() {
 	if(!initialize_translation("ru"))
 		return -1;
-	draw::initialize("Test UI", 0);
+	draw::initialize("Test UI", 640, 480, true, 0);
 	draw::setnext(test_table);
-	draw::application();
+	draw::start();
 	return 0;
 }
 
