@@ -172,6 +172,7 @@
     <ClInclude Include="pointl.h" />
     <ClInclude Include="posable.h" />
     <ClInclude Include="rect.h" />
+    <ClInclude Include="setting.h" />
     <ClInclude Include="stringbuilder.h" />
     <ClInclude Include="variant.h" />
     <ClInclude Include="varianta.h" />
@@ -220,6 +221,7 @@
     <ClCompile Include="moveable.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="resource_dynamic.cpp" />
+    <ClCompile Include="setting.cpp" />
     <ClCompile Include="stringbuilder.cpp" />
     <ClCompile Include="surface_serial.cpp" />
     <ClCompile Include="szdup.cpp" />

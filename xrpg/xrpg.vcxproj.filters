@@ -123,6 +123,9 @@
     <ClInclude Include="draw_figure.h">
       <Filter>Interface</Filter>
     </ClInclude>
+    <ClInclude Include="setting.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -283,6 +286,9 @@
     </ClCompile>
     <ClCompile Include="draw_figure.cpp">
       <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="setting.cpp">
+      <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -171,8 +171,10 @@ void draw::buttonr(int& x, int y, const char* label, fnevent proc, unsigned key)
 void draw::buttonl(int& x, int y, const char* label, fnevent proc, unsigned key, void* focus_value) {
 	if(!label || !proc)
 		return;
-	auto h = texth() + 8;
-	auto w = textw(label) + 8;
+	x += metrics::padding;
+	y += metrics::padding;
+	auto h = texth() + metrics::padding * 2;
+	auto w = textw(label) + metrics::padding * 2;
 	rect r = {x, y, x + w, y + h};
 	if(!focus_value)
 		focus_value = (void*)proc;
@@ -242,7 +244,7 @@ static void mark_check(int x, int y, int size, bool focused, bool checked, bool 
 }
 
 void draw::checkbox(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips) {
-	setposition(x, y, width, 1);
+	setposition(x, y, width);
 	rect rc = {x, y, x + width, y};
 	rect rc1 = {rc.x1 + 22, rc.y1, rc.x2, rc.y2};
 	draw::textw(rc1, label);
