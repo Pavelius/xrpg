@@ -64,10 +64,10 @@ protected:
 	static void				post_select();
 public:
 	int						pixels_per_line;
-	bool					show_header, show_selection, show_grid_lines, hilite_odd_lines, drop_shadow;
+	bool					show_header, show_selection, show_grid_lines, hilite_odd_lines;
 	static int				current_hilite_treemark, current_hilite_row, current_hilite_column;
 	constexpr list(bool show_header = false) : control(), origin(0), origin_x(0), current(0), current_column(0), page(0), page_x(0), pixels_per_line(0),
-		show_header(show_header), show_selection(true), show_grid_lines(true), hilite_odd_lines(true), drop_shadow(false) {}
+		show_header(show_header), show_selection(true), show_grid_lines(true), hilite_odd_lines(true) {}
 	virtual void			collapse(int line) {}
 	void					correction();
 	virtual void			ensurevisible();

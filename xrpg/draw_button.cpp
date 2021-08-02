@@ -222,7 +222,7 @@ void draw::radio(int x, int& y, int width, void* source, int size, unsigned bits
 //	return normal;
 //}
 
-static void mark(int x, int y, int size, bool focused, bool checked, bool hilite) {
+static void mark_check(int x, int y, int size, bool focused, bool checked, bool hilite) {
 	auto push_fore = fore;
 	fore = colors::window;
 	if((hilite && hot.pressed))
@@ -253,7 +253,7 @@ void draw::checkbox(int x, int& y, int width, void* source, int size, unsigned b
 	auto value = getsource(source, size);
 	auto checked = (value & (1 << bits)) != 0;
 	auto a = draw::ishilite(rc);
-	mark(x + 10, y + imax((rc1.height()) / 2, 0), 7, focused, checked, a);
+	mark_check(x + 10, y + imax((rc1.height()) / 2, 0), 7, focused, checked, a);
 	auto need_value = false;
 	if(a && hot.key == MouseLeft) {
 		if(!hot.pressed)

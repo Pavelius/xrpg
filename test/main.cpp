@@ -36,12 +36,10 @@ static void test_fields() {
 	}
 }
 
-static void footer(int x, int& y, controls::list& e) {
+static void panel(int x, int& y, controls::list& e) {
 	auto w = 200; auto y1 = y;
 	checkbox(x, y, w, &e.show_grid_lines, sizeof(e.show_grid_lines), 0, "Показывать линии сетки");
 	checkbox(x, y, w, &e.hilite_odd_lines, sizeof(e.hilite_odd_lines), 0, "Выделять нечетные рядки");
-	x += w + metrics::padding; y = y1;
-	checkbox(x, y, w, &e.drop_shadow, sizeof(e.drop_shadow), 0, "Отбрасывает тень");
 	checkbox(x, y, w, &e.show_selection, sizeof(e.show_selection), 0, "Подсвечивать рядок под мышкой");
 	//x += w + metrics::padding; y = y1;
 	//checkbox(x, y, w, &e.drop_shadow, sizeof(e.drop_shadow), 0, "Отбрасывает тень");
@@ -64,9 +62,7 @@ static void test_window() {
 		rect rc = {0, 0, getwidth(), getheight()};
 		rectf(rc, colors::form);
 		int x = 10, y = 10;
-		object.paint({x, y, getwidth() - 10, y + 500 - metrics::padding});
-		y += 500;
-		footer(x, y, object);
+		object.paint({x, y, getwidth() - 200, y + 500 - metrics::padding});
 		buttonl(x, y, "OK", buttonok, KeyEnter);
 		buttonl(x, y, getnm("Cancel"), buttoncancel, KeyEscape);
 		domodal();
@@ -75,14 +71,15 @@ static void test_window() {
 
 static void test_table() {
 	controls::table	object(bsdata<traiti>::source);
-	object.addcol("Name", "Text").set(ANREQ(traiti,id));
+	object.addcol("Name", "Text").set(ANREQ(traiti, id));
 	object.addcol("Weight", "Number").set(ANREQ(traiti, weight));
 	while(ismodal()) {
 		rect rc = {0, 0, getwidth(), getheight()};
 		rectf(rc, colors::form);
 		int x = 10, y = 10;
-		field(x, y, getwidth() - 10 * 2, object);
-		footer(x, y, object);
+		field(x, y, getwidth() - 10 * 2 - 200, object);
+		auto y1 = 10;
+		panel(x + getwidth() - 10 * 2 - 200 + metrics::padding, y1, object);
 		buttonl(x, y, "OK", buttonok, KeyEnter);
 		buttonl(x, y, getnm("Cancel"), buttoncancel, KeyEscape);
 		domodal();
