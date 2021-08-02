@@ -120,6 +120,9 @@
     <ClInclude Include="anyreq.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="draw_figure.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -276,6 +279,9 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="draw_commands.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_figure.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
   </ItemGroup>

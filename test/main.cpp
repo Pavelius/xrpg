@@ -1,6 +1,7 @@
 #include "draw.h"
 #include "draw_button.h"
 #include "draw_control.h"
+#include "draw_figure.h"
 #include "main.h"
 
 using namespace draw;

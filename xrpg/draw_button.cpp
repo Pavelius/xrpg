@@ -1,6 +1,7 @@
 #include "crt.h"
 #include "draw.h"
 #include "draw_button.h"
+#include "draw_figure.h"
 #include "draw_focus.h"
 
 using namespace draw;
@@ -215,6 +216,31 @@ void draw::radio(int x, int& y, int width, void* source, int size, unsigned bits
 	y += rc1.height() + 2;
 }
 
+//static color getcolor(color normal, unsigned flags) {
+////	if(flags & Disabled)
+////		return normal.mix(colors::window);
+//	return normal;
+//}
+
+static void mark(int x, int y, int size, bool focused, bool checked, bool hilite) {
+	auto push_fore = fore;
+	fore = colors::window;
+	if((hilite && hot.pressed))
+		fore = fore.mix(colors::form);
+	field(x, y, figure::RectFill, size);
+	fore = colors::border;
+	field(x, y, figure::Rect, size);
+	fore = push_fore;
+	if(checked) {
+		auto push = linw; linw = 1.3;
+		if(hilite)
+			fore = fore.mix(colors::active, 32);
+		field(x, y, figure::Check, size - 4);
+		linw = push;
+	}
+	fore = push_fore;
+}
+
 void draw::checkbox(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips) {
 	setposition(x, y, width, 1);
 	rect rc = {x, y, x + width, y};
@@ -226,8 +252,8 @@ void draw::checkbox(int x, int& y, int width, void* source, int size, unsigned b
 	auto focused = isfocused(rc, source, bits);
 	auto value = getsource(source, size);
 	auto checked = (value & (1 << bits)) != 0;
-	//	clipart(x + 2, y + imax((rc1.height() - 14) / 2, 0), 0, flags, ":check");
 	auto a = draw::ishilite(rc);
+	mark(x + 10, y + imax((rc1.height()) / 2, 0), 7, focused, checked, a);
 	auto need_value = false;
 	if(a && hot.key == MouseLeft) {
 		if(!hot.pressed)

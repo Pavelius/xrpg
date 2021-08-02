@@ -25,7 +25,7 @@ class control {
 public:
 	int						splitter;
 	rect					client;
-	constexpr control() : splitter(120), client() {}
+	constexpr control() : splitter(250), client() {}
 	virtual ~control() {}
 	void					contextmenu(const char** source);
 	virtual bool			execute(const char* id, bool run) { return true; }

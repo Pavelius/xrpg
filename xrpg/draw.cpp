@@ -30,7 +30,7 @@ fnevent				draw::domodal;
 color				draw::fore;
 color				draw::fore_stroke;
 const sprite*		draw::font;
-float				draw::linw = 1.0;
+double				draw::linw = 1.0;
 color*				draw::palt;
 rect				draw::clipping;
 char				draw::link[4096];
@@ -831,7 +831,7 @@ void draw::pixel(int x, int y, unsigned char a) {
 	}
 }
 
-static void linew(int x0, int y0, int x1, int y1, float wd) {
+static void linew(int x0, int y0, int x1, int y1, double wd) {
 	int dx = iabs(x1 - x0), sx = x0 < x1 ? 1 : -1;
 	int dy = iabs(y1 - y0), sy = y0 < y1 ? 1 : -1;
 	int err = dx - dy, e2, x2, y2; /* error value e_xy */

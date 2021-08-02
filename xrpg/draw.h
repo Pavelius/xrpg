@@ -155,7 +155,7 @@ extern point			dragmouse;
 extern color			fore; // Foreground color (curently selected color)
 extern color			fore_stroke; // foreground stroke color
 extern const sprite*	font; // Currently selected font
-extern float			linw;
+extern double			linw;
 extern char				link[4096];
 extern color*			palt;
 int						aligned(int x, int width, unsigned state, int string_width);

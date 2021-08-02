@@ -157,6 +157,7 @@
     <ClInclude Include="draw_button.h" />
     <ClInclude Include="draw_clipboard.h" />
     <ClInclude Include="draw_control.h" />
+    <ClInclude Include="draw_figure.h" />
     <ClInclude Include="draw_focus.h" />
     <ClInclude Include="draw_scroll.h" />
     <ClInclude Include="gender.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="draw_control.cpp" />
     <ClCompile Include="draw_button.cpp" />
     <ClCompile Include="draw_field.cpp" />
+    <ClCompile Include="draw_figure.cpp" />
     <ClCompile Include="draw_focus.cpp" />
     <ClCompile Include="draw_input.cpp" />
     <ClCompile Include="draw_list.cpp" />
