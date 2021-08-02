@@ -5,26 +5,6 @@
 
 using namespace draw;
 
-int draw::getimage(const char* id) {
-	if(equal(id, "Cut"))
-		return 3;
-	if(equal(id, "Copy"))
-		return 4;
-	if(equal(id, "Paste"))
-		return 5;
-	return 0;
-}
-
-unsigned draw::getkey(const char* id) {
-	if(equal(id, "Cut"))
-		return Ctrl + 'X';
-	if(equal(id, "Copy"))
-		return Ctrl + 'C';
-	if(equal(id, "Paste"))
-		return Ctrl + 'V';
-	return 0;
-}
-
 static void field(int x, int& y, int width, controls::control& v) {
 	setposition(x, y, width);
 	rect rc = {x, y, x + width, y + v.splitter};

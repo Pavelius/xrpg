@@ -43,6 +43,28 @@ static void open_context_menu() {
 	p->contextmenu(p->getcommands());
 }
 
+static bool execute_command_by_keyboard(const controls::control* p, const char** source) {
+	if(!source)
+		return false;
+	if(!hot.key)
+		return false;
+	for(auto pc = source; *pc; pc++) {
+		auto id = *pc;
+		if(id[0] == '#') {
+			if(execute_command_by_keyboard(p, p->getcommands(id + 1)))
+				return true;
+		}
+		auto key = getkey(id);
+		if(!key || hot.key != key)
+			continue;
+		if(const_cast<control*>(p)->execute(id, false)) {
+			p->post(id);
+			return true;
+		}
+	}
+	return false;
+}
+
 void control::paint(const rect& rc) {
 	client = rc;
 	auto focused = isfocusable() && isfocused(rc, this);
@@ -60,6 +82,8 @@ void control::paint(const rect& rc) {
 			}
 		}
 	}
+	if(focused)
+		execute_command_by_keyboard(this, getcommands());
 }
 
 static bool isallow_proc(const void* object, const char* id) {

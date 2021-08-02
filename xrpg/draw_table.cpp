@@ -433,9 +433,7 @@ column&	table::addcolimp(const char* name, const anyreq* req, const char* visual
 	auto text_width = draw::textw('0');
 	if(!text_width)
 		text_width = 7;
-	//p->plist = p->method->plist;
-	//if(plist)
-	//	p->plist = *plist;
+	p->plist = p->method->plist;
 	p->size = p->method->size;
 	p->width = p->method->default_width;
 	if(p->width < 0)
@@ -778,26 +776,6 @@ const char** table::getcommands() const {
 	return commands;
 }
 
-//control::command table::commands_add[] = {
-//	{"add", "Добавить", 0, &table::addrow, 9},
-//	{"change", "Изменить", 0, &table::change, 10, F2},
-//	{"remove", "Удалить", 0, &table::removerow, 19, KeyDelete},
-//	{}};
-//control::command table::commands_move[] = {
-//	{"moveup", "Переместить вверх", 0, &table::moveup, 21},
-//	{"movedown", "Переместить вниз", 0, &table::movedown, 22},
-//	{"sortas", "Сортировать по возрастанию", 0, &table::sortas, 11},
-//	{"sortds", "Сортировать по убыванию", 0, &table::sortds, 12},
-//	{}};
-//control::command table::commands_ie[] = {
-//	{"export", "Экспорт данных", 0, &table::saveas, 21},
-//	{}};
-//control::command table::commands[] = {
-//	{"*", "", commands_add, &table::isaddable},
-//	{"*", "", commands_move, &table::ismoveable},
-//	{"*", "", commands_ie},
-//	{"setting", "Настройки", 0, &table::setting, 16, 0},
-//	{}};
 const visual table::visuals[] = {
 	{"Number", AlignRight, 8, 80, widthtype::Resized, totaltype::Summarize, &table::cellnumber, &table::changenumber, &table::comparenm},
 	{"RowNumber", AlignCenter, 8, 40, widthtype::Resized, totaltype::None, &table::cellrownumber},

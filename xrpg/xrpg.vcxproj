@@ -188,6 +188,7 @@
     <ClCompile Include="crt.cpp" />
     <ClCompile Include="datetime.cpp" />
     <ClCompile Include="draw_builder.cpp" />
+    <ClCompile Include="draw_commands.cpp" />
     <ClCompile Include="draw_control.cpp" />
     <ClCompile Include="draw_button.cpp" />
     <ClCompile Include="draw_field.cpp" />

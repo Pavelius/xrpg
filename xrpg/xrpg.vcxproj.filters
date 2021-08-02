@@ -275,5 +275,8 @@
     <ClCompile Include="anyreq.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="draw_commands.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
