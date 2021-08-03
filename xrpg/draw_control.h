@@ -17,12 +17,19 @@ enum class selection : unsigned char { Cell, Text, Row };
 enum class dock : unsigned char { Left, LeftBottom, Right, RightBottom, Bottom, Workspace };
 enum class totaltype : unsigned char { None, Summarize, Maximum, Minimum, Average };
 enum class columnf : unsigned char { ReadOnly, Visible };
-struct docki {
-	const char*				id;
-};
 namespace controls {
 class control {
 public:
+	struct plugin {
+		const char*			id;
+		dock				position;
+		bool				visible;
+		plugin*				next;
+		static plugin*		first;
+		plugin(const char* id, dock position);
+		static const plugin* find(const char* id);
+		virtual control*	getcontrol() = 0;
+	};
 	int						splitter;
 	rect					client;
 	constexpr control() : splitter(250), client() {}

@@ -47,6 +47,7 @@ public:
 	void				lower();
 	static const char*	read(const char* p, char* result, const char* result_end);
 	static const char*	read(const char* p, long& result);
+	static const char*	read(const char* p, int& result);
 	void				set(char* v) { p = v; p[0] = 0; }
 	static unsigned char upper(unsigned char sym);
 	void				upper();

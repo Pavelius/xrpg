@@ -63,6 +63,13 @@ const char* stringbuilder::read(const char* p, long& value) {
 	return p;
 }
 
+const char* stringbuilder::read(const char* p, int& value) {
+	long temp;
+	auto result = read(p, temp);
+	value = temp;
+	return result;
+}
+
 static const char* word_end(const char* ps) {
 	while(*ps) {
 		for(auto e : spaces) {
