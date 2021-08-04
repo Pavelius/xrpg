@@ -1,4 +1,2 @@
 ﻿Errors occurs in locale/ru/Names.txt.txt
-Define translate for 'Add'
-Define translate for 'Change'
-Define translate for 'Remove'
+Define translate for 'General'

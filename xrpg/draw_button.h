@@ -22,7 +22,7 @@ bool						folder(const char* title, char* result);
 bool						open(const char* title, char* path, const char* filter, int filter_index = -1, const char* ext = 0);
 bool						save(const char* title, char* path, const char* filter, int filter_index = -1);
 }
-void						application(fnevent heartproc);
+void						application();
 void						application(const char* name, fnevent showproc, fnevent heartproc);
 bool						addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const char* tt1);
 int							addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const char* tt1, const char* t2, unsigned k2, const char* tt2);

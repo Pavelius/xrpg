@@ -4,15 +4,30 @@ Back: Назад
 Cancel: Отмена
 Change: Изменить
 Close: Закрыть
+Colors: Цвета
 Copy: Копировать
 Cut: Вырезать
 Decrease: Уменьшить
 Exit: Выход
+General: Общие
 HotKey: Горячая клавиша
 Increase: Увеличить
+Main: Главный
+Metrics: Метрика
 Name: Наименование
 Next: Далее
+NotFoundOpenDocuments: Не найдено ни одного открытого документа
+OptimizeMouseMove: Оптимизировать дивжение мышки
+Padding: Отступ
 Paste: Вставить
 Remove: Удалить
+ScrollWidth: Ширина полос прокрутки
 Settings: Настройки
+ShowBottomPanel: Показать нижнюю панель
+ShowLeftPanel: Показать левую боковую панель
+ShowPadding: Отступы на главном экране
+ShowRightPanel: Показать правую боковую панель
+ShowStatusBar: Показать панель статуса
+View: Вид
 Weight: Вес
+Workspace: Рабочий стол

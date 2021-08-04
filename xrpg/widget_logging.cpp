@@ -1,0 +1,94 @@
+#include "crt.h"
+#include "datetime.h"
+#include "draw_control.h"
+#include "io_stream.h"
+#include "setting.h"
+#include "stringbuilder.h"
+
+using namespace	draw;
+using namespace	draw::controls;
+
+static bool save_log_file;
+
+namespace {
+struct logi {
+	datetime		stamp;
+	const char*		text;
+};
+}
+static vector<logi>	messages;
+
+void logmsgv(const char* format, const char* arguments) {
+	logi e = {0};
+	char temp[8192]; stringbuilder sb(temp);
+	sb.addv(format, arguments);
+	e.stamp = datetime::now();
+	e.text = szdup(temp);
+	messages.add(e);
+}
+
+static void addsb(stringbuilder& sb, const datetime& d) {
+	sb.add("%1.2i.%2.2i.%3.2i %4.2i:%5.2i",
+		d.day(), d.month(), d.year(),
+		d.hour(), d.minute());
+}
+
+static void write_log_file() {
+	io::file file("log.txt", StreamRead | StreamWrite | StreamText);
+	if(!file)
+		return;
+	file.seek(0, SeekEnd);
+	for(auto& e : messages) {
+		char temp[64]; stringbuilder sb(temp);
+		addsb(sb, e.stamp);
+		file << temp << " " << e.text << "\r\n";
+	}
+}
+
+static void before_application_exit() {
+	if(save_log_file)
+		write_log_file();
+}
+
+static struct widget_logging : control::plugin, /*draw::initplugin,*/ table {
+	array rows;
+	//void after_initialize() override {
+	//	addcol("Дата", ANREQ(logi, stamp), "date").set(SizeFixed).set(AlignCenter);
+	//	addcol("Сообщение", ANREQ(logi, text), "text").set(SizeAuto);
+	//	atexit(before_application_exit);
+	//}
+	control* getcontrol() override { return this; }
+	const char* getvalue(const char* id, stringbuilder& sb) const override {
+		if(equal(id, "Name"))
+			return getnm("MessageList");
+		return 0;
+	}
+	void* get(int line) const {
+		return messages.ptr(line);
+	}
+	void* addrow() override {
+		return 0;
+	}
+	//void remove(int index) override {
+	//}
+	//void swap(int i1, int i2) override {
+	//}
+	int	getmaximum() const override {
+		return messages.getcount();
+	}
+	widget_logging() : rows(sizeof(logi)), table(rows), control::plugin("logging", dock::Bottom) {
+		no_change_count = true;
+		read_only = true;
+		select_mode = selection::Row;
+		//show_toolbar = false;
+	}
+} logging_control;
+
+void logmsg(const char* format, ...) {
+	logmsgv(format, xva_start(format));
+}
+
+static setting::element logging_common[] = {{"Сохранять файл сообщений после закрытия программы", save_log_file},
+};
+static setting::header headers[] = {{"Логирование", "Общие", 0, logging_common},
+};

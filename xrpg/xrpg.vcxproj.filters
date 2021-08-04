@@ -302,5 +302,8 @@
     <ClCompile Include="win_draw_shell.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
+    <ClCompile Include="widget_logging.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

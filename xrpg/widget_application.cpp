@@ -18,7 +18,6 @@ struct application_window {
 };
 
 typedef adat<control*>		controla;
-extern bool					sys_optimize_mouse_move;
 bool						metrics::show::padding;
 bool						metrics::show::statusbar;
 bool						metrics::show::bottom;
@@ -56,7 +55,7 @@ static int compare(const char* s1, const char* s2) {
 		return -1;
 	if(!s2)
 		return 1;
-	return strcmp(s1, s2);
+	return strcmp(getnm(s1), getnm(s2));
 }
 
 static int compare(const header* h1, const header* h2) {
@@ -195,7 +194,7 @@ public:
 };
 
 static const char* get_page_name(const void* p, stringbuilder& sb) {
-	return ((header*)p)->page;
+	return getnm(((header*)p)->page);
 }
 
 static void callback_settab() {
@@ -213,7 +212,7 @@ static bool choose_folder(const void* object, array& source, void* pointer) {
 	char temp[260]; memset(temp, 0, sizeof(temp));
 	if(*p)
 		zcpy(temp, *p, sizeof(temp) - 1);
-	if(!draw::dialog::folder("Укажите папку", temp))
+	if(!draw::dialog::folder(getnm("ChooseFolder"), temp))
 		return false;
 	*p = szdup(temp);
 	return true;
@@ -251,7 +250,7 @@ static int render_element(int x, int y, int width, unsigned flags, const setting
 			if(title + w < width)
 				width = title + w;
 		}
-		fieln(x, y, width, e.name, e.var.data, e.var.size, title, d);
+		fieln(x, y, width, getnm(e.name), e.var.data, e.var.size, title, d);
 		break;
 	case setting::Color:
 		//y += field(x, y, width, e.name, *((color*)e.var.data), title);
@@ -265,10 +264,10 @@ static int render_element(int x, int y, int width, unsigned flags, const setting
 		}
 		break;
 	case setting::Text:
-		field(x, y, width, e.name, *((const char**)e.var.data), title, 0);
+		field(x, y, width, getnm(e.name), *((const char**)e.var.data), title, 0);
 		break;
 	case setting::Url:
-		field(x, y, width, e.name, *((const char**)e.var.data), title, choose_folder);
+		field(x, y, width, getnm(e.name), *((const char**)e.var.data), title, choose_folder);
 		break;
 	case setting::Control:
 		break;
@@ -294,7 +293,8 @@ static int render_element(int x, int y, int width, unsigned flags, const setting
 		color c2 = c1.darken();
 		gradv({x, y2, x + width, y2 + height}, c1, c2);
 		fore = colors::text.mix(c1, 196);
-		text(x + (width - textw(e.group)) / 2, y2 + metrics::padding, e.group);
+		auto label = getnm(e.group);
+		text(x + (width - textw(label)) / 2, y2 + metrics::padding, label);
 		rectb({x, y2, x + width, y + metrics::padding}, colors::border);
 		y += metrics::padding * 2;
 	}
@@ -314,7 +314,7 @@ static struct widget_settings_header : controls::list {
 	}
 	void row(const rect& rc, int index) const override {
 		list::row({rc.x1 + 1, rc.y1 + 1, rc.x2 - 1, rc.y2}, index);
-		textc(rc.x1 + metrics::edit, rc.y1 + metrics::edit, rc.width() - metrics::edit * 2, rows[index]->division);
+		textc(rc.x1 + metrics::edit, rc.y1 + metrics::edit, rc.width() - metrics::edit * 2, getnm(rows[index]->division));
 	}
 	const header* getcurrent() {
 		return rows[current];
@@ -391,7 +391,7 @@ const char* draw::controls::getlabel(const void* object, stringbuilder& sb) {
 static struct widget_settings : controls::control {
 	const char* getvalue(const char* id, stringbuilder& sb) const override {
 		if(equal(id, "Name"))
-			return getnm("Setting");
+			return getnm("Settings");
 		return 0;
 	}
 	void paint(const rect& rcorigin) override {
@@ -465,7 +465,7 @@ static void post_close() {
 }
 
 static struct widget_application : draw::controls::control {
-	fnevent			heartproc;
+	fnevent	heartproc;
 	const char* getvalue(const char* id, stringbuilder& sb) const override {
 		if(equal(id, "Name"))
 			return getnm("Main");
@@ -500,7 +500,7 @@ static struct widget_application : draw::controls::control {
 		if(ct.getcount() == 0) {
 			auto push_fore = fore;
 			fore = colors::border;
-			text(rc, "Не найдено ни одного открытого документа", AlignCenterCenter);
+			text(rc, getnm("NotFoundOpenDocuments"), AlignCenterCenter);
 			fore = push_fore;
 		} else if(ct.getcount() == 1) {
 			current_active_control = ct[0];
@@ -560,7 +560,7 @@ static struct widget_application : draw::controls::control {
 		return true;
 	}
 	void create_filter(stringbuilder& sb) {
-		io::plugin::addfilter(sb, "Все файлы", "*.*");
+		io::plugin::addfilter(sb, getnm("AllFiles"), "*.*");
 		//for(auto p = plugin::first; p; p = p->next) {
 		//	auto pc = p->getbuilder();
 		//	if(!pc)
@@ -703,7 +703,6 @@ static const element appearance_general_view[] = {{"ShowStatusBar", metrics::sho
 	{"ShowRightPanel", metrics::show::right},
 	{"ShowBottomPanel", metrics::show::bottom},
 	{"ShowPadding", metrics::show::padding},
-	{"OptimizeMouseMove", sys_optimize_mouse_move},
 };
 //static const element appearance_general_tabs[] = {{"В имени закладки отображать только имя файла (без полного пути)", use_short_name_label},
 //{"Не выводить в имя закладки расширение", use_no_extension_label},
@@ -781,10 +780,13 @@ static void get_control_status(controls::control* object) {
 //	return getresult() != 0;
 //}
 
-void draw::application(fnevent heartproc) {
+static void setheartbeat(fnevent v) {
+	widget_application_control.heartproc = v;
+}
+
+void draw::application() {
 	// Make header
 	setting_header.initialize();
-	widget_application_control.heartproc = heartproc;
 	auto current_tab = 0;
 	while(ismodal()) {
 		auto pc = layouts[current_tab];
@@ -792,8 +794,9 @@ void draw::application(fnevent heartproc) {
 		draw::fore = colors::text;
 		rect rc = {0, 0, draw::getwidth(), draw::getheight()};
 		draw::rectf(rc, colors::form);
-		//if(metrics::show::statusbar)
-		//	rc.y2 -= draw::statusbardw();
+		if(metrics::show::statusbar) {
+			//	rc.y2 -= draw::statusbardw();
+		}
 		rect rt = rc;
 		if(tb)
 			rt.y2 = rt.y1 + tb->get(0).getrect(0, 0, 0).height() + 4 * 2;
@@ -807,15 +810,14 @@ void draw::application(fnevent heartproc) {
 		pc->paint(rc);
 		pc->toolbar(rt.x1, rt.y1, rt.width());
 		auto hilite_tab = -1;
-		//auto reaction = draw::tabs(rt, false, true, (void**)layouts, 0,
-		//	sizeof(layouts) / sizeof(layouts[0]), current_tab, &hilite_tab,
-		//	controls::getlabel,
-		//	{0, metrics::padding, 0, metrics::padding});
+		auto reaction = draw::tabs(rt/*{rt.x1, rt.y2 - texth() - 4 * 2, rt.x2, rt.y2}*/, false, true, (void**)layouts, 0,
+			sizeof(layouts) / sizeof(layouts[0]), current_tab, &hilite_tab,
+			controls::getlabel);
 		if(hilite_tab != -1)
 			get_control_status(layouts[hilite_tab]);
 		domodal();
-		//if(reaction == 1)
-		//	current_tab = hilite_tab;
+		if(reaction == 1)
+			current_tab = hilite_tab;
 		switch(hot.key) {
 		case F2: metrics::show::bottom = !metrics::show::bottom; break;
 		case Alt + F2: metrics::show::left = !metrics::show::left; break;
@@ -838,9 +840,10 @@ static void application_initialize() {
 void draw::application(const char* name, fnevent showproc, fnevent heartproc) {
 	application_initialize();
 	setcaption(name);
+	setheartbeat(heartproc);
 	if(showproc)
 		showproc();
-	application(heartproc);
+	application();
 }
 
 static int getnum(const char* value) {

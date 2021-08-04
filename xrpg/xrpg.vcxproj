@@ -230,6 +230,7 @@
     <ClCompile Include="variant.cpp" />
     <ClCompile Include="varianta.cpp" />
     <ClCompile Include="widget_application.cpp" />
+    <ClCompile Include="widget_logging.cpp" />
     <ClCompile Include="win_clipboard.cpp" />
     <ClCompile Include="win_draw.cpp" />
     <ClCompile Include="win_draw_shell.cpp" />

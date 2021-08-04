@@ -14,7 +14,6 @@ static struct video_8t {
 
 static HWND		hwnd;
 static point	minimum;
-extern bool		sys_optimize_mouse_move;
 extern rect		sys_static_area;
 static bool		use_mouse = true;
 
@@ -99,10 +98,8 @@ static int handle(MSG& msg) {
 		hot.mouse.y = HIWORD(msg.lParam);
 		if(draw::dragactive())
 			return MouseMove;
-		if(sys_optimize_mouse_move) {
-			if(hot.mouse.in(sys_static_area))
-				return InputNoUpdate;
-		}
+		if(hot.mouse.in(sys_static_area))
+			return InputNoUpdate;
 		return MouseMove;
 	case WM_MOUSELEAVE:
 		if(msg.hwnd != hwnd)

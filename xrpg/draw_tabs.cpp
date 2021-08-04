@@ -17,14 +17,14 @@ static bool sheet(rect& rc, rect& rct, const char* string, bool* area_result, bo
 	auto ts = textw('1');
 	auto width = tw + w2;
 	if(right_side)
-		rct.set(rc.x2 - width - ts * 2, rc.y1, rc.x2, rc.y2);
+		rct.set(rc.x2 - width - ts * 2, rc.y2 - texth() - 10, rc.x2, rc.y2);
 	else
-		rct.set(rc.x1, rc.y1, rc.x1 + width + ts * 2, rc.y2);
+		rct.set(rc.x1, rc.y2 - texth() - 8, rc.x1 + width + ts * 2, rc.y2);
 	auto a = ishilite(rct);
 	if(area_result)
 		*area_result = a;
 	auto push_fore = fore;
-	auto ty = rct.y1 + 2;
+	auto ty = rct.y1 + 4;
 	if(checked) {
 		rectf({rct.x1 + 1, rct.y1 + 1, rct.x2, rct.y2 + 1}, colors::form);
 		fore = colors::border;

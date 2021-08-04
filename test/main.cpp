@@ -91,7 +91,7 @@ int main() {
 		return -1;
 	draw::initialize("Test UI", 640, 480, true, 0);
 	//draw::setnext(test_table);
-	draw::application(0);
+	draw::application();
 	draw::start();
 	return 0;
 }

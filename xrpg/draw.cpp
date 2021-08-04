@@ -36,7 +36,6 @@ rect				draw::clipping;
 char				draw::link[4096];
 hoti				draw::hot;
 // Hot keys and menus
-bool				sys_optimize_mouse_move = true;
 rect				sys_static_area;
 // Locale draw variables
 static draw::surface default_surface;
@@ -1335,8 +1334,7 @@ static void intersect_rect(rect& r1, const rect& r2) {
 bool draw::ishilite(const rect& rc) {
 	if(hot.key == InputNoUpdate)
 		return false;
-	if(sys_optimize_mouse_move)
-		intersect_rect(sys_static_area, rc);
+	intersect_rect(sys_static_area, rc);
 	if(dragactive())
 		return false;
 	if(!hot.mouse.in(clipping))
