@@ -10,6 +10,9 @@
     <Filter Include="Support">
       <UniqueIdentifier>{4cad7b33-4e35-42c7-b710-147d337a166f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widgets">
+      <UniqueIdentifier>{9dd295e4-bd8d-4ef2-83a4-fa373c9369b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="win.h">
@@ -292,6 +295,12 @@
     </ClCompile>
     <ClCompile Include="draw_dockbar.cpp">
       <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="widget_application.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="win_draw_shell.cpp">
+      <Filter>Platform</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

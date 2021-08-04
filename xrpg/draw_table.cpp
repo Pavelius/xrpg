@@ -1,6 +1,7 @@
 #include "command.h"
 #include "datetime.h"
 #include "draw.h"
+#include "draw_button.h"
 #include "draw_control.h"
 #include "io_plugin.h"
 

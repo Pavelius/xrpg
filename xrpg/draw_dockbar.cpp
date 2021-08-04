@@ -15,7 +15,6 @@ struct docki {
 	const char*		id;
 	int				current, size;
 };
-
 BSDATA(docki) = {
 	{"DockLeft"},
 	{"DockLeftBottom"},
@@ -25,16 +24,6 @@ BSDATA(docki) = {
 	{"DockWorkspace"},
 };
 assert_enum(docki, dock::Workspace)
-
-namespace metrics {
-namespace show {
-bool bottom;
-bool top;
-bool left;
-bool right;
-}
-}
-const unsigned max_controls = 65;
 
 control::plugin* control::plugin::first;
 
@@ -57,7 +46,7 @@ static const char* get_control_name(const void* p, stringbuilder& sb) {
 	return pr;
 }
 
-static void getdocked(controla& result, dock type) {
+void getdocked(controla& result, dock type) {
 	for(auto p = control::plugin::first; p; p = p->next) {
 		if(!p->visible)
 			continue;
@@ -89,8 +78,8 @@ static int paint_control(rect rc, const controla& elements, int& current, bool s
 		}
 		rc.y1 += dy;
 	}
-	//if(show_toolbar && ec->show_toolbar)
-	//	rc.y1 += ec->toolbar(rc.x1, rc.y1, rc.width());
+	if(show_toolbar)
+		rc.y1 += ec->toolbar(rc.x1, rc.y1, rc.width());
 	ec->paint(rc);
 	return rc.y1 - y1;
 }
@@ -138,8 +127,7 @@ static bool dock_paint(dock id, rect& client, const controla& p1, const controla
 	return true;
 }
 
-namespace draw {
-void dockbar(rect& rc) {
+void draw::dockbar(rect& rc) {
 	controla p1, p2;
 	if(metrics::show::left) {
 		getdocked(p1, dock::Left);
@@ -155,7 +143,6 @@ void dockbar(rect& rc) {
 		getdocked(p1, dock::Bottom);
 		dock_paint(dock::Bottom, rc, p1, {});
 	}
-}
 }
 
 static struct dockbar_settings_strategy : io::strategy {

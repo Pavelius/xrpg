@@ -229,8 +229,10 @@
     <ClCompile Include="crt_translate.cpp" />
     <ClCompile Include="variant.cpp" />
     <ClCompile Include="varianta.cpp" />
+    <ClCompile Include="widget_application.cpp" />
     <ClCompile Include="win_clipboard.cpp" />
     <ClCompile Include="win_draw.cpp" />
+    <ClCompile Include="win_draw_shell.cpp" />
     <ClCompile Include="win_io_file.cpp" />
     <ClCompile Include="win_menu.cpp" />
     <ClCompile Include="win_time.cpp" />

@@ -7,10 +7,6 @@
 
 struct sprite;
 
-namespace metrics {
-extern int					padding;
-extern int					edit;
-}
 namespace draw {
 enum class widthtype : unsigned char { Default, Resized, Fixed, Inner, Auto };
 enum class selection : unsigned char { Cell, Text, Row };
@@ -215,5 +211,6 @@ struct visual {
 	explicit operator bool() const { return render != 0; }
 	const visual*			find(const char* id) const;
 };
+const char*					getlabel(const void* object, stringbuilder& sb);
 }
 }

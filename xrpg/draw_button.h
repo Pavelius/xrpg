@@ -8,10 +8,22 @@
 namespace metrics {
 extern int					padding;
 extern int					edit;
+namespace show {
+extern bool					padding, statusbar;
+extern bool					bottom, top, left, right;
+}
 }
 namespace draw {
 typedef bool (*fnallowid)(const void* object, const char* id);
 typedef const char** (*fngetcommands)(const void* object, const char* id);
+namespace dialog {
+bool						choose(color& result, struct color* custom = 0);
+bool						folder(const char* title, char* result);
+bool						open(const char* title, char* path, const char* filter, int filter_index = -1, const char* ext = 0);
+bool						save(const char* title, char* path, const char* filter, int filter_index = -1);
+}
+void						application(fnevent heartproc);
+void						application(const char* name, fnevent showproc, fnevent heartproc);
 bool						addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const char* tt1);
 int							addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const char* tt1, const char* t2, unsigned k2, const char* tt2);
 void						breakmodal(int result);
@@ -25,6 +37,7 @@ void						cbsetint();
 void						cbsetptr();
 void						checkbox(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips = 0);
 const char*					contextmenu(const char** commands, const void* object, fnallowid allowid, fngetcommands getcommands);
+void						dockbar(rect& rc);
 void						fieln(int x, int& y, int width, const char* label, void* source, int size, int label_width, int digits);
 void						field(int x, int& y, int width, const char* label, char* source, unsigned size, int label_width, fnchoose choosep);
 void						field(int x, int& y, int width, int line_height, const char* label, char* source, unsigned size, int label_width, fnchoose choosep);
