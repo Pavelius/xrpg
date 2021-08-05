@@ -15,6 +15,9 @@
     <Filter Include="Logic">
       <UniqueIdentifier>{dff59be6-2315-47ba-be8a-45b8a11450bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugins">
+      <UniqueIdentifier>{6a87a028-5983-4abb-909c-81913bea2cde}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -22,6 +25,9 @@
     </ClCompile>
     <ClCompile Include="trait.cpp">
       <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrpg\io_plugin_json.cpp">
+      <Filter>Plugins</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

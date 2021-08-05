@@ -23,7 +23,7 @@ bool						open(const char* title, char* path, const char* filter, int filter_ind
 bool						save(const char* title, char* path, const char* filter, int filter_index = -1);
 }
 void						application();
-void						application(const char* name, fnevent showproc, fnevent heartproc);
+void						application(const char* title);
 bool						addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const char* tt1);
 int							addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const char* tt1, const char* t2, unsigned k2, const char* tt2);
 void						breakmodal(int result);
@@ -48,6 +48,7 @@ int							getresult();
 long						getsource(void* source, int size);
 void						initialize(const char* label, int width, int height, bool resize, int timer);
 bool						ismodal();
+void						logmsgv(const char* format, const char* arguments);
 void						radio(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips = 0);
 void						setnext(fnevent v);
 void						setposition(int& x, int& y, int& width, int padding = -1);

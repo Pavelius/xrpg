@@ -718,27 +718,6 @@ static header setting_headers[] = {
 	//{"Workspace", "Plugins", 0, plugin_elements},
 };
 
-//static struct application_plugin : draw::initplugin {
-//	void initialize() override {
-//		control_viewer.initialize();
-//	}
-//	static void exit_application() {
-//		point pos, size; getwindowpos(pos, size, &window.flags);
-//		if((window.flags & WFMaximized) == 0) {
-//			window.x = pos.x;
-//			window.y = pos.y;
-//			window.width = size.x;
-//			window.height = size.y;
-//		}
-//		io::write(settings_file_name, "settings", 0);
-//	}
-//	void after_initialize() override {
-//		atexit(exit_application);
-//		io::read(settings_file_name, "settings", 0);
-//	}
-//	application_plugin() : initplugin(3) {}
-//} application_plugin_instance;
-
 static controls::control* layouts[] = {&widget_application_control, &widget_settings_control};
 
 static void get_control_status(controls::control* object) {
@@ -786,7 +765,6 @@ static void setheartbeat(fnevent v) {
 
 void draw::application() {
 	// Make header
-	setting_header.initialize();
 	auto current_tab = 0;
 	while(ismodal()) {
 		auto pc = layouts[current_tab];
@@ -830,21 +808,6 @@ void draw::application() {
 
 void set_dark_theme();
 void set_light_theme();
-
-static void application_initialize() {
-	set_light_theme();
-	//initialize();
-	create(window.x, window.y, window.width, window.height, window.flags, 32);
-}
-
-void draw::application(const char* name, fnevent showproc, fnevent heartproc) {
-	application_initialize();
-	setcaption(name);
-	setheartbeat(heartproc);
-	if(showproc)
-		showproc();
-	application();
-}
 
 static int getnum(const char* value) {
 	if(strcmp(value, "true") == 0)
@@ -1025,3 +988,30 @@ static struct controls_settings_strategy : io::strategy {
 	}
 	controls_settings_strategy() : strategy("controls", "settings") {}
 } controls_settings_strategy_instance;
+
+static void exit_application() {
+	point pos, size; getwindowpos(pos, size, &window.flags);
+	if((window.flags & WFMaximized) == 0) {
+		window.x = pos.x;
+		window.y = pos.y;
+		window.width = size.x;
+		window.height = size.y;
+	}
+	io::write(settings_file_name, "settings", 0);
+}
+
+void draw::application(const char* title) {
+	//control_viewer.initialize();
+	set_light_theme();
+	atexit(exit_application);
+	io::read(settings_file_name, "settings", 0);
+	after_initialize->execute();
+	setting_header.initialize();
+	setting_header.show_grid_lines = false;
+	draw::font = metrics::font;
+	draw::fore = colors::text;
+	draw::fore_stroke = colors::blue;
+	create(window.x, window.y, window.width, window.height, window.flags, 32);
+	setcaption(title);
+	setnext(application);
+}

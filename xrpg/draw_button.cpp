@@ -70,11 +70,11 @@ int draw::addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const c
 	rc.x2 -= width;
 	auto height = rc.height() / 2;
 	auto result = 0;
-	if(button({rc.x2, rc.y1, rc.x2 + width, rc.y1 + height},
+	if(button({rc.x2, rc.y1, rc.x2 + width, rc.y1 + height + 1},
 		t1, tt1, k1, colors::button,
 		false, false, false, false))
 		result = 1;
-	if(button({rc.x2, rc.y1 + height, rc.x2 + width, rc.y1 + height * 2},
+	if(button({rc.x2, rc.y1 + height + 1, rc.x2 + width, rc.y1 + height * 2 + 1},
 		t2, tt2, k2, colors::button,
 		false, false, false, false))
 		result = 2;

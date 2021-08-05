@@ -89,9 +89,9 @@ static void test_table() {
 int main() {
 	if(!initialize_translation("ru"))
 		return -1;
-	draw::initialize("Test UI", 640, 480, true, 0);
+	logmsgv("Тостовая строка залогирована в общий лог приложения.", 0);
 	//draw::setnext(test_table);
-	draw::application();
+	draw::application("Test UI");
 	draw::start();
 	return 0;
 }

@@ -8,19 +8,23 @@ Colors: Цвета
 Copy: Копировать
 Cut: Вырезать
 Decrease: Уменьшить
+ExecuteCommand: Выполнить команду '%1'
 Exit: Выход
 General: Общие
 HotKey: Горячая клавиша
 Increase: Увеличить
+Log: Логирование
 Main: Главный
+MessageList: СписокСообщений
 Metrics: Метрика
 Name: Наименование
 Next: Далее
-NotFoundOpenDocuments: Не найдено ни одного открытого документа
+NotFoundOpenDocuments: Не найдено ни одного открытого документа.
 OptimizeMouseMove: Оптимизировать дивжение мышки
 Padding: Отступ
 Paste: Вставить
 Remove: Удалить
+SaveMessageFile: Сохранять файл сообщений после закрытия программы.
 ScrollWidth: Ширина полос прокрутки
 Settings: Настройки
 ShowBottomPanel: Показать нижнюю панель

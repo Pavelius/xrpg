@@ -1,6 +1,7 @@
 #include "crt.h"
 #include "datetime.h"
 #include "draw_control.h"
+#include "draw_button.h"
 #include "io_stream.h"
 #include "setting.h"
 #include "stringbuilder.h"
@@ -18,7 +19,7 @@ struct logi {
 }
 static vector<logi>	messages;
 
-void logmsgv(const char* format, const char* arguments) {
+void draw::logmsgv(const char* format, const char* arguments) {
 	logi e = {0};
 	char temp[8192]; stringbuilder sb(temp);
 	sb.addv(format, arguments);
@@ -88,7 +89,8 @@ void logmsg(const char* format, ...) {
 	logmsgv(format, xva_start(format));
 }
 
-static setting::element logging_common[] = {{"Сохранять файл сообщений после закрытия программы", save_log_file},
+//Сохранять файл сообщений после закрытия программы
+static setting::element logging_common[] = {{"SaveMessageFile", save_log_file},
 };
-static setting::header headers[] = {{"Логирование", "Общие", 0, logging_common},
+static setting::header headers[] = {{"Log", "General", 0, logging_common},
 };

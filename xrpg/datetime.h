@@ -17,7 +17,7 @@ public:
 	constexpr int			minute() const { return d % 60; }
 	int						month() const;
 	datetime				monthbegin() const { return datetime(year(), month(), 1, 0, 0); }
-	static datetime			now();
+	static datetime			now() { return {}; }
 	int						year() const;
 	datetime				yearbegin() const { return datetime(year(), 1, 1, 0, 0); }
 };
