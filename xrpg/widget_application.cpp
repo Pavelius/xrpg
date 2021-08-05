@@ -400,7 +400,7 @@ static struct widget_settings : controls::control {
 		fore = colors::text;
 		splitv(rc.x1, rc.y1, window.header_width, rc.height(), 6, 64, 282, false);
 		//setting_header.show_border = metrics::show::padding;
-		setting_header.paint({rc.x1, rc.y1, rc.x1 + window.header_width, rc.y2});
+		setting_header.view({rc.x1, rc.y1, rc.x1 + window.header_width, rc.y2});
 		rc.x1 += window.header_width + 6;
 		auto top = setting_header.getcurrent();
 		// При изменении текущего заголовка

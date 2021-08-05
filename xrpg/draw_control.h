@@ -47,6 +47,7 @@ public:
 	virtual void			setvalue(const char* id, long value) {}
 	int						toolbar(int x, int y, int width, int* next_x = 0) const;
 	virtual void			write(serializer& e) const {}
+	void					view(const rect& rc);
 };
 class scrollable : control {
 	int						origin_x, origin_y;

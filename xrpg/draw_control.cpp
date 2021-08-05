@@ -100,3 +100,8 @@ void control::contextmenu(const char** source) {
 		return;
 	execute(id, true);
 }
+
+void control::view(const rect& rc) {
+	windowback(rc);
+	paint(rc);
+}

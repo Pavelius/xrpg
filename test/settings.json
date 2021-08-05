@@ -4,11 +4,11 @@
       "General":{
         "Metrics":{
           "Padding":4,
-          "ScrollWidth":16
+          "ScrollWidth":12
         },
         "View":{
           "ShowStatusBar":2,
-          "ShowLeftPanel":2,
+          "ShowLeftPanel":0,
           "ShowRightPanel":0,
           "ShowBottomPanel":1,
           "ShowPadding":0
@@ -22,7 +22,7 @@
     },
     "Log":{
       "General":{
-        "SaveMessageFile":0
+        "SaveMessageFile":2
       }
     }
   },
@@ -31,7 +31,7 @@
     "y":54,
     "width":865,
     "height":635,
-    "header_width":107,
+    "header_width":95,
     "flags":48
   },
   "controls":{
@@ -59,7 +59,7 @@
     },
     "DockBottom":{
       "current":0,
-      "size":397
+      "size":216
     },
     "DockWorkspace":{
       "current":0,

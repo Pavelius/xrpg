@@ -273,3 +273,8 @@ void draw::checkbox(int x, int& y, int width, void* source, int size, unsigned b
 		tooltips(tips);
 	y += rc1.height() + metrics::padding;
 }
+
+void draw::windowback(const rect& rc) {
+	rectf(rc, colors::window);
+	rectb(rc, colors::border);
+}
