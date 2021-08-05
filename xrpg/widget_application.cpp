@@ -1001,13 +1001,13 @@ static void exit_application() {
 }
 
 void draw::application(const char* title) {
-	//control_viewer.initialize();
 	set_light_theme();
 	atexit(exit_application);
 	io::read(settings_file_name, "settings", 0);
 	after_initialize->execute();
 	setting_header.initialize();
 	setting_header.show_grid_lines = false;
+	//control_viewer.initialize();
 	draw::font = metrics::font;
 	draw::fore = colors::text;
 	draw::fore_stroke = colors::blue;

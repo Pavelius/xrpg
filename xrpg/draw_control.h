@@ -42,9 +42,11 @@ public:
 	virtual bool			ismodified() const { return false; }
 	virtual void			paint(const rect& rc);
 	void					post(const char* id) const;
+	virtual void			read(serializer& e) {}
 	static const sprite*	std_images;
 	virtual void			setvalue(const char* id, long value) {}
 	int						toolbar(int x, int y, int width, int* next_x = 0) const;
+	virtual void			write(serializer& e) const {}
 };
 class scrollable : control {
 	int						origin_x, origin_y;
@@ -193,7 +195,7 @@ public:
 	void					select(int index, int column) override;
 	void					sort(int column, bool ascending);
 	void					sort(int i1, int i2, sortparam* ps, int count);
-	void					write(serializer& file) const;
+	void					write(serializer& file) const override;
 	bool					write(const char* url, bool include_header) const;
 };
 struct visual {

@@ -146,17 +146,15 @@ void draw::dockbar(rect& rc) {
 }
 
 static struct dockbar_settings_strategy : io::strategy {
-	int getindex(const serializer::node& n, const char* name) const {
+	int getindex(const serializer::node& n) const {
 		if(!n.parent)
 			return -1;
 		auto text = n.parent->name;
-		while(*name) {
-			if(*name++ != *text++)
-				return -1;
+		for(auto& e : bsdata<docki>()) {
+			if(equal(e.id, text))
+				return &e - bsdata<docki>::elements;
 		}
-		long index = 0;
-		text = stringbuilder::read(text, index);
-		return index;
+		return -1;
 	}
 	void write(serializer& file, void* param) override {
 		for(auto& e : bsdata<docki>()) {
@@ -168,7 +166,7 @@ static struct dockbar_settings_strategy : io::strategy {
 		}
 	}
 	void set(serializer::node& n, const char* value) override {
-		unsigned i = getindex(n, "Dock");
+		unsigned i = getindex(n);
 		if(i == 0xFFFFFFFF)
 			return;
 		auto& e = bsdata<docki>::elements[i];

@@ -7,10 +7,10 @@
           "ScrollWidth":16
         },
         "View":{
-          "ShowStatusBar":0,
-          "ShowLeftPanel":0,
+          "ShowStatusBar":2,
+          "ShowLeftPanel":2,
           "ShowRightPanel":0,
-          "ShowBottomPanel":0,
+          "ShowBottomPanel":1,
           "ShowPadding":0
         }
       }
@@ -31,7 +31,7 @@
     "y":54,
     "width":865,
     "height":635,
-    "header_width":146,
+    "header_width":107,
     "flags":112
   },
   "controls":{
@@ -59,11 +59,11 @@
     },
     "DockBottom":{
       "current":0,
-      "size":0
+      "size":397
     },
     "DockWorkspace":{
       "current":0,
-      "size":0
+      "size":200
     }
   }
 }
