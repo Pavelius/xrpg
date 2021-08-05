@@ -58,6 +58,7 @@ void						splith(int x, int y, int width, int& value, int size, int minimum, int
 void						splitv(int x, int y, int& value, int height, int size, int minimum, int maximum, bool right_align);
 void						start();
 void						statusbar(const char* format, ...);
+void						statusbar(rect& rc);
 int							tabs(rect rc, bool show_close, bool right_side, void** data, int start, int count, int current, int* hilite, fntext gtext, int* result_x1 = 0);
 int							tabv(rect rc, bool show_close, bool right_side, void** data, int start, int count, int current, int* hilite, fntext gtext);
 void						titletext(int& x, int y, int& width, const char* label, int label_width, const char* separator = 0);

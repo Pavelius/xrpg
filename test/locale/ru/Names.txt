@@ -8,7 +8,7 @@ Colors: Цвета
 Copy: Копировать
 Cut: Вырезать
 Decrease: Уменьшить
-ExecuteCommand: Выполнить команду '%1'
+ExecuteCommand: Выполнить команду
 Exit: Выход
 General: Общие
 HotKey: Горячая клавиша

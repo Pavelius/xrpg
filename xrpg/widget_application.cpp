@@ -772,9 +772,8 @@ void draw::application() {
 		draw::fore = colors::text;
 		rect rc = {0, 0, draw::getwidth(), draw::getheight()};
 		draw::rectf(rc, colors::form);
-		if(metrics::show::statusbar) {
-			//	rc.y2 -= draw::statusbardw();
-		}
+		if(metrics::show::statusbar)
+			draw::statusbar(rc);
 		rect rt = rc;
 		if(tb)
 			rt.y2 = rt.y1 + tb->get(0).getrect(0, 0, 0).height() + 4 * 2;
