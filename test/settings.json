@@ -10,8 +10,8 @@
           "ShowStatusBar":2,
           "ShowLeftPanel":2,
           "ShowRightPanel":0,
-          "ShowBottomPanel":1,
-          "ShowPadding":2
+          "ShowBottomPanel":0,
+          "ShowPadding":0
         }
       }
     },

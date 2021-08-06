@@ -602,18 +602,18 @@ static struct widget_application : draw::controls::control {
 //control* controls::getactivated() {
 //	return current_active_control;
 //}
-//
-//void controls::activate(control* p) {
-//	if(current_active_control)
-//		current_active_control->deactivating();
-//	current_active_control = p;
-//	if(current_active_control) {
-//		current_active_control->setfocus(true);
-//		current_active_control->activating();
-//	}
-//}
-//
-//void controls::close(control* p) {
+
+void controls::activate(control* p) {
+	if(current_active_control)
+		current_active_control->deactivating();
+	current_active_control = p;
+	if(current_active_control) {
+		//current_active_control->setfocus(true);
+		current_active_control->activating();
+	}
+}
+
+void controls::close(control* p) {
 //	auto i = active_controls.indexof(p);
 //	if(i == -1)
 //		return;
@@ -625,9 +625,9 @@ static struct widget_application : draw::controls::control {
 //			activate(0);
 //	}
 //	delete p;
-//}
+}
 
-//control* controls::openurl(const char* url) {
+control* controls::openurl(const char* url) {
 //	char temp[260];
 //	for(auto p : active_controls) {
 //		stringbuilder sb(temp);
@@ -654,8 +654,8 @@ static struct widget_application : draw::controls::control {
 //			return result;
 //		}
 //	}
-//	return 0;
-//}
+	return 0;
+}
 
 void set_light_theme();
 void set_dark_theme();

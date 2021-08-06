@@ -29,7 +29,9 @@ public:
 	rect					client;
 	constexpr control() : client() {}
 	virtual ~control() {}
+	virtual void			activating() {}
 	void					contextmenu(const char** source);
+	virtual void			deactivating() {}
 	virtual bool			execute(const char* id, bool run) { return true; }
 	virtual const char**	getcommands() const { return 0; }
 	virtual const char**	getcommands(const char* parent) const { return 0; }
@@ -214,6 +216,9 @@ struct visual {
 	explicit operator bool() const { return render != 0; }
 	const visual*			find(const char* id) const;
 };
+void						activate(control* p);
+void						close(control* p);
 const char*					getlabel(const void* object, stringbuilder& sb);
+control*					openurl(const char* url);
 }
 }
