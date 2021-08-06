@@ -101,7 +101,10 @@ void control::contextmenu(const char** source) {
 	execute(id, true);
 }
 
-void control::view(const rect& rc, bool show_border, bool show_background) {
+void control::view(const rect& ro, bool show_border, bool show_background) {
+	rect rc = ro;
+	if(hastoolbar())
+		rc.y1 += toolbar(rc.x1, rc.y2, rc.width(), 0);
 	if(show_background)
 		rectf(rc, colors::window);
 	if(show_border)

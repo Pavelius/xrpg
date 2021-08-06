@@ -8,10 +8,10 @@
         },
         "View":{
           "ShowStatusBar":2,
-          "ShowLeftPanel":0,
+          "ShowLeftPanel":2,
           "ShowRightPanel":0,
-          "ShowBottomPanel":1,
-          "ShowPadding":2
+          "ShowBottomPanel":0,
+          "ShowPadding":0
         }
       }
     },
@@ -37,10 +37,10 @@
     }
   },
   "window":{
-    "x":123,
-    "y":54,
-    "width":784,
-    "height":635,
+    "x":306,
+    "y":156,
+    "width":768,
+    "height":561,
     "header_width":137,
     "flags":48
   },
@@ -69,7 +69,7 @@
     },
     "DockBottom":{
       "current":0,
-      "size":216
+      "size":219
     },
     "DockWorkspace":{
       "current":0,

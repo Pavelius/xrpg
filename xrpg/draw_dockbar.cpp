@@ -59,7 +59,7 @@ void getdocked(controla& result, dock type) {
 }
 
 // view control on form
-static int paint_control(rect rc, const controla& elements, int& current, bool show_toolbar) {
+static int paint_control(rect rc, const controla& elements, int& current) {
 	int y1 = rc.y1;
 	if(current >= (int)elements.getcount())
 		current = elements.getcount() - 1;
@@ -67,7 +67,10 @@ static int paint_control(rect rc, const controla& elements, int& current, bool s
 	if(elements) {
 		auto current_hilite = -1;
 		const int dy = texth() + 8;
-		line(rc.x1, rc.y1 + dy - 1, rc.x2, rc.y1 + dy, colors::border);
+		if(metrics::show::padding)
+			rectb({rc.x1, rc.y1 + dy, rc.x2, rc.y2}, colors::border);
+		else
+			line(rc.x1, rc.y1 + dy, rc.x2, rc.y1 + dy, colors::border);
 		rect rct = {rc.x1, rc.y1, rc.x2, rc.y1 + dy};
 		if(tabs(rct, false, false, (void**)elements.begin(), 0, elements.getcount(),
 			current, &current_hilite, get_control_name)) {
@@ -77,15 +80,16 @@ static int paint_control(rect rc, const controla& elements, int& current, bool s
 				current = 0;
 		}
 		rc.y1 += dy;
+		if(metrics::show::padding)
+			rc.offset(metrics::padding);
+		else
+			rc.y1 += metrics::padding;
 	}
-	if(show_toolbar)
-		rc.y1 += ec->toolbar(rc.x1, rc.y1, rc.width());
-	ec->paint(rc);
+	ec->view(rc, true, true);
 	return rc.y1 - y1;
 }
 
 static bool dock_paint(dock id, rect& client, const controla& p1, const controla& p2) {
-	bool show_toolbar = true;
 	rect rc = client;
 	auto& e1 = bsdata<docki>::elements[static_cast<int>(id)];
 	auto& e2 = bsdata<docki>::elements[static_cast<int>(id) + 1];
@@ -116,13 +120,13 @@ static bool dock_paint(dock id, rect& client, const controla& p1, const controla
 		return false;
 	}
 	if(!p2)
-		paint_control(rc, p1, e1.current, show_toolbar);
+		paint_control(rc, p1, e1.current);
 	else if(!p1)
-		paint_control(rc, p2, e2.current, show_toolbar);
+		paint_control(rc, p2, e2.current);
 	else if(id == dock::Left || id == dock::Right) {
 		draw::splith(rc.x1, rc.y1, rc.width(), e2.size, sx, 64, 400, false);
-		paint_control({rc.x1, rc.y1, rc.x2, rc.y1 + e2.size}, p1, e1.current, show_toolbar);
-		paint_control({rc.x1, rc.y1 + e2.size + sx, rc.x2, rc.y2}, p2, e2.current, show_toolbar);
+		paint_control({rc.x1, rc.y1, rc.x2, rc.y1 + e2.size}, p1, e1.current);
+		paint_control({rc.x1, rc.y1 + e2.size + sx, rc.x2, rc.y2}, p2, e2.current);
 	}
 	return true;
 }

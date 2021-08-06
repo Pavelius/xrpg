@@ -77,6 +77,9 @@ static struct widget_logging : control::plugin, /*draw::initplugin,*/ table {
 	int	getmaximum() const override {
 		return messages.getcount();
 	}
+	bool hastoolbar() const override {
+		return false;
+	}
 	widget_logging() : rows(sizeof(logi)), table(rows), control::plugin("logging", dock::Bottom) {
 		no_change_count = true;
 		read_only = true;

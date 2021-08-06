@@ -218,11 +218,11 @@ void draw::radio(int x, int& y, int width, void* source, int size, unsigned bits
 	y += rc1.height() + 2;
 }
 
-//static color getcolor(color normal, unsigned flags) {
-////	if(flags & Disabled)
-////		return normal.mix(colors::window);
-//	return normal;
-//}
+static color getcolor(color normal, bool disabled) {
+	if(disabled)
+		return normal.mix(colors::window);
+	return normal;
+}
 
 static void mark_check(int x, int y, int size, bool focused, bool checked, bool hilite) {
 	auto push_fore = fore;

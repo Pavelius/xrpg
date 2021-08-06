@@ -20,7 +20,7 @@ HotKey: Горячая клавиша
 Increase: Увеличить
 Log: Логирование
 Main: Главный
-MessageList: СписокСообщений
+MessageList: Сообщения
 Metrics: Метрика
 Name: Наименование
 Next: Далее

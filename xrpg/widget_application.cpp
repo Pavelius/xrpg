@@ -346,14 +346,14 @@ static struct widget_settings_header : controls::list {
 int draw::field(int x, int& y, int width, const char* label, color& value, int header_width, const char* tips) {
 	char temp[128]; stringbuilder sb(temp);
 	sb.add("%1i, %2i, %3i", value.r, value.g, value.b);
+	setposition(x, y, width);
+	titletext(x, y, width, label, header_width);
 	auto push_fore = fore;
 	auto level = value.gray().r;
 	if(level < 100)
 		fore = colors::white;
 	else
 		fore = colors::black;
-	setposition(x, y, width);
-	titletext(x, y, width, label, header_width);
 	rect rc = {x, y, x + width, y + draw::texth() + 8};
 	auto focused = isfocused(rc, &value);
 	if(button(rc, temp, tips, 0, value, focused, false, false, true))
@@ -422,7 +422,7 @@ static struct widget_settings : controls::control {
 		// Нарисуем закладки
 		auto hilited = -1;
 		//line(rc.x1, rc.y1 + h1, rc.x2, rc.y1 + h1, colors::border);
-		rectb({rc.x1, rc.y1 + h1, rc.x2/* - metrics::padding*/, rc.y2 /* - metrics::padding */}, colors::border);
+		rectb({rc.x1, rc.y1 + h1, rc.x2, rc.y2}, colors::border);
 		if(draw::tabs({rc.x1, rc.y1, rc.x2, rc.y1 + h1}, false, false,
 			(void**)tabs.data, 0, tabs.count, current_tab, &hilited,
 			get_page_name)) {

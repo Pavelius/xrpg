@@ -26,9 +26,8 @@ public:
 		static const plugin* find(const char* id);
 		virtual control*	getcontrol() = 0;
 	};
-	int						splitter;
 	rect					client;
-	constexpr control() : splitter(250), client() {}
+	constexpr control() : client() {}
 	virtual ~control() {}
 	void					contextmenu(const char** source);
 	virtual bool			execute(const char* id, bool run) { return true; }
@@ -36,6 +35,7 @@ public:
 	virtual const char**	getcommands(const char* parent) const { return 0; }
 	virtual const sprite*	getimages() const { return std_images; }
 	virtual const char*		getvalue(const char* id, stringbuilder& sb) const { return 0; }
+	virtual bool			hastoolbar() const { return true; }
 	void					icon(int x, int y, const char* id, bool disabled) const;
 	virtual bool			isfocusable() const { return true; }
 	bool					ishilited() const;

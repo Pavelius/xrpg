@@ -8,11 +8,11 @@ using namespace draw;
 
 static void field(int x, int& y, int width, controls::control& v) {
 	setposition(x, y, width);
-	rect rc = {x, y, x + width, y + v.splitter};
+	rect rc = {x, y, x + width, y + 300};
 	rectf(rc, colors::window);
 	rectb(rc, colors::border);
 	v.paint(rc);
-	y += v.splitter + metrics::padding;
+	y += 300 + metrics::padding;
 }
 
 static void test_fields() {
