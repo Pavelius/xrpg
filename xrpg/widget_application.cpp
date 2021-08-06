@@ -230,6 +230,16 @@ static const char* getname(char* temp, const setting::element& e) {
 	return temp;
 }
 
+static void button(int x, int& y, int width, const char* title, const element& e) {
+	setposition(x, y, width, 1);
+	rect rc = {x, y, x + width, y + texth() + 8};
+	auto result = false;
+	auto focus = isfocused(rc, &e);
+	if(button(rc, title, 0, 0, colors::button, focus, false, false, true))
+		draw::execute(callback_button, (int)&e);
+	y += rc.height() + metrics::padding;
+}
+
 static int render_element(int x, int y, int width, unsigned flags, const setting::element& e) {
 	const auto title = 160;
 	char temp[512]; temp[0] = 0;
@@ -257,12 +267,7 @@ static int render_element(int x, int y, int width, unsigned flags, const setting
 		y += field(x, y, width, getnm(e.name), *((color*)e.var.data), title, 0);
 		break;
 	case setting::Button:
-		if(true) {
-			auto result = false;
-			//y += button(x, y, width, e, result, getname(temp, e), 0);
-			//if(result)
-			//	draw::execute(callback_button, (int)&e);
-		}
+		button(x, y, width, getnm(e.name), e);
 		break;
 	case setting::Text:
 		field(x, y, width, getnm(e.name), *((const char**)e.var.data), title, 0);

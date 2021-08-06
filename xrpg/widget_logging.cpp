@@ -2,6 +2,7 @@
 #include "datetime.h"
 #include "draw_control.h"
 #include "draw_button.h"
+#include "handler.h"
 #include "io_stream.h"
 #include "setting.h"
 #include "stringbuilder.h"
@@ -51,13 +52,8 @@ static void before_application_exit() {
 		write_log_file();
 }
 
-static struct widget_logging : control::plugin, /*draw::initplugin,*/ table {
+static struct widget_logging : control::plugin, table {
 	array rows;
-	//void after_initialize() override {
-	//	addcol("Дата", ANREQ(logi, stamp), "date").set(SizeFixed).set(AlignCenter);
-	//	addcol("Сообщение", ANREQ(logi, text), "text").set(SizeAuto);
-	//	atexit(before_application_exit);
-	//}
 	control* getcontrol() override { return this; }
 	const char* getvalue(const char* id, stringbuilder& sb) const override {
 		if(equal(id, "Name"))
@@ -86,13 +82,20 @@ static struct widget_logging : control::plugin, /*draw::initplugin,*/ table {
 		select_mode = selection::Row;
 		//show_toolbar = false;
 	}
-} logging_control;
+} widget;
 
 void logmsg(const char* format, ...) {
 	logmsgv(format, xva_start(format));
 }
 
-//Сохранять файл сообщений после закрытия программы
+HANDLER(after_initialize) {
+	widget.show_header = false;
+	widget.show_grid_lines = false;
+	widget.addcol("Message", ANREQ(logi, text), "Text").set(widthtype::Auto);
+	widget.addcol("Date", ANREQ(logi, stamp), "Date").set(widthtype::Fixed);
+	atexit(before_application_exit);
+}
+
 static setting::element logging_common[] = {{"SaveMessageFile", save_log_file},
 };
 static setting::header headers[] = {{"Log", "General", 0, logging_common},

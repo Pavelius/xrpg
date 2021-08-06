@@ -10,6 +10,7 @@ Close: Закрыть
 Colors: Цвета
 Copy: Копировать
 Cut: Вырезать
+Date: Дата
 Decrease: Уменьшить
 ExecuteCommand: Выполнить команду
 Exit: Выход
@@ -20,6 +21,7 @@ HotKey: Горячая клавиша
 Increase: Увеличить
 Log: Логирование
 Main: Главный
+Message: Сообщение
 MessageList: Сообщения
 Metrics: Метрика
 Name: Наименование
@@ -31,6 +33,8 @@ Paste: Вставить
 Remove: Удалить
 SaveMessageFile: Сохранять файл сообщений после закрытия программы.
 ScrollWidth: Ширина полос прокрутки
+SetDarkTheme: Установить темную тему
+SetLightTheme: Установить светлую тему
 Settings: Настройки
 ShowBottomPanel: Показать нижнюю панель
 ShowLeftPanel: Показать левую боковую панель

@@ -58,7 +58,7 @@ void getdocked(controla& result, dock type) {
 	}
 }
 
-// view control on form
+// View control on form
 static int paint_control(rect rc, const controla& elements, int& current) {
 	int y1 = rc.y1;
 	if(current >= (int)elements.getcount())

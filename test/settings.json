@@ -10,8 +10,8 @@
           "ShowStatusBar":2,
           "ShowLeftPanel":2,
           "ShowRightPanel":0,
-          "ShowBottomPanel":0,
-          "ShowPadding":0
+          "ShowBottomPanel":1,
+          "ShowPadding":2
         }
       }
     },
@@ -20,13 +20,13 @@
         
       },
       "Form":{
-        "TextColor":0,
-        "WindowColor":16777215,
-        "FormColor":15790320,
-        "BorderColor":11316396,
-        "ActiveColor":5653804,
-        "ButtonColor":14671839,
-        "TipsBackColor":5263480,
+        "TextColor":16777215,
+        "WindowColor":2105376,
+        "FormColor":4210752,
+        "BorderColor":-2138141042,
+        "ActiveColor":11304960,
+        "ButtonColor":31436,
+        "TipsBackColor":6579320,
         "TipsTextColor":16777215
       }
     },
@@ -37,8 +37,8 @@
     }
   },
   "window":{
-    "x":306,
-    "y":156,
+    "x":216,
+    "y":182,
     "width":768,
     "height":561,
     "header_width":137,
