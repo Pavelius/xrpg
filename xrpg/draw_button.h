@@ -40,6 +40,7 @@ const char*					contextmenu(const char** commands, const void* object, fnallowid
 void						dockbar(rect& rc);
 void						fieln(int x, int& y, int width, const char* label, void* source, int size, int label_width, int digits);
 void						field(int x, int& y, int width, const char* label, char* source, unsigned size, int label_width, fnchoose choosep);
+int							field(int x, int& y, int width, const char* label, color& value, int header_width, const char* tips);
 void						field(int x, int& y, int width, int line_height, const char* label, char* source, unsigned size, int label_width, fnchoose choosep);
 void						field(int x, int& y, int width, const char* label, const char*& source, int label_width, fnchoose choosep);
 int							getimage(const char* id);
@@ -63,7 +64,6 @@ int							tabs(rect rc, bool show_close, bool right_side, void** data, int start
 int							tabv(rect rc, bool show_close, bool right_side, void** data, int start, int count, int current, int* hilite, fntext gtext);
 void						titletext(int& x, int y, int& width, const char* label, int label_width, const char* separator = 0);
 void						tooltips(const char* format, ...);
-void						windowback(const rect& rc);
 }
 extern struct handler*	after_initialize; // After initialization made
 extern struct handler*	before_modal; // Before next step of modal cicle

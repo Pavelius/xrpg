@@ -11,13 +11,23 @@
           "ShowLeftPanel":0,
           "ShowRightPanel":0,
           "ShowBottomPanel":1,
-          "ShowPadding":0
+          "ShowPadding":2
         }
       }
     },
     "Colors":{
       "General":{
         
+      },
+      "Form":{
+        "TextColor":0,
+        "WindowColor":16777215,
+        "FormColor":15790320,
+        "BorderColor":11316396,
+        "ActiveColor":5653804,
+        "ButtonColor":14671839,
+        "TipsBackColor":5263480,
+        "TipsTextColor":16777215
       }
     },
     "Log":{
@@ -29,9 +39,9 @@
   "window":{
     "x":123,
     "y":54,
-    "width":865,
+    "width":784,
     "height":635,
-    "header_width":95,
+    "header_width":137,
     "flags":48
   },
   "controls":{

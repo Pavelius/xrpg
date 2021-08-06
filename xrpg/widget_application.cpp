@@ -2,6 +2,7 @@
 #include "draw.h"
 #include "draw_button.h"
 #include "draw_control.h"
+#include "draw_focus.h"
 #include "draw_scroll.h"
 #include "handler.h"
 #include "io_plugin.h"
@@ -253,7 +254,7 @@ static int render_element(int x, int y, int width, unsigned flags, const setting
 		fieln(x, y, width, getnm(e.name), e.var.data, e.var.size, title, d);
 		break;
 	case setting::Color:
-		//y += field(x, y, width, e.name, *((color*)e.var.data), title);
+		y += field(x, y, width, getnm(e.name), *((color*)e.var.data), title, 0);
 		break;
 	case setting::Button:
 		if(true) {
@@ -342,23 +343,24 @@ static struct widget_settings_header : controls::list {
 //	void remove(int index) override {}
 //} control_viewer;
 
-//int draw::field(int x, int y, int width, const char* label, color& value, int header_width, const char* tips) {
-//	draw::state push;
-//	setposition(x, y, width);
-//	decortext(0);
-//	if(label && label[0])
-//		titletext(x, y, width, 0, label, header_width);
-//	rect rc = {x, y, x + width, y + draw::texth() + 8};
-//	char temp[128]; stringbuilder sb(temp);
-//	sb.add("%1i, %2i, %3i", value.r, value.g, value.b);
-//	anyval av(value, 0);
-//	auto focused = isfocused(rc, av);
-//	if(buttonh(rc,
-//		false, focused, false, true, value,
-//		temp, KeyEnter, false, tips))
-//		execute(callback_choose_color, (int)&value);
-//	return rc.height() + metrics::padding * 2;
-//}
+int draw::field(int x, int& y, int width, const char* label, color& value, int header_width, const char* tips) {
+	char temp[128]; stringbuilder sb(temp);
+	sb.add("%1i, %2i, %3i", value.r, value.g, value.b);
+	auto push_fore = fore;
+	auto level = value.gray().r;
+	if(level < 100)
+		fore = colors::white;
+	else
+		fore = colors::black;
+	setposition(x, y, width);
+	titletext(x, y, width, label, header_width);
+	rect rc = {x, y, x + width, y + draw::texth() + 8};
+	auto focused = isfocused(rc, &value);
+	if(button(rc, temp, tips, 0, value, focused, false, false, true))
+		execute(callback_choose_color, (int)&value);
+	fore = push_fore;
+	return rc.height() + metrics::padding * 2;
+}
 
 const char* draw::controls::getlabel(const void* object, stringbuilder& sb) {
 	auto pc = (controls::control*)object;
@@ -399,8 +401,7 @@ static struct widget_settings : controls::control {
 		auto push_fore = fore;
 		fore = colors::text;
 		splitv(rc.x1, rc.y1, window.header_width, rc.height(), 6, 64, 282, false);
-		//setting_header.show_border = metrics::show::padding;
-		setting_header.view({rc.x1, rc.y1, rc.x1 + window.header_width, rc.y2});
+		setting_header.view({rc.x1, rc.y1, rc.x1 + window.header_width, rc.y2}, metrics::show::padding, true);
 		rc.x1 += window.header_width + 6;
 		auto top = setting_header.getcurrent();
 		// При изменении текущего заголовка
@@ -420,13 +421,15 @@ static struct widget_settings : controls::control {
 		auto h1 = 28;
 		// Нарисуем закладки
 		auto hilited = -1;
-		if(draw::tabs({rc.x1, rc.y1, rc.x2, rc.y1 + h1 + 1}, false, false,
+		//line(rc.x1, rc.y1 + h1, rc.x2, rc.y1 + h1, colors::border);
+		rectb({rc.x1, rc.y1 + h1, rc.x2/* - metrics::padding*/, rc.y2 /* - metrics::padding */}, colors::border);
+		if(draw::tabs({rc.x1, rc.y1, rc.x2, rc.y1 + h1}, false, false,
 			(void**)tabs.data, 0, tabs.count, current_tab, &hilited,
 			get_page_name)) {
 			draw::execute(callback_settab);
 			hot.param = hilited;
 		}
-		line(rc.x1, rc.y1 + h1, rc.x2, rc.y1 + h1, colors::border);
+		rc.offset(metrics::padding);
 		// Нариуем текущую закладку
 		if(current_tab == -1)
 			return;
@@ -442,8 +445,7 @@ static struct widget_settings : controls::control {
 			rc.y1 += h1;
 			if(metrics::show::padding)
 				rc.y1 += metrics::padding;
-			//((control*)e1->var.data)->show_border = metrics::show::padding;
-			((control*)e1->var.data)->paint(rc);
+			((control*)e1->var.data)->view(rc, metrics::show::padding, true);
 			break;
 		default:
 			rc.y1 += h1 + metrics::padding;
@@ -504,8 +506,7 @@ static struct widget_application : draw::controls::control {
 			fore = push_fore;
 		} else if(ct.getcount() == 1) {
 			current_active_control = ct[0];
-			//current_active_control->show_border = metrics::show::padding;
-			current_active_control->paint(rc);
+			current_active_control->view(rc, metrics::show::padding, false);
 		} else {
 			auto current_select = getindexof(ct, current_active_control);
 			if(current_select == -1)
@@ -532,20 +533,12 @@ static struct widget_application : draw::controls::control {
 				}
 			}
 			rc.y1 += dy;
-			if(current_active_control) {
-				//current_active_control->show_border = metrics::show::padding;
-				current_active_control->paint(rc);
-			}
+			if(current_active_control)
+				current_active_control->view(rc, metrics::show::padding, true);
 		}
 	}
 	void paint(const rect& rc) override {
 		auto rct = rc;
-		//for(auto p = controls::control::plugin::first; p; p = p->next) {
-		//	auto pc = p->getcontrol();
-		//	if(!pc)
-		//		continue;
-		//	pc->show_border = metrics::show::padding;
-		//}
 		if(heartproc)
 			heartproc();
 		dockbar(rct);
@@ -591,24 +584,6 @@ static struct widget_application : draw::controls::control {
 		//}
 		return true;
 	}
-	//bool cut(bool run) {
-	//	auto p = getfocus();
-	//	if(!p)
-	//		return false;
-	//	return p->cut(run);
-	//}
-	//bool copy(bool run) {
-	//	auto p = getfocus();
-	//	if(!p)
-	//		return false;
-	//	return p->copy(run);
-	//}
-	//bool paste(bool run) {
-	//	auto p = getfocus();
-	//	if(!p)
-	//		return false;
-	//	return p->paste(run);
-	//}
 } widget_application_control;
 
 //control::command widget_application::commands_general[] = {{"create", "Создать", 0, &widget_application::create_window, 0},
@@ -683,21 +658,22 @@ void set_dark_theme();
 static const element appearance_general_metrics[] = {{"Padding", metrics::padding, 3},
 	{"ScrollWidth", metrics::scroll, 3},
 };
-static const element colors_general[] = {{"SetLightTheme", set_light_theme},
+static const element colors_general[] = {
+	{"SetLightTheme", set_light_theme},
 	{"SetDarkTheme", set_dark_theme},
 };
-//static const element colors_form[] = {{"Цвет текста", colors::text},
-//{"Цвет окна", colors::window},
-//{"Цвет формы", colors::form},
-//{"Цвет границы", colors::border},
-//{"Активный цвет", colors::active},
-//{"Цвет кнопки", colors::button},
-//{"Цвет редактирования", colors::edit},
-//{"Цвет закладок", colors::tabs::back},
-//{"Цвет текста закладок", colors::tabs::text},
-//{"Цвет подсказки", colors::tips::back},
-//{"Цвет текста подсказки", colors::tips::text},
-//};
+static const element colors_form[] = {
+	{"TextColor", colors::text},
+	{"WindowColor", colors::window},
+	{"FormColor", colors::form},
+	{"BorderColor", colors::border},
+	{"ActiveColor", colors::active},
+	{"ButtonColor", colors::button},
+	//{"Цвет закладок", colors::tabs::back},
+	//{"Цвет текста закладок", colors::tabs::text},
+	{"TipsBackColor", colors::tips::back},
+	{"TipsTextColor", colors::tips::text},
+};
 static const element appearance_general_view[] = {{"ShowStatusBar", metrics::show::statusbar},
 	{"ShowLeftPanel", metrics::show::left},
 	{"ShowRightPanel", metrics::show::right},
@@ -714,7 +690,7 @@ static header setting_headers[] = {
 	{"Workspace", "General", "View", appearance_general_view},
 	//{"Workspace", "General", "Tabs", appearance_general_tabs},
 	{"Colors", "General", 0, colors_general},
-	//{"Colors", "Form", 0, colors_form},
+	{"Colors", "Form", 0, colors_form},
 	//{"Workspace", "Plugins", 0, plugin_elements},
 };
 

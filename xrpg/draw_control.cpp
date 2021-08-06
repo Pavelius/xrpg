@@ -101,7 +101,10 @@ void control::contextmenu(const char** source) {
 	execute(id, true);
 }
 
-void control::view(const rect& rc) {
-	windowback(rc);
+void control::view(const rect& rc, bool show_border, bool show_background) {
+	if(show_background)
+		rectf(rc, colors::window);
+	if(show_border)
+		rectb(rc, colors::border);
 	paint(rc);
 }
