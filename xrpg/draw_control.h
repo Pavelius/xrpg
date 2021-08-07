@@ -201,6 +201,7 @@ public:
 	int						gettotal(int column) const;
 	int						getvalid(int column) const { return column; }
 	virtual const visual**	getvisuals() const;
+	void					mouseclick() const;
 	void					paint(const rect& rc) override;
 	void					row(const rect& rc, int index) const override;
 	int						rowheader(const rect& rc) const override;

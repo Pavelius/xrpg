@@ -1,6 +1,7 @@
 ﻿About: О программе
 ActiveColor: Цвет выделения
 Add: Добавить
+AddCopy: Скопировать
 AllFiles: Все файлы
 Back: Назад
 BorderColor: Цвет границы

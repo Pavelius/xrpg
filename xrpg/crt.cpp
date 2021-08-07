@@ -79,7 +79,7 @@ bool equal(const char* p, const char* s) {
 	while(*s && *p)
 		if(*p++ != *s++)
 			return false;
-	return true;
+	return *s == *p;
 }
 
 bool matchuc(const char* name, const char* filter) {

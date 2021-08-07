@@ -154,7 +154,7 @@ void table::select(int index, int column) {
 }
 
 static void proc_mouseselect() {
-	auto p = (table*)draw::hot.param;
+	auto p = (table*)draw::hot.object;
 	auto i = p->getvalid(list::current_hilite_column);
 	p->select(list::current_hilite_row, i);
 	if(p->columns[i].method->change_one_click)
@@ -167,6 +167,11 @@ static void proc_mouseselect() {
 //	if(pressed)
 //		draw::execute(proc_mouseselect, (int)this);
 //}
+
+void table::mouseclick() const {
+	if(hot.key == MouseLeft && hot.pressed)
+		draw::execute(proc_mouseselect, 0, 0, this);
+}
 
 const char* table::getheader(int column, stringbuilder& sb) const {
 	return getnm(columns[column].id);
@@ -704,7 +709,22 @@ bool table::execute(const char* id, bool run) {
 			auto p = addrow();
 			if(p) {
 				if(getmaximum())
-					select(n, getcolumn());
+					select(n, getvalid(0));
+				post("Change");
+				setneedupdate();
+			}
+		}
+	} else if(equal(id, "AddCopy")) {
+		if(no_change_count)
+			return false;
+		if(run) {
+			auto n = getmaximum();
+			auto p = addrow();
+			if(p) {
+				auto pc = get(current);
+				memcpy(p, pc, rows.getsize());
+				if(getmaximum())
+					select(rows.indexof(p), getvalid(0));
 				post("Change");
 				setneedupdate();
 			}
@@ -788,7 +808,7 @@ bool table::write(const char* url, bool include_header) const {
 }
 
 const char** table::getcommands() const {
-	static const char* commands[] = {"Add", "Change", "Remove", 0};
+	static const char* commands[] = {"Add", "AddCopy", "Change", "Remove", 0};
 	return commands;
 }
 
