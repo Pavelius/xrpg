@@ -1,7 +1,8 @@
 #include "crt.h"
 #include "draw.h"
-#include "draw_control.h"
 #include "draw_button.h"
+#include "draw_control.h"
+#include "draw_dockbar.h"
 #include "io_plugin.h"
 #include "setting.h"
 #include "stringbuilder.h"
@@ -11,10 +12,6 @@ using namespace draw::controls;
 
 typedef adat<control*> controla;
 
-struct docki {
-	const char*		id;
-	int				current, size;
-};
 BSDATA(docki) = {
 	{"DockLeft"},
 	{"DockLeftBottom"},

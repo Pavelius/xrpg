@@ -2,6 +2,7 @@
 #include "draw.h"
 #include "draw_button.h"
 #include "draw_control.h"
+#include "draw_dockbar.h"
 #include "draw_focus.h"
 #include "draw_scroll.h"
 #include "handler.h"
@@ -331,11 +332,14 @@ static struct widget_settings_header : controls::list {
 } setting_header;
 
 static struct widget_control_viewer : controls::tableref {
+	static const char* get_id_name(const void* object, stringbuilder& sb) {
+		return getnm(((plugin*)object)->id);
+	}
 	void initialize() {
 		no_change_order = true;
 		no_change_count = true;
-		addcol("Name", ANREQ(plugin, id), "Text").set(columnf::ReadOnly);
-		addcol("Docking", ANREQ(plugin, position), "Enum");
+		addcol("Name", ANREQ(plugin, id), "Text").set(columnf::ReadOnly).plist.getname = get_id_name;
+		addcol("Docking", ANREQ(plugin, position), "Enum", bsdata<docki>::source_ptr);
 		//addcol(type, "visible", "Видимость", "checkbox");
 		for(auto p = plugin::first; p; p = p->next) {
 			auto pc = p->getcontrol();
@@ -620,7 +624,12 @@ static struct widget_application : draw::controls::control {
 			if(run) {
 				char temp[512]; stringbuilder sb(temp);
 				auto ps = p->getvalue("URL", sb);
-				//p->save(ps);
+				if(!ps || ps[0] == 0) {
+					ps = temp; temp[0] = 0;
+					if(!dialog::save(getnm("SaveFile"), temp, 0))
+						return false;
+				}
+				p->save(ps);
 			}
 		} else
 			return control::execute(id, run);
@@ -734,8 +743,8 @@ bool draw::edit(control& e, fnevent heartbeat) {
 		}
 		auto x2 = rc.x2;
 		e.view(rc, true, true);
-		//		draw::buttonr(x2, y2, buttoncancel, "Cancel", &e, KeyEscape);
-		//		draw::buttonr(x2, y2, buttonok, "OK", &e, Ctrl + KeyEnter);
+		buttonr(x2, y2, getnm("Cancel"), buttoncancel, KeyEscape);
+		buttonr(x2, y2, getnm("OK"), buttonok, KeyEnter);
 		domodal();
 		if(heartbeat)
 			heartbeat();
@@ -746,6 +755,8 @@ bool draw::edit(control& e, fnevent heartbeat) {
 static void setheartbeat(fnevent v) {
 	widget_application_control.heartproc = v;
 }
+
+stringbuilder& getstatustext();
 
 void draw::application() {
 	auto current_tab = 0;
@@ -758,7 +769,7 @@ void draw::application() {
 		rect rc = {0, 0, draw::getwidth(), draw::getheight()};
 		draw::rectf(rc, colors::form);
 		if(metrics::show::statusbar)
-			draw::statusbar(rc);
+			statusbar(rc);
 		rect rt = rc;
 		if(tb)
 			rt.y2 = rt.y1 + tb->get(0).getrect(0, 0, 0).height() + 4 * 2;
@@ -777,6 +788,8 @@ void draw::application() {
 			getlabel);
 		if(hilite_tab != -1)
 			get_control_status(layouts[hilite_tab]);
+		if(getstatustext().isempthy())
+			statusbar(getnm("Ready"));
 		domodal();
 		if(reaction == 1)
 			current_tab = hilite_tab;
@@ -952,7 +965,7 @@ static struct controls_settings_strategy : io::strategy {
 			auto pc = pp->getcontrol();
 			if(!pc)
 				continue;
-			//pc->write(file);
+			pc->write(file);
 			file.close(id);
 		}
 	}

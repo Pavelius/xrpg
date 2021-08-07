@@ -78,7 +78,9 @@ const char* column::get(const void* object, stringbuilder& sb) const {
 		if(source)
 			return plist.getname(source->ptr(value.get(value.ptr(object))), sb);
 		return plist.getname(object, sb);
-	} else
+	} else if(source)
+		return getpresent(value.ptr(object), value.size, true, source, sb);
+	else if(value.size==sizeof(const char*))
 		return value.gets(value.ptr(object));
 	return "";
 }
@@ -711,8 +713,8 @@ bool table::execute(const char* id, bool run) {
 		if(run) {
 			char filter[1024]; stringbuilder sb(filter);
 			io::plugin::getfilter(sb);
-			//if(!dialog::save("Сохранить данные таблицы", url, filter, 0))
-			//	return false;
+			if(!dialog::save(getnm("ExportTableData"), url, filter, 0))
+				return false;
 			write(url, false);
 		}
 	}

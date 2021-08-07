@@ -54,6 +54,7 @@ public:
 	virtual void			paint(const rect& rc);
 	void					post(const char* id) const;
 	virtual void			read(serializer& e) {}
+	virtual void			save(const char* url) const {}
 	static const sprite*	std_images;
 	virtual void			setvalue(const char* id, long value) {}
 	int						toolbar(int x, int y, int width, int* next_x = 0) const;
@@ -214,7 +215,7 @@ class tableref : public table {
 	array					rows;
 public:
 	constexpr tableref() : rows(sizeof(void*)), table(rows) {}
-	virtual void			addref(void* v) { rows.add(v); }
+	virtual void			addref(void* v) { rows.add(&v); }
 	virtual void*			get(int line) const override { return *((void**)rows.ptr(line)); }
 };
 struct visual {

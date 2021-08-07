@@ -46,20 +46,26 @@ static void need_update() {
 	current_origin_cashe = -1;
 }
 
-static const char* getsource(void* source, int size, bool istext, stringbuilder& sb) {
+const char* draw::getpresent(void* source, int size, bool isnumber, const array* database, stringbuilder& sb) {
 	if(!source)
 		return "";
-	if(istext) {
-		if(size == sizeof(const char*)) {
-			auto p = (const char*)getsource(source, size);
-			if(p)
-				return p;
-		} else
-			return (const char*)source;
-	} else {
-		sb.add("%1i", getsource(source, size));
-		return sb.begin();
-	}
+	if(isnumber) {
+		if(database) {
+			auto i = getsource(source, size);
+			auto p = (char*)database->ptr(i);
+			if(!p || p[0]== 0)
+				return getnm("None");
+			return getnm(*((const char**)p));
+		} else {
+			sb.add("%1i", getsource(source, size));
+			return sb.begin();
+		}
+	} else if(size == sizeof(const char*)) {
+		auto p = (const char*)getsource(source, size);
+		if(p)
+			return p;
+	} else
+		return (const char*)source;
 	return "";
 }
 
@@ -247,7 +253,7 @@ static void field_read(void* source, int size, bool isnumber, int& i1, int& i2, 
 		return;
 	field_save_and_clear();
 	stringbuilder sb(current_buffer); current_buffer[0] = 0;
-	auto value = (const char*)getsource(source, size, !isnumber, sb);
+	auto value = getpresent(source, size, isnumber, 0, sb);
 	if(value != sb.begin()) {
 		sb.clear();
 		sb.copy(value);
@@ -334,7 +340,7 @@ static void field_focus(const rect& rc, void* source, int size, bool isnumber, u
 		draw::scroll scrollh(current_origin_height, rc.height(), current_maximum_height, rc, false, texth());
 		scrollh.correct(); scrollh.input();
 		auto n = current_cashe - current_buffer;
-		texte(rc, current_cashe, flags, i1 - n, (i2==-1) ? -1 : i2 - n);
+		texte(rc, current_cashe, flags, i1 - n, (i2 == -1) ? -1 : i2 - n);
 		scrollh.view(true);
 	}
 	switch(hot.key) {
@@ -454,7 +460,7 @@ static void fieldf(const rect& rco, unsigned flags, void* source, int size, int 
 		field_focus(rc, source, size, increment, flags & edit_mask);
 	} else {
 		char temp[260]; stringbuilder sb(temp);
-		auto p = getsource(source, size, istext, sb);
+		auto p = getpresent(source, size, !istext, 0, sb);
 		text(rc, p, flags & edit_mask);
 	}
 }

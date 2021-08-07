@@ -1,5 +1,2 @@
 ﻿Errors occurs in locale/ru/Names.txt.txt
-Define translate for 'NoUrlLabelExtension'
-Define translate for 'Tabs'
-Define translate for 'UppercaseLabe'
-Define translate for 'UseShortNameLabel'
+Define translate for 'Ready'

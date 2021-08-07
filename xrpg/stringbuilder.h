@@ -40,6 +40,7 @@ public:
 	char*				get() const { return p; }
 	unsigned			getlenght() const { return pb - p; }
 	unsigned			getmaximum() const { return pe - pb - 1; }
+	bool				isempthy() const { return !pb || pb[0] == 0; }
 	static bool			ischa(unsigned char sym) { return (sym >= 'A' && sym <= 'Z') || (sym >= 'a' && sym <= 'z') || sym >= 0xC0; }
 	static bool			isnum(unsigned char sym) { return sym >= '0' && sym <= '9'; }
 	bool				ispos(const char* v) const { return p == v; }

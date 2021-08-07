@@ -10,13 +10,13 @@
           "ShowStatusBar":2,
           "ShowLeftPanel":2,
           "ShowRightPanel":2,
-          "ShowBottomPanel":0,
-          "ShowPadding":0
+          "ShowBottomPanel":2,
+          "ShowPadding":2
         },
         "Tabs":{
           "UseShortNameLabel":2,
           "NoUrlLabelExtension":2,
-          "UppercaseLabel":0
+          "UppercaseLabel":2
         }
       },
       "Plugins":{
@@ -28,13 +28,13 @@
         
       },
       "Form":{
-        "TextColor":16777215,
-        "WindowColor":2105376,
-        "FormColor":4210752,
-        "BorderColor":-2138141042,
-        "ActiveColor":11304960,
-        "ButtonColor":31436,
-        "TipsBackColor":6579320,
+        "TextColor":0,
+        "WindowColor":16777215,
+        "FormColor":15790320,
+        "BorderColor":11316396,
+        "ActiveColor":32940,
+        "ButtonColor":14671839,
+        "TipsBackColor":5263480,
         "TipsTextColor":16777215
       }
     },
@@ -45,17 +45,27 @@
     }
   },
   "window":{
-    "x":209,
-    "y":133,
-    "width":784,
-    "height":551,
-    "header_width":120,
+    "x":139,
+    "y":110,
+    "width":974,
+    "height":628,
+    "header_width":255,
     "flags":48
   },
   "controls":{
-    "logging":{
+    "MessageList":{
       "Docking":4,
-      "Visible":1
+      "Visible":1,
+      "columns":{
+        "column":{
+          "id":"Message",
+          "width":870
+        },
+        "column":{
+          "id":"Date",
+          "width":88
+        }
+      }
     }
   },
   "dockbar":{

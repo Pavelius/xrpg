@@ -129,6 +129,9 @@
     <ClInclude Include="setting.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="draw_dockbar.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">

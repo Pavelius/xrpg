@@ -157,6 +157,7 @@
     <ClInclude Include="draw_button.h" />
     <ClInclude Include="draw_clipboard.h" />
     <ClInclude Include="draw_control.h" />
+    <ClInclude Include="draw_dockbar.h" />
     <ClInclude Include="draw_figure.h" />
     <ClInclude Include="draw_focus.h" />
     <ClInclude Include="draw_scroll.h" />

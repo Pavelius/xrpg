@@ -37,7 +37,6 @@ void						cbsetint();
 void						cbsetptr();
 void						checkbox(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips = 0);
 const char*					contextmenu(const char** commands, const void* object, fnallowid allowid, fngetcommands getcommands);
-void						dockbar(rect& rc);
 void						fieln(int x, int& y, int width, const char* label, void* source, int size, int label_width, int digits);
 void						field(int x, int& y, int width, const char* label, char* source, unsigned size, int label_width, fnchoose choosep);
 int							field(int x, int& y, int width, const char* label, color& value, int header_width, const char* tips);
@@ -45,6 +44,7 @@ void						field(int x, int& y, int width, int line_height, const char* label, ch
 void						field(int x, int& y, int width, const char* label, const char*& source, int label_width, fnchoose choosep);
 int							getimage(const char* id);
 unsigned					getkey(const char* id);
+const char*					getpresent(void* source, int size, bool isnumber, const array* database, stringbuilder& sb);
 int							getresult();
 long						getsource(void* source, int size);
 void						initialize(const char* label, int width, int height, bool resize, int timer);

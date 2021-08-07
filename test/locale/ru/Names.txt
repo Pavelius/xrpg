@@ -14,6 +14,12 @@ Create: Создать новый
 Cut: Вырезать
 Date: Дата
 Decrease: Уменьшить
+DockBottom: Присоединено снизу
+DockLeft: Присоединено слева
+DockLeftBottom: Присоединено слева снизу
+DockRight: Присоединено справа
+DockRightBottom: Присоединено справа снизу
+DockWorkspace: На рабочем столе
 Docking: Расположение
 ExecuteCommand: Выполнить команду
 Exit: Выход
@@ -36,6 +42,7 @@ OpenFile: Открыть файл
 Padding: Отступ
 Paste: Вставить
 Plugins: Окна
+Ready: Готово
 Remove: Удалить
 Save: Сохранить
 SaveMessageFile: Сохранять файл сообщений после закрытия программы.

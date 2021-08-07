@@ -58,7 +58,7 @@ static class widget_logging : public control::plugin, public table {
 	}
 	const char* getvalue(const char* id, stringbuilder& sb) const override {
 		if(equal(id, "Name"))
-			return getnm("MessageList");
+			return getnm(this->id);
 		return 0;
 	}
 	void* get(int line) const {
@@ -78,7 +78,7 @@ public:
 		addcol("Date", ANREQ(logi, stamp), "Date").set(widtht::Fixed);
 		atexit(before_application_exit);
 	}
-	widget_logging() : rows(sizeof(logi)), table(rows), control::plugin("logging", dock::Bottom) {
+	widget_logging() : rows(sizeof(logi)), table(rows), control::plugin("MessageList", dock::Bottom) {
 		no_change_count = true;
 		read_only = true;
 		select_mode = selection::Row;

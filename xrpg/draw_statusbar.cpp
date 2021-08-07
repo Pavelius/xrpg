@@ -7,6 +7,10 @@ static rect				sb_rect;
 static char				sb_text[4096];
 static stringbuilder	sb(sb_text);
 
+stringbuilder& getstatustext() {
+	return sb;
+}
+
 void draw::statusbar(const char* format, ...) {
 	sb.addv(format, xva_start(format));
 }
