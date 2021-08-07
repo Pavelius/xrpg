@@ -8,7 +8,7 @@ int reference::get() const {
 	switch(type) {
 	case Text: case Url:
 		if(size==sizeof(const char*))
-			return (int)*((const char**)data);
+			return (size_t)*((const char**)data);
 		return 0;
 	default:
 		switch(size) {

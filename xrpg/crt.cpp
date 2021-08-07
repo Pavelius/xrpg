@@ -1,8 +1,8 @@
 #include "crt.h"
 #include "io_stream.h"
 
-extern "C" void* malloc(unsigned size);
-extern "C" void* realloc(void *ptr, unsigned size);
+extern "C" void* malloc(long long unsigned size);
+extern "C" void* realloc(void *ptr, long long unsigned size);
 extern "C" void	free(void* pointer);
 
 unsigned rmoptimal(unsigned need_count) {

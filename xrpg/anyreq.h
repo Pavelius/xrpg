@@ -1,7 +1,7 @@
 #pragma once
 
-#define ANREQ(T, R) {((unsigned long)&((T*)0)->R), sizeof(T::R)}
-#define ANBIT(T, R, B) {((unsigned long)&((T*)0)->R), sizeof(T::R), B}
+#define ANREQ(T, R) {(unsigned short)(int)&((T*)0)->R, sizeof(T::R)}
+#define ANBIT(T, R, B) {((unsigned short)&((T*)0)->R), sizeof(T::R), B}
 
 struct anyreq {
 	unsigned short			offset;

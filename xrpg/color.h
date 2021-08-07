@@ -7,8 +7,8 @@ struct color {
 	unsigned char			a;
 	//
 	color() = default;
-	constexpr color(unsigned char r, unsigned char g, unsigned char b) : r(r), g(g), b(b), a(0) {}
-	constexpr color(unsigned char r, unsigned char g, unsigned char b, unsigned char a) : r(r), g(g), b(b), a(a) {}
+	constexpr color(unsigned char r, unsigned char g, unsigned char b) : b(b), g(g), r(r), a(0) {}
+	constexpr color(unsigned char r, unsigned char g, unsigned char b, unsigned char a) : b(b), g(g), r(r), a(a) {}
 	inline bool	operator==(const color& e) const { return b == e.b && g == e.g && r == e.r && a == e.a; }
 	inline bool	operator!=(const color& e) const { return b != e.b || g != e.g || r != e.r || a != e.a; }
 	//

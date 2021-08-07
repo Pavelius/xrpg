@@ -59,7 +59,7 @@ struct menu_builder : builder {
 			mi.fState = MFS_DISABLED | MFS_GRAYED;
 		mi.dwTypeData = temp;
 		mi.wID = ++count;
-		mi.dwItemData = (unsigned)id;
+		mi.dwItemData = (size_t)id;
 		InsertMenuItemA(hMenu, mi.wID, 0, &mi);
 	}
 	void addseparator() override {

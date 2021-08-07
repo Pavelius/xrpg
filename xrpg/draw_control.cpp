@@ -28,7 +28,7 @@ bool control::ishilited() const {
 
 void control::post(const char* id) const {
 	if(const_cast<control*>(this)->execute(id, false)) // Do not post command and do not clear hot.key if our command is disabled.
-		draw::execute(command_execute, 0, (long)id, this);
+		draw::execute(command_execute, 0, (size_t)id, this);
 }
 
 void control::icon(int x, int y, const char* id, bool disabled) const {

@@ -1,5 +1,9 @@
 #pragma once
 
+#define HANDLER(T) static void proc_##T();\
+static handler handler_##T(proc_##T, T);\
+static void proc_##T()
+
 typedef void (*fnevent)();
 
 struct handler {
@@ -20,7 +24,3 @@ struct handler {
 			p->proc();
 	}
 };
-
-#define HANDLER(T) static void proc_##T();\
-static handler handler_##T(proc_##T, T);\
-static void proc_##T()

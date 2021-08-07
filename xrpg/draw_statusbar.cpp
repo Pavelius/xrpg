@@ -21,7 +21,7 @@ void draw::statusbar(rect& rb) {
 	sb_rect = rb;
 	sb_rect.y1 = sb_rect.y2 - texth() - 3 * 2;
 	rb.y2 -= sb_rect.height();
-	auto dx = font->height + 6;
+	//auto dx = font->height + 6;
 	gradv(sb_rect, colors::button.lighten(), colors::button.darken());
 	line(sb_rect.x1, sb_rect.y1, sb_rect.x2, sb_rect.y1, colors::border);
 	sb_rect.offset(4, 3);

@@ -237,7 +237,7 @@ static void button(int x, int& y, int width, const char* title, const element& e
 	auto result = false;
 	auto focus = isfocused(rc, &e);
 	if(button(rc, title, 0, 0, colors::button, focus, false, false, true))
-		draw::execute(callback_button, (int)&e);
+		draw::execute(callback_button, (size_t)&e);
 	y += rc.height() + metrics::padding;
 }
 
@@ -367,7 +367,7 @@ int draw::field(int x, int& y, int width, const char* label, color& value, int h
 	rect rc = {x, y, x + width, y + draw::texth() + 8};
 	auto focused = isfocused(rc, &value);
 	if(button(rc, temp, tips, 0, value, focused, false, false, true))
-		execute(callback_choose_color, (int)&value);
+		execute(callback_choose_color, (size_t)&value);
 	fore = push_fore;
 	return rc.height() + metrics::padding * 2;
 }
@@ -752,9 +752,9 @@ bool draw::edit(control& e, fnevent heartbeat) {
 	return getresult() != 0;
 }
 
-static void setheartbeat(fnevent v) {
-	widget_application_control.heartproc = v;
-}
+//static void setheartbeat(fnevent v) {
+//	widget_application_control.heartproc = v;
+//}
 
 stringbuilder& getstatustext();
 
@@ -918,7 +918,7 @@ static struct settings_settings_strategy : io::strategy {
 			break;
 		case setting::Text:
 		case setting::Url:
-			e->var.set((int)szdup(value));
+			e->var.set((size_t)szdup(value));
 			break;
 		default:
 			break;

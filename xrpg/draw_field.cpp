@@ -80,7 +80,7 @@ static void setsource(void* source, int size, bool istext, const char* result) {
 	long value = 0;
 	if(istext) {
 		if(size == sizeof(const char*))
-			value = (int)szdup(result);
+			value = (size_t)szdup(result);
 		else {
 			int len = zlen(result);
 			if(len > size - 1)
@@ -237,7 +237,7 @@ static void field_save() {
 		stringbuilder::read(current_buffer, result);
 		setsource(current_source, current_size, result);
 	} else if(current_size == sizeof(const char*))
-		setsource(current_source, current_size, (long)szdup(current_buffer));
+		setsource(current_source, current_size, (size_t)szdup(current_buffer));
 	else
 		zcpy((char*)current_source, current_buffer, current_size);
 }
@@ -457,7 +457,7 @@ static void fieldf(const rect& rco, unsigned flags, void* source, int size, bool
 	}
 	if(pchoose) {
 		if(addbutton(rc, focused, "...", F4, "Выбрать"))
-			draw::execute(choosefield, (long)pchoose, size, source);
+			draw::execute(choosefield, (size_t)pchoose, size, source);
 	}
 	rc.offset(metrics::edit);
 	if(focused) {

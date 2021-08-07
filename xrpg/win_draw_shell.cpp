@@ -82,7 +82,7 @@ static int CALLBACK BrowseFolderCallback(void* hwnd, unsigned uMsg, unsigned lPa
 bool draw::dialog::folder(const char* title, char* path) {
 	BROWSEINFOA binf = {0};
 	binf.hwndOwner = GetActiveWindow();
-	binf.lParam = reinterpret_cast<unsigned>(path);
+	binf.lParam = reinterpret_cast<size_t>(path);
 	binf.lpfn = BrowseFolderCallback;
 	binf.ulFlags = BIF_RETURNONLYFSDIRS | BIF_USENEWUI;
 	void* it = SHBrowseForFolderA(&binf);

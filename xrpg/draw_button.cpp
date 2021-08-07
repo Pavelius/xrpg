@@ -196,7 +196,7 @@ void draw::radio(int x, int& y, int width, void* source, int size, unsigned bits
 	rc.x2 = rc1.x2;
 	auto focused = isfocused(rc, source, bits);
 	auto value = getsource(source, size);
-	auto checked = (value == bits);
+	//auto checked = (value == bits);
 	//clipart(x + 2, y + imax((rc1.height() - 14) / 2, 0), width, flags, ":radio");
 	bool need_select = false;
 	auto a = ishilite(rc);

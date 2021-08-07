@@ -511,13 +511,13 @@ void table::changetext(const rect& rc, int line, int column) {
 	else
 		sb.add(value);
 	if(changefield(rc, p, columns[column], sb, false))
-		columns[column].set(get(line), (int)szdup(temp));
+		columns[column].set(get(line), (size_t)szdup(temp));
 }
 
 void table::changeref(const rect& rc, int line, int column) {
 	if(!columns[column].source)
 		return;
-	auto p = get(line);
+	//auto p = get(line);
 	//const anyval av((char*)p + columns[column].path.offset, columns[column].path.size, 0);
 	//fieldm(rc, av, *columns[column].source, p, columns[column].plist, true);
 }
@@ -634,9 +634,9 @@ void table::celldatetime(const rect& rc, int line, int column) {
 }
 
 void table::cellbox(const rect& rc, int line, int column) {
-	unsigned flags = 0;
-	auto v = columns[column].get(get(line));
-	auto b = 1 << columns[column].value.bit;
+	//unsigned flags = 0;
+	//auto v = columns[column].get(get(line));
+	//auto b = 1 << columns[column].value.bit;
 	//if(v & b)
 	//	flags |= Checked;
 	cellhilite(rc, line, column, 0, AlignCenter);
@@ -718,7 +718,6 @@ bool table::execute(const char* id, bool run) {
 		if(no_change_count)
 			return false;
 		if(run) {
-			auto n = getmaximum();
 			auto p = addrow();
 			if(p) {
 				auto pc = get(current);
@@ -783,7 +782,7 @@ bool table::write(const char* url, bool include_header) const {
 	if(include_header)
 		write(*pw);
 	pw->open("Rows", serializer::kind::Array);
-	auto mr = getmaximum();
+	//auto mr = getmaximum();
 	for(auto i = 0; i < getmaximum(); i++) {
 		auto p = get(i);
 		pw->open("Row");

@@ -2,6 +2,10 @@
 
 #pragma once
 
+#ifdef _GCC
+typedef long unsigned size_t;
+#endif // _GCC
+
 namespace setting {
 enum type_s : unsigned char {
 	Number, Text, Bool,

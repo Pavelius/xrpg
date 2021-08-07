@@ -12,7 +12,7 @@ protected:
 	fnallowid				allowid;
 	fngetcommands			getcommands;
 public:
-	constexpr builder() : count(), separator(), object(), allowid(), getcommands() {}
+	constexpr builder() : separator(), count(), object(), allowid(), getcommands() {}
 	virtual ~builder() {}
 	virtual void			add(const char* id) = 0;
 	virtual void			addseparator() = 0;

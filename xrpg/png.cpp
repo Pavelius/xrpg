@@ -31,9 +31,9 @@ static int get_bpp(colortypes colortype, unsigned bit_depth) {
 	return getNumColorChannels(colortype) * bit_depth;
 }
 
-static unsigned get_raw_size(unsigned w, unsigned h, const colortypes color, int bit_depth) {
-	return (w * (h + 1) * get_bpp(color, bit_depth) + 7) / 8;
-}
+//static unsigned get_raw_size(unsigned w, unsigned h, const colortypes color, int bit_depth) {
+//	return (w * (h + 1) * get_bpp(color, bit_depth) + 7) / 8;
+//}
 
 static int read32(const unsigned char* p) {
 	return (p[0] << 24) | (p[1] << 16) | (p[2] << 8) | p[3];
@@ -255,13 +255,13 @@ static const unsigned ADAM7_IY[7] = {0, 0, 4, 0, 2, 0, 1}; /*y start values*/
 static const unsigned ADAM7_DX[7] = {8, 8, 4, 4, 2, 2, 1}; /*x delta values*/
 static const unsigned ADAM7_DY[7] = {8, 8, 8, 4, 4, 2, 2}; /*y delta values*/
 
-static unsigned char readBitFromReversedStream(size_t* bitpointer, const unsigned char* bitstream) {
+static unsigned char readBitFromReversedStream(unsigned long* bitpointer, const unsigned char* bitstream) {
 	unsigned char result = (unsigned char)((bitstream[(*bitpointer) >> 3] >> (7 - ((*bitpointer) & 0x7))) & 1);
 	++(*bitpointer);
 	return result;
 }
 
-static void setBitOfReversedStream0(size_t* bitpointer, unsigned char* bitstream, unsigned char bit) {
+static void setBitOfReversedStream0(unsigned long* bitpointer, unsigned char* bitstream, unsigned char bit) {
 	/*the current bit in bitstream must be 0 for this to work*/
 	if(bit) {
 		/*earlier bit of huffman code is in a lesser significant bit of an earlier byte*/
@@ -285,8 +285,8 @@ bpp: bits per pixel
 "padded" is only relevant if bpp is less than 8 and a scanline or image does not
 end at a full byte
 */
-static void Adam7_getpassvalues(unsigned passw[7], unsigned passh[7], size_t filter_passstart[8],
-	size_t padded_passstart[8], size_t passstart[8], unsigned w, unsigned h, unsigned bpp) {
+static void Adam7_getpassvalues(unsigned passw[7], unsigned passh[7], unsigned long filter_passstart[8],
+	unsigned long padded_passstart[8], unsigned long passstart[8], unsigned w, unsigned h, unsigned bpp) {
 	/*the passstart values have 8 values: the 8th one indicates the byte after the end of the 7th (= last) pass*/
 	unsigned i;
 
@@ -323,7 +323,7 @@ NOTE: comments about padding bits are only relevant if bpp < 8
 */
 static void Adam7_deinterlace(unsigned char* out, const unsigned char* in, unsigned w, unsigned h, unsigned bpp) {
 	unsigned passw[7], passh[7];
-	size_t filter_passstart[8], padded_passstart[8], passstart[8];
+	unsigned long filter_passstart[8], padded_passstart[8], passstart[8];
 	unsigned i;
 
 	Adam7_getpassvalues(passw, passh, filter_passstart, padded_passstart, passstart, w, h, bpp);
@@ -331,11 +331,11 @@ static void Adam7_deinterlace(unsigned char* out, const unsigned char* in, unsig
 	if(bpp >= 8) {
 		for(i = 0; i != 7; ++i) {
 			unsigned x, y, b;
-			size_t bytewidth = bpp / 8;
+			unsigned long bytewidth = bpp / 8;
 			for(y = 0; y < passh[i]; ++y)
 				for(x = 0; x < passw[i]; ++x) {
-					size_t pixelinstart = passstart[i] + (y * passw[i] + x) * bytewidth;
-					size_t pixeloutstart = ((ADAM7_IY[i] + y * ADAM7_DY[i]) * w + ADAM7_IX[i] + x * ADAM7_DX[i]) * bytewidth;
+					unsigned long pixelinstart = passstart[i] + (y * passw[i] + x) * bytewidth;
+					unsigned long pixeloutstart = ((ADAM7_IY[i] + y * ADAM7_DY[i]) * w + ADAM7_IX[i] + x * ADAM7_DX[i]) * bytewidth;
 					for(b = 0; b < bytewidth; ++b) {
 						out[pixeloutstart + b] = in[pixelinstart + b];
 					}
@@ -347,7 +347,7 @@ static void Adam7_deinterlace(unsigned char* out, const unsigned char* in, unsig
 			unsigned x, y, b;
 			unsigned ilinebits = bpp * passw[i];
 			unsigned olinebits = bpp * w;
-			size_t obp, ibp; /*bit pointers (for out and in buffer)*/
+			unsigned long obp, ibp; /*bit pointers (for out and in buffer)*/
 			for(y = 0; y < passh[i]; ++y)
 				for(x = 0; x < passw[i]; ++x) {
 					ibp = (8 * passstart[i]) + (y * ilinebits + x * bpp);
@@ -417,9 +417,9 @@ static struct png_bitmap_plugin : public draw::surface::plugin {
 		auto bpp = iabs(input_bpp);
 		// Get encoder plugin
 		auto zlib = converter::find("zip"); assert(zlib);
-		auto colortype = (colortypes)input[25];
-		auto compression = input[26];
-		auto filter = input[27];
+		//auto colortype = (colortypes)input[25];
+		//auto compression = input[26];
+		//auto filter = input[27];
 		auto interlace = input[28];
 		input += 33;
 		// retrevie size

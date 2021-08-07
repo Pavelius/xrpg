@@ -82,7 +82,7 @@ bool bsreq::custom::readf(const char* url) {
 			if(pm->type == bsmeta<int>::meta)
 				pm->set(ps, getnumber(value));
 			else if(pm->type == bsmeta<const char*>::meta)
-				pm->set(ps, (long)szdup(value));
+				pm->set(ps, (size_t)szdup(value));
 			else if(pm->is(KindEnum)) {
 				auto i = pm->findenum(value);
 				if(i == -1) {

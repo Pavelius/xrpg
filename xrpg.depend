@@ -1,0 +1,369 @@
+# depslib dependency file v1.0
+1628324027 source:d:\projects\xrpg\xrpg\draw.cpp
+	"color.h"
+	"crt.h"
+	"draw.h"
+
+1628341671 d:\projects\xrpg\xrpg\color.h
+
+1628343432 d:\projects\xrpg\xrpg\crt.h
+
+1628339962 d:\projects\xrpg\xrpg\draw.h
+	"color.h"
+	"point.h"
+	"stringbuilder.h"
+
+1626194208 d:\projects\xrpg\xrpg\point.h
+	"rect.h"
+
+1627712998 d:\projects\xrpg\xrpg\rect.h
+
+1628321015 d:\projects\xrpg\xrpg\stringbuilder.h
+
+1628343308 source:d:\projects\xrpg\test\main.cpp
+	"draw.h"
+	"draw_button.h"
+	"draw_control.h"
+	"draw_figure.h"
+	"main.h"
+
+1627845036 d:\projects\xrpg\test\main.h
+	"crt.h"
+
+1627319804 source:d:\projects\xrpg\xrpg\archive.cpp
+	"archive.h"
+
+1627359291 d:\projects\xrpg\xrpg\archive.h
+	"crt.h"
+	"io_stream.h"
+
+1626285914 d:\projects\xrpg\xrpg\io_stream.h
+
+1610294642 source:d:\projects\xrpg\xrpg\bstream.cpp
+	"bstream.h"
+
+1610294642 d:\projects\xrpg\xrpg\bstream.h
+
+1627713096 source:d:\projects\xrpg\xrpg\color.cpp
+	"color.h"
+	"crt.h"
+
+1627756734 source:d:\projects\xrpg\xrpg\command.cpp
+	"command.h"
+	"crt.h"
+
+1627740665 d:\projects\xrpg\xrpg\command.h
+
+1610294642 source:d:\projects\xrpg\xrpg\converter.cpp
+	"converter.h"
+	"crt.h"
+
+1610294642 d:\projects\xrpg\xrpg\converter.h
+
+1628343216 source:d:\projects\xrpg\xrpg\crt.cpp
+	"crt.h"
+	"io_stream.h"
+
+1627621678 source:d:\projects\xrpg\xrpg\crt_translate.cpp
+	"crt.h"
+	"io_stream.h"
+	"log.h"
+	"stringbuilder.h"
+
+1627207532 d:\projects\xrpg\xrpg\log.h
+
+1610294642 source:d:\projects\xrpg\xrpg\datetime.cpp
+	"datetime.h"
+
+1628134695 d:\projects\xrpg\xrpg\datetime.h
+
+1627737488 source:d:\projects\xrpg\xrpg\draw_builder.cpp
+	"draw_builder.h"
+
+1628342735 d:\projects\xrpg\xrpg\draw_builder.h
+
+1628312547 source:d:\projects\xrpg\xrpg\draw_commands.cpp
+	"crt.h"
+	"command.h"
+	"draw.h"
+	"draw_button.h"
+
+1628339995 d:\projects\xrpg\xrpg\draw_button.h
+	"crt.h"
+	"color.h"
+	"rect.h"
+	"stringbuilder.h"
+
+1628319738 source:d:\projects\xrpg\xrpg\draw_dockbar.cpp
+	"crt.h"
+	"draw.h"
+	"draw_button.h"
+	"draw_control.h"
+	"draw_dockbar.h"
+	"io_plugin.h"
+	"setting.h"
+	"stringbuilder.h"
+
+1628341871 d:\projects\xrpg\xrpg\draw_control.h
+	"anyreq.h"
+	"handler.h"
+	"markup.h"
+	"point.h"
+
+1628342540 d:\projects\xrpg\xrpg\anyreq.h
+
+1628343327 d:\projects\xrpg\xrpg\handler.h
+
+1610294642 d:\projects\xrpg\xrpg\markup.h
+	"crt.h"
+	"stringbuilder.h"
+
+1628319708 d:\projects\xrpg\xrpg\draw_dockbar.h
+	"rect.h"
+
+1627359209 d:\projects\xrpg\xrpg\io_plugin.h
+	"io_stream.h"
+	"stringbuilder.h"
+
+1628343754 d:\projects\xrpg\xrpg\setting.h
+	"color.h"
+
+1628342614 source:d:\projects\xrpg\xrpg\draw_button.cpp
+	"crt.h"
+	"draw.h"
+	"draw_button.h"
+	"draw_figure.h"
+	"draw_focus.h"
+
+1628322195 d:\projects\xrpg\xrpg\draw_figure.h
+
+1627802839 d:\projects\xrpg\xrpg\draw_focus.h
+	"rect.h"
+
+1628322938 source:d:\projects\xrpg\xrpg\draw_figure.cpp
+	"draw.h"
+	"draw_figure.h"
+
+1627803047 source:d:\projects\xrpg\xrpg\draw_focus.cpp
+	"crt.h"
+	"draw.h"
+	"draw_button.h"
+	"draw_focus.h"
+	"handler.h"
+
+1628340096 source:d:\projects\xrpg\xrpg\draw_input.cpp
+	"draw.h"
+	"draw_button.h"
+	"draw_focus.h"
+	"handler.h"
+
+1628340299 source:d:\projects\xrpg\xrpg\draw_list.cpp
+	"crt.h"
+	"draw.h"
+	"draw_button.h"
+	"draw_control.h"
+	"draw_focus.h"
+	"draw_scroll.h"
+	"handler.h"
+
+1627838404 d:\projects\xrpg\xrpg\draw_scroll.h
+	"rect.h"
+
+1627798864 source:d:\projects\xrpg\xrpg\draw_scroll.cpp
+	"draw.h"
+	"draw_button.h"
+	"draw_scroll.h"
+
+1627838913 source:d:\projects\xrpg\xrpg\draw_scrollable.cpp
+	"draw.h"
+	"draw_control.h"
+	"draw_focus.h"
+	"draw_scroll.h"
+
+1627758529 source:d:\projects\xrpg\xrpg\draw_splitter.cpp
+	"draw.h"
+	"draw_button.h"
+
+1628343347 source:d:\projects\xrpg\xrpg\draw_statusbar.cpp
+	"draw.h"
+	"draw_button.h"
+	"handler.h"
+	"stringbuilder.h"
+
+1628101473 source:d:\projects\xrpg\xrpg\draw_tabs.cpp
+	"crt.h"
+	"draw.h"
+	"draw_button.h"
+
+1627159609 source:d:\projects\xrpg\xrpg\draw_text.cpp
+	"draw.h"
+
+1627758329 source:d:\projects\xrpg\xrpg\draw_textf.cpp
+	"crt.h"
+	"draw.h"
+
+1627714396 source:d:\projects\xrpg\xrpg\draw_theme.cpp
+	"draw.h"
+
+1628312515 source:d:\projects\xrpg\xrpg\draw_toolbar.cpp
+	"draw.h"
+	"draw_control.h"
+	"draw_builder.h"
+	"draw_button.h"
+
+1628322039 source:d:\projects\xrpg\xrpg\draw_tooltips.cpp
+	"draw.h"
+	"draw_button.h"
+	"handler.h"
+	"stringbuilder.h"
+
+1627213833 source:d:\projects\xrpg\xrpg\gender.cpp
+	"crt.h"
+	"gender.h"
+
+1627213778 d:\projects\xrpg\xrpg\gender.h
+
+1623595071 source:d:\projects\xrpg\xrpg\io_plugin.cpp
+	"crt.h"
+	"io_plugin.h"
+
+1626800064 source:d:\projects\xrpg\xrpg\io_plugin_json.cpp
+	"crt.h"
+	"io_plugin.h"
+
+1627359191 source:d:\projects\xrpg\xrpg\io_stream.cpp
+	"crt.h"
+	"io_stream.h"
+	"stringbuilder.h"
+
+1627415333 source:d:\projects\xrpg\xrpg\log.cpp
+	"io_stream.h"
+	"log.h"
+	"stringbuilder.h"
+
+1610294642 source:d:\projects\xrpg\xrpg\markup.cpp
+	"markup.h"
+
+1627133468 source:d:\projects\xrpg\xrpg\moveable.cpp
+	"moveable.h"
+
+1627133367 d:\projects\xrpg\xrpg\moveable.h
+	"posable.h"
+
+1627133357 d:\projects\xrpg\xrpg\posable.h
+	"point.h"
+
+1627661524 source:d:\projects\xrpg\xrpg\nix_draw.cpp
+	"crt.h"
+	"draw.h"
+
+1627661524 source:d:\projects\xrpg\xrpg\nix_io_file.cpp
+	<cstdio>
+	<unistd.h>
+	"crt.h"
+	"io_stream.h"
+
+1610294642 source:d:\projects\xrpg\xrpg\point.cpp
+	"point.h"
+
+1627359255 source:d:\projects\xrpg\xrpg\resource_dynamic.cpp
+	"crt.h"
+	"draw.h"
+
+1628328644 source:d:\projects\xrpg\xrpg\screenshoot.cpp
+	"screenshoot.h"
+
+1628327905 d:\projects\xrpg\xrpg\screenshoot.h
+	"point.h"
+	"draw.h"
+
+1628342598 source:d:\projects\xrpg\xrpg\bsreq.cpp
+	"bsreq.h"
+	"stringbuilder.h"
+
+1627494906 d:\projects\xrpg\xrpg\bsreq.h
+	"crt.h"
+
+1628343447 source:d:\projects\xrpg\xrpg\draw_control.cpp
+	"crt.h"
+	"draw.h"
+	"draw_builder.h"
+	"draw_button.h"
+	"draw_control.h"
+	"draw_focus.h"
+	"handler.h"
+
+1628343474 source:d:\projects\xrpg\xrpg\draw_field.cpp
+	"crt.h"
+	"command.h"
+	"draw.h"
+	"draw_button.h"
+	"draw_clipboard.h"
+	"draw_focus.h"
+	"draw_scroll.h"
+	"handler.h"
+	"screenshoot.h"
+
+1627738724 d:\projects\xrpg\xrpg\draw_clipboard.h
+
+1628343480 source:d:\projects\xrpg\xrpg\io_plugin_bsreq.cpp
+	"bsreq.h"
+	"crt.h"
+	"io_plugin.h"
+
+1627966427 source:d:\projects\xrpg\xrpg\stringbuilder.cpp
+	"crt.h"
+	"stringbuilder.h"
+
+1628343489 source:d:\projects\xrpg\xrpg\draw_table.cpp
+	"command.h"
+	"datetime.h"
+	"draw.h"
+	"draw_button.h"
+	"draw_control.h"
+	"draw_focus.h"
+	"io_plugin.h"
+
+1627359355 source:d:\projects\xrpg\xrpg\surface_serial.cpp
+	"draw.h"
+	"io_stream.h"
+
+1627495557 source:d:\projects\xrpg\xrpg\szdup.cpp
+	"crt.h"
+
+1627495597 source:d:\projects\xrpg\xrpg\variant.cpp
+	"variant.h"
+
+1627661524 d:\projects\xrpg\xrpg\variant.h
+	"crt.h"
+	"stringbuilder.h"
+
+1628343626 source:d:\projects\xrpg\xrpg\widget_logging.cpp
+	"crt.h"
+	"datetime.h"
+	"draw_control.h"
+	"draw_button.h"
+	"handler.h"
+	"io_stream.h"
+	"setting.h"
+	"stringbuilder.h"
+
+1628343714 source:d:\projects\xrpg\xrpg\setting.cpp
+	"setting.h"
+
+1628343798 source:d:\projects\xrpg\xrpg\widget_application.cpp
+	"crt.h"
+	"draw.h"
+	"draw_button.h"
+	"draw_control.h"
+	"draw_dockbar.h"
+	"draw_focus.h"
+	"draw_scroll.h"
+	"handler.h"
+	"io_plugin.h"
+	"setting.h"
+
+1573297248 source:d:\projects\xrpg\xrpg\zip.cpp
+	"crt.h"
+	"converter.h"
+

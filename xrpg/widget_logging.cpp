@@ -78,7 +78,7 @@ public:
 		addcol("Date", ANREQ(logi, stamp), "Date").set(widtht::Fixed);
 		atexit(before_application_exit);
 	}
-	widget_logging() : rows(sizeof(logi)), table(rows), control::plugin("MessageList", dock::Bottom) {
+	widget_logging() : control::plugin("MessageList", dock::Bottom), table(rows), rows(sizeof(logi)) {
 		no_change_count = true;
 		read_only = true;
 		select_mode = selection::Row;

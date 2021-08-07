@@ -12,7 +12,7 @@ static void field(int x, int& y, int width, controls::control& v) {
 	y += 300 + metrics::padding;
 }
 
-static void test_fields() {
+/*static void test_fields() {
 	auto fname = "Чистяков";
 	auto name = "Павел";
 	auto lname = "Валентинович";
@@ -31,39 +31,15 @@ static void test_fields() {
 		buttonl(x, y, getnm("Cancel"), buttoncancel, KeyEscape);
 		domodal();
 	}
-}
+}*/
 
 static void panel(int x, int& y, controls::list& e) {
-	auto w = 200; auto y1 = y;
+	auto w = 200;
 	checkbox(x, y, w, &e.show_grid_lines, sizeof(e.show_grid_lines), 0, "Показывать линии сетки");
 	checkbox(x, y, w, &e.hilite_odd_lines, sizeof(e.hilite_odd_lines), 0, "Выделять нечетные рядки");
 	checkbox(x, y, w, &e.show_selection, sizeof(e.show_selection), 0, "Подсвечивать рядок под мышкой");
 	//x += w + metrics::padding; y = y1;
 	//checkbox(x, y, w, &e.drop_shadow, sizeof(e.drop_shadow), 0, "Отбрасывает тень");
-}
-
-static void test_window() {
-	struct test_list : public controls::list {
-		const char* getname(int line, int column, stringbuilder& sb) const override {
-			switch(column) {
-			case 0: return bsdata<traiti>::elements[line].id;
-			default: return 0;
-			}
-		}
-		int getmaximum() const override {
-			return bsdata<traiti>::source.getcount();
-		}
-	};
-	test_list object;
-	while(ismodal()) {
-		rect rc = {0, 0, getwidth(), getheight()};
-		rectf(rc, colors::form);
-		int x = 10, y = 10;
-		object.paint({x, y, getwidth() - 200, y + 500 - metrics::padding});
-		buttonl(x, y, "OK", buttonok, KeyEnter);
-		buttonl(x, y, getnm("Cancel"), buttoncancel, KeyEscape);
-		domodal();
-	}
 }
 
 static void test_table() {
@@ -83,9 +59,13 @@ static void test_table() {
 	}
 }
 
+static void select(void* object) {
+}
+
 int main() {
 	if(!initialize_translation("ru"))
 		return -1;
+	select((void*)12);
 	logmsgv("Тостовая строка залогирована в общий лог приложения.", 0);
 	draw::initialize("Test UI");
 	draw::setnext(test_table);

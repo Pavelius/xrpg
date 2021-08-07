@@ -1,33 +1,38 @@
 #pragma once
 
-extern "C" int						atexit(void(*func)(void));
-extern "C" void*					bsearch(const void* key, const void* base, unsigned num, unsigned size, int(*compar)(const void*, const void*));
-extern "C" unsigned					clock(); // Returns the processor time consumed by the program.
-extern "C" void						exit(int exit_code);
-extern "C" int						memcmp(const void* p1, const void* p2, unsigned size);
-extern "C" void*					memmove(void* destination, const void* source, unsigned size);
-extern "C" void*					memcpy(void* destination, const void* source, unsigned size);
-extern "C" void*					memset(void* destination, int value, unsigned size);
-extern "C" void						qsort(void* base, unsigned num, unsigned size, int(*compar)(const void*, const void*));
-extern "C" int						rand(void); // Get next random value
-extern "C" void						srand(unsigned seed); // Set random seed
-extern "C" int						strcmp(const char* s1, const char* s2); // Compare two strings
-extern "C" long long				time(long long* seconds);
+#ifdef _GCC
+typedef long unsigned size_t;
+#endif // _GCC
 
 #ifdef _DEBUG
 #define assert(e) if(!(e)) {exit(255);}
 #else
 #define assert(e)
 #endif
+
 #define maptbl(t, id) (t[imax((unsigned)0, imin((unsigned)id, (sizeof(t)/sizeof(t[0])-1)))])
 #define maprnd(t) t[rand()%(sizeof(t)/sizeof(t[0]))]
-#define	FO(T,R) ((unsigned long)&((T*)0)->R)
+#define	FO(T,R) (*((unsigned*)&((T*)0)->R))
 #define BSDATA(e) template<> e bsdata<e>::elements[]
 #define BSDATAE(e) template<> array bsdata<e>::source(bsdata<e>::elements, sizeof(bsdata<e>::elements[0]), 0, sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]));
 #define BSDATAF(e) template<> array bsdata<e>::source(bsdata<e>::elements, sizeof(bsdata<e>::elements[0]), sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]), sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]));
 #define BSDATAC(e, c) template<> e bsdata<e>::elements[c] = {}; BSDATAE(e)
 #define NOBSDATA(e) template<> struct bsdata<e> : bsdata<int> {};
 #define assert_enum(e, last) static_assert(sizeof(bsdata<e>::elements) / sizeof(bsdata<e>::elements[0]) == static_cast<int>(last) + 1, "Invalid count of " #e " elements"); BSDATAF(e)
+
+extern "C" int						atexit(void(*func)(void));
+extern "C" void*					bsearch(const void* key, const void* base, unsigned num, unsigned size, int(*compar)(const void*, const void*));
+extern "C" unsigned					clock(); // Returns the processor time consumed by the program.
+extern "C" void						exit(int exit_code);
+extern "C" int						memcmp(const void* p1, const void* p2, size_t size);
+extern "C" void*					memmove(void* destination, const void* source, size_t size);
+extern "C" void*					memcpy(void* destination, const void* source, size_t size);
+extern "C" void*					memset(void* destination, int value, size_t size);
+extern "C" void						qsort(void* base, unsigned num, size_t size, int(*compar)(const void*, const void*));
+extern "C" int						rand(void); // Get next random value
+extern "C" void						srand(unsigned seed); // Set random seed
+extern "C" int						strcmp(const char* s1, const char* s2); // Compare two strings
+extern "C" long long				time(long long* seconds);
 
 enum class codepages { None, W1251, UTF8, U16BE, U16LE };
 namespace metrics {
@@ -98,9 +103,9 @@ public:
 	void*							data;
 	unsigned						count, size;
 	typedef int(*pcompare)(const void* p1, const void* p2, void* param);
-	constexpr array(unsigned size = 0) : size(size), count_maximum(0), data(0), count(0) {}
-	constexpr array(void* data, unsigned size, unsigned count) : size(size), count_maximum(count | 0x80000000), data(data), count(count) {}
-	constexpr array(void* data, unsigned size, unsigned count, unsigned count_maximum) : size(size), count_maximum(count_maximum | 0x80000000), data(data), count(count) {}
+	constexpr array(unsigned size = 0) : count_maximum(0), data(0), count(0), size(size) {}
+	constexpr array(void* data, unsigned size, unsigned count) : count_maximum(count | 0x80000000), data(data), count(count), size(size) {}
+	constexpr array(void* data, unsigned size, unsigned count, unsigned count_maximum) : count_maximum(count_maximum | 0x80000000), data(data), count(count), size(size) {}
 	~array();
 	void*							add();
 	void*							addz() { auto p = add(); memset(p, 0, size); return p; }
@@ -223,9 +228,9 @@ inline int							xrand(int n1, int n2) { return n1 + rand() % (n2 - n1 + 1); }
 struct serializer {
 	enum class kind { Text, Number, Array, Struct };
 	struct node {
-		kind						type;
-		const char*					name;
 		node*						parent;
+		const char*					name;
+		kind						type;
 		int							index;
 		void*						object; // application defined data
 		void*						metadata; // application defined metadata

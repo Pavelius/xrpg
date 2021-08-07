@@ -215,7 +215,7 @@ public:
 class tableref : public table {
 	array					rows;
 public:
-	constexpr tableref() : rows(sizeof(void*)), table(rows) {}
+	constexpr tableref() : table(rows), rows(sizeof(void*)) {}
 	virtual void			addref(void* v) { rows.add(&v); }
 	virtual void*			get(int line) const override { return *((void**)rows.ptr(line)); }
 };
