@@ -17,6 +17,9 @@ void draw::field(int x, int y, figure type, int size) {
 	case figure::Rect:
 		rectb({x - size, y - size, x + size, y + size});
 		break;
+	case figure::Rect3D:
+		rectb3d({x - size, y - size, x + size, y + size});
+		break;
 	case figure::RectFill:
 		rectf({x - size, y - size, x + size, y + size});
 		break;

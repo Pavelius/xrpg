@@ -10,7 +10,7 @@
           "ShowStatusBar":2,
           "ShowLeftPanel":2,
           "ShowRightPanel":2,
-          "ShowBottomPanel":2,
+          "ShowBottomPanel":0,
           "ShowPadding":2
         },
         "Tabs":{
@@ -28,13 +28,13 @@
         
       },
       "Form":{
-        "TextColor":16777215,
-        "WindowColor":2105376,
-        "FormColor":4210752,
-        "BorderColor":-2138141042,
-        "ActiveColor":11304960,
-        "ButtonColor":31436,
-        "TipsBackColor":6579320,
+        "TextColor":0,
+        "WindowColor":16777215,
+        "FormColor":15790320,
+        "BorderColor":11316396,
+        "ActiveColor":32940,
+        "ButtonColor":14671839,
+        "TipsBackColor":5263480,
         "TipsTextColor":16777215
       }
     },
@@ -59,7 +59,7 @@
       "columns":{
         "column":{
           "id":"Message",
-          "width":870
+          "width":200
         },
         "column":{
           "id":"Date",

@@ -121,6 +121,16 @@ static void set32(unsigned char* d, int d_scan, int width, int height, void(*pro
 	}
 }
 
+static void set32h(color* p, int height, unsigned char alpha) {
+	auto d_scan = canvas->scanline / sizeof(color);
+	while(height-- > 0) {
+		p->r = (p->r * (255 - alpha) + fore.r * alpha) >> 8;
+		p->g = (p->g * (255 - alpha) + fore.g * alpha) >> 8;
+		p->b = (p->b * (255 - alpha) + fore.b * alpha) >> 8;
+		p += d_scan;
+	}
+}
+
 static void raw832(unsigned char* d, int d_scan, unsigned char* s, int s_scan, int width, int height, const color* pallette) {
 	const int cbd = 4;
 	while(height-- > 0) {
@@ -980,7 +990,7 @@ void draw::bezier(int x0, int y0, int x1, int y1, int x2, int y2) {
 
 void draw::spline(point* original_points, int n) {
 	point points[256];
-	if(n>sizeof(points) / sizeof(points[0]))
+	if(n > sizeof(points) / sizeof(points[0]))
 		n = sizeof(points) / sizeof(points[0]);
 	n = n - 1;
 	memcpy(points, original_points, sizeof(points[0]) * (n + 1));
@@ -1081,6 +1091,33 @@ void draw::rectb(rect rc) {
 	line(rc.x2, rc.y1 + 1, rc.x2, rc.y2);
 	line(rc.x2 - 1, rc.y2, rc.x1, rc.y2);
 	line(rc.x1, rc.y2 - 1, rc.x1, rc.y1);
+}
+
+void draw::rectb3d(rect rc) {
+	if(!draw::canvas)
+		return;
+	line(rc.x1, rc.y1, rc.x2, rc.y1);
+	line(rc.x2, rc.y1 + 1, rc.x2, rc.y2);
+	line(rc.x2 - 1, rc.y2, rc.x1, rc.y2);
+	line(rc.x1, rc.y2 - 1, rc.x1, rc.y1);
+	rc.offset(1, 1);
+	correct(rc.x1, rc.y1, rc.x2, rc.y2); rect r1 = rc;
+	if(!correct(r1.x1, r1.y1, r1.x2, r1.y2, clipping))
+		return;
+	if(r1.x1 == r1.x2)
+		return;
+	auto push_fore = fore;
+	fore.a = 128;
+	if(rc.y1 >= clipping.y1 && rc.y1 <= clipping.y2)
+		set32a((color*)ptr(r1.x1, r1.y1), r1.y2 - r1.y1);
+	if(rc.x1 >= clipping.x1 && rc.x1 <= clipping.x2)
+		set32h((color*)ptr(r1.x1, r1.y1), r1.y2 - r1.y1, 128);
+	fore.a = 64;
+	if(rc.y2 >= clipping.y1 && rc.y2 <= clipping.y2)
+		set32a((color*)ptr(r1.x1, r1.y2), r1.x2 - r1.x1);
+	if(rc.x2 >= clipping.x1 && rc.x2 <= clipping.x2)
+		set32h((color*)ptr(r1.x2, r1.y1), r1.y2 - r1.y1, 64);
+	fore = push_fore;
 }
 
 void draw::rectb(rect rc, int radius) {

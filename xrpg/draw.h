@@ -199,6 +199,7 @@ void					rectb(rect rc); // Draw rectangle border
 void					rectb(rect rc, color c1);
 void					rectb(rect rc, int radius);
 void					rectb(rect rc, color c1, int radius);
+void					rectb3d(rect rc); // Draw rectangle border
 void					rectf(rect rc); // Draw rectangle area. Right and bottom side is one pixel less.
 void					rectfe(rect rc, int radius, unsigned char alpha);
 void					rectf(rect rc, color c1);
