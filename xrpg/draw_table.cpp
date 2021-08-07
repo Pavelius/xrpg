@@ -3,6 +3,7 @@
 #include "draw.h"
 #include "draw_button.h"
 #include "draw_control.h"
+#include "draw_focus.h"
 #include "io_plugin.h"
 
 using namespace draw;
@@ -80,7 +81,7 @@ const char* column::get(const void* object, stringbuilder& sb) const {
 		return plist.getname(object, sb);
 	} else if(source)
 		return getpresent(value.ptr(object), value.size, true, source, sb);
-	else if(value.size==sizeof(const char*))
+	else if(value.size == sizeof(const char*))
 		return value.gets(value.ptr(object));
 	return "";
 }
@@ -156,8 +157,8 @@ static void proc_mouseselect() {
 	auto p = (table*)draw::hot.param;
 	auto i = p->getvalid(list::current_hilite_column);
 	p->select(list::current_hilite_row, i);
-	//if(p->columns[i].method->change_one_click)
-	//	p->change(true);
+	if(p->columns[i].method->change_one_click)
+		p->execute("Change", true);
 }
 
 //void table::mouseselect(int id, bool pressed) {
@@ -357,9 +358,9 @@ void table::ensurevisible() {
 
 rect table::getrect(int row, int column) const {
 	rect rs;
-	rs.x1 = client.x1 - origin_x;
+	rs.x1 = client.x1 - origin_x + 1;
 	rs.x2 = rs.x1;
-	rs.y1 = client.y1 + pixels_per_line * (row - origin);
+	rs.y1 = client.y1 + pixels_per_line * (row - origin) + 1;
 	rs.y2 = rs.y1 + pixels_per_line;
 	if(column >= (int)columns.getcount())
 		column = columns.getcount() - 1;
@@ -396,13 +397,30 @@ void table::paint(const rect& rc) {
 		rowtotal({rc.x1, rc.y2 - getrowheight(), rc.x2, rc.y2});
 	} else
 		list::paint(rc);
-	switch(hot.key) {
-	case KeyLeft:
-		draw::execute(post_select, getline(), getvalid(current_column - 1, -1), this);
-		break;
-	case KeyRight:
-		draw::execute(post_select, getline(), getvalid(current_column + 1), this);
-		break;
+	if(isfocused(this)) {
+		int v;
+		switch(hot.key) {
+		case KeyHome:
+			v = getvalid(0, 1);
+			if(v != current_column)
+				draw::execute(post_select, getline(), v, this);
+			break;
+		case KeyEnd:
+			v = getvalid(columns.getcount() - 1, 1);
+			if(v != current_column)
+				draw::execute(post_select, getline(), v, this);
+			break;
+		case KeyLeft:
+			v = getvalid(current_column - 1, -1);
+			if(v != current_column)
+				draw::execute(post_select, getline(), v, this);
+			break;
+		case KeyRight:
+			v = getvalid(current_column + 1);
+			if(v != current_column && v < (int)columns.getcount())
+				draw::execute(post_select, getline(), v, this);
+			break;
+		}
 	}
 }
 
@@ -462,20 +480,18 @@ column& table::addcolimage() {
 	return addcol(0, "standart_image");
 }
 
-bool table::changefield(const rect& rc, unsigned flags, stringbuilder& sb) {
-	//textedit te(sb.begin(), sb.getmaximum(), true);
-	//te.setfocus(true);
-	//te.show_border = false;
-	//te.post_escape = false;
-	//te.align = flags;
-	//return te.editing(rc);
-	return false;
+static bool changefield(rect rc, void* row, const column& col, stringbuilder& sb, bool isnumber) {
+	rc.offset(metrics::edit);
+	draw::rectf({rc.x1 - 1, rc.y1 - 1, rc.x2, rc.y2}, colors::window);
+	rc.x2 -= 1;
+	return draw::edit(rc, col.value.ptr(row), col.value.size, col.align|TextSingleLine, isnumber);
 }
 
 void table::changenumber(const rect& rc, int line, int column) {
+	auto p = get(line);
 	char temp[32]; stringbuilder sb(temp);
 	sb.add("%1i", columns[column].get(get(line)));
-	if(changefield(rc, columns[column].align, sb)) {
+	if(changefield(rc, p, columns[column], sb, true)) {
 		long value = 0;
 		stringbuilder::read(temp, value);
 		columns[column].set(get(line), value);
@@ -483,13 +499,14 @@ void table::changenumber(const rect& rc, int line, int column) {
 }
 
 void table::changetext(const rect& rc, int line, int column) {
+	auto p = get(line);
 	char temp[8192]; stringbuilder sb(temp);
 	auto value = (const char*)columns[column].get(get(line));
 	if(!value)
 		temp[0] = 0;
 	else
 		sb.add(value);
-	if(changefield(rc, columns[column].align, sb))
+	if(changefield(rc, p, columns[column], sb, false))
 		columns[column].set(get(line), (int)szdup(temp));
 }
 
@@ -509,21 +526,6 @@ void table::changecheck(const rect& rc, int line, int column) {
 		columns[column].set(p, v & (~b));
 	else
 		columns[column].set(p, v | b);
-}
-
-bool table::change(int row, column& col, bool run) {
-	if(col.is(columnf::ReadOnly))
-		return false;
-	auto pv = col.method;
-	if(!pv)
-		return false;
-	if(!pv->change)
-		return false;
-	if(run) {
-		//if(current_rect)
-		//	(this->*pv->change)(current_rect, current, current_column);
-	}
-	return true;
 }
 
 void table::cell(const rect& rc, int line, int column, const char* label) {
@@ -677,14 +679,24 @@ bool table::execute(const char* id, bool run) {
 			rows.swap(current + 1, current);
 			select(current + 1, getcolumn());
 		}
-	} else if(equal(id, "Change")) {
+	} else if(equal(id, "Change") || equal(id, "Choose")) {
 		if(read_only)
 			return false;
 		if(!columns)
 			return false;
-		if(current >= getmaximum())
+		if(current >= getmaximum() || current_column == -1)
 			return false;
-		return change(current, columns[current_column], run);
+		auto& col = columns[current_column];
+		if(col.is(columnf::ReadOnly))
+			return false;
+		auto pv = col.method;
+		if(!pv || !pv->change)
+			return false;
+		auto rc = getrect(current, current_column);
+		if(!rc)
+			return false;
+		if(run)
+			(this->*pv->change)(rc, current, current_column);
 	} else if(equal(id, "Add")) {
 		if(no_change_count)
 			return false;

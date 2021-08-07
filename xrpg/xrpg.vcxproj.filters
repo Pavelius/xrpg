@@ -132,6 +132,9 @@
     <ClInclude Include="draw_dockbar.h">
       <Filter>Interface</Filter>
     </ClInclude>
+    <ClInclude Include="screenshoot.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -307,6 +310,9 @@
     </ClCompile>
     <ClCompile Include="widget_logging.cpp">
       <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="screenshoot.cpp">
+      <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

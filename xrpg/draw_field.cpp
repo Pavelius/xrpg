@@ -6,6 +6,7 @@
 #include "draw_focus.h"
 #include "draw_scroll.h"
 #include "handler.h"
+#include "screenshoot.h"
 
 using namespace draw;
 
@@ -23,11 +24,15 @@ static void*		current_source;
 static const char*	current_cashe;
 static int			i1, i2;
 
-static int texth(const char* string, int width, int height_origin, const char** current_cashe) {
+static int texth(const char* string, int width, int height_origin, const char** current_cashe, unsigned align) {
 	int dy = texth();
-	int y1 = 0;
 	auto p = string;
 	*current_cashe = 0;
+	if(align & TextSingleLine) {
+		*current_cashe = p;
+		return dy;
+	}
+	int y1 = 0;
 	while(*p) {
 		auto c = textbc(p, width);
 		if(!c)
@@ -53,7 +58,7 @@ const char* draw::getpresent(void* source, int size, bool isnumber, const array*
 		if(database) {
 			auto i = getsource(source, size);
 			auto p = (char*)database->ptr(i);
-			if(!p || p[0]== 0)
+			if(!p || p[0] == 0)
 				return getnm("None");
 			return getnm(*((const char**)p));
 		} else {
@@ -329,11 +334,10 @@ static command field_commands[] = {
 	{"SelectAll", select_all, Ctrl + 'A'},
 };
 
-static void field_focus(const rect& rc, void* source, int size, bool isnumber, unsigned flags) {
+static void field_focus(const rect& rc, bool isnumber, unsigned flags) {
 	int n;
-	field_read(source, size, isnumber, i1, i2, flags, rc.width(), rc.height());
 	if(current_origin_cashe != current_origin_height) {
-		current_maximum_height = texth(current_buffer, current_width, current_origin_height, &current_cashe);
+		current_maximum_height = texth(current_buffer, current_width, current_origin_height, &current_cashe, flags);
 		current_origin_cashe = current_origin_height;
 	}
 	if(current_cashe) {
@@ -433,7 +437,7 @@ static void field_focus(const rect& rc, void* source, int size, bool isnumber, u
 	}
 }
 
-static void fieldf(const rect& rco, unsigned flags, void* source, int size, int digits, bool increment, bool istext, fnchoose pchoose) {
+static void fieldf(const rect& rco, unsigned flags, void* source, int size, bool increment, bool istext, fnchoose pchoose) {
 	if(rco.width() <= 0)
 		return;
 	rect rc = rco;
@@ -457,7 +461,8 @@ static void fieldf(const rect& rco, unsigned flags, void* source, int size, int 
 	}
 	rc.offset(metrics::edit);
 	if(focused) {
-		field_focus(rc, source, size, increment, flags & edit_mask);
+		field_read(source, size, !istext, i1, i2, flags, rc.width(), rc.height());
+		field_focus(rc, !istext, flags & edit_mask);
 	} else {
 		char temp[260]; stringbuilder sb(temp);
 		auto p = getpresent(source, size, !istext, 0, sb);
@@ -469,7 +474,7 @@ void draw::fieln(int x, int& y, int width, const char* label, void* source, int 
 	setposition(x, y, width);
 	titletext(x, y, width, label, label_width);
 	rect rc = {x, y, x + width, y + draw::texth() + metrics::edit * 2};
-	fieldf(rc, AlignRight | TextSingleLine, source, size, digits, true, false, 0);
+	fieldf(rc, AlignRight | TextSingleLine, source, size, true, false, 0);
 	y += rc.height() + metrics::padding;
 }
 
@@ -477,7 +482,7 @@ void draw::field(int x, int& y, int width, const char* label, char* source, unsi
 	setposition(x, y, width);
 	titletext(x, y, width, label, label_width);
 	rect rc = {x, y, x + width, y + draw::texth() + metrics::edit * 2};
-	fieldf(rc, AlignLeft | TextSingleLine, source, size, -1, false, true, choosep);
+	fieldf(rc, AlignLeft | TextSingleLine, source, size, false, true, choosep);
 	y += rc.height() + metrics::padding;
 }
 
@@ -485,7 +490,7 @@ void draw::field(int x, int& y, int width, int line_height, const char* label, c
 	setposition(x, y, width);
 	titletext(x, y, width, label, label_width);
 	rect rc = {x, y, x + width, y + draw::texth() * line_height + metrics::edit * 2};
-	fieldf(rc, AlignLeft, source, size, -1, false, true, choosep);
+	fieldf(rc, AlignLeft, source, size, false, true, choosep);
 	y += rc.height() + metrics::padding;
 }
 
@@ -493,8 +498,51 @@ void draw::field(int x, int& y, int width, const char* label, const char*& sourc
 	setposition(x, y, width);
 	titletext(x, y, width, label, label_width);
 	rect rc = {x, y, x + width, y + draw::texth() + metrics::edit * 2};
-	fieldf(rc, AlignLeft | TextSingleLine, &source, sizeof(source), -1, false, true, choosep);
+	fieldf(rc, AlignLeft | TextSingleLine, &source, sizeof(source), false, true, choosep);
 	y += rc.height() + metrics::padding;
+}
+
+bool draw::edit(const rect& rc, void* source, int size, unsigned align, bool isnumber) {
+	draw::screenshoot push;
+	field_read(source, size, isnumber, i1, i2, align, rc.width(), rc.height());
+	while(ismodal()) {
+		push.restore();
+		auto push_clipping = clipping;
+		setclip({rc.x1 - 1, rc.y1, rc.x2 + 1, rc.y2});
+		field_focus(rc, isnumber, align);
+		clipping = push_clipping;
+		domodal();
+		switch(hot.key) {
+		case KeyEscape:
+			breakmodal(0);
+			hot.key = InputNoUpdate;
+			break;
+		case KeyEnter:
+			breakmodal(1);
+			hot.key = InputNoUpdate;
+			field_save_and_clear();
+			break;
+		case KeyTab:
+		case KeyTab | Shift:
+		case KeyDown:
+		case KeyUp:
+		case F4:
+			return true;
+		case InputUpdate:
+			// Leaving when lost focus or change windows size
+			return false;
+		case MouseLeft:
+		case MouseLeft | Ctrl:
+		case MouseLeft | Shift:
+		case MouseLeftDBL:
+		case MouseLeftDBL | Ctrl:
+		case MouseLeftDBL | Shift:
+			if(!ishilite(rc) && hot.pressed)
+				return true;
+			break;
+		}
+	}
+	return getresult() != 0;
 }
 
 HANDLER(before_setfocus) {

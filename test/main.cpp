@@ -8,10 +8,7 @@ using namespace draw;
 
 static void field(int x, int& y, int width, controls::control& v) {
 	setposition(x, y, width);
-	rect rc = {x, y, x + width, y + 300};
-	rectf(rc, colors::window);
-	rectb(rc, colors::border);
-	v.paint(rc);
+	v.view({x, y, x + width, y + 300}, true, true);
 	y += 300 + metrics::padding;
 }
 
@@ -90,8 +87,8 @@ int main() {
 	if(!initialize_translation("ru"))
 		return -1;
 	logmsgv("Тостовая строка залогирована в общий лог приложения.", 0);
-	//draw::setnext(test_table);
 	draw::application("Test UI");
+	draw::setnext(test_table);
 	draw::start();
 	return 0;
 }

@@ -37,6 +37,7 @@ void						cbsetint();
 void						cbsetptr();
 void						checkbox(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips = 0);
 const char*					contextmenu(const char** commands, const void* object, fnallowid allowid, fngetcommands getcommands);
+bool						edit(const rect& rc, void* source, int size, unsigned align, bool isnumber);
 void						fieln(int x, int& y, int width, const char* label, void* source, int size, int label_width, int digits);
 void						field(int x, int& y, int width, const char* label, char* source, unsigned size, int label_width, fnchoose choosep);
 int							field(int x, int& y, int width, const char* label, color& value, int header_width, const char* tips);
