@@ -241,7 +241,7 @@ static void button(int x, int& y, int width, const char* title, const element& e
 }
 
 static int render_element(int x, int y, int width, unsigned flags, const setting::element& e) {
-	const auto title = 160;
+	const auto title = 200;
 	char temp[512]; temp[0] = 0;
 	if(e.test && !e.test())
 		return 0;
@@ -330,23 +330,24 @@ static struct widget_settings_header : controls::list {
 	}
 } setting_header;
 
-//static struct widget_control_viewer : controls::tableref {
-//	void initialize() {
-//		no_change_order = true;
-//		no_change_count = true;
-//		addcol("Наименование", ANREQ(plugin, id), "text").set(ColumnReadOnly);
-//		addcol("Расположение", ANREQ(plugin, dock), "enum");
-//		//addcol(type, "visible", "Видимость", "checkbox");
-//		for(auto p = plugin::first; p; p = p->next) {
-//			auto pc = p->getcontrol();
-//			if(!pc)
-//				continue;
-//			addref(p);
-//		}
-//	}
-//	void* addrow() override { return 0; }
-//	void remove(int index) override {}
-//} control_viewer;
+static struct widget_control_viewer : controls::tableref {
+	void initialize() {
+		no_change_order = true;
+		no_change_count = true;
+		addcol("Name", ANREQ(plugin, id), "Text").set(columnf::ReadOnly);
+		addcol("Docking", ANREQ(plugin, position), "Enum");
+		//addcol(type, "visible", "Видимость", "checkbox");
+		for(auto p = plugin::first; p; p = p->next) {
+			auto pc = p->getcontrol();
+			if(!pc)
+				continue;
+			addref(p);
+		}
+	}
+	bool hastoolbar() const override {
+		return false;
+	}
+} control_viewer;
 
 int draw::field(int x, int& y, int width, const char* label, color& value, int header_width, const char* tips) {
 	char temp[128]; stringbuilder sb(temp);
@@ -367,7 +368,7 @@ int draw::field(int x, int& y, int width, const char* label, color& value, int h
 	return rc.height() + metrics::padding * 2;
 }
 
-const char* draw::controls::getlabel(const void* object, stringbuilder& sb) {
+const char* draw::getlabel(const void* object, stringbuilder& sb) {
 	auto pc = (controls::control*)object;
 	auto p = pc->getvalue("Name", sb);
 	if(p != sb.begin())
@@ -409,7 +410,6 @@ static struct widget_settings : controls::control {
 		setting_header.view({rc.x1, rc.y1, rc.x1 + window.header_width, rc.y2}, metrics::show::padding, true);
 		rc.x1 += window.header_width + 6;
 		auto top = setting_header.getcurrent();
-		// При изменении текущего заголовка
 		if(top != current_header) {
 			current_header = top;
 			current_tab = -1;
@@ -420,22 +420,26 @@ static struct widget_settings : controls::control {
 		if(!tabs)
 			return;
 		tabs.sort();
-		// Покажем дополнительную панель
 		if(current_tab == -1)
 			current_tab = 0;
 		auto h1 = 28;
-		// Нарисуем закладки
+		// Paint tabs
 		auto hilited = -1;
-		//line(rc.x1, rc.y1 + h1, rc.x2, rc.y1 + h1, colors::border);
-		rectb({rc.x1, rc.y1 + h1, rc.x2, rc.y2}, colors::border);
+		if(metrics::show::padding)
+			rectb({rc.x1, rc.y1 + h1, rc.x2, rc.y2}, colors::border);
+		else
+			line(rc.x1, rc.y1 + h1, rc.x2 - metrics::padding, rc.y1 + h1, colors::border);
 		if(draw::tabs({rc.x1, rc.y1, rc.x2, rc.y1 + h1}, false, false,
 			(void**)tabs.data, 0, tabs.count, current_tab, &hilited,
 			get_page_name)) {
 			draw::execute(callback_settab);
 			hot.param = hilited;
 		}
-		rc.offset(metrics::padding);
-		// Нариуем текущую закладку
+		if(metrics::show::padding)
+			rc.offset(metrics::padding + 2, metrics::padding);
+		else
+			rc.y1 += metrics::padding;
+		// Paint current tab
 		if(current_tab == -1)
 			return;
 		auto p1 = tabs[current_tab];
@@ -464,11 +468,40 @@ static struct widget_settings : controls::control {
 } widget_settings_control;
 
 static void post_activate() {
-	//activate((control*)hot.object);
+	activate((control*)hot.object);
 }
 
 static void post_close() {
-	//close((control*)hot.object);
+	close((control*)hot.object);
+}
+
+static control* getactivated() {
+	return current_active_control;
+}
+
+void draw::activate(control* p) {
+	if(current_active_control)
+		current_active_control->deactivating();
+	current_active_control = p;
+	if(current_active_control) {
+		if(current_active_control->isfocusable())
+			setfocus(current_active_control, 0, true);
+		current_active_control->activating();
+	}
+}
+
+void draw::close(control* p) {
+	auto i = active_controls.indexof(p);
+	if(i == -1)
+		return;
+	active_controls.remove(i, 1);
+	if(current_active_control == p) {
+		if(i > 0)
+			activate(active_controls[i - 1]);
+		else
+			activate(0);
+	}
+	delete p;
 }
 
 static struct widget_application : draw::controls::control {
@@ -489,7 +522,7 @@ static struct widget_application : draw::controls::control {
 		char temp[260]; stringbuilder sb(temp);
 		auto pu = pc->getvalue("URL", sb);
 		if(pu)
-			statusbar("Данные из %1", pu);
+			statusbar(getnm("DataFormURL"), pu);
 	}
 	static int getindexof(const controla& source, control* v) {
 		auto i = 0;
@@ -520,11 +553,11 @@ static struct widget_application : draw::controls::control {
 			rect rct = {rc.x1, rc.y1, rc.x2, rc.y1 + dy};
 			auto current_hilite = -1;
 			auto result = draw::tabs(rct, false, false, (void**)ct.begin(), 0, z1,
-				current_select, &current_hilite, controls::getlabel, &rct.x1);
+				current_select, &current_hilite, getlabel, &rct.x1);
 			if(ct.getcount() != 0) {
 				auto current_hilite2 = -1;
 				auto r1 = draw::tabs(rct, true, false, (void**)ct.begin(), z1, ct.getcount(),
-					current_select, &current_hilite2, controls::getlabel, &rct.x1);
+					current_select, &current_hilite2, getlabel, &rct.x1);
 				if(current_hilite2 != -1)
 					current_hilite = current_hilite2;
 				if(r1)
@@ -549,118 +582,90 @@ static struct widget_application : draw::controls::control {
 		dockbar(rct);
 		workspace(rct);
 	}
-	//static control::command commands_general[];
-	//static control::command commands[];
-	//const command* getcommands() const override {
-	//	return commands;
-	//}
-	bool create_window(bool run) {
-		return true;
+	static const char* commands_file[];
+	static const char* commands[];
+	const char** getcommands() const override {
+		return commands_file;
+	}
+	const char** getcommands(const char* id) const override {
+		if(equal(id, "File"))
+			return commands_file;
+		return 0;
 	}
 	void create_filter(stringbuilder& sb) {
 		io::plugin::addfilter(sb, getnm("AllFiles"), "*.*");
-		//for(auto p = plugin::first; p; p = p->next) {
-		//	auto pc = p->getbuilder();
-		//	if(!pc)
-		//		continue;
-		//	pc->getextensions(sb);
-		//}
+		for(auto p = plugin::first; p; p = p->next) {
+			auto pc = p->getbuilder();
+			if(!pc)
+				continue;
+			pc->getextensions(sb);
+		}
 		sb.addsz();
 	}
-	//bool open_window(bool run) {
-	//	if(run) {
-	//		char filter[1024 * 16]; stringbuilder sb(filter); create_filter(sb);
-	//		if(!dialog::open("Открыть файл", last_open_file, filter, -1))
-	//			return false;
-	//		openurl(last_open_file);
-	//	}
-	//	return true;
-	//}
-	bool save_window(bool run) {
-		//auto p = getactivated();
-		//if(!p)
-		//	return false;
-		//if(!p->ismodified())
-		//	return false;
-		//if(run) {
-		//	char temp[512]; stringbuilder sb(temp);
-		//	p->geturl(sb);
-		//	p->save(temp);
-		//}
+	bool execute(const char* id, bool run) override {
+		if(equal(id, "Open")) {
+			if(run) {
+				static char filter[1024 * 16];
+				stringbuilder sb(filter); create_filter(sb);
+				if(!dialog::open(getnm("OpenFile"), last_open_file, filter, -1))
+					return false;
+				openurl(last_open_file);
+			}
+		} else if(equal(id, "Save")) {
+			auto p = getactivated();
+			if(!p)
+				return false;
+			if(!p->ismodified())
+				return false;
+			if(run) {
+				char temp[512]; stringbuilder sb(temp);
+				auto ps = p->getvalue("URL", sb);
+				//p->save(ps);
+			}
+		} else
+			return control::execute(id, run);
 		return true;
 	}
 } widget_application_control;
 
-//control::command widget_application::commands_general[] = {{"create", "Создать", 0, &widget_application::create_window, 0},
-//{"open", "Открыть", 0, &widget_application::open_window, 1},
-//{"save", "Сохранить", 0, &widget_application::save_window, 2},
-//{}};
-//control::command widget_application::commands[] = {{"*", "", commands_general},
-//{"*", "", commands_edit},
-//{}};
+const char* widget_application::commands_file[] = {"Create", "Open", "Save", 0};
+const char* widget_application::commands[] = {"File", 0};
 
-//control* controls::getactivated() {
-//	return current_active_control;
-//}
-
-void controls::activate(control* p) {
-	if(current_active_control)
-		current_active_control->deactivating();
-	current_active_control = p;
-	if(current_active_control) {
-		//current_active_control->setfocus(true);
-		current_active_control->activating();
+control* draw::openurl(const char* url) {
+	char temp[260];
+	for(auto p : active_controls) {
+		stringbuilder sb(temp);
+		auto purl = p->getvalue("URL", sb);
+		if(!purl)
+			continue;
+		if(szcmpi(purl, url) == 0) {
+			activate(p);
+			return p;
+		}
 	}
-}
-
-void controls::close(control* p) {
-//	auto i = active_controls.indexof(p);
-//	if(i == -1)
-//		return;
-//	active_controls.remove(i, 1);
-//	if(current_active_control == p) {
-//		if(i > 0)
-//			activate(active_controls[i - 1]);
-//		else
-//			activate(0);
-//	}
-//	delete p;
-}
-
-control* controls::openurl(const char* url) {
-//	char temp[260];
-//	for(auto p : active_controls) {
-//		stringbuilder sb(temp);
-//		auto purl = p->geturl(sb);
-//		if(!purl)
-//			continue;
-//		if(szcmpi(purl, url) == 0) {
-//			activate(p);
-//			return p;
-//		}
-//	}
-//	for(auto p = control::plugin::first; p; p = p->next) {
-//		auto pc = p->getbuilder();
-//		if(!pc)
-//			continue;
-//		if(!pc->canopen(url))
-//			continue;
-//		if(pc->read(url))
-//			return 0;
-//		auto result = pc->create(url);
-//		if(result) {
-//			active_controls.add(result);
-//			activate(result);
-//			return result;
-//		}
-//	}
+	for(auto p = control::plugin::first; p; p = p->next) {
+		auto pc = p->getbuilder();
+		if(!pc)
+			continue;
+		if(!pc->canopen(url))
+			continue;
+		if(pc->read(url))
+			return 0;
+		auto result = pc->create(url);
+		if(result) {
+			active_controls.add(result);
+			activate(result);
+			return result;
+		}
+	}
 	return 0;
 }
 
 void set_light_theme();
 void set_dark_theme();
 
-static const element appearance_general_metrics[] = {{"Padding", metrics::padding, 3},
+static const element appearance_general_metrics[] = {
+	{"Padding", metrics::padding, 3},
 	{"ScrollWidth", metrics::scroll, 3},
 };
 static const element colors_general[] = {
@@ -674,31 +679,30 @@ static const element colors_form[] = {
 	{"BorderColor", colors::border},
 	{"ActiveColor", colors::active},
 	{"ButtonColor", colors::button},
-	//{"Цвет закладок", colors::tabs::back},
-	//{"Цвет текста закладок", colors::tabs::text},
 	{"TipsBackColor", colors::tips::back},
 	{"TipsTextColor", colors::tips::text},
 };
-static const element appearance_general_view[] = {{"ShowStatusBar", metrics::show::statusbar},
+static const element appearance_general_view[] = {
+	{"ShowStatusBar", metrics::show::statusbar},
 	{"ShowLeftPanel", metrics::show::left},
 	{"ShowRightPanel", metrics::show::right},
 	{"ShowBottomPanel", metrics::show::bottom},
 	{"ShowPadding", metrics::show::padding},
 };
-//static const element appearance_general_tabs[] = {{"В имени закладки отображать только имя файла (без полного пути)", use_short_name_label},
-//{"Не выводить в имя закладки расширение", use_no_extension_label},
-//{"Первую букву имени закладки выводить в верхнем регистре", use_uppercase_label},
-//};
-//static const element plugin_elements[] = {{0, {Control, static_cast<control*>(&control_viewer), 0}}};
+static const element appearance_general_tabs[] = {
+	{"UseShortNameLabel", use_short_name_label},
+	{"NoUrlLabelExtension", use_no_extension_label},
+	{"UppercaseLabel", use_uppercase_label},
+};
+static const element plugin_elements[] = {{0, {Control, static_cast<control*>(&control_viewer), 0}}};
 static header setting_headers[] = {
 	{"Workspace", "General", "Metrics", appearance_general_metrics},
 	{"Workspace", "General", "View", appearance_general_view},
-	//{"Workspace", "General", "Tabs", appearance_general_tabs},
+	{"Workspace", "General", "Tabs", appearance_general_tabs},
 	{"Colors", "General", 0, colors_general},
 	{"Colors", "Form", 0, colors_form},
-	//{"Workspace", "Plugins", 0, plugin_elements},
+	{"Workspace", "Plugins", 0, plugin_elements},
 };
-
 static controls::control* layouts[] = {&widget_application_control, &widget_settings_control};
 
 static void get_control_status(controls::control* object) {
@@ -706,48 +710,48 @@ static void get_control_status(controls::control* object) {
 	draw::statusbar("Переключить вид на '%1'", object->getvalue("Name", sb));
 }
 
-//bool draw::controls::edit(control& e, fnevent heartbeat) {
-//	while(ismodal()) {
-//		auto tb = e.getimages();
-//		rect rc = {0, 0, draw::getwidth(), draw::getheight()};
-//		draw::rectf(rc, colors::form);
-//		if(metrics::show::statusbar)
-//			rc.y2 -= draw::statusbardw();
-//		rect rt = rc;
-//		if(tb)
-//			rt.y2 = rt.y1 + tb->get(0).getrect(0, 0, 0).height() + 4 * 2;
-//		else
-//			rt.y2 = rt.y1 + 24 + 4 * 2;
-//		sheetline(rt, true);
-//		rc.y1 += rt.height();
-//		rt.x1 += 2; rt.y1 += 1; rt.x2 -= 2;
-//		auto dx = draw::texth() + metrics::padding + 4 * 2;
-//		auto y2 = rc.y2 - dx; rc.y2 = y2;
-//		if(metrics::show::padding) {
-//			rc.x1 += metrics::padding;
-//			rc.x2 -= metrics::padding;
-//			rc.y1 += metrics::padding;
-//		}
-//		auto x2 = rc.x2;
-//		e.toolbar(rt.x1, rt.y1, rt.width());
-//		e.view(rc);
-//		draw::buttonr(x2, y2, buttoncancel, "Cancel", &e, KeyEscape);
-//		draw::buttonr(x2, y2, buttonok, "OK", &e, Ctrl + KeyEnter);
-//		domodal();
-//		if(heartbeat)
-//			heartbeat();
-//	}
-//	return getresult() != 0;
-//}
+bool draw::edit(control& e, fnevent heartbeat) {
+	while(ismodal()) {
+		auto tb = e.getimages();
+		rect rc = {0, 0, draw::getwidth(), draw::getheight()};
+		draw::rectf(rc, colors::form);
+		if(metrics::show::statusbar)
+			draw::statusbar(rc);
+		rect rt = rc;
+		if(tb)
+			rt.y2 = rt.y1 + tb->get(0).getrect(0, 0, 0).height() + 4 * 2;
+		else
+			rt.y2 = rt.y1 + 24 + 4 * 2;
+		sheetline(rt, true);
+		rc.y1 += rt.height();
+		rt.x1 += 2; rt.y1 += 1; rt.x2 -= 2;
+		auto dx = draw::texth() + metrics::padding + 4 * 2;
+		auto y2 = rc.y2 - dx; rc.y2 = y2;
+		if(metrics::show::padding) {
+			rc.x1 += metrics::padding;
+			rc.x2 -= metrics::padding;
+			rc.y1 += metrics::padding;
+		}
+		auto x2 = rc.x2;
+		e.view(rc, true, true);
+		//		draw::buttonr(x2, y2, buttoncancel, "Cancel", &e, KeyEscape);
+		//		draw::buttonr(x2, y2, buttonok, "OK", &e, Ctrl + KeyEnter);
+		domodal();
+		if(heartbeat)
+			heartbeat();
+	}
+	return getresult() != 0;
+}
 
 static void setheartbeat(fnevent v) {
 	widget_application_control.heartproc = v;
 }
 
 void draw::application() {
-	// Make header
 	auto current_tab = 0;
 	while(ismodal()) {
+		if(current_tab >= sizeof(layouts) / sizeof(layouts[0]))
+			current_tab = sizeof(layouts) / sizeof(layouts[0]) - 1;
 		auto pc = layouts[current_tab];
 		auto tb = pc->getimages();
 		draw::fore = colors::text;
@@ -768,9 +772,9 @@ void draw::application() {
 		pc->paint(rc);
 		pc->toolbar(rt.x1, rt.y1, rt.width());
 		auto hilite_tab = -1;
-		auto reaction = draw::tabs(rt/*{rt.x1, rt.y2 - texth() - 4 * 2, rt.x2, rt.y2}*/, false, true, (void**)layouts, 0,
+		auto reaction = draw::tabs(rt, false, true, (void**)layouts, 0,
 			sizeof(layouts) / sizeof(layouts[0]), current_tab, &hilite_tab,
-			controls::getlabel);
+			getlabel);
 		if(hilite_tab != -1)
 			get_control_status(layouts[hilite_tab]);
 		domodal();
@@ -780,8 +784,7 @@ void draw::application() {
 		case F2: metrics::show::bottom = !metrics::show::bottom; break;
 		case Alt + F2: metrics::show::left = !metrics::show::left; break;
 		case Ctrl + F2: metrics::show::right = !metrics::show::right; break;
-		default:
-			break;
+		default: break;
 		}
 	}
 }
@@ -986,8 +989,7 @@ void draw::application(const char* title) {
 	io::read(settings_file_name, "settings", 0);
 	after_initialize->execute();
 	setting_header.initialize();
-	setting_header.show_grid_lines = false;
-	//control_viewer.initialize();
+	control_viewer.initialize();
 	draw::font = metrics::font;
 	draw::fore = colors::text;
 	draw::fore_stroke = colors::blue;

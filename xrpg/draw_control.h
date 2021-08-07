@@ -6,17 +6,25 @@
 #pragma once
 
 struct sprite;
+typedef void (*fnevent)();
 
 namespace draw {
-enum class widthtype : unsigned char { Default, Resized, Fixed, Inner, Auto };
+enum class widtht : unsigned char { Default, Resized, Fixed, Inner, Auto };
 enum class selection : unsigned char { Cell, Text, Row };
 enum class dock : unsigned char { Left, LeftBottom, Right, RightBottom, Bottom, Workspace };
-enum class totaltype : unsigned char { None, Summarize, Maximum, Minimum, Average };
+enum class totalt : unsigned char { None, Summarize, Maximum, Minimum, Average };
 enum class columnf : unsigned char { ReadOnly, Visible };
 namespace controls {
 class control {
 public:
 	struct plugin {
+		struct builder {
+			virtual bool	canopen(const char* url) const;
+			virtual control* create(const char* url) = 0;
+			virtual void	destroy(control* v) {}
+			virtual void	getextensions(stringbuilder& sb) const {}
+			virtual bool	read(const char* url) { return false; }
+		};
 		const char*			id;
 		dock				position;
 		bool				visible;
@@ -24,6 +32,7 @@ public:
 		static plugin*		first;
 		plugin(const char* id, dock position);
 		static const plugin* find(const char* id);
+		virtual builder*	getbuilder() { return 0; }
 		virtual control*	getcontrol() = 0;
 	};
 	rect					client;
@@ -32,7 +41,7 @@ public:
 	virtual void			activating() {}
 	void					contextmenu(const char** source);
 	virtual void			deactivating() {}
-	virtual bool			execute(const char* id, bool run) { return true; }
+	virtual bool			execute(const char* id, bool run) { return false; }
 	virtual const char**	getcommands() const { return 0; }
 	virtual const char**	getcommands(const char* parent) const { return 0; }
 	virtual const sprite*	getimages() const { return std_images; }
@@ -75,7 +84,7 @@ public:
 	bool					show_header, show_selection, show_grid_lines, hilite_odd_lines;
 	static int				current_hilite_treemark, current_hilite_row, current_hilite_column;
 	constexpr list(bool show_header = false) : control(), origin(0), origin_x(0), current(0), current_column(0), page(0), page_x(0), pixels_per_line(0),
-		show_header(show_header), show_selection(true), show_grid_lines(true), hilite_odd_lines(true) {}
+		show_header(show_header), show_selection(true), show_grid_lines(false), hilite_odd_lines(true) {}
 	virtual void			collapse(int line) {}
 	void					correction();
 	virtual void			ensurevisible();
@@ -116,8 +125,8 @@ struct visual;
 struct column {
 	const char*				id;
 	short					width;
-	widthtype				size;
-	totaltype				total;
+	widtht					size;
+	totalt					total;
 	array*					source;
 	anyreq					value;
 	const visual*			method;
@@ -128,9 +137,9 @@ struct column {
 	int						get(const void* object) const;
 	const char*				get(const void* object, stringbuilder& sb) const;
 	bool					is(columnf v) const { return flags & (1 << static_cast<int>(v)); }
-	column&					set(widthtype v) { size = v; return *this; }
+	column&					set(widtht v) { size = v; return *this; }
 	column&					set(columnf v) { flags |= 1 << static_cast<int>(v); return *this; }
-	column&					set(totaltype v) { total = v; return *this; }
+	column&					set(totalt v) { total = v; return *this; }
 	column&					set(array* v) { source = v; return *this; }
 	column&					set(const anyreq& v) { value = v; return *this; }
 	void					set(const void* object, int v) const;
@@ -201,13 +210,20 @@ public:
 	void					write(serializer& file) const override;
 	bool					write(const char* url, bool include_header) const;
 };
+class tableref : public table {
+	array					rows;
+public:
+	constexpr tableref() : rows(sizeof(void*)), table(rows) {}
+	virtual void			addref(void* v) { rows.add(v); }
+	virtual void*			get(int line) const override { return *((void**)rows.ptr(line)); }
+};
 struct visual {
 	typedef void (table::*fnrender)(const rect& rc, int line, int column);
 	const char*				id;
 	unsigned				align;
 	int						minimal_width, default_width;
-	widthtype				size;
-	totaltype				total;
+	widtht					size;
+	totalt					total;
 	fnrender				render;
 	fnrender				change;
 	table::fncompare		comparer;
@@ -216,9 +232,10 @@ struct visual {
 	explicit operator bool() const { return render != 0; }
 	const visual*			find(const char* id) const;
 };
-void						activate(control* p);
-void						close(control* p);
-const char*					getlabel(const void* object, stringbuilder& sb);
-control*					openurl(const char* url);
 }
+void						activate(controls::control* p);
+void						close(controls::control* p);
+bool						edit(controls::control& e, fnevent heartbeat);
+const char*					getlabel(const void* object, stringbuilder& sb);
+controls::control*			openurl(const char* url);
 }

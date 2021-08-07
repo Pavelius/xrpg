@@ -10,14 +10,13 @@
 using namespace	draw;
 using namespace	draw::controls;
 
-static bool save_log_file;
-
 namespace {
 struct logi {
 	datetime		stamp;
 	const char*		text;
 };
 }
+static bool			save_log_file;
 static vector<logi>	messages;
 
 void draw::logmsgv(const char* format, const char* arguments) {
@@ -52,9 +51,11 @@ static void before_application_exit() {
 		write_log_file();
 }
 
-static struct widget_logging : control::plugin, table {
-	array rows;
-	control* getcontrol() override { return this; }
+static class widget_logging : public control::plugin, public table {
+	array	rows;
+	control* getcontrol() override {
+		return this;
+	}
 	const char* getvalue(const char* id, stringbuilder& sb) const override {
 		if(equal(id, "Name"))
 			return getnm("MessageList");
@@ -63,24 +64,24 @@ static struct widget_logging : control::plugin, table {
 	void* get(int line) const {
 		return messages.ptr(line);
 	}
-	void* addrow() override {
-		return 0;
-	}
-	//void remove(int index) override {
-	//}
-	//void swap(int i1, int i2) override {
-	//}
 	int	getmaximum() const override {
 		return messages.getcount();
 	}
 	bool hastoolbar() const override {
 		return false;
 	}
+public:
+	void initialize() {
+		show_header = false;
+		show_grid_lines = false;
+		addcol("Message", ANREQ(logi, text), "Text").set(widtht::Auto);
+		addcol("Date", ANREQ(logi, stamp), "Date").set(widtht::Fixed);
+		atexit(before_application_exit);
+	}
 	widget_logging() : rows(sizeof(logi)), table(rows), control::plugin("logging", dock::Bottom) {
 		no_change_count = true;
 		read_only = true;
 		select_mode = selection::Row;
-		//show_toolbar = false;
 	}
 } widget;
 
@@ -89,14 +90,12 @@ void logmsg(const char* format, ...) {
 }
 
 HANDLER(after_initialize) {
-	widget.show_header = false;
-	widget.show_grid_lines = false;
-	widget.addcol("Message", ANREQ(logi, text), "Text").set(widthtype::Auto);
-	widget.addcol("Date", ANREQ(logi, stamp), "Date").set(widthtype::Fixed);
-	atexit(before_application_exit);
+	widget.initialize();
 }
 
-static setting::element logging_common[] = {{"SaveMessageFile", save_log_file},
+static setting::element logging_common[] = {
+	{"SaveMessageFile", save_log_file},
 };
-static setting::header headers[] = {{"Log", "General", 0, logging_common},
+static setting::header headers[] = {
+	{"Log", "General", 0, logging_common},
 };

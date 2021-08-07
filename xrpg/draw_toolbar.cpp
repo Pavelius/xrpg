@@ -57,14 +57,22 @@ struct toolbar_builder : builder {
 		}
 		auto disabled = allowid && !allowid(object, id);
 		if(tool(rc, disabled, false, true, false)) {
-			//if(object)
-			//	parent->post(id);
+			if(object)
+				static_cast<const controls::control*>(object)->post(id);
 		}
-		//if(parent)
-		//	parent->icon(x + size.x / 2 + 1, y + size.y / 2 + 1, id, disabled);
+		if(object)
+			static_cast<const controls::control*>(object)->icon(x + size.x / 2 + 1, y + size.y / 2 + 1, id, disabled);
 		x += width;
 	}
 };
+
+static bool isallow_proc(const void* object, const char* id) {
+	return ((controls::control*)object)->execute(id, false);
+}
+
+static const char** getcommands_proc(const void* object, const char* id) {
+	return ((controls::control*)object)->getcommands(id);
+}
 
 int	controls::control::toolbar(int x, int y, int width, int* next_x) const {
 	auto commands = getcommands();
@@ -77,7 +85,7 @@ int	controls::control::toolbar(int x, int y, int width, int* next_x) const {
 		return 0;
 	short height = images->get(0).getrect(0, 0, 0).height() + 4;
 	toolbar_builder e(x, y, width, {height, height});
-	e.render(getcommands(), this, 0, 0);
+	e.render(getcommands(), this, isallow_proc, getcommands_proc);
 	if(next_x)
 		*next_x = e.x;
 	if(e.x != x)

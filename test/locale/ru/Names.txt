@@ -1,6 +1,7 @@
 ﻿About: О программе
 ActiveColor: Цвет выделения
 Add: Добавить
+AllFiles: Все файлы
 Back: Назад
 BorderColor: Цвет границы
 ButtonColor: Цвет кнопки
@@ -9,9 +10,11 @@ Change: Изменить
 Close: Закрыть
 Colors: Цвета
 Copy: Копировать
+Create: Создать новый
 Cut: Вырезать
 Date: Дата
 Decrease: Уменьшить
+Docking: Расположение
 ExecuteCommand: Выполнить команду
 Exit: Выход
 Form: Форма
@@ -26,11 +29,15 @@ MessageList: Сообщения
 Metrics: Метрика
 Name: Наименование
 Next: Далее
+NoUrlLabelExtension: Не выводить в имя закладки расширение.
 NotFoundOpenDocuments: Не найдено ни одного открытого документа.
-OptimizeMouseMove: Оптимизировать дивжение мышки
+Open: Открыть
+OpenFile: Открыть файл
 Padding: Отступ
 Paste: Вставить
+Plugins: Окна
 Remove: Удалить
+Save: Сохранить
 SaveMessageFile: Сохранять файл сообщений после закрытия программы.
 ScrollWidth: Ширина полос прокрутки
 SetDarkTheme: Установить темную тему
@@ -41,9 +48,12 @@ ShowLeftPanel: Показать левую боковую панель
 ShowPadding: Отступы на главном экране
 ShowRightPanel: Показать правую боковую панель
 ShowStatusBar: Показать панель статуса
+Tabs: Закладки
 TextColor: Цвет текста
 TipsBackColor: Цвет фона подсказки
 TipsTextColor: Цвет текста подсказки
+UppercaseLabel: Первую букву имени закладки выводить в верхнем регистре.
+UseShortNameLabel: В имени закладки отображать только имя файла (без полного пути).
 View: Вид
 Weight: Вес
 WindowColor: Цвет окна

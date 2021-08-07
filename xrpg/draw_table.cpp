@@ -96,7 +96,7 @@ void table::update_columns(const rect& rc) {
 		return;
 	// Get count of al elements
 	for(auto& e : columns) {
-		if(e.size == widthtype::Auto) {
+		if(e.size == widtht::Auto) {
 			w2 += min_width;
 			c2++;
 		} else {
@@ -112,7 +112,7 @@ void table::update_columns(const rect& rc) {
 		int d1 = w1 - w2;
 		int d2 = d1 / c2;
 		for(auto& e : columns) {
-			if(e.size == widthtype::Auto) {
+			if(e.size == widtht::Auto) {
 				if(d2 < d1)
 					e.width = min_width + d2;
 				else {
@@ -132,7 +132,7 @@ int	table::getvalid(int column, int direction) const {
 		if(column < 0 || (unsigned)column >= columns.count)
 			return getcolumn();
 		if(!columns[column].is(columnf::Visible)
-			|| columns[column].size == widthtype::Inner) {
+			|| columns[column].size == widtht::Inner) {
 			if(direction)
 				column += direction;
 			else
@@ -202,7 +202,7 @@ int table::rowheader(const rect& rc) const {
 		r1.x2 = r1.x2 + columns[i].width;
 		if(r1.x1 == (rch.x1 - origin_x))
 			r1.x1++;
-		if(columns[i].size == widthtype::Inner)
+		if(columns[i].size == widtht::Inner)
 			continue;
 		auto a = ishilite(r1);
 		if(!no_change_order) {
@@ -240,19 +240,19 @@ int table::rowheader(const rect& rc) const {
 int	table::gettotal(int column) const {
 	auto& c = columns[column];
 	auto type = c.total;
-	if(type == totaltype::None)
+	if(type == totalt::None)
 		return 0;
 	auto m = getmaximum();
 	auto result = 0;
 	switch(type) {
-	case totaltype::Maximum:
+	case totalt::Maximum:
 		for(auto i = 0; i < m; i++) {
 			auto v = c.get(get(i));
 			if(v > result)
 				result = v;
 		}
 		break;
-	case totaltype::Minimum:
+	case totalt::Minimum:
 		result = 0x7FFFFFFF;
 		for(auto i = 0; i < m; i++) {
 			auto v = c.get(get(i));
@@ -263,7 +263,7 @@ int	table::gettotal(int column) const {
 	default:
 		for(auto i = 0; i < m; i++)
 			result += c.get(get(i));
-		if(type == totaltype::Average)
+		if(type == totalt::Average)
 			result = result / m;
 		break;
 	}
@@ -287,7 +287,7 @@ void table::rowtotal(const rect& rc) const {
 		if(!columns[i].is(columnf::Visible))
 			continue;
 		r1.x2 = r1.x2 + columns[i].width;
-		if(columns[i].size == widthtype::Inner)
+		if(columns[i].size == widtht::Inner)
 			continue;
 		line(r1.x2, r1.y1, r1.x2, r1.y2, colors::border);
 		auto result = gettotal(i);
@@ -326,7 +326,7 @@ void table::row(const rect& rc, int index) const {
 		}
 		rect r1 = {x1, rc.y1, x1 + pc->width - 1, rc.y2 - 1};
 		if(level_ident) {
-			if(columns[i].size != widthtype::Inner && columns[i].size != widthtype::Fixed) {
+			if(columns[i].size != widtht::Inner && columns[i].size != widtht::Fixed) {
 				auto mx = r1.width() - metrics::edit * 2;
 				if(mx > level_ident)
 					mx = level_ident;
@@ -334,7 +334,7 @@ void table::row(const rect& rc, int index) const {
 				level_ident -= mx;
 			}
 		}
-		if(show_grid_lines && columns[i].size != widthtype::Inner) {
+		if(show_grid_lines && columns[i].size != widtht::Inner) {
 			draw::line(r1.x2, r1.y1, r1.x2, r1.y2, colors::border);
 		}
 		ishilite(r1);
@@ -778,14 +778,14 @@ const char** table::getcommands() const {
 }
 
 const visual table::visuals[] = {
-	{"Number", AlignRight, 8, 80, widthtype::Resized, totaltype::Summarize, &table::cellnumber, &table::changenumber, &table::comparenm},
-	{"RowNumber", AlignCenter, 8, 40, widthtype::Resized, totaltype::None, &table::cellrownumber},
-	{"Checkbox", AlignCenter, 28, 28, widthtype::Fixed, totaltype::None, &table::cellbox, &table::changecheck, 0, true},
-	{"Date", AlignLeft, 8, -12, widthtype::Resized, totaltype::None, &table::celldate, 0, &table::comparenm},
-	{"DateTime", AlignLeft, 8, -16, widthtype::Resized, totaltype::None, &table::celldatetime, 0, &table::comparenm},
-	{"Text", AlignLeft, 8, 200, widthtype::Resized, totaltype::None, &table::celltext, &table::changetext, &table::comparest},
-	{"Enum", AlignLeft, 8, 200, widthtype::Resized, totaltype::None, &table::celltext, &table::changeref, 0, false},
-	{"Percent", AlignRight, 40, 60, widthtype::Resized, totaltype::Average, &table::cellpercent, &table::changenumber},
-	{"Image", AlignCenter, 20, 20, widthtype::Inner, totaltype::None, &table::cellimage, 0, &table::comparenm},
-	{"StandartImage", AlignCenter, 20, 20, widthtype::Inner, totaltype::None, &table::cellimagest, 0, 0},
+	{"Number", AlignRight, 8, 80, widtht::Resized, totalt::Summarize, &table::cellnumber, &table::changenumber, &table::comparenm},
+	{"RowNumber", AlignCenter, 8, 40, widtht::Resized, totalt::None, &table::cellrownumber},
+	{"Checkbox", AlignCenter, 28, 28, widtht::Fixed, totalt::None, &table::cellbox, &table::changecheck, 0, true},
+	{"Date", AlignLeft, 8, -12, widtht::Resized, totalt::None, &table::celldate, 0, &table::comparenm},
+	{"DateTime", AlignLeft, 8, -16, widtht::Resized, totalt::None, &table::celldatetime, 0, &table::comparenm},
+	{"Text", AlignLeft, 8, 200, widtht::Resized, totalt::None, &table::celltext, &table::changetext, &table::comparest},
+	{"Enum", AlignLeft, 8, 200, widtht::Resized, totalt::None, &table::celltext, &table::changeref, 0, false},
+	{"Percent", AlignRight, 40, 60, widtht::Resized, totalt::Average, &table::cellpercent, &table::changenumber},
+	{"Image", AlignCenter, 20, 20, widtht::Inner, totalt::None, &table::cellimage, 0, &table::comparenm},
+	{"StandartImage", AlignCenter, 20, 20, widtht::Inner, totalt::None, &table::cellimagest, 0, 0},
 	{}};

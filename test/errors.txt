@@ -1,3 +1,5 @@
 ﻿Errors occurs in locale/ru/Names.txt.txt
-Define translate for 'SetDarkTheme'
-Define translate for 'SetLightTheme'
+Define translate for 'NoUrlLabelExtension'
+Define translate for 'Tabs'
+Define translate for 'UppercaseLabe'
+Define translate for 'UseShortNameLabel'
