@@ -78,26 +78,3 @@ void draw::start() {
 		next_proc = 0; p();
 	}
 }
-
-void draw::initialize(const char* label, int width, int height, bool resize, int timer) {
-	colors::active = color(172, 128, 0);
-	colors::border = color(63, 63, 70);
-	colors::button = color(51, 51, 51);
-	colors::form = color(45, 45, 48);
-	colors::window = color(32, 32, 32);
-	colors::text = color(255, 255, 255);
-	colors::special = color(255, 244, 32);
-	colors::tips::text = color(255, 255, 255);
-	colors::tips::back = color(100, 100, 120);
-	colors::h1 = colors::text.mix(colors::button, 64);
-	colors::h2 = colors::text.mix(colors::button, 96);
-	colors::h3 = colors::text.mix(colors::button, 128);
-	draw::font = metrics::font;
-	draw::fore = colors::text;
-	draw::fore_stroke = colors::blue;
-	after_initialize->execute();
-	create(-1, -1, width, height, resize ? (WFResize|WFMinmax) : 0, 32);
-	setcaption(label);
-	if(timer)
-		settimer(timer);
-}

@@ -23,7 +23,6 @@ bool						open(const char* title, char* path, const char* filter, int filter_ind
 bool						save(const char* title, char* path, const char* filter, int filter_index = -1);
 }
 void						application();
-void						application(const char* title);
 bool						addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const char* tt1);
 int							addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const char* tt1, const char* t2, unsigned k2, const char* tt2);
 void						breakmodal(int result);
@@ -48,7 +47,7 @@ unsigned					getkey(const char* id);
 const char*					getpresent(void* source, int size, bool isnumber, const array* database, stringbuilder& sb);
 int							getresult();
 long						getsource(void* source, int size);
-void						initialize(const char* label, int width, int height, bool resize, int timer);
+void						initialize(const char* title);
 bool						ismodal();
 void						logmsgv(const char* format, const char* arguments);
 void						radio(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips = 0);

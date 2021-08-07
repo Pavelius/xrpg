@@ -996,7 +996,7 @@ static void exit_application() {
 	io::write(settings_file_name, "settings", 0);
 }
 
-void draw::application(const char* title) {
+void draw::initialize(const char* title) {
 	set_light_theme();
 	atexit(exit_application);
 	io::read(settings_file_name, "settings", 0);
