@@ -51,6 +51,7 @@ void						initialize(const char* title);
 bool						ismodal();
 void						logmsgv(const char* format, const char* arguments);
 void						radio(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips = 0);
+void						setneedupdate();
 void						setnext(fnevent v);
 void						setposition(int& x, int& y, int& width, int padding = -1);
 void						setsource(void* source, int size, long value);

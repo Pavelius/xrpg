@@ -137,26 +137,13 @@ int list::getlinesperpage(int height) const {
 	return height / pixels_per_line;
 }
 
-void list::paint(const rect& rcorigin) {
-	rect rc = rcorigin;
-	page_x = rc.width() - 1;
-	if(show_header)
-		rc.y1 += rowheader(rc);
-	rect rc1 = rc;
-	rc.x1 += 1; rc.y1 += 1; // Padding for first string
-	if(!pixels_per_line)
-		pixels_per_line = getrowheight();
-	page = getlinesperpage(rc.height());
-	correction();
+void list::paintrows(const rect& rc) {
 	auto maximum = getmaximum();
 	auto maximum_x = getmaximumwidth();
-	if(!pixels_per_line)
-		return;
 	scroll scrollv(origin, page, maximum, rc, false);
 	scroll scrollh(origin_x, page_x, maximum_x, rc, true);
 	scrollv.input();
 	scrollh.input();
-	control::paint(rc1);
 	auto focused = isfocused(this);
 	if(ishilite(rc)) {
 		mousehiliting(rc, hot.mouse);
@@ -200,10 +187,27 @@ void list::paint(const rect& rcorigin) {
 	clipping = push_clip;
 	scrollv.view(focused);
 	scrollh.view(focused);
+}
+
+void list::paint(const rect& rcorigin) {
+	rect rc = rcorigin;
+	page_x = rc.width() - 1;
+	if(show_header)
+		rc.y1 += rowheader(rc);
+	rect rc1 = rc; rc.x1++; rc.y1++;
+	if(!pixels_per_line)
+		pixels_per_line = getrowheight();
+	page = getlinesperpage(rc.height());
+	correction();
+	control::paint(rc1);
+	if(!pixels_per_line)
+		return;
+	paintrows(rc);
 	//if(drop_shadow) {
 	//	rectf({rcorigin.x2 + 1, rcorigin.y1 + 4, rcorigin.x2 + 5, rcorigin.y2}, colors::black, 64);
 	//	rectf({rcorigin.x1 + 4, rcorigin.y2, rcorigin.x2 + 5, rcorigin.y2 + 5}, colors::black, 64);
 	//}
+	auto focused = isfocused(this);
 	if(focused) {
 		int m;
 		blockfocuskeys();

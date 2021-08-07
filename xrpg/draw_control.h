@@ -115,6 +115,7 @@ public:
 	virtual void			mouseclick() const;
 	virtual void			mousehiliting(const rect& rc, point mouse) const;
 	void					paint(const rect& rc) override;
+	void					paintrows(const rect& rc);
 	virtual void			row(const rect& rc, int line) const;
 	virtual int				rowheader(const rect& rc) const { return 0; }
 	virtual void			rowhilite(const rect& rc, int index) const;

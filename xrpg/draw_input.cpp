@@ -24,7 +24,10 @@ static void standart_domodal() {
 bool draw::ismodal() {
 	hot.cursor = cursor::Arrow;
 	hot.hilite.clear();
-	domodal = standart_domodal;
+	if(hot.key == InputNeedUpdate)
+		hot.key = InputUpdate;
+	else
+		domodal = standart_domodal;
 	before_modal->execute();
 	if(hot.mouse.x < 0 || hot.mouse.y < 0)
 		sys_static_area.clear();
@@ -77,4 +80,8 @@ void draw::start() {
 		auto p = next_proc;
 		next_proc = 0; p();
 	}
+}
+
+void draw::setneedupdate() {
+	hot.key = InputNeedUpdate;
 }

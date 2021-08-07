@@ -337,9 +337,8 @@ void table::row(const rect& rc, int index) const {
 				level_ident -= mx;
 			}
 		}
-		if(show_grid_lines && columns[i].size != widtht::Inner) {
+		if(show_grid_lines && columns[i].size != widtht::Inner)
 			draw::line(r1.x2, r1.y1, r1.x2, r1.y2, colors::border);
-		}
 		ishilite(r1);
 		((const_cast<table*>(this))->*pc->method->render)(r1, index, i);
 		x1 += pc->width;
@@ -701,11 +700,13 @@ bool table::execute(const char* id, bool run) {
 		if(no_change_count)
 			return false;
 		if(run) {
+			auto n = getmaximum();
 			auto p = addrow();
 			if(p) {
 				if(getmaximum())
-					select(current + 1, getcolumn());
-				execute("Change", true);
+					select(n, getcolumn());
+				post("Change");
+				setneedupdate();
 			}
 		}
 	} else if(equal(id, "Remove")) {

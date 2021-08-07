@@ -505,6 +505,7 @@ void draw::field(int x, int& y, int width, const char* label, const char*& sourc
 bool draw::edit(const rect& rc, void* source, int size, unsigned align, bool isnumber) {
 	draw::screenshoot push;
 	field_read(source, size, isnumber, i1, i2, align, rc.width(), rc.height());
+	select(0, -2);
 	while(ismodal()) {
 		push.restore();
 		auto push_clipping = clipping;
