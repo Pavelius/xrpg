@@ -2,6 +2,8 @@
 
 using namespace setting;
 
+typedef decltype(sizeof(0)) size_t;
+
 int reference::get() const {
 	if(!data)
 		return 0;

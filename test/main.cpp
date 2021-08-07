@@ -59,13 +59,10 @@ static void test_table() {
 	}
 }
 
-static void select(void* object) {
-}
-
 int main() {
 	if(!initialize_translation("ru"))
 		return -1;
-	select((void*)12);
+	auto a = sizeof(size_t);
 	logmsgv("Тостовая строка залогирована в общий лог приложения.", 0);
 	draw::initialize("Test UI");
 	draw::setnext(test_table);

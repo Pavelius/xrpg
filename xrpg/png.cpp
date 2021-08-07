@@ -383,12 +383,11 @@ static void postprocess_scanlines(unsigned char* out, unsigned char* in, unsigne
 			unfilter(out, in, w, h, bpp);
 	} else // interlace_method is 1 (Adam7)
 	{
-		// FIXME: В этом случае изображение выводится некорректно
+		// FIXME: Image incorrect visualize
 		unsigned passw[7], passh[7];
-		unsigned filter_passstart[8], padded_passstart[8], passstart[8];
-		unsigned i;
+		unsigned long filter_passstart[8], padded_passstart[8], passstart[8];
 		Adam7_getpassvalues(passw, passh, filter_passstart, padded_passstart, passstart, w, h, bpp);
-		for(i = 0; i < 7; i++) {
+		for(size_t i = 0; i < 7; i++) {
 			unfilter(&in[padded_passstart[i]], &in[filter_passstart[i]], passw[i], passh[i], bpp);
 			// TODO: possible efficiency improvement: if in this reduced image the bits fit nicely in 1 scanline,
 			// move bytes instead of bits or move not at all

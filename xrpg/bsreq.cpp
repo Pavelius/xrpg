@@ -4,12 +4,13 @@
 
 BSMETA(int) = {{"number"}, {}};
 BSMETA(const char*) = {{"text"}, {}};
-BSMETA(bsreq) = {BSREQ(id),
-BSREQ(offset),
-BSREQ(size),
-BSREQ(lenght),
-BSREQ(count),
-BSREQ(type),
+BSMETA(bsreq) = {
+	BSREQ(id),
+	BSREQ(offset),
+	BSREQ(size),
+	BSREQ(lenght),
+	BSREQ(count),
+	BSREQ(type),
 {}};
 
 const bsreq* bsreq::find(const char* name) const {

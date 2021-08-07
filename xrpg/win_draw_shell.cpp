@@ -74,7 +74,7 @@ bool draw::dialog::choose(struct color& result, struct color* custom) {
 static int CALLBACK BrowseFolderCallback(void* hwnd, unsigned uMsg, unsigned lParam, unsigned lpData) {
 	if(uMsg == BFFM_INITIALIZED) {
 		const char* path = reinterpret_cast<const char*>(lpData);
-		SendMessageA(hwnd, BFFM_SETSELECTIONA, true, (int)path);
+		SendMessageA(hwnd, BFFM_SETSELECTIONA, true, (size_t)path);
 	}
 	return 0;
 }

@@ -8,11 +8,11 @@
 		<Build>
 			<Target title="Debug">
 				<Option output="xrpg/xrpg" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="test" />
 				<Option object_output="../objects/debug/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-std=c++17" />
 					<Add option="-g" />
 				</Compiler>
 			</Target>
@@ -31,9 +31,13 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add directory="xrpg" />
 		</Compiler>
 		<Unit filename="test/main.cpp" />
 		<Unit filename="test/main.h" />
+		<Unit filename="test/trait.cpp" />
+		<Unit filename="xrpg/anyreq.cpp" />
+		<Unit filename="xrpg/anyreq.h" />
 		<Unit filename="xrpg/archive.cpp" />
 		<Unit filename="xrpg/archive.h" />
 		<Unit filename="xrpg/bsreq.cpp" />
@@ -100,8 +104,6 @@
 		<Unit filename="xrpg/markup.h" />
 		<Unit filename="xrpg/moveable.cpp" />
 		<Unit filename="xrpg/moveable.h" />
-		<Unit filename="xrpg/nix_draw.cpp" />
-		<Unit filename="xrpg/nix_io_file.cpp" />
 		<Unit filename="xrpg/png.cpp" />
 		<Unit filename="xrpg/point.cpp" />
 		<Unit filename="xrpg/point.h" />
@@ -117,9 +119,6 @@
 		<Unit filename="xrpg/stringbuilder.h" />
 		<Unit filename="xrpg/surface_serial.cpp" />
 		<Unit filename="xrpg/szdup.cpp" />
-		<Unit filename="xrpg/variant.cpp" />
-		<Unit filename="xrpg/variant.h" />
-		<Unit filename="xrpg/view.h" />
 		<Unit filename="xrpg/widget_application.cpp" />
 		<Unit filename="xrpg/widget_logging.cpp" />
 		<Unit filename="xrpg/win.h" />

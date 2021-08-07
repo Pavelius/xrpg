@@ -6,7 +6,7 @@
 
 1628341671 d:\projects\xrpg\xrpg\color.h
 
-1628343432 d:\projects\xrpg\xrpg\crt.h
+1628358043 d:\projects\xrpg\xrpg\crt.h
 
 1628339962 d:\projects\xrpg\xrpg\draw.h
 	"color.h"
@@ -20,7 +20,7 @@
 
 1628321015 d:\projects\xrpg\xrpg\stringbuilder.h
 
-1628343308 source:d:\projects\xrpg\test\main.cpp
+1628356201 source:d:\projects\xrpg\test\main.cpp
 	"draw.h"
 	"draw_button.h"
 	"draw_control.h"
@@ -60,7 +60,7 @@
 
 1610294642 d:\projects\xrpg\xrpg\converter.h
 
-1628343216 source:d:\projects\xrpg\xrpg\crt.cpp
+1628357382 source:d:\projects\xrpg\xrpg\crt.cpp
 	"crt.h"
 	"io_stream.h"
 
@@ -110,7 +110,7 @@
 	"markup.h"
 	"point.h"
 
-1628342540 d:\projects\xrpg\xrpg\anyreq.h
+1628356414 d:\projects\xrpg\xrpg\anyreq.h
 
 1628343327 d:\projects\xrpg\xrpg\handler.h
 
@@ -125,7 +125,7 @@
 	"io_stream.h"
 	"stringbuilder.h"
 
-1628343754 d:\projects\xrpg\xrpg\setting.h
+1628344266 d:\projects\xrpg\xrpg\setting.h
 	"color.h"
 
 1628342614 source:d:\projects\xrpg\xrpg\draw_button.cpp
@@ -277,8 +277,9 @@
 	"point.h"
 	"draw.h"
 
-1628342598 source:d:\projects\xrpg\xrpg\bsreq.cpp
+1628357690 source:d:\projects\xrpg\xrpg\bsreq.cpp
 	"bsreq.h"
+	"crt.h"
 	"stringbuilder.h"
 
 1627494906 d:\projects\xrpg\xrpg\bsreq.h
@@ -338,7 +339,7 @@
 	"crt.h"
 	"stringbuilder.h"
 
-1628343626 source:d:\projects\xrpg\xrpg\widget_logging.cpp
+1628344291 source:d:\projects\xrpg\xrpg\widget_logging.cpp
 	"crt.h"
 	"datetime.h"
 	"draw_control.h"
@@ -348,7 +349,7 @@
 	"setting.h"
 	"stringbuilder.h"
 
-1628343714 source:d:\projects\xrpg\xrpg\setting.cpp
+1628356442 source:d:\projects\xrpg\xrpg\setting.cpp
 	"setting.h"
 
 1628343798 source:d:\projects\xrpg\xrpg\widget_application.cpp
@@ -366,4 +367,47 @@
 1573297248 source:d:\projects\xrpg\xrpg\zip.cpp
 	"crt.h"
 	"converter.h"
+
+1628356593 source:d:\projects\xrpg\xrpg\png.cpp
+	"converter.h"
+	"draw.h"
+
+1627738731 source:d:\projects\xrpg\xrpg\win_clipboard.cpp
+	"crt.h"
+	"draw_clipboard.h"
+	"win.h"
+
+1628356775 d:\projects\xrpg\xrpg\win.h
+
+1628343965 source:d:\projects\xrpg\xrpg\win_draw.cpp
+	"crt.h"
+	"draw.h"
+	"win.h"
+
+1627359467 source:d:\projects\xrpg\xrpg\win_io_file.cpp
+	"crt.h"
+	"io_stream.h"
+	"win.h"
+
+1628343819 source:d:\projects\xrpg\xrpg\win_menu.cpp
+	"crt.h"
+	"draw.h"
+	"draw_button.h"
+	"draw_builder.h"
+	"draw_control.h"
+	"win.h"
+
+1627119838 source:d:\projects\xrpg\xrpg\win_time.cpp
+	"win.h"
+
+1628356805 source:d:\projects\xrpg\xrpg\win_draw_shell.cpp
+	"crt.h"
+	"draw_button.h"
+	"win.h"
+
+1627846003 source:d:\projects\xrpg\xrpg\anyreq.cpp
+	"anyreq.h"
+
+1627845130 source:d:\projects\xrpg\test\trait.cpp
+	"main.h"
 

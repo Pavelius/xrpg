@@ -1,8 +1,6 @@
 #pragma once
 
-#ifdef _GCC
-typedef long unsigned size_t;
-#endif // _GCC
+typedef decltype(sizeof(0)) size_t;
 
 #ifdef _DEBUG
 #define assert(e) if(!(e)) {exit(255);}
@@ -12,16 +10,16 @@ typedef long unsigned size_t;
 
 #define maptbl(t, id) (t[imax((unsigned)0, imin((unsigned)id, (sizeof(t)/sizeof(t[0])-1)))])
 #define maprnd(t) t[rand()%(sizeof(t)/sizeof(t[0]))]
-#define	FO(T,R) (*((unsigned*)&((T*)0)->R))
+#define	FO(T,R) ((size_t)&((T*)0)->R)
 #define BSDATA(e) template<> e bsdata<e>::elements[]
 #define BSDATAE(e) template<> array bsdata<e>::source(bsdata<e>::elements, sizeof(bsdata<e>::elements[0]), 0, sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]));
 #define BSDATAF(e) template<> array bsdata<e>::source(bsdata<e>::elements, sizeof(bsdata<e>::elements[0]), sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]), sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]));
-#define BSDATAC(e, c) template<> e bsdata<e>::elements[c] = {}; BSDATAE(e)
+#define BSDATAC(e, c) template<> e bsdata<e>::elements[c]; BSDATAE(e)
 #define NOBSDATA(e) template<> struct bsdata<e> : bsdata<int> {};
 #define assert_enum(e, last) static_assert(sizeof(bsdata<e>::elements) / sizeof(bsdata<e>::elements[0]) == static_cast<int>(last) + 1, "Invalid count of " #e " elements"); BSDATAF(e)
 
 extern "C" int						atexit(void(*func)(void));
-extern "C" void*					bsearch(const void* key, const void* base, unsigned num, unsigned size, int(*compar)(const void*, const void*));
+extern "C" void*					bsearch(const void* key, const void* base, unsigned num, size_t size, int(*compar)(const void*, const void*));
 extern "C" unsigned					clock(); // Returns the processor time consumed by the program.
 extern "C" void						exit(int exit_code);
 extern "C" int						memcmp(const void* p1, const void* p2, size_t size);

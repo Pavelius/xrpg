@@ -13,6 +13,10 @@
 #define FALSE 0
 #define TRUE 1
 
+#ifdef __GNUC__
+#define _stdcall __attribute__((stdcall))
+#endif // _GCC
+
 typedef long LRESULT;
 typedef int LPARAM;
 typedef int WPARAM;
@@ -499,8 +503,8 @@ typedef void(CALLBACK *PIMAGE_TLS_CALLBACK)(void* DllHandle, unsigned long Reaso
 #define OPEN_ALWAYS               4
 #define TRUNCATE_EXISTING         5
 
-#define FILE_ATTRIBUTE_READONLY   0x00000001  
-#define FILE_ATTRIBUTE_NORMAL     0x00000080  
+#define FILE_ATTRIBUTE_READONLY   0x00000001
+#define FILE_ATTRIBUTE_NORMAL     0x00000080
 #define FILE_ATTRIBUTE_TEMPORARY  0x00000100
 
 #define FILE_BEGIN			0
