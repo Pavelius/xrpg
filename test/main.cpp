@@ -12,11 +12,12 @@ static void field(int x, int& y, int width, controls::control& v) {
 	y += 300 + metrics::padding;
 }
 
-/*static void test_fields() {
+static void test_fields() {
 	auto fname = "Чистяков";
 	auto name = "Павел";
 	auto lname = "Валентинович";
 	char age = 41;
+	char list = 1;
 	char buffer[2048] = {"В течение игры каждый участник задает действия для своего персонажа, а результаты действий определяются мастером в соответствии с правилами. Все что надо сделать здесь."};
 	while(ismodal()) {
 		rect rc = {0, 0, getwidth(), getheight()};
@@ -26,12 +27,13 @@ static void field(int x, int& y, int width, controls::control& v) {
 		field(x, y, 400, "Имя", name, 100, 0);
 		field(x, y, 400, "Отчество", lname, 100, 0);
 		fieln(x, y, 400, "Возраст", &age, sizeof(age), 100, 0);
-		field(x, y, 400, 3, "Отчество", buffer, sizeof(buffer), 100, 0);
+		field(x, y, 400, "Ссылка", &list, sizeof(list), 100, bsdata<traiti>::source, {getenumname}, 0);
+		field(x, y, 400, 3, "Описание", buffer, sizeof(buffer), 100, 0);
 		buttonl(x, y, "OK", buttonok, KeyEnter);
 		buttonl(x, y, getnm("Cancel"), buttoncancel, KeyEscape);
 		domodal();
 	}
-}*/
+}
 
 static void panel(int x, int& y, controls::list& e) {
 	auto w = 200;
@@ -65,7 +67,9 @@ int main() {
 	auto a = sizeof(size_t);
 	logmsgv("Тостовая строка залогирована в общий лог приложения.", 0);
 	draw::initialize("Test UI");
-	draw::setnext(test_table);
+	//draw::setnext(test_table);
+	draw::setnext(test_fields);
+	//draw::setnext(draw::application);
 	draw::start();
 	return 0;
 }

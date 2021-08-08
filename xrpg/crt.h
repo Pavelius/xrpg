@@ -157,7 +157,6 @@ template<typename T> struct bsdata {
 	static T						elements[];
 	static array					source;
 	static constexpr array*			source_ptr = &source;
-	//
 	static T*						add() { return (T*)source.add(); }
 	static constexpr T*				begin() { return (T*)source.data; }
 	static constexpr T*				end() { return (T*)source.data + source.getcount(); }
@@ -182,6 +181,8 @@ typedef bool(*fnvisible)(const void* object);
 typedef void(*fncommand)(void* object);
 // Callback function of source identification. Return property filled 'source'.
 typedef void(*fnsource)(const void* object, array& source);
+// Callback function of draw custom draw object.
+typedef int(*fndraw)(int x, int y, int width, const void* object);
 // Common functions
 bool								equal(const char* s1, const char* s2);
 const char*							getdescription(const char* id);

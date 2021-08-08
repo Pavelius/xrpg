@@ -1,5 +1,5 @@
-#include "crt.h"
 #include "color.h"
+#include "markup.h"
 #include "rect.h"
 #include "stringbuilder.h"
 
@@ -42,6 +42,8 @@ void						field(int x, int& y, int width, const char* label, char* source, unsig
 int							field(int x, int& y, int width, const char* label, color& value, int header_width, const char* tips);
 void						field(int x, int& y, int width, int line_height, const char* label, char* source, unsigned size, int label_width, fnchoose choosep);
 void						field(int x, int& y, int width, const char* label, const char*& source, int label_width, fnchoose choosep);
+void						field(int x, int& y, int width, const char* label, void* source, int size, int label_width, array& source_data, const fnlist& plist, const char* tips);
+const char*					getenumname(const void* object, stringbuilder& sb);
 int							getimage(const char* id);
 unsigned					getkey(const char* id);
 const char*					getpresent(void* source, int size, bool isnumber, const array* database, stringbuilder& sb);
@@ -65,6 +67,7 @@ int							tabs(rect rc, bool show_close, bool right_side, void** data, int start
 int							tabv(rect rc, bool show_close, bool right_side, void** data, int start, int count, int current, int* hilite, fntext gtext);
 void						titletext(int& x, int y, int& width, const char* label, int label_width, const char* separator = 0);
 void						tooltips(const char* format, ...);
+void						tooltips(int x, int y, int width, const char* format, ...);
 }
 extern struct handler*	after_initialize; // After initialization made
 extern struct handler*	before_modal; // Before next step of modal cicle

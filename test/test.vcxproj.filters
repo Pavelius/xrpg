@@ -7,6 +7,9 @@
     <Text Include="locale\ru\Names.txt">
       <Filter>Localization</Filter>
     </Text>
+    <Text Include="errors.txt">
+      <Filter>Localization</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Localization">

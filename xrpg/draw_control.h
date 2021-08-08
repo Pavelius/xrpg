@@ -41,6 +41,7 @@ public:
 	virtual void			activating() {}
 	void					contextmenu(const char** source);
 	virtual void			deactivating() {}
+	bool					dropdown(const rect& rc);
 	virtual bool			execute(const char* id, bool run) { return false; }
 	virtual const char**	getcommands() const { return 0; }
 	virtual const char**	getcommands(const char* parent) const { return 0; }

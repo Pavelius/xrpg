@@ -10,7 +10,7 @@
           "ShowStatusBar":2,
           "ShowLeftPanel":2,
           "ShowRightPanel":2,
-          "ShowBottomPanel":0,
+          "ShowBottomPanel":1,
           "ShowPadding":2
         },
         "Tabs":{
@@ -45,11 +45,11 @@
     }
   },
   "window":{
-    "x":235,
-    "y":159,
-    "width":768,
+    "x":245,
+    "y":71,
+    "width":927,
     "height":519,
-    "header_width":255,
+    "header_width":140,
     "flags":48
   },
   "controls":{

@@ -20,14 +20,12 @@ sizeof(R),\
 
 struct markup;
 
-typedef int(*fndraw)(int x, int y, int width, const void* object); // Custom draw
-
 struct fnlist {
-	fntext				getname;
-	fnallow				allow;
-	fnsource			source;
-	fnchoose			choose;
-	fndraw				preview;
+	fntext							getname;
+	fnallow							allow;
+	fnsource						source;
+	fnchoose						choose;
+	fndraw							preview;
 };
 struct fnelement {
 	fnvisible			visible;

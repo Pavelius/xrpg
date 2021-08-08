@@ -61,3 +61,11 @@ HANDLER(before_input) {
 void draw::tooltips(const char* format, ...) {
 	sb.addv(format, xva_start(format));
 }
+
+void draw::tooltips(int x, int y, int width, const char* format, ...) {
+	sb_rect.x1 = x;
+	sb_rect.x2 = x + width;
+	sb_rect.y1 = y;
+	sb_rect.y2 = y;
+	sb.addv(format, xva_start(format));
+}

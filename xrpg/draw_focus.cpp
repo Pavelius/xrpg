@@ -61,6 +61,14 @@ static focusable* getlast() {
 	return elements.end() - 1;
 }
 
+pushfocus::pushfocus() : focus(current_focus), bits(current_bits) {
+}
+
+pushfocus::~pushfocus() {
+	current_focus = focus;
+	current_bits = bits;
+}
+
 void draw::setfocusable(const rect& rc, const void* value, unsigned bits) {
 	auto p = elements.add();
 	p->rc = rc;

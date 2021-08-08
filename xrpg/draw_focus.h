@@ -3,6 +3,13 @@
 #pragma once
 
 namespace draw {
+class pushfocus {
+	const void*	focus;
+	unsigned	bits;
+public:
+	pushfocus();
+	~pushfocus();
+};
 void			blockfocuskeys();
 bool			isfocused();
 bool			isfocused(const void* value, unsigned bits = 0);

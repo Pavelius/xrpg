@@ -27,6 +27,10 @@ void draw::setsource(void* source, int size, long value) {
 		*((long*)source) = (int)value;
 }
 
+const char* draw::getenumname(const void* object, stringbuilder& sb) {
+	return getnm(*((const char**)object));
+}
+
 static void cbsetsource() {
 	auto p = (void*)hot.object;
 	auto s = hot.param2;

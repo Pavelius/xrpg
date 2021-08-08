@@ -2,32 +2,17 @@
 ActiveColor: Цвет выделения
 Add: Добавить
 AddCopy: Скопировать
-Admirer: Администратор
-Agitator: Агитатор 
 AllFiles: Все файлы
-Archeologist: Археолого
 Back: Назад
-BadOmens: Плохие символы
-BargeThrought: Баргаш
-BloodHound: Чуйка крови
-Bodyguard: Телохранитель
-BoneSaw: Костоправ
 BorderColor: Цвет границы
-Butcher: Мясник
 ButtonColor: Цвет кнопки
 Cancel: Отмена
 Change: Изменить
 Close: Закрыть
-Colors: Цвета 
-CombatVeteran: Солдат
-Commander: Коммандер
-CoolHead: Крутая голова
+Colors: Цвета
 Copy: Копировать
-Counselor: Советник
-Coward: Трус
 Create: Создать новый
 Cut: Вырезать
-Cynic: Цинник
 Date: Дата
 Decrease: Уменьшить
 DockBottom: Присоединено снизу
@@ -39,18 +24,13 @@ DockWorkspace: На рабочем столе
 Docking: Расположение
 ExecuteCommand: Выполнить команду
 Exit: Выход
-FastDraw: Быстрое выхватывание
-FightDog: Бойцовский пес
 Form: Форма
 FormColor: Цвет формы
 General: Общие
-Gunslingers: Стрелки
 HotKey: Горячая клавиша
 Increase: Увеличить
-Inventor: Изобретатель
 Log: Логирование
 Main: Главный
-MeanStreak: Торговая хватка
 Message: Сообщение
 MessageList: Сообщения
 Metrics: Метрика
@@ -62,11 +42,8 @@ Open: Открыть
 OpenFile: Открыть файл
 Padding: Отступ
 Paste: Вставить
-Perfomer: Артист
 Plugins: Окна
-Racketeer: Рекитер
 Ready: Готово
-Rebel: Бунтарь
 Remove: Удалить
 Save: Сохранить
 SaveMessageFile: Сохранять файл сообщений после закрытия программы.
@@ -86,8 +63,6 @@ TipsTextColor: Цвет текста подсказки
 UppercaseLabel: Первую букву имени закладки выводить в верхнем регистре.
 UseShortNameLabel: В имени закладки отображать только имя файла (без полного пути).
 View: Вид
-WeaponSpecialist: Специалист по оружию
 Weight: Вес
 WindowColor: Цвет окна
-Workhorse: Рабочая лошадка
 Workspace: Рабочий стол

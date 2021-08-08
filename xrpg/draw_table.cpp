@@ -161,13 +161,6 @@ static void proc_mouseselect() {
 		p->execute("Change", true);
 }
 
-//void table::mouseselect(int id, bool pressed) {
-//	if(!ishilited() || current_hilite_row == -1 || current_hilite_column == -1)
-//		return;
-//	if(pressed)
-//		draw::execute(proc_mouseselect, (int)this);
-//}
-
 void table::mouseclick() const {
 	if(hot.key == MouseLeft && hot.pressed)
 		draw::execute(proc_mouseselect, 0, 0, this);
@@ -223,10 +216,8 @@ int table::rowheader(const rect& rc) const {
 					clickcolumn(i);
 			}
 		}
-		// Нарисуем границу только когда она далеко от края
-		// Чтобы она была не видна, если ширина элемента впритык к краю.
 		line(r1.x2 - 1, r1.y1, r1.x2 - 1, r1.y2, colors::border);
-		temp[0] = 0; stringbuilder sb(temp);
+		stringbuilder sb(temp); temp[0] = 0;
 		auto p = getheader(i, sb);
 		if(p)
 			textc(r1.x1 + metrics::edit, r1.y1 + metrics::edit, r1.width() - metrics::edit * 2, p);
@@ -541,8 +532,8 @@ void table::cell(const rect& rc, int line, int column, const char* label) {
 	rect r1 = rc + metrics::edit;
 	textc(r1.x1, r1.y1, r1.width(), label, -1, align, &clipped);
 	if(clipped) {
-		//		if(ishilite(r1))
-		//			tooltips(r1.x1, r1.y1, 200, ps);
+		if(ishilite(r1))
+			tooltips(r1.x1, r1.y1, 200, label);
 	}
 }
 
@@ -782,7 +773,6 @@ bool table::write(const char* url, bool include_header) const {
 	if(include_header)
 		write(*pw);
 	pw->open("Rows", serializer::kind::Array);
-	//auto mr = getmaximum();
 	for(auto i = 0; i < getmaximum(); i++) {
 		auto p = get(i);
 		pw->open("Row");

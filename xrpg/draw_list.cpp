@@ -203,10 +203,6 @@ void list::paint(const rect& rcorigin) {
 	if(!pixels_per_line)
 		return;
 	paintrows(rc);
-	//if(drop_shadow) {
-	//	rectf({rcorigin.x2 + 1, rcorigin.y1 + 4, rcorigin.x2 + 5, rcorigin.y2}, colors::black, 64);
-	//	rectf({rcorigin.x1 + 4, rcorigin.y2, rcorigin.x2 + 5, rcorigin.y2 + 5}, colors::black, 64);
-	//}
 	auto focused = isfocused(this);
 	if(focused) {
 		int m;
