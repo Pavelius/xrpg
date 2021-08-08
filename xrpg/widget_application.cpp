@@ -752,10 +752,6 @@ bool draw::edit(control& e, fnevent heartbeat) {
 	return getresult() != 0;
 }
 
-//static void setheartbeat(fnevent v) {
-//	widget_application_control.heartproc = v;
-//}
-
 stringbuilder& getstatustext();
 
 void draw::application() {

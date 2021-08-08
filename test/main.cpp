@@ -68,8 +68,8 @@ int main() {
 	logmsgv("Тостовая строка залогирована в общий лог приложения.", 0);
 	draw::initialize("Test UI");
 	//draw::setnext(test_table);
-	draw::setnext(test_fields);
-	//draw::setnext(draw::application);
+	//draw::setnext(test_fields);
+	draw::setnext(draw::application);
 	draw::start();
 	return 0;
 }

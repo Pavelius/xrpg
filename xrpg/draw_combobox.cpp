@@ -146,7 +146,7 @@ static void post_combolist() {
 		setsourcep(current_source, current_size, current_database, list.getvalue());
 }
 
-static void dropdown(const rect& rc, void* source, int size, array& database, const void* object, const fnlist& plist, bool instant) {
+void draw::fielcd(const rect& rc, void* source, int size, array& database, const void* object, const fnlist& plist, bool instant) {
 	hot.focus = rc;
 	current_list = plist;
 	current_object = object;
@@ -159,7 +159,7 @@ static void dropdown(const rect& rc, void* source, int size, array& database, co
 		execute(post_combolist);
 }
 
-static void fieldc(const rect& rc, unsigned flags, void* source, int size, array& database, const void* object, const fnlist& plist, const char* tips) {
+static void fielc(const rect& rc, unsigned flags, void* source, int size, array& database, const void* object, const fnlist& plist, const char* tips) {
 	if(rc.width() <= 0)
 		return;
 	auto focused = isfocused(rc, source);
@@ -193,7 +193,7 @@ static void fieldc(const rect& rc, unsigned flags, void* source, int size, array
 	if(focused && (hot.key == KeyEnter || hot.key==F2))
 		execute_drop_down = true;
 	if(execute_drop_down)
-		dropdown(rc, source, size, database, object, plist, false);
+		fielcd(rc, source, size, database, object, plist, false);
 }
 
 void draw::field(int x, int& y, int width, const char* label, void* source, int size, int label_width, array& database, const fnlist& plist, const char* tips) {
@@ -202,6 +202,6 @@ void draw::field(int x, int& y, int width, const char* label, void* source, int 
 	setposition(x, y, width);
 	titletext(x, y, width, label, label_width);
 	rect rc = {x, y, x + width, y + draw::texth() + metrics::edit * 2};
-	fieldc(rc, AlignLeft | TextSingleLine, source, size, database, 0, plist, tips);
+	fielc(rc, AlignLeft | TextSingleLine, source, size, database, 0, plist, tips);
 	y += rc.height() + metrics::padding;
 }

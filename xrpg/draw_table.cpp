@@ -508,9 +508,10 @@ void table::changetext(const rect& rc, int line, int column) {
 void table::changeref(const rect& rc, int line, int column) {
 	if(!columns[column].source)
 		return;
-	//auto p = get(line);
+	auto p = get(line);
+	auto& col = columns[column];
 	//const anyval av((char*)p + columns[column].path.offset, columns[column].path.size, 0);
-	//fieldm(rc, av, *columns[column].source, p, columns[column].plist, true);
+	fielcd(rc, col.value.ptr(p), col.value.size, *col.source, p, col.plist, true);
 }
 
 void table::changecheck(const rect& rc, int line, int column) {
@@ -808,7 +809,7 @@ const visual table::visuals[] = {
 	{"Date", AlignLeft, 8, -12, widtht::Resized, totalt::None, &table::celldate, 0, &table::comparenm},
 	{"DateTime", AlignLeft, 8, -16, widtht::Resized, totalt::None, &table::celldatetime, 0, &table::comparenm},
 	{"Text", AlignLeft, 8, 200, widtht::Resized, totalt::None, &table::celltext, &table::changetext, &table::comparest},
-	{"Enum", AlignLeft, 8, 200, widtht::Resized, totalt::None, &table::celltext, &table::changeref, 0, false},
+	{"Enum", AlignLeft, 8, 200, widtht::Resized, totalt::None, &table::celltext, &table::changeref, 0, false, {getenumname}},
 	{"Percent", AlignRight, 40, 60, widtht::Resized, totalt::Average, &table::cellpercent, &table::changenumber},
 	{"Image", AlignCenter, 20, 20, widtht::Inner, totalt::None, &table::cellimage, 0, &table::comparenm},
 	{"StandartImage", AlignCenter, 20, 20, widtht::Inner, totalt::None, &table::cellimagest, 0, 0},
