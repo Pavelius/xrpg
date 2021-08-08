@@ -52,6 +52,7 @@ public:
 	virtual bool			isfocusable() const { return true; }
 	bool					ishilited() const;
 	virtual bool			ismodified() const { return false; }
+	virtual void			opening() {}
 	virtual void			paint(const rect& rc);
 	void					post(const char* id) const;
 	virtual void			read(serializer& e) {}

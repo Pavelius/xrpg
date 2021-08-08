@@ -216,7 +216,7 @@ void					stroke(int x, int y, const sprite* e, int id, int flags, unsigned char 
 void					syscursor(bool enable);
 void					sysredraw();
 void					text(int x, int y, const char* string, int count = -1, unsigned flags = 0);
-void					text(int x, int y, const char* string, int count, unsigned flags, int maximum_width);
+void					text(int x, int y, const char* string, int count, unsigned flags, int maximum_width, bool* clipped = 0);
 int						text(rect rc, const char* string, unsigned state = 0, int* max_width = 0);
 int						textc(int x, int y, int width, const char* string, int count = -1, unsigned flags = 0, bool* clipped = 0);
 int						textbc(const char* string, int width);

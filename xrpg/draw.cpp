@@ -1499,7 +1499,9 @@ void draw::text(int x, int y, const char* string, int count, unsigned flags) {
 	}
 }
 
-void draw::text(int x, int y, const char* string, int count, unsigned flags, int maximum_width) {
+void draw::text(int x, int y, const char* string, int count, unsigned flags, int maximum_width, bool* clipped) {
+	if(clipped)
+		*clipped = false;
 	if(!font)
 		return;
 	auto dy = texth();
@@ -1515,6 +1517,8 @@ void draw::text(int x, int y, const char* string, int count, unsigned flags, int
 		auto x1 = x + textw(sm);
 		if(x1 >= x2) {
 			text(x, y, "...", -1, flags);
+			if(clipped)
+				*clipped = true;
 			break;
 		}
 		if(sm >= 0x21)

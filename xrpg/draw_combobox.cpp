@@ -8,12 +8,16 @@ using namespace draw;
 
 static fnlist		current_list;
 static const void*	current_object;
-static array*		current_source;
+static array*		current_database;
+static int			current_size;
+static void*		current_source;
 
 bool controls::control::dropdown(const rect& rc) {
 	screenshoot screen;
 	pushfocus push_focus;
 	setfocus(this, 0, true);
+	view(rc, true, true); // Calculate position and rect only
+	opening(); // Some special actions when open control
 	while(ismodal()) {
 		screen.restore();
 		view(rc, true, true);
@@ -47,32 +51,36 @@ bool controls::control::dropdown(const rect& rc) {
 			break;
 		}
 	}
-	return 0;
+	return getresult()!=0;
 }
 
-struct combolist : public controls::list, public vector<void*> {
+static int compare_by_order(const void* v1, const void* v2) {
+	char t1[256]; stringbuilder sb1(t1);
+	char t2[256]; stringbuilder sb2(t2);
+	auto p1 = *((void**)v1);
+	auto p2 = *((void**)v2);
+	auto n1 = current_list.getname(p1, sb1);
+	auto n2 = current_list.getname(p2, sb2);
+	return strcmp(n1, n2);
+}
+
+struct combolist : public controls::list, vector<void*> {
 	const char* getname(int line, int column, stringbuilder& sb) const override {
 		auto p = *((void**)ptr(line));
 		return current_list.getname(p, sb);
 	}
-	static int compare_by_order(const void* v1, const void* v2) {
-		char t1[256]; stringbuilder sb1(t1);
-		char t2[256]; stringbuilder sb2(t2);
-		auto p1 = *((void**)v1);
-		auto p2 = *((void**)v2);
-		auto n1 = current_list.getname(p1, sb1);
-		auto n2 = current_list.getname(p2, sb2);
-		return strcmp(n1, n2);
-	}
 	int	getmaximum() const {
 		return getcount();
 	}
-//	void mouseselect(int id, bool pressed) override {
-//		if(pressed)
-//			list::mouseselect(id, pressed);
-//		else
-//			draw::execute(buttonok);
-//	}
+	void opening() {
+		ensurevisible();
+	}
+	void mouseclick() const override {
+		if(hot.pressed)
+			list::mouseclick();
+		else
+			draw::execute(buttonok);
+	}
 	int find(const void* object) const {
 		for(auto p : *this) {
 			if(p == object)
@@ -80,29 +88,41 @@ struct combolist : public controls::list, public vector<void*> {
 		}
 		return -1;
 	}
-	void sort() {
-//		qsort(data, getcount(), sizeof(data[0]), compare_by_order);
+	const void* getvalue() const {
+		if(current == -1)
+			return 0;
+		return *((void**)ptr(current));
 	}
-	void choose(const void* value) {
+	void sort() {
+		qsort(begin(), getcount(), sizeof(begin()[0]), compare_by_order);
+	}
+	void setvalue(const void* value) {
 		current = find(value);
 	}
-//	static int getvalue(const anyval& var, const array& source) {
-//		auto v = var.get();
-//		if(var.getsize() != sizeof(void*))
-//			v = (int)source.ptr(v);
-//		return v;
-//	}
 	void update() {
 		clear();
-		auto pe = current_source->end();
-		for(auto pb = current_source->begin(); pb < pe; pb += current_source->getsize()) {
-			if(current_list.allow && !current_list.allow(current_object, (int)current_source->indexof(pb)))
+		auto pe = current_database->end();
+		for(auto pb = current_database->begin(); pb < pe; pb += current_database->getsize()) {
+			if(current_list.allow && !current_list.allow(current_database, (int)current_database->indexof(pb)))
 				continue;
 			add(pb);
 		}
-//		current = getvalue(cmb_var, cmb_source);
 	}
 };
+
+static void* getsourcep(void* source, int size, array* database) {
+	if(size == sizeof(void*))
+		return (void*)getsource(source, size);
+	else
+		return database->ptr(getsource(source, size));
+}
+
+static void setsourcep(void* source, int size, array* database, const void* value) {
+	if(size == sizeof(void*))
+		setsource(source, size, (long)value);
+	else
+		setsource(source, size, database->indexof(value));
+}
 
 static void post_combolist() {
 	combolist list;
@@ -121,23 +141,18 @@ static void post_combolist() {
 		rc.y2 = getheight() - 2;
 	if(rc.y1 > rc.y2 - (list.pixels_per_line + 1))
 		rc.y1 = rc.y2 - (list.pixels_per_line + 1);
-//	list.choose(cmb_source.ptr(cmb_var.get()));
-	list.ensurevisible();
-	if(list.dropdown(rc)) {
-//		auto p = list.data[list.current];
-//		if(cmb_var.getsize() != sizeof(void*)) {
-//			auto i = cmb_source.indexof(p);
-//			cmb_var.set(i);
-//		} else
-//			cmb_var.set((int)p);
-	}
+	list.setvalue((void*)getsourcep(current_source, current_size, current_database));
+	if(list.dropdown(rc))
+		setsourcep(current_source, current_size, current_database, list.getvalue());
 }
 
 static void dropdown(const rect& rc, void* source, int size, array& database, const void* object, const fnlist& plist, bool instant) {
 	hot.focus = rc;
 	current_list = plist;
 	current_object = object;
-	current_source = &database;
+	current_database = &database;
+	current_source = source;
+	current_size = size;
 	if(instant)
 		post_combolist();
 	else
@@ -159,21 +174,23 @@ static void fieldc(const rect& rc, unsigned flags, void* source, int size, array
 		gradv(rc, colors::button.lighten(), colors::button.darken());
 	rectb(rc, colors::border);
 	rect rco = rc + metrics::edit;
-	if(focused)
-		rectx(rco, colors::black);
+	if(focused) {
+		rect r1 = rco; r1.offset(-1);
+		rectx(r1, colors::text);
+	}
 	auto v = (void*)getsource(source, size);
 	if(size != sizeof(void*))
 		v = database.ptr((long)v);
 	char temp[260]; stringbuilder sb(temp);
 	auto pn = plist.getname(v, sb);
 	if(pn)
-		textc(rco.x1, rco.y1, rco.width(), pn);
+		text(rco.x1, rco.y1, pn, -1, 0, rco.width());
 	if(tips && a && !hot.pressed)
 		tooltips(tips);
 	auto execute_drop_down = false;
 	if(a && hot.key == MouseLeft && !hot.pressed)
 		execute_drop_down = true;
-	if(focused && hot.key == KeyEnter)
+	if(focused && (hot.key == KeyEnter || hot.key==F2))
 		execute_drop_down = true;
 	if(execute_drop_down)
 		dropdown(rc, source, size, database, object, plist, false);
