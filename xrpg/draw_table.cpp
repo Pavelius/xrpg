@@ -510,7 +510,6 @@ void table::changeref(const rect& rc, int line, int column) {
 		return;
 	auto p = get(line);
 	auto& col = columns[column];
-	//const anyval av((char*)p + columns[column].path.offset, columns[column].path.size, 0);
 	fielcd(rc, col.value.ptr(p), col.value.size, *col.source, p, col.plist, true);
 }
 

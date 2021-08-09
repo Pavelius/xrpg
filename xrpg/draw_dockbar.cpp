@@ -51,7 +51,7 @@ void getdocked(controla& result, dock type) {
 		if(!pc)
 			continue;
 		if(p->position == type)
-			result.add(p->getcontrol());
+			result.add(pc);
 	}
 }
 
@@ -129,19 +129,18 @@ static bool dock_paint(dock id, rect& client, const controla& p1, const controla
 }
 
 void draw::dockbar(rect& rc) {
-	controla p1, p2;
 	if(metrics::show::left) {
-		getdocked(p1, dock::Left);
-		getdocked(p2, dock::LeftBottom);
+		controla p1; getdocked(p1, dock::Left);
+		controla p2; getdocked(p2, dock::LeftBottom);
 		dock_paint(dock::Left, rc, p1, p2);
 	}
 	if(metrics::show::right) {
-		getdocked(p1, dock::Right);
-		getdocked(p2, dock::RightBottom);
+		controla p1; getdocked(p1, dock::Right);
+		controla p2; getdocked(p2, dock::RightBottom);
 		dock_paint(dock::Right, rc, p1, p2);
 	}
 	if(metrics::show::bottom) {
-		getdocked(p1, dock::Bottom);
+		controla p1; getdocked(p1, dock::Bottom);
 		dock_paint(dock::Bottom, rc, p1, {});
 	}
 }
