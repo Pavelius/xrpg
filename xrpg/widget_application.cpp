@@ -498,13 +498,15 @@ void draw::close(control* p) {
 	auto i = active_controls.indexof(p);
 	if(i == -1)
 		return;
-	active_controls.remove(i, 1);
 	if(current_active_control == p) {
 		if(i > 0)
 			activate(active_controls[i - 1]);
+		else if(i < (int)(active_controls.getcount() - 1))
+			activate(active_controls[i + 1]);
 		else
-			activate(0);
+			p->deactivating();
 	}
+	active_controls.remove(i, 1);
 	delete p;
 }
 

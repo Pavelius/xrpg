@@ -11,7 +11,6 @@ struct varianti {
 	const char*			id;
 	const bsreq*		metadata;
 	array*				source;
-	static bool			localization(const char* locale_id, bool writemode);
 };
 union variant{
 	unsigned char		uc[4];

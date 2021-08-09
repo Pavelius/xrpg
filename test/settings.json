@@ -28,13 +28,13 @@
         
       },
       "Form":{
-        "TextColor":0,
-        "WindowColor":16777215,
-        "FormColor":15790320,
-        "BorderColor":11316396,
-        "ActiveColor":32940,
-        "ButtonColor":14671839,
-        "TipsBackColor":5263480,
+        "TextColor":16777215,
+        "WindowColor":2105376,
+        "FormColor":4210752,
+        "BorderColor":-2138141042,
+        "ActiveColor":11304960,
+        "ButtonColor":31436,
+        "TipsBackColor":6579320,
         "TipsTextColor":16777215
       }
     },
@@ -49,7 +49,7 @@
     "y":68,
     "width":891,
     "height":588,
-    "header_width":140,
+    "header_width":89,
     "flags":48
   },
   "controls":{
@@ -59,7 +59,7 @@
       "columns":{
         "column":{
           "id":"Message",
-          "width":274
+          "width":133
         },
         "column":{
           "id":"Date",
@@ -71,7 +71,7 @@
   "dockbar":{
     "DockLeft":{
       "current":0,
-      "size":370
+      "size":229
     },
     "DockLeftBottom":{
       "current":0,

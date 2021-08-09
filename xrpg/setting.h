@@ -2,9 +2,7 @@
 
 #pragma once
 
-#ifdef _GCC
-typedef long unsigned size_t;
-#endif // _GCC
+typedef decltype(sizeof(0)) size_t;
 
 namespace setting {
 enum type_s : unsigned char {

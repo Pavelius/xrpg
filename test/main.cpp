@@ -1,7 +1,9 @@
+#include "archive.h"
 #include "draw.h"
 #include "draw_button.h"
 #include "draw_control.h"
 #include "draw_figure.h"
+#include "io_stream.h"
 #include "main.h"
 
 using namespace draw;
@@ -61,7 +63,20 @@ static void test_table() {
 	}
 }
 
+static bool test_archive(bool write_mode) {
+	io::file file("test.data", write_mode ? StreamWrite : StreamRead);
+	archive e(file, write_mode);
+	if(!e.signature("TST"))
+		return false;
+	if(!e.version(0,1))
+		return false;
+	e.set(bsdata<planeti>::source);
+	return true;
+}
+
 int main() {
+	//if(!test_archive(true))
+	//	return -1;
 	if(!initialize_translation("ru"))
 		return -1;
 	auto a = sizeof(size_t);

@@ -32,6 +32,9 @@
     <ClCompile Include="..\xrpg\io_plugin_json.cpp">
       <Filter>Plugins</Filter>
     </ClCompile>
+    <ClCompile Include="planet.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">

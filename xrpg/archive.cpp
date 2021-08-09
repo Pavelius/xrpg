@@ -27,3 +27,18 @@ bool archive::version(short major, short minor) {
 	}
 	return true;
 }
+
+template<> void archive::set<array>(array& v) {
+	set(v.count);
+	set(v.size);
+	if(!writemode)
+		v.reserve(v.count);
+	set(v.data, v.size * v.count);
+}
+
+void archive::set(void* value, unsigned size) {
+	if(writemode)
+		source.write(value, size);
+	else
+		source.read(value, size);
+}

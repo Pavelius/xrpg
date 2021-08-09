@@ -11,7 +11,6 @@ struct resei {
 	bool			notfound;
 };
 }
-
 static vector<resei> source;
 
 static resei* find(const char* name, const char* folder) {
