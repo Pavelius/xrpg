@@ -63,7 +63,8 @@ public:
 	virtual void			write(serializer& e) const {}
 	void					view(const rect& rc, bool show_border, bool show_background);
 };
-class scrollable : control {
+class scrollable : public control {
+protected:
 	int						origin_x, origin_y;
 	int						maximum_x, maximum_y;
 	int						wheel_x, wheel_y;

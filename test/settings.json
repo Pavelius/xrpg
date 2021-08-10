@@ -1,73 +1,4 @@
 ﻿{
-  "settings":{
-    "Workspace":{
-      "General":{
-        "Metrics":{
-          "Padding":4,
-          "ScrollWidth":12
-        },
-        "View":{
-          "ShowStatusBar":2,
-          "ShowLeftPanel":2,
-          "ShowRightPanel":2,
-          "ShowBottomPanel":0,
-          "ShowPadding":2
-        },
-        "Tabs":{
-          "UseShortNameLabel":2,
-          "NoUrlLabelExtension":2,
-          "UppercaseLabel":2
-        }
-      },
-      "Plugins":{
-        
-      }
-    },
-    "Colors":{
-      "General":{
-        
-      },
-      "Form":{
-        "TextColor":16777215,
-        "WindowColor":2105376,
-        "FormColor":4210752,
-        "BorderColor":-2138141042,
-        "ActiveColor":11304960,
-        "ButtonColor":31436,
-        "TipsBackColor":6579320,
-        "TipsTextColor":16777215
-      }
-    },
-    "Log":{
-      "General":{
-        "SaveMessageFile":2
-      }
-    }
-  },
-  "window":{
-    "x":209,
-    "y":68,
-    "width":891,
-    "height":588,
-    "header_width":89,
-    "flags":48
-  },
-  "controls":{
-    "MessageList":{
-      "Docking":1,
-      "Visible":1,
-      "columns":{
-        "column":{
-          "id":"Message",
-          "width":133
-        },
-        "column":{
-          "id":"Date",
-          "width":88
-        }
-      }
-    }
-  },
   "dockbar":{
     "DockLeft":{
       "current":0,
@@ -93,5 +24,77 @@
       "current":0,
       "size":200
     }
+  },
+  "settings":{
+    "Workspace":{
+      "General":{
+        "Metrics":{
+          "Padding":4,
+          "ScrollWidth":12
+        },
+        "View":{
+          "ShowStatusBar":0,
+          "ShowLeftPanel":2,
+          "ShowRightPanel":2,
+          "ShowBottomPanel":2,
+          "ShowPadding":0
+        },
+        "Tabs":{
+          "UseShortNameLabel":2,
+          "NoUrlLabelExtension":2,
+          "UppercaseLabel":2
+        }
+      },
+      "Plugins":{
+        
+      }
+    },
+    "Colors":{
+      "General":{
+        
+      },
+      "Form":{
+        "TextColor":0,
+        "WindowColor":16777215,
+        "FormColor":15790320,
+        "BorderColor":11316396,
+        "ActiveColor":32940,
+        "ButtonColor":14671839,
+        "TipsBackColor":5263480,
+        "TipsTextColor":16777215
+      }
+    },
+    "Log":{
+      "General":{
+        "SaveMessageFile":2
+      }
+    }
+  },
+  "window":{
+    "x":143,
+    "y":47,
+    "width":1125,
+    "height":650,
+    "header_width":89,
+    "flags":48
+  },
+  "controls":{
+    "picture":{
+      "Docking":4,
+      "Visible":1,
+      "MessageList":{
+        "Docking":5,
+        "Visible":1,
+        "columns":{
+          "column":{
+            "id":"Message",
+            "width":1037
+          },
+          "column":{
+            "id":"Date",
+            "width":88
+          }
+        }
+      }
+    }
   }
-}

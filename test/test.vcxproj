@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\xrpg\io_plugin_json.cpp" />
+    <ClCompile Include="..\xrpg\widget_picture.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="planet.cpp" />
     <ClCompile Include="trait.cpp" />
