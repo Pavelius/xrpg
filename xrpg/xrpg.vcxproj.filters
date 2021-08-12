@@ -135,6 +135,9 @@
     <ClInclude Include="screenshoot.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="draw_codeview.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -315,6 +318,9 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="draw_combobox.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="codeview.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
   </ItemGroup>

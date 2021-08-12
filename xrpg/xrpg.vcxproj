@@ -145,6 +145,7 @@
     <ClInclude Include="bsreq.h" />
     <ClInclude Include="bstream.h" />
     <ClInclude Include="cflags.h" />
+    <ClInclude Include="draw_codeview.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="command.h" />
     <ClInclude Include="converter.h" />
@@ -186,6 +187,9 @@
     <ClCompile Include="archive.cpp" />
     <ClCompile Include="bsreq.cpp" />
     <ClCompile Include="bstream.cpp" />
+    <ClCompile Include="codeview.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="color.cpp" />
     <ClCompile Include="command.cpp" />
     <ClCompile Include="converter.cpp" />
