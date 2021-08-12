@@ -74,9 +74,17 @@ static bool test_archive(bool write_mode) {
 	return true;
 }
 
+static bool test_printf() {
+    char temp[260]; stringbuilder sb(temp);
+    sb.add("Test = %2i in %1 or %3", "First", 2, "Third");
+    return true;
+}
+
 int main() {
-	//if(!test_archive(true))
-	//	return -1;
+	if(!test_printf())
+		return -1;
+	if(!test_archive(true))
+		return -1;
 	if(!initialize_translation("ru"))
 		return -1;
 	auto a = sizeof(size_t);

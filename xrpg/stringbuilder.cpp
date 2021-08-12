@@ -364,11 +364,14 @@ const char* stringbuilder::readformat(const char* src, const char* vl) {
 		long pn = 0, pnp = 0;
 		if(isnum(*src))
 			src = psnum10(src, pn);
+#ifdef __unix__
+    pn = pn + 3;
+#endif
 		if(src[0] == '.' && isnum(src[1]))
 			src = psnum10(src + 1, pnp);
 		if(*src == 'i') {
 			src++;
-			auto value = ((int*)vl)[pn - 1];
+			auto value = ((long*)vl)[pn - 1];
 			if(prefix == '+' && value >= 0) {
 				if(p < pe)
 					*p++ = '+';
@@ -376,7 +379,7 @@ const char* stringbuilder::readformat(const char* src, const char* vl) {
 			addint(value, pnp, 10);
 		} else if(*src == 'h') {
 			src++;
-			adduint((unsigned)(((int*)vl)[pn - 1]), pnp, 16);
+			adduint((unsigned)(((long*)vl)[pn - 1]), pnp, 16);
 		} else {
 			if(((char**)vl)[pn - 1]) {
 				auto p0 = p;

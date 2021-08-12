@@ -94,7 +94,14 @@ int io::file::write(const void* p, int size) {
 }
 
 int io::file::seek(int pos, int rel) {
-	return 0;
+    switch(rel) {
+    case SeekEnd: rel = SEEK_END; break;
+    case SeekCur: rel = SEEK_CUR; break;
+    case SeekSet: rel = SEEK_SET; break;
+    }
+    if(std::fseek((FILE*)handle, pos, rel))
+        return 0;
+	return ftell((FILE*)handle);
 }
 
 bool io::file::exist(const char* url) {

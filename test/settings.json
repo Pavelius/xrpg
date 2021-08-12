@@ -1,28 +1,28 @@
-﻿{
+{
   "dockbar":{
     "DockLeft":{
       "current":0,
-      "size":229
+      "size":0
     },
     "DockLeftBottom":{
       "current":0,
-      "size":200
+      "size":0
     },
     "DockRight":{
       "current":0,
-      "size":268
+      "size":0
     },
     "DockRightBottom":{
       "current":0,
-      "size":200
+      "size":0
     },
     "DockBottom":{
       "current":0,
-      "size":291
+      "size":0
     },
     "DockWorkspace":{
       "current":0,
-      "size":200
+      "size":0
     }
   },
   "settings":{
@@ -30,19 +30,19 @@
       "General":{
         "Metrics":{
           "Padding":4,
-          "ScrollWidth":12
+          "ScrollWidth":16
         },
         "View":{
           "ShowStatusBar":0,
-          "ShowLeftPanel":2,
-          "ShowRightPanel":2,
-          "ShowBottomPanel":2,
+          "ShowLeftPanel":0,
+          "ShowRightPanel":0,
+          "ShowBottomPanel":0,
           "ShowPadding":0
         },
         "Tabs":{
-          "UseShortNameLabel":2,
-          "NoUrlLabelExtension":2,
-          "UppercaseLabel":2
+          "UseShortNameLabel":0,
+          "NoUrlLabelExtension":0,
+          "UppercaseLabel":0
         }
       },
       "Plugins":{
@@ -66,35 +66,32 @@
     },
     "Log":{
       "General":{
-        "SaveMessageFile":2
+        "SaveMessageFile":0
       }
     }
   },
   "window":{
-    "x":143,
-    "y":47,
-    "width":1125,
-    "height":650,
-    "header_width":89,
+    "x":-6768,
+    "y":-1,
+    "width":32767,
+    "height":0,
+    "header_width":160,
     "flags":48
   },
   "controls":{
-    "picture":{
+    "MessageList":{
       "Docking":4,
       "Visible":1,
-      "MessageList":{
-        "Docking":5,
-        "Visible":1,
-        "columns":{
-          "column":{
-            "id":"Message",
-            "width":1037
-          },
-          "column":{
-            "id":"Date",
-            "width":88
-          }
+      "columns":{
+        "column":{
+          "id":"Message",
+          "width":200
+        },
+        "column":{
+          "id":"Date",
+          "width":88
         }
       }
     }
   }
+}
