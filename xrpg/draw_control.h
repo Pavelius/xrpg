@@ -55,6 +55,7 @@ public:
 	virtual void			opening() {}
 	virtual void			paint(const rect& rc);
 	void					post(const char* id) const;
+	void					post(const char* id, int value) const;
 	virtual void			read(serializer& e) {}
 	virtual void			save(const char* url) const {}
 	static const sprite*	std_images;

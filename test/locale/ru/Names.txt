@@ -37,12 +37,14 @@ DockRight: Присоединено справа
 DockRightBottom: Присоединено справа снизу
 DockWorkspace: На рабочем столе
 Docking: Расположение
+Editor: Редактор
 ExecuteCommand: Выполнить команду
 Exit: Выход
 FastDraw: Быстрое выхватывание
 FightDog: Бойцовский пес
 Form: Форма
 FormColor: Цвет формы
+Formating: Форматирование
 General: Общие
 Gunslingers: Стрелки
 HotKey: Горячая клавиша
@@ -80,6 +82,7 @@ ShowPadding: Отступы на главном экране
 ShowRightPanel: Показать правую боковую панель
 ShowStatusBar: Показать панель статуса
 Tabs: Закладки
+Tabulation: Табуляция
 TextColor: Цвет текста
 TipsBackColor: Цвет фона подсказки
 TipsTextColor: Цвет текста подсказки

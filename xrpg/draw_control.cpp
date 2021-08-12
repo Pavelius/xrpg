@@ -22,6 +22,13 @@ static void command_execute() {
 	p->execute(n, true);
 }
 
+static void command_setvalue() {
+	auto p = (control*)hot.object;
+	auto v = hot.param;
+	auto n = (const char*)hot.param2;
+	p->setvalue(n, v);
+}
+
 static void open_context_menu() {
 	auto p = (control*)hot.object;
 	p->contextmenu(p->getcommands());
@@ -34,6 +41,10 @@ bool control::ishilited() const {
 void control::post(const char* id) const {
 	if(const_cast<control*>(this)->execute(id, false)) // Do not post command and do not clear hot.key if our command is disabled.
 		draw::execute(command_execute, 0, (size_t)id, this);
+}
+
+void control::post(const char* id, int value) const {
+	draw::execute(command_setvalue, value, (size_t)id, this);
 }
 
 void control::icon(int x, int y, const char* id, bool disabled) const {

@@ -1,4 +1,4 @@
-{
+﻿{
   "dockbar":{
     "DockLeft":{
       "current":0,
@@ -18,11 +18,11 @@
     },
     "DockBottom":{
       "current":0,
-      "size":0
+      "size":200
     },
     "DockWorkspace":{
       "current":0,
-      "size":0
+      "size":200
     }
   },
   "settings":{
@@ -33,16 +33,16 @@
           "ScrollWidth":16
         },
         "View":{
-          "ShowStatusBar":0,
-          "ShowLeftPanel":0,
-          "ShowRightPanel":0,
-          "ShowBottomPanel":0,
-          "ShowPadding":0
+          "ShowStatusBar":2,
+          "ShowLeftPanel":2,
+          "ShowRightPanel":2,
+          "ShowBottomPanel":2,
+          "ShowPadding":2
         },
         "Tabs":{
-          "UseShortNameLabel":0,
-          "NoUrlLabelExtension":0,
-          "UppercaseLabel":0
+          "UseShortNameLabel":2,
+          "NoUrlLabelExtension":2,
+          "UppercaseLabel":2
         }
       },
       "Plugins":{
@@ -68,30 +68,41 @@
       "General":{
         "SaveMessageFile":0
       }
+    },
+    "Editor":{
+      "General":{
+        "Formating":{
+          "Tabulation":4,
+          "Использовать пробелы вместо табуляции":0
+        }
+      }
     }
   },
   "window":{
-    "x":-6768,
-    "y":-1,
-    "width":32767,
-    "height":0,
+    "x":215,
+    "y":154,
+    "width":1024,
+    "height":534,
     "header_width":160,
     "flags":48
   },
   "controls":{
-    "MessageList":{
+    "picture":{
       "Docking":4,
       "Visible":1,
-      "columns":{
-        "column":{
-          "id":"Message",
-          "width":200
-        },
-        "column":{
-          "id":"Date",
-          "width":88
+      "MessageList":{
+        "Docking":4,
+        "Visible":1,
+        "columns":{
+          "column":{
+            "id":"Message",
+            "width":920
+          },
+          "column":{
+            "id":"Date",
+            "width":88
+          }
         }
       }
     }
   }
-}
