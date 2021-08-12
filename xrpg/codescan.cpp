@@ -19,18 +19,52 @@ bool codescan::isnextline(const char* ps, const char** pv) {
 	return false;
 }
 
-void codescan::getstate(const char* source, int origin_y, int& cashe_y, int& maximum_x, int& maximum_y, int& p1_x, int& p1_y, int& p2_x, int& p2_y, int p1, int p2) {
-	p1_x = p1_y = p2_x = p2_y = -1;
-	maximum_x = maximum_y = 0;
-	cashe_y = -1;
-	auto n = 0;
+static int getnext(int x, char sym) {
+	if(sym == '\t' && codescan::metrics::tabs)
+		return ((x + (codescan::metrics::tabs - 1)) / codescan::metrics::tabs) * codescan::metrics::tabs;
+	else
+		return x + 1;
+}
+
+static int getpos(const char* source, const char* p1) {
 	auto p = source;
-	while(*p) {
-		auto i0 = p - source;
-		if(origin_y == n)
-			cashe_y = p - source;
-		while(*p && *p!=10 && *p!=13)
-			p++;
-		auto i1 = p - source;
+	auto x = 0;
+	int result = 0;
+	while(*p && *p != 10 && *p != 13) {
+		if(*p == '\t')
+			x = getnext(x, *p);
+		else
+			x++;
+		if(p1 == p)
+			result = x;
+		p++;
 	}
+	return result;
+}
+
+void codescan::getstate(const char* source, int origin_y, int& cashe_y, int& maximum_x, int& maximum_y) {
+	maximum_x = maximum_y = 0;
+	auto y = 0, x = 0;
+	auto p = source;
+	cashe_y = y;
+	while(*p) {
+		if(*p == 10 || *p == 13) {
+			isnextline(p, &p);
+			y++; x = 0;
+			if(origin_y == y)
+				cashe_y = p - source;
+			if(maximum_x < x)
+				maximum_x = x;
+		} else {
+			if(*p == '\t')
+				x = getnext(x, *p);
+			else
+				x++;
+			p++;
+		}
+		y++;
+	}
+	if(maximum_x < x)
+		maximum_x = x;
+	maximum_y = y;
 }

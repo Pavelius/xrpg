@@ -299,9 +299,11 @@ static int render_element(int x, int y, int width, unsigned flags, const setting
 		color c1 = colors::border.mix(colors::window, 128);
 		color c2 = c1.darken();
 		gradv({x, y2, x + width, y2 + height}, c1, c2);
+		auto push_fore = fore;
 		fore = colors::text.mix(c1, 196);
 		auto label = getnm(e.group);
 		text(x + (width - textw(label)) / 2, y2 + metrics::padding, label);
+		fore = push_fore;
 		rectb({x, y2, x + width, y + metrics::padding}, colors::border);
 		y += metrics::padding * 2;
 	}

@@ -18,7 +18,7 @@
     },
     "DockBottom":{
       "current":0,
-      "size":200
+      "size":239
     },
     "DockWorkspace":{
       "current":0,
@@ -30,7 +30,7 @@
       "General":{
         "Metrics":{
           "Padding":4,
-          "ScrollWidth":16
+          "ScrollWidth":13
         },
         "View":{
           "ShowStatusBar":2,
@@ -79,10 +79,10 @@
     }
   },
   "window":{
-    "x":215,
-    "y":154,
-    "width":1024,
-    "height":534,
+    "x":182,
+    "y":130,
+    "width":898,
+    "height":586,
     "header_width":160,
     "flags":48
   },
@@ -96,7 +96,7 @@
         "columns":{
           "column":{
             "id":"Message",
-            "width":920
+            "width":794
           },
           "column":{
             "id":"Date",
