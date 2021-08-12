@@ -18,3 +18,6 @@ void draw::setcaption(const char* string) {
 
 void draw::settimer(unsigned milleseconds) {
 }
+
+void draw::getwindowpos(point& pos, point& size, unsigned* flags){
+}

@@ -109,7 +109,7 @@ extern sprite*			h3;
 }
 namespace draw {
 struct hoti {
-	cursor				cursor; // set this mouse cursor
+	enum cursor			cursor; // set this mouse cursor
 	unsigned			key; // if pressed key or mouse this field has key
 	point				mouse; // current mouse coordinates
 	bool				pressed; // flag if any of mouse keys is pressed
