@@ -28,6 +28,7 @@ Coward: Трус
 Create: Создать новый
 Cut: Вырезать
 Cynic: Цинник
+DataFormURL: Данные из %1
 Date: Дата
 Decrease: Уменьшить
 DockBottom: Присоединено снизу
@@ -94,4 +95,3 @@ Weight: Вес
 WindowColor: Цвет окна
 Workhorse: Рабочая лошадка
 Workspace: Рабочий стол
-Использовать пробелы вместо табуляции: 

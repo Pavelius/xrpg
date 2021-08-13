@@ -85,6 +85,8 @@ int main() {
 	initialize_codeview();
 	logmsgv("Тостовая строка залогирована в общий лог приложения.", 0);
 	draw::initialize("Test UI");
+	openurl("battle.bmp");
+	openurl("main.c2");
 	//draw::setnext(test_table);
 	//draw::setnext(test_fields);
 	draw::setnext(draw::application);

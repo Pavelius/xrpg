@@ -33,7 +33,7 @@ public:
 		plugin(const char* id, dock position);
 		static const plugin* find(const char* id);
 		virtual builder*	getbuilder() { return 0; }
-		virtual control*	getcontrol() = 0;
+		virtual control*	getcontrol() { return 0; }
 	};
 	rect					client;
 	constexpr control() : client() {}
