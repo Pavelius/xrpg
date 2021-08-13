@@ -16,11 +16,22 @@ class picture_widget : public scrollable {
 			return url;
 		return 0;
 	}
+	void setvalue(const char* id, long value) override {
+		if(equal(id, "URL"))
+			url = szdup((const char*)value);
+	}
+	bool execute(const char* id, bool run) {
+		if(equal(id, "Open")) {
+			if(run) {
+				source.read(url);
+				setmaximum(source.width, source.height);
+			}
+		} else
+			return false;
+		return true;
+	}
 public:
 	picture_widget() : source(), url(0) {}
-	picture_widget(const char* url) : source(url), url(szdup(url)) {
-		setmaximum(source.width, source.height);
-	}
 };
 
 static struct picture_plugin : control::plugin, control::plugin::builder {
@@ -31,8 +42,8 @@ static struct picture_plugin : control::plugin, control::plugin::builder {
 	control::plugin::builder* getbuilder() {
 		return this;
 	}
-	control* create(const char* url) override {
-		return new picture_widget(url);
+	control* create() override {
+		return new picture_widget;
 	}
 	void getextensions(stringbuilder& sb) const override {
 		for(auto pv = surface::plugin::first; pv; pv = pv->next) {

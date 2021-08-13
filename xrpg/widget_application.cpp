@@ -632,8 +632,9 @@ static struct widget_application : draw::controls::control {
 					ps = temp; temp[0] = 0;
 					if(!dialog::save(getnm("SaveFile"), temp, 0))
 						return false;
+					p->setvalue("URL", (int)szdup(temp));
 				}
-				p->save(ps);
+				p->execute("Save", true);
 			}
 		} else
 			return control::execute(id, run);
@@ -664,8 +665,10 @@ control* draw::openurl(const char* url) {
 			continue;
 		if(pc->read(url))
 			return 0;
-		auto result = pc->create(url);
+		auto result = pc->create();
 		if(result) {
+			result->setvalue("URL", (int)url);
+			result->execute("Open", true);
 			active_controls.add(result);
 			activate(result);
 			return result;

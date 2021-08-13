@@ -2,6 +2,7 @@
 #include "draw_control.h"
 #include "draw_builder.h"
 #include "draw_button.h"
+#include "draw_focus.h"
 
 using namespace draw;
 
@@ -43,20 +44,25 @@ struct toolbar_builder : builder {
 	void add(const char* id) override {
 		auto width = size.x;
 		rect rc = {x, y, x + width, y + size.y};
+		auto key = draw::getkey(id);
 		if(ishilite(rc)) {
 			auto name = getnm(id);
 			if(name) {
-				auto key = 0;
 				if(key) {
 					char temp[128]; stringbuilder sb(temp); key2str(sb, key);
 					tooltips("%1 (%2)", name, temp);
 				} else
-				tooltips(name);
+					tooltips(name);
 				statusbar("%ExecuteCommand '%1'", name);
 			}
 		}
 		auto disabled = allowid && !allowid(object, id);
-		if(tool(rc, disabled, false, true, false)) {
+		auto need_run = false;
+		//if(draw::isfocused(object) && key && hot.key==key)
+		//	need_run = true;
+		if(tool(rc, disabled, false, true, false))
+			need_run = true;
+		if(need_run) {
 			if(object)
 				static_cast<const controls::control*>(object)->post(id);
 		}

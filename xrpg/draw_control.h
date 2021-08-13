@@ -20,7 +20,7 @@ public:
 	struct plugin {
 		struct builder {
 			virtual bool	canopen(const char* url) const;
-			virtual control* create(const char* url) = 0;
+			virtual control* create() = 0;
 			virtual void	destroy(control* v) {}
 			virtual void	getextensions(stringbuilder& sb) const {}
 			virtual bool	read(const char* url) { return false; }
@@ -57,7 +57,6 @@ public:
 	void					post(const char* id) const;
 	void					post(const char* id, int value) const;
 	virtual void			read(serializer& e) {}
-	virtual void			save(const char* url) const {}
 	static const sprite*	std_images;
 	virtual void			setvalue(const char* id, long value) {}
 	int						toolbar(int x, int y, int width, int* next_x = 0) const;

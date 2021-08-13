@@ -37,7 +37,7 @@
           "ShowLeftPanel":2,
           "ShowRightPanel":2,
           "ShowBottomPanel":0,
-          "ShowPadding":2
+          "ShowPadding":0
         },
         "Tabs":{
           "UseShortNameLabel":2,
@@ -79,10 +79,10 @@
     }
   },
   "window":{
-    "x":113,
-    "y":195,
+    "x":150,
+    "y":99,
     "width":1010,
-    "height":508,
+    "height":618,
     "header_width":160,
     "flags":48
   },

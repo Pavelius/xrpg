@@ -4,6 +4,7 @@
 #include "draw_control.h"
 #include "draw_focus.h"
 #include "draw_scroll.h"
+#include "io_stream.h"
 #include "pointl.h"
 #include "setting.h"
 
@@ -266,6 +267,7 @@ class widget_codeview : public control, vector<char> {
 					draw::execute(post_wordselect, 0, 0, this);
 				break;
 			}
+			hot.cursor = cursor::Edit;
 		}
 		pointl pos = {};
 		group_s type = IllegalSymbol;
@@ -643,26 +645,41 @@ public:
 			return url;
 		return control::getvalue(id, sb);
 	}
+	bool execute(const char* id, bool run) override {
+		if(equal(id, "Save")) {
+			if(run) {
+				io::file file(url, StreamText | StreamWrite);
+				if(!file)
+					return false;
+				file << (char*)data;
+				modified = false;
+			}
+		} else if(equal(id, "Open")) {
+			if(run) {
+				int s = 0;
+				auto p = loadt(url, &s);
+				if(!p)
+					return false;
+				this->url = szdup(url);
+				reserve(s + 1);
+				setcount(s);
+				memcpy(begin(), p, s + 1);
+				delete p;
+				invalidate();
+			}
+		} else
+			return false;
+		return true;
+	}
 	void setvalue(const char* id, long value) override {
 		if(equal(id, "Readonly"))
 			readonly = (value != 0);
+		else if(equal(id, "Modified"))
+			modified = (value != 0);
 		else if(equal(id, "URL"))
-			open((const char*)value);
+			url = szdup((const char*)value);
 		else
 			control::setvalue(id, value);
-	}
-	bool open(const char* url) {
-		int s = 0;
-		auto p = loadt(url, &s);
-		if(!p)
-			return false;
-		this->url = szdup(url);
-		reserve(s + 1);
-		setcount(s);
-		memcpy(begin(), p, s + 1);
-		delete p;
-		invalidate();
-		return true;
 	}
 };
 
@@ -676,10 +693,8 @@ static class widget_codeview_plugin : controls::control::plugin, controls::contr
 			return true;
 		return false;
 	}
-	control* create(const char* url) override {
-		auto p = new widget_codeview();
-		p->open(url);
-		return p;
+	control* create() override {
+		return new widget_codeview();
 	}
 	void getextensions(stringbuilder& sb) const override {
 		const char* exts = "*.c2";
