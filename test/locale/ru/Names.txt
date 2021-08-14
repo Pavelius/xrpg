@@ -19,6 +19,7 @@ Cancel: Отмена
 Change: Изменить
 Close: Закрыть
 Colors: Цвета 
+Column: Колонка
 CombatVeteran: Солдат
 Commander: Коммандер
 CoolHead: Крутая голова
@@ -71,9 +72,11 @@ Racketeer: Рекитер
 Ready: Готово
 Rebel: Бунтарь
 Remove: Удалить
+Row: Строка
 Save: Сохранить
 SaveMessageFile: Сохранять файл сообщений после закрытия программы.
 ScrollWidth: Ширина полос прокрутки
+SelectAll: Выбрать все
 SetDarkTheme: Установить темную тему
 SetLightTheme: Установить светлую тему
 Settings: Настройки

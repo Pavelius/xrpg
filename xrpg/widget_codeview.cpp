@@ -1,5 +1,6 @@
 #include "codescan.h"
 #include "draw.h"
+#include "draw_button.h"
 #include "draw_clipboard.h"
 #include "draw_control.h"
 #include "draw_focus.h"
@@ -29,16 +30,9 @@ BSDATA(groupi) = {
 	{"Comment", {color(0, 128, 0)}},
 	{"Number", {color(128, 128, 0)}},
 	{"String", {color(0, 255, 255)}},
-	{"Identifier", {color(0, 0, 100)}},
-	{"Open parameters block", {color(255, 0, 255)}},
-	{"Close parameters block", {color(255, 0, 255)}},
-	{"Open code block", {color(255, 0, 255)}},
-	{"Close code block", {color(255, 0, 255)}},
-	{"Open scope block", {color(255, 0, 255)}},
-	{"Close scope block", {color(255, 0, 255)}},
-	{"Open user block", {color(0, 50, 100)}},
-	{"Close user block", {color(0, 50, 128)}},
+	{"Identifier", {color(0, 0, 0)}},
 };
+assert_enum(groupi, Identifier)
 
 static const sprite* default_font = (sprite*)loadb("art/fonts/code.pma");
 static point fontsize;
@@ -50,6 +44,7 @@ class widget_codeview : public control, vector<char> {
 		const char*		before;
 		const char*		after;
 	};
+	const lexer* source_lexer = 0;
 	const char* url = 0;
 	int	cash_origin = -1;
 	int	lines_per_page = 0;
@@ -276,7 +271,7 @@ class widget_codeview : public control, vector<char> {
 			auto x1 = x + pos.x * fontsize.x;
 			auto y1 = y + pos.y * fontsize.y;
 			auto pb = ps;
-			ps = codescan::getnext(ps, pos.x, pos.y, type);
+			ps = codescan::getnext(ps, pos, type, source_lexer);
 			if(pb == ps)
 				break;
 			if(type == Identifier)
@@ -423,6 +418,11 @@ class widget_codeview : public control, vector<char> {
 				break;
 			default: break;
 			}
+			if(!source_lexer)
+				statuscolumn(0, 50, "TXT");
+			else
+				statuscolumn(0, 50, source_lexer->id);
+			statuscolumn(1, 160, "%Row: %2i, %Column: %1i", pos1.x, pos1.y);
 		}
 	}
 	int	getpixelperline() const {
@@ -666,6 +666,12 @@ public:
 				memcpy(begin(), p, s + 1);
 				delete p;
 				invalidate();
+				source_lexer = findlexer(szext(url));
+			}
+		} else if(equal(id, "SelectAll")) {
+			if(run) {
+				set(0, false, false);
+				set(zlen((const char*)data), true, false);
 			}
 		} else
 			return false;
@@ -681,6 +687,19 @@ public:
 		else
 			control::setvalue(id, value);
 	}
+	static lexer* findlexer(const char* ext) {
+		char temp[260]; stringbuilder sb(temp);
+		sb.add("*.%1", ext);
+		for(auto& e : bsdata<lexer>()) {
+			if(szpmatch(temp, e.extensions))
+				return &e;
+		}
+		return 0;
+	}
+	const char** getcommands() const override {
+		static const char* source[] = {"Cut", "Copy", "Paste", "SelectAll", 0};
+		return source;
+	}
 };
 
 static class widget_codeview_plugin : controls::control::plugin, controls::control::plugin::builder {
@@ -689,7 +708,7 @@ static class widget_codeview_plugin : controls::control::plugin, controls::contr
 	}
 	bool canopen(const char* url) const override {
 		auto ext = szext(url);
-		if(equal(ext, "c2"))
+		if(widget_codeview::findlexer(ext))
 			return true;
 		return false;
 	}
@@ -697,11 +716,12 @@ static class widget_codeview_plugin : controls::control::plugin, controls::contr
 		return new widget_codeview();
 	}
 	void getextensions(stringbuilder& sb) const override {
-		const char* exts = "*.c2";
-		sb.add("Исходный код (%1)", exts);
-		sb.addsz();
-		sb.add(exts);
-		sb.addsz();
+		for(auto& e : bsdata<lexer>()) {
+			sb.add("Исходный код (%1)", e.id);
+			sb.addsz();
+			sb.add(e.extensions);
+			sb.addsz();
+		}
 	}
 public:
 	widget_codeview_plugin() : plugin("Codeview", dock::Workspace) {}

@@ -17,6 +17,7 @@ BSDATA(command) = {
 	{"Remove", 0, KeyDelete, 19},
 	{"Save", 0, Ctrl + 'S', 2},
 	{"Settings", 0, 0, 16},
+	{"SelectAll", 0, Ctrl + 'A', -1},
 	{"SortAs", 0, 0, 11},
 	{"SortDs", 0, 0, 12},
 };

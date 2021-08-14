@@ -1,5 +1,6 @@
-﻿import core.crt;import core.string as this;
+﻿import core.crt;import core.string as this;
+import core.io;
 int main() {
 	char* test = "Test another";	char temp[260];	cpy(temp, "Test string");	cat(temp, " is ");	number(end(temp), 11, 6, 0, 10);
 	message.text(temp, "Test - Caption");
-	len(test);	crt.exit(0);}
+	len(test);	crt.exit(0);}

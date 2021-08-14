@@ -86,6 +86,8 @@ class slice {
 	T*								data;
 	unsigned						count;
 public:
+	template<size_t N> constexpr slice(T(&v)[N]) : data(v), count(N) {}
+	template<int N> constexpr slice(adat<T,N>& v) : data(v), count(v.count) {}
 	constexpr slice(T* data, unsigned count) : data(data), count(count) {}
 	constexpr T*					begin() const { return data; }
 	constexpr T*					end() const { return data + count; }
