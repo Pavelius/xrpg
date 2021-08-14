@@ -2,7 +2,7 @@
   "dockbar":{
     "DockLeft":{
       "current":0,
-      "size":220
+      "size":257
     },
     "DockLeftBottom":{
       "current":0,
@@ -36,7 +36,7 @@
           "ShowStatusBar":2,
           "ShowLeftPanel":2,
           "ShowRightPanel":2,
-          "ShowBottomPanel":3,
+          "ShowBottomPanel":0,
           "ShowPadding":2
         },
         "Tabs":{
@@ -87,24 +87,24 @@
     }
   },
   "window":{
-    "x":223,
-    "y":66,
-    "width":830,
-    "height":629,
-    "header_width":118,
-    "flags":48
+    "x":215,
+    "y":90,
+    "width":784,
+    "height":539,
+    "header_width":163,
+    "flags":112
   },
   "controls":{
     "picture":{
       "Docking":4,
       "Visible":1,
       "MessageList":{
-        "Docking":0,
+        "Docking":4,
         "Visible":1,
         "columns":{
           "column":{
             "id":"Message",
-            "width":116
+            "width":200
           },
           "column":{
             "id":"Date",

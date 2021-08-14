@@ -19,38 +19,6 @@ int codescan::getindex(const char* source, pointl pt) {
 	return p - source;
 }
 
-void codescan::getstate(const char* source, int origin_y, int& cashe_y, pointl& size, int p1, pointl& pp1, int p2, pointl& pp2) {
-	size.x = size.y = 0;
-	pointl pos = {0, 0};
-	auto p = source;
-	cashe_y = pos.y;
-	while(*p) {
-		switch(*p) {
-		case 10: case 13:
-			if(size.x < pos.x)
-				size.x = pos.x;
-			p = getnext(p, pos);
-			if(origin_y == pos.y)
-				cashe_y = p - source;
-			break;
-		case 9:
-			p = getnext(p, pos);
-			break;
-		default:
-			pos.x++; p++;
-			break;
-		}
-		auto n = p - source;
-		if(p1 == n)
-			pp1 = pos;
-		if(p2 == n)
-			pp2 = pos;
-	}
-	if(size.x < pos.x)
-		size.x = pos.x;
-	size.y = pos.y;
-}
-
 const char* codescan::getnext(const char* p, pointl& pos) {
 	switch(*p) {
 	case 0:

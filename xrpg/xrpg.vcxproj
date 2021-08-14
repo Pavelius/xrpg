@@ -169,6 +169,7 @@
     <ClInclude Include="log.h" />
     <ClInclude Include="markup.h" />
     <ClInclude Include="menu.h" />
+    <ClInclude Include="metadata.h" />
     <ClInclude Include="moveable.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="pointl.h" />
@@ -176,6 +177,7 @@
     <ClInclude Include="rect.h" />
     <ClInclude Include="screenshoot.h" />
     <ClInclude Include="setting.h" />
+    <ClInclude Include="string.h" />
     <ClInclude Include="stringbuilder.h" />
     <ClInclude Include="variant.h" />
     <ClInclude Include="varianta.h" />
@@ -188,6 +190,7 @@
     <ClCompile Include="bsreq.cpp" />
     <ClCompile Include="bstream.cpp" />
     <ClCompile Include="codescan.cpp" />
+    <ClCompile Include="metadata.cpp" />
     <ClCompile Include="widget_codeview.cpp" />
     <ClCompile Include="color.cpp" />
     <ClCompile Include="command.cpp" />

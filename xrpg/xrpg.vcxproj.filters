@@ -138,6 +138,12 @@
     <ClInclude Include="codescan.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="metadata.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="string.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -324,6 +330,9 @@
       <Filter>Widgets</Filter>
     </ClCompile>
     <ClCompile Include="codescan.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="metadata.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>

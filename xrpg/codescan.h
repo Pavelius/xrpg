@@ -11,7 +11,7 @@ enum group_s : unsigned char {
 	Type,
 };
 namespace metrics {
-extern int		tabs;
+extern int				tabs;
 }
 struct lexer {
 	struct word {
@@ -33,5 +33,4 @@ struct lexer {
 int						getindex(const char* p, pointl pos);
 const char*				getnext(const char* p, pointl& pos);
 const char*				getnext(const char* p, pointl& pos, group_s& type, const lexer* pk = 0);
-void					getstate(const char* p, int origin_y, int& cashe_y, pointl& size, int p1, pointl& pp1, int p2, pointl& pp2);
 }

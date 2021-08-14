@@ -5,6 +5,7 @@
 #include "draw_figure.h"
 #include "io_stream.h"
 #include "main.h"
+#include "string.h"
 
 using namespace draw;
 
@@ -74,6 +75,14 @@ static bool test_archive(bool write_mode) {
 	return true;
 }
 
+static bool test_string() {
+	string t1 = "Answer";
+	string t2 = "Duke";
+	if(t1 == "Duke1")
+		return false;
+	return t1 == "Answer";
+}
+
 void initialize_codeview();
 
 #ifdef _DEBUG
@@ -84,6 +93,8 @@ int main() {
 #ifdef _DEBUG
 	main_util();
 #endif
+	if(!test_string())
+		return -1;
 	if(!test_archive(true))
 		return -1;
 	if(!initialize_translation("ru"))
