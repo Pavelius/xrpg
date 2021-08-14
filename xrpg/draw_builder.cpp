@@ -19,15 +19,15 @@ void builder::render(const char** commands) {
 					addseparator();
 				separator = false;
 			}
-			add(*p);
-			count++;
+			if(add(*p))
+				count++;
 		}
 	}
 }
 
-void builder::render(const char** commands, const void* object, fnallowid allowid, fngetcommands getcommands) {
-	this->separator = false;
-	this->count = 0;
+void builder::render(const char** commands, const void* object, fnallowid allowid, fngetcommands getcommands, bool separator) {
+	this->separator = separator;
+	this->count = separator ? 1 : 0;
 	this->object = object;
 	this->allowid = allowid;
 	this->getcommands = getcommands;

@@ -18,7 +18,7 @@
     },
     "DockBottom":{
       "current":0,
-      "size":239
+      "size":192
     },
     "DockWorkspace":{
       "current":0,
@@ -79,8 +79,8 @@
     }
   },
   "window":{
-    "x":387,
-    "y":45,
+    "x":141,
+    "y":41,
     "width":924,
     "height":663,
     "header_width":160,
@@ -96,7 +96,7 @@
         "columns":{
           "column":{
             "id":"Message",
-            "width":200
+            "width":836
           },
           "column":{
             "id":"Date",

@@ -41,7 +41,10 @@ struct toolbar_builder : builder {
 		gradv({x + 3, y + 4, x + 5, y + size.y - 4}, colors::border.lighten(), colors::border);
 		x += 7;
 	}
-	void add(const char* id) override {
+	bool add(const char* id) override {
+		auto index = draw::getimage(id);
+		if(index == -1)
+			return false;
 		auto width = size.x;
 		rect rc = {x, y, x + width, y + size.y};
 		auto key = draw::getkey(id);
@@ -58,8 +61,6 @@ struct toolbar_builder : builder {
 		}
 		auto disabled = allowid && !allowid(object, id);
 		auto need_run = false;
-		//if(draw::isfocused(object) && key && hot.key==key)
-		//	need_run = true;
 		if(tool(rc, disabled, false, true, false))
 			need_run = true;
 		if(need_run) {
@@ -67,8 +68,9 @@ struct toolbar_builder : builder {
 				static_cast<const controls::control*>(object)->post(id);
 		}
 		if(object)
-			static_cast<const controls::control*>(object)->icon(x + size.x / 2 + 1, y + size.y / 2 + 1, id, disabled);
+			static_cast<const controls::control*>(object)->icon(x + size.x / 2 + 1, y + size.y / 2 + 1, index, disabled);
 		x += width;
+		return true;
 	}
 };
 
@@ -80,7 +82,7 @@ static const char** getcommands_proc(const void* object, const char* id) {
 	return ((controls::control*)object)->getcommands(id);
 }
 
-int	controls::control::toolbar(int x, int y, int width, int* next_x) const {
+int	controls::control::toolbar(int x, int y, int width, int* next_x, bool separator) const {
 	auto commands = getcommands();
 	if(next_x)
 		*next_x = x;
@@ -91,7 +93,7 @@ int	controls::control::toolbar(int x, int y, int width, int* next_x) const {
 		return 0;
 	short height = images->get(0).getrect(0, 0, 0).height() + 4;
 	toolbar_builder e(x, y, width, {height, height});
-	e.render(getcommands(), this, isallow_proc, getcommands_proc);
+	e.render(getcommands(), this, isallow_proc, getcommands_proc, separator);
 	if(next_x)
 		*next_x = e.x;
 	if(e.x != x)

@@ -70,7 +70,7 @@ static int paint_control(rect rc, const controla& elements, int& current) {
 			line(rc.x1, rc.y1 + dy, rc.x2, rc.y1 + dy, colors::border);
 		rect rct = {rc.x1, rc.y1, rc.x2, rc.y1 + dy};
 		if(tabs(rct, false, false, (void**)elements.begin(), 0, elements.getcount(),
-			current, &current_hilite, get_control_name)) {
+			current, &current_hilite, get_control_name, 0, colors::window)) {
 			if(current_hilite != -1)
 				current = current_hilite;
 			else

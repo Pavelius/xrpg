@@ -437,7 +437,7 @@ static struct widget_settings : controls::control {
 			line(rc.x1, rc.y1 + h1, rc.x2 - metrics::padding, rc.y1 + h1, colors::border);
 		if(draw::tabs({rc.x1, rc.y1, rc.x2, rc.y1 + h1}, false, false,
 			(void**)tabs.data, 0, tabs.count, current_tab, &hilited,
-			get_page_name)) {
+			get_page_name, 0, colors::form)) {
 			draw::execute(callback_settab);
 			hot.param = hilited;
 		}
@@ -559,13 +559,16 @@ static struct widget_application : draw::controls::control {
 				current_select = 0;
 			const int dy = draw::texth() + 8;
 			rect rct = {rc.x1, rc.y1, rc.x2, rc.y1 + dy};
+			rc.y1 += dy;
+			if(current_active_control)
+				current_active_control->view(rc, metrics::show::padding, true, false);
 			auto current_hilite = -1;
 			auto result = draw::tabs(rct, false, false, (void**)ct.begin(), 0, z1,
-				current_select, &current_hilite, getlabel, &rct.x1);
+				current_select, &current_hilite, getlabel, &rct.x1, colors::window);
 			if(ct.getcount() != 0) {
 				auto current_hilite2 = -1;
 				auto r1 = draw::tabs(rct, true, false, (void**)ct.begin(), z1, ct.getcount(),
-					current_select, &current_hilite2, getlabel, &rct.x1);
+					current_select, &current_hilite2, getlabel, &rct.x1, colors::window);
 				if(current_hilite2 != -1)
 					current_hilite = current_hilite2;
 				if(r1)
@@ -578,9 +581,6 @@ static struct widget_application : draw::controls::control {
 				case 2: draw::execute(post_close, 0, 0, ct.begin()[current_hilite]); break;
 				}
 			}
-			rc.y1 += dy;
-			if(current_active_control)
-				current_active_control->view(rc, metrics::show::padding, true);
 		}
 	}
 	void paint(const rect& rc) override {
@@ -784,11 +784,13 @@ void draw::application() {
 		if(metrics::show::padding)
 			rc.offset(metrics::padding);
 		pc->paint(rc);
-		pc->toolbar(rt.x1, rt.y1, rt.width());
+		pc->toolbar(rt.x1, rt.y1, rt.width(), &rt.x1);
+		if(current_active_control)
+			current_active_control->toolbar(rt.x1, rt.y1, rt.width(), 0, true);
 		auto hilite_tab = -1;
 		auto reaction = draw::tabs(rt, false, true, (void**)layouts, 0,
 			sizeof(layouts) / sizeof(layouts[0]), current_tab, &hilite_tab,
-			getlabel);
+			getlabel, 0, colors::form);
 		if(hilite_tab != -1)
 			get_control_status(layouts[hilite_tab]);
 		if(getstatustext().isempthy())

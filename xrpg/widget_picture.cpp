@@ -1,5 +1,7 @@
 #include "draw.h"
+#include "draw_button.h"
 #include "draw_control.h"
+#include "draw_focus.h"
 
 using namespace draw;
 using namespace draw::controls;
@@ -10,6 +12,8 @@ class picture_widget : public scrollable {
 	void redraw(const rect& rco) override {
 		rect rc = centerview(rco);
 		draw::blit(*draw::canvas, rc.x1, rc.y1, rc.width(), rc.height(), 0, source, origin_x, origin_y);
+		if(isfocused(this))
+			statuscolumn(0, 120, "%Size %1ix%2i", source.width, source.height);
 	}
 	const char* getvalue(const char* id, stringbuilder& sb) const override {
 		if(equal(id, "URL"))

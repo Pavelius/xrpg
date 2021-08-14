@@ -14,11 +14,11 @@ protected:
 public:
 	constexpr builder() : separator(), count(), object(), allowid(), getcommands() {}
 	virtual ~builder() {}
-	virtual void			add(const char* id) = 0;
+	virtual bool			add(const char* id) = 0;
 	virtual void			addseparator() = 0;
 	const char*				choose(const char** source, const void* object, fnallowid allowid = 0, fngetcommands getcommands = 0);
 	virtual const char*		finish() const { return 0; }
-	void					render(const char** commands, const void* object, fnallowid proc = 0, fngetcommands getcommands = 0);
+	void					render(const char** commands, const void* object, fnallowid proc = 0, fngetcommands getcommands = 0, bool separator = false);
 	virtual void			start() const {}
 };
 }

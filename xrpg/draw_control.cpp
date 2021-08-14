@@ -47,11 +47,9 @@ void control::post(const char* id, int value) const {
 	draw::execute(command_setvalue, value, (size_t)id, this);
 }
 
-void control::icon(int x, int y, const char* id, bool disabled) const {
-	auto i = getimage(id);
-	if(i == -1)
-		return;
-	image(x, y, getimages(), i, 0, disabled ? 0x80 : 0xFF);
+void control::icon(int x, int y, int index, bool disabled) const {
+	if(index!=-1)
+		image(x, y, getimages(), index, 0, disabled ? 0x80 : 0xFF);
 }
 
 bool control::plugin::builder::canopen(const char* url) const {
@@ -130,9 +128,9 @@ void control::contextmenu(const char** source) {
 	execute(id, true);
 }
 
-void control::view(const rect& ro, bool show_border, bool show_background) {
+void control::view(const rect& ro, bool show_border, bool show_background, bool show_toolbar) {
 	rect rc = ro;
-	if(hastoolbar())
+	if(show_toolbar && hastoolbar())
 		rc.y1 += toolbar(rc.x1, rc.y1, rc.width(), 0);
 	if(show_background)
 		rectf(rc, colors::window);

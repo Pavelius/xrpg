@@ -11,22 +11,22 @@ int draw::sheetline(rect rc, bool background) {
 	return rc.height();
 }
 
-static bool sheet(rect& rc, rect& rct, const char* string, bool* area_result, bool checked, bool right_side, int w2) {
+static bool sheet(rect& rc, rect& rct, const char* string, bool* area_result, bool checked, bool right_side, int w2, color back) {
 	bool result = false;
 	auto tw = textw(string);
 	auto ts = textw('1');
 	auto width = tw + w2;
 	if(right_side)
-		rct.set(rc.x2 - width - ts * 2, rc.y2 - texth() - 10, rc.x2, rc.y2);
+		rct.set(rc.x2 - width - ts * 2, rc.y2 - texth() - 7, rc.x2, rc.y2);
 	else
-		rct.set(rc.x1, rc.y2 - texth() - 8, rc.x1 + width + ts * 2, rc.y2);
+		rct.set(rc.x1, rc.y2 - texth() - 7, rc.x1 + width + ts * 2, rc.y2);
 	auto a = ishilite(rct);
 	if(area_result)
 		*area_result = a;
 	auto push_fore = fore;
 	auto ty = rct.y1 + 4;
 	if(checked) {
-		rectf({rct.x1 + 1, rct.y1 + 1, rct.x2, rct.y2 + 1}, colors::form);
+		rectf({rct.x1 + 1, rct.y1 + 1, rct.x2, rct.y2 + 1}, back);
 		fore = colors::border;
 		line(rct.x1, rct.y1, rct.x2, rct.y1);
 		line(rct.x1, rct.y1, rct.x1, rct.y2);
@@ -40,7 +40,7 @@ static bool sheet(rect& rc, rect& rct, const char* string, bool* area_result, bo
 		if(hot.key == MouseLeft && hot.pressed)
 			result = true;
 		else
-			draw::rectf({rct.x1 + 1, rct.y1 + 1, rct.x2, rct.y2 - 2}, colors::form, 64);
+			draw::rectf({rct.x1 + 1, rct.y1 + 1, rct.x2, rct.y2 - 2}, back, 64);
 	}
 	if(right_side)
 		rc.x2 -= rct.width();
@@ -50,7 +50,7 @@ static bool sheet(rect& rc, rect& rct, const char* string, bool* area_result, bo
 }
 
 int draw::tabs(rect rc, bool show_close, bool right_side, void** data, int start, int count, int current, int* hilite,
-	fntext gtext, int* result_x1) {
+	fntext gtext, int* result_x1, color back) {
 	char temp[260]; stringbuilder sb(temp);
 	auto result = 0;
 	if(hilite)
@@ -61,7 +61,7 @@ int draw::tabs(rect rc, bool show_close, bool right_side, void** data, int start
 		auto object = data[i]; sb.clear();
 		auto s = gtext(object, sb);
 		auto a = false; rect element;
-		if(sheet(rc, element, s, &a, (i == current), right_side, (show_close ? 16 : 0)))
+		if(sheet(rc, element, s, &a, (i == current), right_side, (show_close ? 16 : 0), back))
 			result = 1;
 		if(a) {
 			if(hilite)
@@ -93,5 +93,5 @@ int draw::tabv(rect ro, bool show_close, bool right_side, void** data, int start
 	rect rc = {ro.x1, ro.y1 + dy, ro.x2, ro.y2};
 	rectf(rc, colors::form);
 	rectb(rc, colors::border);
-	return tabs({ro.x1, ro.y1, ro.x2, ro.y1 + dy}, show_close, right_side, data, start, count, current, hilite, gtext);
+	return tabs({ro.x1, ro.y1, ro.x2, ro.y1 + dy}, show_close, right_side, data, start, count, current, hilite, gtext, 0, colors::form);
 }

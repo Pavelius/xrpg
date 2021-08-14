@@ -48,7 +48,7 @@ public:
 	virtual const sprite*	getimages() const { return std_images; }
 	virtual const char*		getvalue(const char* id, stringbuilder& sb) const { return 0; }
 	virtual bool			hastoolbar() const { return true; }
-	void					icon(int x, int y, const char* id, bool disabled) const;
+	void					icon(int x, int y, int index, bool disabled) const;
 	virtual bool			isfocusable() const { return true; }
 	bool					ishilited() const;
 	virtual bool			ismodified() const { return false; }
@@ -59,9 +59,9 @@ public:
 	virtual void			read(serializer& e) {}
 	static const sprite*	std_images;
 	virtual void			setvalue(const char* id, long value) {}
-	int						toolbar(int x, int y, int width, int* next_x = 0) const;
+	int						toolbar(int x, int y, int width, int* next_x = 0, bool separator = false) const;
 	virtual void			write(serializer& e) const {}
-	void					view(const rect& rc, bool show_border, bool show_background);
+	void					view(const rect& rc, bool show_border, bool show_background, bool show_toolbar = true);
 };
 class scrollable : public control {
 protected:

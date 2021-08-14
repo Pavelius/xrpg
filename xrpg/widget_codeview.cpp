@@ -6,8 +6,8 @@
 #include "draw_focus.h"
 #include "draw_scroll.h"
 #include "io_stream.h"
-#include "pointl.h"
 #include "setting.h"
+#include "pointl.h"
 
 using namespace codescan;
 using namespace draw;
@@ -419,7 +419,7 @@ class widget_codeview : public control, vector<char> {
 			default: break;
 			}
 			if(!source_lexer)
-				statuscolumn(0, 50, "TXT");
+				statuscolumn(0, 50, "Text");
 			else
 				statuscolumn(0, 50, source_lexer->id);
 			statuscolumn(1, 160, "%Row: %2i, %Column: %1i", pos1.x, pos1.y);
@@ -645,8 +645,41 @@ public:
 			return url;
 		return control::getvalue(id, sb);
 	}
+	void copy() {
+		auto p1 = getbegin();
+		auto p2 = getend();
+		auto sn = p2 - p1;
+		if(sn > 0)
+			clipboard::copy(p1, sn);
+	}
+	void paste() {
+		long size;
+		auto p = clipboard::paste(&size);
+		if(!p)
+			return;
+		clear();
+		paste(p);
+		delete p;
+	}
 	bool execute(const char* id, bool run) override {
-		if(equal(id, "Save")) {
+		if(equal(id, "Cut")) {
+			if(!isselected() || readonly)
+				return false;
+			if(run) {
+				copy();
+				clear();
+			}
+		} else if(equal(id, "Copy")) {
+			if(!isselected())
+				return false;
+			if(run)
+				copy();
+		} else if(equal(id, "Paste")) {
+			if(!clipboard::isallowpaste() || readonly)
+				return false;
+			if(run)
+				paste();
+		} else if(equal(id, "Save")) {
 			if(run) {
 				io::file file(url, StreamText | StreamWrite);
 				if(!file)

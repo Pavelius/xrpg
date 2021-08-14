@@ -39,7 +39,7 @@ struct menu_builder : builder {
 		hot.pressed = false;
 		return (const char*)result;
 	}
-	void add(const char* id) override {
+	bool add(const char* id) override {
 		MENUITEMINFO mi = {0};
 		mi.cbSize = sizeof(mi);
 		mi.fMask = MIIM_STRING | MIIM_FTYPE | MIIM_STATE | MIIM_ID | MIIM_SUBMENU | MIIM_DATA;
@@ -61,6 +61,7 @@ struct menu_builder : builder {
 		mi.wID = ++count;
 		mi.dwItemData = (size_t)id;
 		InsertMenuItemA(hMenu, mi.wID, 0, &mi);
+		return true;
 	}
 	void addseparator() override {
 		AppendMenuA(hMenu, MF_SEPARATOR, ++count, 0);
