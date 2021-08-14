@@ -361,8 +361,7 @@ int draw::field(int x, int& y, int width, const char* label, color& value, int h
 	setposition(x, y, width);
 	titletext(x, y, width, label, header_width);
 	auto push_fore = fore;
-	auto level = value.gray().r;
-	if(level < 100)
+	if(value.isdark())
 		fore = colors::white;
 	else
 		fore = colors::black;
@@ -562,6 +561,7 @@ static struct widget_application : draw::controls::control {
 			rc.y1 += dy;
 			if(current_active_control)
 				current_active_control->view(rc, metrics::show::padding, true, false);
+			line(rct.x1, rct.y2, rct.x2, rct.y2, colors::border);
 			auto current_hilite = -1;
 			auto result = draw::tabs(rct, false, false, (void**)ct.begin(), 0, z1,
 				current_select, &current_hilite, getlabel, &rct.x1, colors::window);

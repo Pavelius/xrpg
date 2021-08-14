@@ -15,6 +15,10 @@ color color::gray() const {
 	return{level, level, level, a};
 }
 
+bool color::isdark() const {
+	return gray().r < 100;
+}
+
 color color::lighten() const {
 	int		n;
 	color	result;

@@ -20,6 +20,7 @@ struct color {
 	char*					getname(char* result, const char* result_maximum) const;
 	color					gray() const;
 	color					lighten() const;
+	bool					isdark() const;
 	color					mix(const color c1, unsigned char s = 128) const;
 	color					negative() const;
 	void					read(const void* scanline, int x, int bpp, const void* pallette = 0);

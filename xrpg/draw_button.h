@@ -72,8 +72,9 @@ void						tooltips(const char* format, ...);
 void						tooltips(int x, int y, int width, const char* format, ...);
 }
 extern struct handler*	after_initialize; // After initialization made
+extern struct handler*	after_input; // After input handled
+extern struct handler*	after_theme_change; // After initialization made
 extern struct handler*	before_modal; // Before next step of modal cicle
 extern struct handler*	before_input; // Before next step of modal cicle
-extern struct handler*	after_input; // After input handled
 extern struct handler*	before_setfocus; // Before focus change
 extern struct handler*	leave_modal; // When leaving current modal loop

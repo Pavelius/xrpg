@@ -78,11 +78,11 @@ static int paint_control(rect rc, const controla& elements, int& current) {
 		}
 		rc.y1 += dy;
 		if(metrics::show::padding)
-			rc.offset(metrics::padding);
+			rc.offset(metrics::padding*2);
 		else
 			rc.y1 += metrics::padding;
 	}
-	ec->view(rc, true, true);
+	ec->view(rc, metrics::show::padding, true);
 	return rc.y1 - y1;
 }
 

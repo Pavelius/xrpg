@@ -6,6 +6,7 @@
 #include "draw_focus.h"
 #include "draw_scroll.h"
 #include "io_stream.h"
+#include "handler.h"
 #include "setting.h"
 #include "pointl.h"
 
@@ -23,15 +24,15 @@ struct groupi {
 };
 
 BSDATA(groupi) = {
-	{"Illegal symbol", {255, 0, 0}},
-	{"White space", color(255, 255, 255)},
-	{"Operator", color(255, 128, 0)},
-	{"Keyword", color(0, 0, 128), TextBold},
-	{"Comment", color(0, 128, 0)},
-	{"Number", color(128, 128, 0)},
-	{"String", color(0, 255, 255)},
-	{"Identifier", color(0, 0, 0)},
-	{"Type", color(0, 0, 128)},
+	{"Illegal symbol"},
+	{"White space"},
+	{"Operator"},
+	{"Keyword", {}, TextBold},
+	{"Comment"},
+	{"Number"},
+	{"String"},
+	{"Identifier"},
+	{"Type"},
 };
 assert_enum(groupi, Type)
 
@@ -740,11 +741,42 @@ public:
 	widget_codeview_plugin() : plugin("Codeview", dock::Workspace) {}
 } plugin_instance;
 
+static const setting::element colors_editor[] = {
+	{"IdentifierColor", bsdata<groupi>::elements[Identifier].fore},
+	{"KeywordColor", bsdata<groupi>::elements[Keyword].fore},
+	{"TypeColor", bsdata<groupi>::elements[Type].fore},
+	{"CommentColor", bsdata<groupi>::elements[Comment].fore},
+	{"StringColor", bsdata<groupi>::elements[String].fore},
+	{"NumberColor", bsdata<groupi>::elements[Number].fore},
+	{"OperatorColor", bsdata<groupi>::elements[Operator].fore},
+};
 static setting::element format_setting[] = {{"Tabulation", {common_padding}},
-	{"»спользовать пробелы вместо табул€ции", {use_space_instead_tab}},
+//{"»спользовать пробелы вместо табул€ции", {use_space_instead_tab}},
 };
-static setting::header headers[] = {{"Editor", "General", "Formating", format_setting},
+static setting::header headers[] = {
+	{"Editor", "General", "Formating", format_setting},
+	{"Colors", "Editor", 0, colors_editor},
 };
+
+static void update_theme() {
+	bsdata<groupi>::elements[IllegalSymbol].fore = colors::red;
+	bsdata<groupi>::elements[WhiteSpace].fore = colors::red;
+	bsdata<groupi>::elements[Identifier].fore = colors::text;
+	bsdata<groupi>::elements[Operator].fore = colors::text;
+	if(colors::window.isdark()) {
+		bsdata<groupi>::elements[Type].fore = color(78, 201, 176);
+		bsdata<groupi>::elements[Keyword].fore = color(86, 156, 214);
+		bsdata<groupi>::elements[String].fore = color(214, 136, 82);
+		bsdata<groupi>::elements[Number].fore = color(184, 215, 163);
+		bsdata<groupi>::elements[Comment].fore = color(87, 166, 74);
+	} else {
+		bsdata<groupi>::elements[Type].fore = color(78, 201, 176);
+		bsdata<groupi>::elements[Keyword].fore = color(86, 156, 214);
+		bsdata<groupi>::elements[String].fore = color(214, 136, 82);
+		bsdata<groupi>::elements[Number].fore = color(184, 215, 163);
+		bsdata<groupi>::elements[Comment].fore = color(0, 128, 0);
+	}
+}
 
 void initialize_codeview() {
 	auto old_font = draw::font;
@@ -752,4 +784,9 @@ void initialize_codeview() {
 	fontsize.x = draw::textw('A');
 	fontsize.y = draw::texth();
 	draw::font = old_font;
+	update_theme();
+}
+
+HANDLER(after_theme_change) {
+	update_theme();
 }

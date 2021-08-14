@@ -22,6 +22,7 @@ Colors: Цвета
 Column: Колонка
 CombatVeteran: Солдат
 Commander: Коммандер
+CommentColor: Цвет комментариев
 CoolHead: Крутая голова
 Copy: Копировать
 Counselor: Советник
@@ -50,8 +51,10 @@ Formating: Форматирование
 General: Общие
 Gunslingers: Стрелки
 HotKey: Горячая клавиша
+IdentifierColor: Цвет идентификаторов
 Increase: Увеличить
 Inventor: Изобретатель
+KeywordColor: Цвет ключевых слов
 Log: Логирование
 Main: Главный
 MeanStreak: Торговая хватка
@@ -62,8 +65,10 @@ Name: Наименование
 Next: Далее
 NoUrlLabelExtension: Не выводить в имя закладки расширение.
 NotFoundOpenDocuments: Не найдено ни одного открытого документа.
+NumberColor: Цвет чисел
 Open: Открыть
 OpenFile: Открыть файл
+OperatorColor: Цвет операторов
 Padding: Отступ
 Paste: Вставить
 Perfomer: Артист
@@ -86,11 +91,13 @@ ShowPadding: Отступы на главном экране
 ShowRightPanel: Показать правую боковую панель
 ShowStatusBar: Показать панель статуса
 Size: Размер
+StringColor: Цвет строк
 Tabs: Закладки
 Tabulation: Табуляция
 TextColor: Цвет текста
 TipsBackColor: Цвет фона подсказки
 TipsTextColor: Цвет текста подсказки
+TypeColor: Цвет типов
 UppercaseLabel: Первую букву имени закладки выводить в верхнем регистре.
 UseShortNameLabel: В имени закладки отображать только имя файла (без полного пути).
 View: Вид
@@ -99,4 +106,3 @@ Weight: Вес
 WindowColor: Цвет окна
 Workhorse: Рабочая лошадка
 Workspace: Рабочий стол
-Использовать пробелы вместо табуляции: 

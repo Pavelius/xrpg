@@ -2,11 +2,11 @@
   "dockbar":{
     "DockLeft":{
       "current":0,
-      "size":0
+      "size":274
     },
     "DockLeftBottom":{
       "current":0,
-      "size":0
+      "size":200
     },
     "DockRight":{
       "current":0,
@@ -62,6 +62,15 @@
         "ButtonColor":14671839,
         "TipsBackColor":5263480,
         "TipsTextColor":16777215
+      },
+      "Editor":{
+        "IdentifierColor":0,
+        "KeywordColor":5676246,
+        "TypeColor":5163440,
+        "CommentColor":32768,
+        "StringColor":14059602,
+        "NumberColor":12113827,
+        "OperatorColor":0
       }
     },
     "Log":{
@@ -72,15 +81,14 @@
     "Editor":{
       "General":{
         "Formating":{
-          "Tabulation":4,
-          "Использовать пробелы вместо табуляции":0
+          "Tabulation":4
         }
       }
     }
   },
   "window":{
-    "x":175,
-    "y":42,
+    "x":141,
+    "y":46,
     "width":994,
     "height":697,
     "header_width":119,
@@ -96,7 +104,7 @@
         "columns":{
           "column":{
             "id":"Message",
-            "width":906
+            "width":200
           },
           "column":{
             "id":"Date",
