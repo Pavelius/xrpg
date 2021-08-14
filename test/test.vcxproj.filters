@@ -21,6 +21,9 @@
     <Filter Include="Plugins">
       <UniqueIdentifier>{6a87a028-5983-4abb-909c-81913bea2cde}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{c6e6f94a-f50b-4764-ac79-be3714bf9806}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -41,10 +44,25 @@
     <ClCompile Include="lexers.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="..\xrpg\font_util.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="main_util.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrpg\sprite_util.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
       <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xrpg\font_util.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xrpg\sprite_util.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

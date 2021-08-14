@@ -145,12 +145,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\xrpg\font_util.cpp" />
     <ClCompile Include="..\xrpg\io_plugin_json.cpp" />
+    <ClCompile Include="..\xrpg\sprite_util.cpp" />
     <ClCompile Include="..\xrpg\widget_picture.cpp" />
     <ClCompile Include="lexers.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="planet.cpp" />
     <ClCompile Include="trait.cpp" />
+    <ClCompile Include="main_util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="errors.txt" />
@@ -158,6 +161,8 @@
     <Text Include="locale\ru\Names.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\xrpg\font_util.h" />
+    <ClInclude Include="..\xrpg\sprite_util.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

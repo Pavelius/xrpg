@@ -2,7 +2,7 @@
   "dockbar":{
     "DockLeft":{
       "current":0,
-      "size":274
+      "size":220
     },
     "DockLeftBottom":{
       "current":0,
@@ -18,7 +18,7 @@
     },
     "DockBottom":{
       "current":0,
-      "size":192
+      "size":301
     },
     "DockWorkspace":{
       "current":0,
@@ -36,8 +36,8 @@
           "ShowStatusBar":2,
           "ShowLeftPanel":2,
           "ShowRightPanel":2,
-          "ShowBottomPanel":0,
-          "ShowPadding":0
+          "ShowBottomPanel":3,
+          "ShowPadding":2
         },
         "Tabs":{
           "UseShortNameLabel":2,
@@ -54,23 +54,23 @@
         
       },
       "Form":{
-        "TextColor":0,
-        "WindowColor":16777215,
-        "FormColor":15790320,
-        "BorderColor":11316396,
-        "ActiveColor":32940,
-        "ButtonColor":14671839,
-        "TipsBackColor":5263480,
+        "TextColor":16777215,
+        "WindowColor":2105376,
+        "FormColor":2960688,
+        "BorderColor":4144966,
+        "ActiveColor":11304960,
+        "ButtonColor":31436,
+        "TipsBackColor":6579320,
         "TipsTextColor":16777215
       },
       "Editor":{
-        "IdentifierColor":0,
+        "IdentifierColor":16777215,
         "KeywordColor":5676246,
         "TypeColor":5163440,
-        "CommentColor":32768,
+        "CommentColor":5744202,
         "StringColor":14059602,
         "NumberColor":12113827,
-        "OperatorColor":0
+        "OperatorColor":16777215
       }
     },
     "Log":{
@@ -87,11 +87,11 @@
     }
   },
   "window":{
-    "x":141,
-    "y":46,
-    "width":994,
-    "height":697,
-    "header_width":119,
+    "x":223,
+    "y":66,
+    "width":830,
+    "height":629,
+    "header_width":118,
     "flags":48
   },
   "controls":{
@@ -99,12 +99,12 @@
       "Docking":4,
       "Visible":1,
       "MessageList":{
-        "Docking":4,
+        "Docking":0,
         "Visible":1,
         "columns":{
           "column":{
             "id":"Message",
-            "width":200
+            "width":116
           },
           "column":{
             "id":"Date",

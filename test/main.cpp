@@ -76,7 +76,14 @@ static bool test_archive(bool write_mode) {
 
 void initialize_codeview();
 
+#ifdef _DEBUG
+void main_util();
+#endif
+
 int main() {
+#ifdef _DEBUG
+	main_util();
+#endif
 	if(!test_archive(true))
 		return -1;
 	if(!initialize_translation("ru"))
