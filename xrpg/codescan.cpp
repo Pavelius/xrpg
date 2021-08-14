@@ -16,7 +16,7 @@ int codescan::getindex(const char* source, pointl pt) {
 		} else if(pt.y < pos.y)
 			return i;
 	}
-	return -1;
+	return p - source;
 }
 
 void codescan::getstate(const char* source, int origin_y, int& cashe_y, pointl& size, int p1, pointl& pp1, int p2, pointl& pp2) {
@@ -126,7 +126,7 @@ const char* codescan::getnext(const char* p, pointl& pos, group_s& type, const l
 		while(ischa(*p) || *p == '_' || isnum(*p))
 			p = getnext(p, pos);
 		if(pk) {
-			auto pw = pk->find(pb, p - pb);
+			auto pw = pk->find(pk->keywords, pb, p - pb);
 			if(pw)
 				type = Keyword;
 		}
@@ -139,8 +139,8 @@ const char* codescan::getnext(const char* p, pointl& pos, group_s& type, const l
 	return p;
 }
 
-const codescan::lexer::word* codescan::lexer::find(const char* sym, unsigned size) const {
-	for(auto& e : keywords) {
+const codescan::lexer::word* codescan::lexer::find(const worda& source, const char* sym, unsigned size) {
+	for(auto& e : source) {
 		if(e.size != size)
 			continue;
 		if(memcmp(e.id, sym, size) == 0)

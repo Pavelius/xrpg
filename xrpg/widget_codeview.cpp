@@ -24,15 +24,16 @@ struct groupi {
 
 BSDATA(groupi) = {
 	{"Illegal symbol", {255, 0, 0}},
-	{"White space", {color(255, 255, 255)}},
-	{"Operator", {color(255, 128, 0)}},
-	{"Keyword", {color(0, 0, 128)}, TextBold},
-	{"Comment", {color(0, 128, 0)}},
-	{"Number", {color(128, 128, 0)}},
-	{"String", {color(0, 255, 255)}},
-	{"Identifier", {color(0, 0, 0)}},
+	{"White space", color(255, 255, 255)},
+	{"Operator", color(255, 128, 0)},
+	{"Keyword", color(0, 0, 128), TextBold},
+	{"Comment", color(0, 128, 0)},
+	{"Number", color(128, 128, 0)},
+	{"String", color(0, 255, 255)},
+	{"Identifier", color(0, 0, 0)},
+	{"Type", color(0, 0, 128)},
 };
-assert_enum(groupi, Identifier)
+assert_enum(groupi, Type)
 
 static const sprite* default_font = (sprite*)loadb("art/fonts/code.pma");
 static point fontsize;
@@ -58,20 +59,37 @@ class widget_codeview : public control, vector<char> {
 	bool ismodified() const {
 		return modified;
 	}
-	void ensurevisible(int v) {
-		if(v < 0 || v >= maximum.y)
-			return;
-		if(v < origin.y) {
-			origin.y = v;
-			invalidate();
+	void cashing() {
+		pointl pos;
+		pos1 = pos2 = pos = {};
+		cash_origin = pos.y;
+		auto pb = (const char*)begin();
+		auto p = pb;
+		while(*p) {
+			switch(*p) {
+			case 10: case 13:
+				if(size.x < pos.x)
+					size.x = pos.x;
+				p = getnext(p, pos);
+				if(origin.y == pos.y)
+					cash_origin = p - pb;
+				break;
+			case 9:
+				p = getnext(p, pos);
+				break;
+			default:
+				pos.x++; p++;
+				break;
+			}
+			auto n = p - pb;
+			if(p1 == n)
+				pos1 = pos;
+			if(p2 == n)
+				pos2 = pos;
 		}
-		if(v > origin.y + (lines_per_page - 1)) {
-			origin.y = v - (lines_per_page - 1);
-			invalidate();
-		}
-	}
-	void invalidate() {
-		cash_origin = -1;
+		if(size.x < pos.x)
+			size.x = pos.x;
+		size.y = pos.y;
 	}
 	static bool iswhitespace(char s) {
 		return s == 9 || s == 32 || s == 10 || s == 13;
@@ -161,25 +179,6 @@ class widget_codeview : public control, vector<char> {
 	bool isselected() const {
 		return p2 != -1 && p1 != -1;
 	}
-	void updatetype(group_s& type, const char* sym, unsigned size) const {
-		//if(!package)
-		//	return;
-		//for(auto& e : package->symbols) {
-		//	if(e.parent != code::Class && e.parent != code::This)
-		//		continue;
-		//	auto pn = package->getsymstr(&e - package->symbols.begin());
-		//	auto sz = zlen(pn);
-		//	if(sz == size && memcmp(pn, sym, sz) == 0) {
-		//		if(e.parent == code::Class)
-		//			type = Type;
-		//		else if(e.is(code::Const))
-		//			type = Constant;
-		//		else
-		//			type = Member;
-		//		return;
-		//	}
-		//}
-	}
 	static void post_right() {
 		auto p = (widget_codeview*)hot.object;
 		p->right(hot.param != 0, hot.param2 != 0);
@@ -193,6 +192,7 @@ class widget_codeview : public control, vector<char> {
 	static void post_set_horiz() {
 		auto p = (widget_codeview*)hot.object;
 		p->set(hot.param, hot.param2 != 0, true);
+		p->ensurevisible(p->pos1.y);
 	}
 	static void post_set() {
 		auto p = (widget_codeview*)hot.object;
@@ -274,8 +274,14 @@ class widget_codeview : public control, vector<char> {
 			ps = codescan::getnext(ps, pos, type, source_lexer);
 			if(pb == ps)
 				break;
-			if(type == Identifier)
-				updatetype(type, pb, ps - pb);
+			if(source_lexer) {
+				if(type == Identifier) {
+					if(source_lexer->istype(pb, ps - pb))
+						type = Type;
+					else if(source_lexer->isconstant(pb, ps - pb))
+						type = Number;
+				}
+			}
 			auto& ei = bsdata<groupi>::elements[type];
 			if(type != WhiteSpace) {
 				fore = ei.fore;
@@ -428,19 +434,14 @@ class widget_codeview : public control, vector<char> {
 	int	getpixelperline() const {
 		return fontsize.y;
 	}
-	void updateposition() {
-		if(cash_origin == -1) {
-			getstate(getstart(), origin.y, cash_origin, size, p1, pos1, p2, pos2);
-			maximum.x = size.x * fontsize.x;
-			maximum.y = size.y;
-		}
-	}
 	void paint(const rect& rc) override {
 		auto pixels_per_line = getpixelperline();
 		if(!pixels_per_line)
 			return;
-		updateposition();
-		lines_per_page = rc.height() / pixels_per_line;
+		if(!lines_per_page) {
+			lines_per_page = rc.height() / pixels_per_line;
+			correction();
+		}
 		draw::scroll scrollv(origin.y, lines_per_page, maximum.y, rc); scrollv.input();
 		draw::scroll scrollh(origin.x, rc.width(), maximum.x, rc, true); scrollh.input();
 		control::paint(rc);
@@ -467,8 +468,7 @@ class widget_codeview : public control, vector<char> {
 				horiz_position = pos1.x;
 		} else
 			horiz_position = -1;
-		invalidate();
-		updateposition();
+		correction();
 	}
 	void clear() {
 		if(p2 != -1 && p1 != p2 && data) {
@@ -476,9 +476,9 @@ class widget_codeview : public control, vector<char> {
 			auto i2 = imax(p1, p2);
 			memcpy(ptr(i1), ptr(i2), (getcount() - i2 + 1) * sizeof(char));
 			count -= (i2 - i1);
-			invalidate();
 			if(p1 > p2)
 				p1 = p2;
+			correction();
 			modified = true;
 		}
 		p2 = -1;
@@ -495,8 +495,8 @@ class widget_codeview : public control, vector<char> {
 		modified = true;
 	}
 	bool isnextlevel(const char* p) const {
-		//if(!lex)
-		//	return false;
+		if(!source_lexer)
+			return false;
 		auto pb = getstart();
 		if(p <= pb)
 			return false;
@@ -604,40 +604,21 @@ class widget_codeview : public control, vector<char> {
 				break;
 		}
 	}
-	bool copy(bool run) {
-		if(!isselected())
-			return false;
-		if(run) {
-			auto s1 = getbegin();
-			auto s2 = getend();
-			clipboard::copy(s1, s2 - s1);
-		}
-		return true;
+	void ensurevisible(int y) {
+		if(y < origin.y)
+			origin.y = y;
+		if(y >= origin.y + lines_per_page)
+			origin.y = y - lines_per_page + 1;
+		if(origin.y + lines_per_page >= maximum.y)
+			origin.y = maximum.y - lines_per_page + 1;
+		if(origin.y < 0)
+			origin.y = 0;
+		correction();
 	}
-	bool paste(bool run) {
-		if(readonly)
-			return false;
-		if(run) {
-			clear();
-			auto p = clipboard::paste();
-			if(p)
-				paste(p);
-			delete p;
-		}
-		return true;
-	}
-	bool cut(bool run) {
-		if(readonly)
-			return false;
-		if(!isselected())
-			return false;
-		if(run) {
-			auto s1 = getbegin();
-			auto s2 = getend();
-			clipboard::copy(s1, s2 - s1);
-			clear();
-		}
-		return true;
+	void correction() {
+		cashing();
+		maximum.x = size.x * fontsize.x;
+		maximum.y = size.y;
 	}
 public:
 	const char* getvalue(const char* id, stringbuilder& sb) const override {
@@ -646,8 +627,7 @@ public:
 		return control::getvalue(id, sb);
 	}
 	void copy() {
-		auto p1 = getbegin();
-		auto p2 = getend();
+		auto p1 = getbegin(), p2 = getend();
 		auto sn = p2 - p1;
 		if(sn > 0)
 			clipboard::copy(p1, sn);
@@ -698,7 +678,7 @@ public:
 				setcount(s);
 				memcpy(begin(), p, s + 1);
 				delete p;
-				invalidate();
+				correction();
 				source_lexer = findlexer(szext(url));
 			}
 		} else if(equal(id, "SelectAll")) {

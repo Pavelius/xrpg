@@ -780,7 +780,7 @@ void draw::application() {
 			rt.y2 = rt.y1 + 24 + 4 * 2;
 		sheetline(rt, true);
 		rc.y1 += rt.height();
-		rt.x1 += 2; rt.y1 += 1; rt.x2 -= 2;
+		rt.offset(2, 1);
 		if(metrics::show::padding)
 			rc.offset(metrics::padding);
 		pc->paint(rc);

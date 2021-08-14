@@ -67,7 +67,7 @@ rect scroll::getslide() const {
 void scroll::view(bool focused) {
 	if(!isvisible())
 		return;
-	auto a = ishilite();
+	auto a = !dragactive() && hot.mouse.in(work);
 	if(dragactive(origin))
 		a = true;
 	if(a) {
@@ -132,6 +132,8 @@ void scroll::input() {
 				hot.key = InputNoUpdate;
 			}
 			break;
+		case MouseMove:
+		case InputIdle:
 		case MouseRight:
 		case MouseLeftDBL:
 			if(ishilite())

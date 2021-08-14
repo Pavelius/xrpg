@@ -7,7 +7,8 @@ namespace codescan {
 enum group_s : unsigned char {
 	IllegalSymbol,
 	WhiteSpace, Operator, Keyword, Comment,
-	Number, String, Identifier
+	Number, String, Identifier,
+	Type,
 };
 namespace metrics {
 extern int		tabs;
@@ -23,8 +24,11 @@ struct lexer {
 	typedef slice<word> worda;
 	const char*			id;
 	const char*			extensions;
-	worda				keywords;
-	const word*			find(const char* sym, unsigned size) const;
+	worda				keywords, types;
+	worda				constants;
+	bool				isconstant(const char* sym, unsigned size) const { return find(constants, sym, size) != 0; }
+	bool				istype(const char* sym, unsigned size) const { return find(types, sym, size) != 0; }
+	static const word*	find(const worda& source, const char* sym, unsigned size);
 };
 int						getindex(const char* p, pointl pos);
 const char*				getnext(const char* p, pointl& pos);

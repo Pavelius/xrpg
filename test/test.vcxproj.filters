@@ -38,7 +38,7 @@
     <ClCompile Include="..\xrpg\widget_picture.cpp">
       <Filter>Plugins</Filter>
     </ClCompile>
-    <ClCompile Include="lexer_c2.cpp">
+    <ClCompile Include="lexers.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>

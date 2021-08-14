@@ -86,7 +86,8 @@ int main() {
 	logmsgv("Тостовая строка залогирована в общий лог приложения.", 0);
 	draw::initialize("Test UI");
 	openurl("battle.bmp");
-	openurl("main.c2");
+	openurl("code/C2Code.c2");
+	openurl("code/RustCode.rs");
 	//draw::setnext(test_table);
 	//draw::setnext(test_fields);
 	draw::setnext(draw::application);
