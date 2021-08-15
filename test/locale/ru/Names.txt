@@ -6,6 +6,7 @@ Admirer: Администратор
 Agitator: Агитатор 
 AllFiles: Все файлы
 Archeologist: Археолого
+Autocomplete: Автоматическое завершение
 Back: Назад
 BadOmens: Плохие символы
 BargeThrought: Баргаш

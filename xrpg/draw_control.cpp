@@ -38,6 +38,10 @@ bool control::ishilited() const {
 	return (this == hilite_control);
 }
 
+bool control::isfocused() const {
+	return draw::isfocused(this);
+}
+
 void control::post(const char* id) const {
 	if(const_cast<control*>(this)->execute(id, false)) // Do not post command and do not clear hot.key if our command is disabled.
 		draw::execute(command_execute, 0, (size_t)id, this);
@@ -95,7 +99,7 @@ static bool execute_command_by_keyboard(const controls::control* p, const char**
 
 void control::paint(const rect& rc) {
 	client = rc;
-	auto focused = isfocusable() && isfocused(rc, this);
+	auto focused = isfocusable() && draw::isfocused(rc, this);
 	if(ishilite(rc)) {
 		hilite_control = this;
 		if(!focused) {
@@ -129,7 +133,7 @@ void control::contextmenu(const char** source) {
 	execute(id, true);
 }
 
-void control::view(const rect& ro, bool show_border, bool show_background, bool show_toolbar) {
+void control::view(const rect& ro, bool show_border, bool show_background, bool show_toolbar, bool show_shadow) {
 	rect rc = ro;
 	if(show_toolbar && hastoolbar())
 		rc.y1 += toolbar(rc.x1, rc.y1, rc.width(), 0);
@@ -138,4 +142,8 @@ void control::view(const rect& ro, bool show_border, bool show_background, bool 
 	if(show_border)
 		rectb(rc, colors::border);
 	paint(rc);
+	if(show_shadow) {
+		rectf({rc.x2 + 1, rc.y1 + 4, rc.x2 + 5, rc.y2}, colors::black, 32);
+		rectf({rc.x1 + 4, rc.y2, rc.x2 + 5, rc.y2 + 5}, colors::black, 32);
+	}
 }

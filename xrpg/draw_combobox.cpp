@@ -20,9 +20,7 @@ bool controls::control::dropdown(const rect& rc) {
 	opening(); // Some special actions when open control
 	while(ismodal()) {
 		screen.restore();
-		view(rc, true, true);
-		rectf({rc.x2 + 1, rc.y1 + 4, rc.x2 + 5, rc.y2}, colors::black, 32);
-		rectf({rc.x1 + 4, rc.y2, rc.x2 + 5, rc.y2 + 5}, colors::black, 32);
+		view(rc, true, true, true, true);
 		domodal();
 		switch(hot.key) {
 		case KeyEscape:

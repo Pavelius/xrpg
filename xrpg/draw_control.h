@@ -50,6 +50,7 @@ public:
 	virtual bool			hastoolbar() const { return true; }
 	void					icon(int x, int y, int index, bool disabled) const;
 	virtual bool			isfocusable() const { return true; }
+	virtual bool			isfocused() const;
 	bool					ishilited() const;
 	virtual bool			ismodified() const { return false; }
 	virtual void			opening() {}
@@ -61,7 +62,7 @@ public:
 	virtual void			setvalue(const char* id, long value) {}
 	int						toolbar(int x, int y, int width, int* next_x = 0) const;
 	virtual void			write(serializer& e) const {}
-	void					view(const rect& rc, bool show_border, bool show_background, bool show_toolbar = true);
+	void					view(const rect& rc, bool show_border, bool show_background, bool show_toolbar = true, bool show_shadow = false);
 };
 class scrollable : public control {
 protected:

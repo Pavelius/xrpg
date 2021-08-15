@@ -5,6 +5,7 @@
 
 BSDATA(command) = {
 	{"Add", 0, F3, 9},
+	{"Autocomplete", 0, Ctrl + KeySpace, -1},
 	{"Change", 0, F2, 10},
 	{"Choose", 0, KeyEnter},
 	{"Copy", 0, Ctrl + 'C', 4},
@@ -16,8 +17,8 @@ BSDATA(command) = {
 	{"Paste", 0, Ctrl + 'V', 5},
 	{"Remove", 0, KeyDelete, 19},
 	{"Save", 0, Ctrl + 'S', 2},
-	{"Settings", 0, 0, 16},
 	{"SelectAll", 0, Ctrl + 'A', -1},
+	{"Settings", 0, 0, 16},
 	{"SortAs", 0, 0, 11},
 	{"SortDs", 0, 0, 12},
 };

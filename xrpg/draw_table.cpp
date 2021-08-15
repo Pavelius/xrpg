@@ -392,7 +392,7 @@ void table::paint(const rect& rc) {
 		rowtotal({rc.x1, rc.y2 - getrowheight(), rc.x2, rc.y2});
 	} else
 		list::paint(rc);
-	if(isfocused(this)) {
+	if(isfocused()) {
 		int v;
 		switch(hot.key) {
 		case KeyHome:

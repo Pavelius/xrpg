@@ -144,6 +144,9 @@
     <ClInclude Include="string.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="draw_valuelist.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -340,6 +343,9 @@
     </ClCompile>
     <ClCompile Include="string.cpp">
       <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_valuelist.cpp">
+      <Filter>Interface</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

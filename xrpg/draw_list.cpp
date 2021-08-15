@@ -57,7 +57,7 @@ void list::correction() {
 }
 
 void list::hilight(const rect& rc) const {
-	auto focused = isfocused(this);
+	auto focused = isfocused();
 	const color c1 = focused ? colors::button : colors::button.mix(colors::window, 192);
 	rect r1 = {rc.x1, rc.y1, rc.x2 - 1, rc.y2 - 1};
 	rectf(r1, c1); rectb(r1, c1);
@@ -144,7 +144,7 @@ void list::paintrows(const rect& rc) {
 	scroll scrollh(origin_x, page_x, maximum_x, rc, true);
 	scrollv.input();
 	scrollh.input();
-	auto focused = isfocused(this);
+	auto focused = isfocused();
 	if(ishilite(rc)) {
 		mousehiliting(rc, hot.mouse);
 		switch(hot.key) {
@@ -203,7 +203,7 @@ void list::paint(const rect& rcorigin) {
 	if(!pixels_per_line)
 		return;
 	paintrows(rc);
-	auto focused = isfocused(this);
+	auto focused = isfocused();
 	if(focused) {
 		int m;
 		blockfocuskeys();

@@ -162,6 +162,7 @@
     <ClInclude Include="draw_figure.h" />
     <ClInclude Include="draw_focus.h" />
     <ClInclude Include="draw_scroll.h" />
+    <ClInclude Include="draw_valuelist.h" />
     <ClInclude Include="gender.h" />
     <ClInclude Include="handler.h" />
     <ClInclude Include="io_stream.h" />
@@ -191,6 +192,7 @@
     <ClCompile Include="bstream.cpp" />
     <ClCompile Include="code.cpp" />
     <ClCompile Include="code_parse.cpp" />
+    <ClCompile Include="draw_valuelist.cpp" />
     <ClCompile Include="metadata.cpp" />
     <ClCompile Include="string.cpp" />
     <ClCompile Include="widget_codeview.cpp" />

@@ -2,9 +2,9 @@
 #include "draw.h"
 #include "draw_button.h"
 #include "draw_clipboard.h"
-#include "draw_control.h"
 #include "draw_focus.h"
 #include "draw_scroll.h"
+#include "draw_valuelist.h"
 #include "io_stream.h"
 #include "handler.h"
 #include "setting.h"
@@ -33,12 +33,9 @@ BSDATA(groupi) = {
 	{"String"},
 	{"Identifier"},
 	{"Type"},
-	{"BlockBegin"},
-	{"BlockEnd"},
-	{"IndexBegin"},
-	{"IndexEnd"},
-	{"ExpressionBegin"},
-	{"ExpressionEnd"},
+	{"BlockBegin"}, {"BlockEnd"},
+	{"IndexBegin"}, {"IndexEnd"},
+	{"ExpressionBegin"}, {"ExpressionEnd"},
 };
 assert_enum(groupi, ExpressionEnd)
 
@@ -48,9 +45,9 @@ static const char* line_feed = "\r\n";
 
 class widget_codeview : public control, vector<char> {
 	struct snipet {
-		const char*		match;
-		const char*		before;
-		const char*		after;
+		const char*	match;
+		const char*	before;
+		const char*	after;
 	};
 	const lexer* source_lexer = 0;
 	const char* url = 0;
@@ -62,6 +59,7 @@ class widget_codeview : public control, vector<char> {
 	pointl origin = {}, maximum = {};
 	rect rctext = {4, 4, 4, 4};
 	bool readonly = false, modified = false;
+	valuelist dropdown;
 
 	bool ismodified() const {
 		return modified;
@@ -229,13 +227,29 @@ class widget_codeview : public control, vector<char> {
 		p->left(false, true);
 		p->right(true, true);
 	}
+	static void post_close_dropdown() {
+		auto p = (widget_codeview*)hot.object;
+		p->dropdown.clear();
+	}
+	void autocomplete() {
+		if(!source_lexer)
+			return;
+		dropdown.always_focus = true;
+		dropdown.clear();
+		for(auto& e : source_lexer->keywords)
+			dropdown.add(e.id);
+		dropdown.appear(client.x1 + pos1.x * fontsize.x - origin.x, client.y1 + (pos1.y - origin.y) * fontsize.y + fontsize.y);
+	}
+	bool isdropdown() const {
+		return dropdown.getmaximum();
+	}
 	void redraw(const rect& rco) {
 		if(!fontsize.x || !fontsize.y)
 			return;
 		auto push_font = font;
 		auto push_fore = fore;
 		draw::font = default_font;
-		auto focused = isfocused(this);
+		auto focused = isfocused();
 		rect rc = rco + rctext;
 		// Mouse input handle
 		rect r1 = rc;
@@ -253,6 +267,12 @@ class widget_codeview : public control, vector<char> {
 			switch(hot.key) {
 			case MouseLeft:
 			case MouseLeft | Shift:
+				if(isdropdown()) {
+					if(ishilite(dropdown.client))
+						break;
+					else
+						draw::execute(post_close_dropdown, 0, 0, this);
+				}
 				if(hot.pressed) {
 					auto i = getindex(mpos);
 					draw::execute(post_set, i, (hot.key & Shift) != 0, this);
@@ -334,6 +354,8 @@ class widget_codeview : public control, vector<char> {
 				break;
 			case KeyUp:
 			case KeyUp | Shift:
+				if(isdropdown())
+					break;
 				if(getcurrentpos().y > 0) {
 					auto pt = getcurrentpos();
 					pt.y -= 1;
@@ -342,6 +364,8 @@ class widget_codeview : public control, vector<char> {
 				break;
 			case KeyDown:
 			case KeyDown | Shift:
+				if(isdropdown())
+					break;
 				if(getcurrentpos().y < maximum.y) {
 					auto pt = getcurrentpos();
 					pt.y += 1;
@@ -350,7 +374,7 @@ class widget_codeview : public control, vector<char> {
 				break;
 			case KeyPageDown:
 			case KeyPageDown | Shift:
-				if(true) {
+				if(!isdropdown()) {
 					auto pt = getcurrentpos();
 					auto n = origin.y + lines_per_page - 1;
 					if(pt.y != n)
@@ -362,7 +386,7 @@ class widget_codeview : public control, vector<char> {
 				break;
 			case KeyPageUp:
 			case KeyPageUp | Shift:
-				if(true) {
+				if(!isdropdown()) {
 					auto pt = getcurrentpos();
 					auto n = origin.y;
 					if(pt.y != n)
@@ -397,12 +421,14 @@ class widget_codeview : public control, vector<char> {
 					draw::execute(post_paste_symbol, hot.param, 0, this);
 				break;
 			case KeyEnter:
+				if(isdropdown())
+					break;
 				if(!readonly)
 					draw::execute(post_paste_cr, 0, 0, this);
 				break;
 			case KeyHome:
 			case KeyHome | Shift:
-				if(true) {
+				if(!isdropdown()) {
 					auto pb = getstart();
 					auto ps = getcurrent();
 					auto pa = lineb(pb, ps);
@@ -418,7 +444,7 @@ class widget_codeview : public control, vector<char> {
 				break;
 			case KeyEnd:
 			case KeyEnd | Shift:
-				if(true) {
+				if(!isdropdown()) {
 					auto pb = getstart();
 					auto ps = getcurrent();
 					ps = linee(ps);
@@ -428,6 +454,14 @@ class widget_codeview : public control, vector<char> {
 			case KeyTab:
 				if(!readonly)
 					draw::execute(post_paste_symbol, '\t', 0, this);
+				break;
+			case KeyEscape:
+				if(isdropdown())
+					draw::execute(post_close_dropdown, 0, 0, this);
+				break;
+			case InputUpdate:
+				if(isdropdown())
+					draw::execute(post_close_dropdown, 0, 0, this);
 				break;
 			default: break;
 			}
@@ -456,6 +490,8 @@ class widget_codeview : public control, vector<char> {
 		setclip(rc);
 		redraw(rc);
 		clipping = push_clip;
+		if(dropdown.getmaximum())
+			dropdown.view(dropdown.client, true, true, false, true);
 		scrollv.view(isfocused());
 		scrollh.view(isfocused());
 	}
@@ -701,6 +737,9 @@ public:
 				set(0, false, false);
 				set(zlen((const char*)data), true, false);
 			}
+		} else if(equal(id, "Autocomplete")) {
+			if(run)
+				autocomplete();
 		} else
 			return false;
 		return true;
@@ -726,7 +765,7 @@ public:
 	}
 	const char** getcommands(const char* id) const override {
 		static const char* edit_commands[] = {"Cut", "Copy", "Paste", "SelectAll", 0};
-		static const char* parser_commands[] = {"ParseAll", 0};
+		static const char* parser_commands[] = {"ParseAll", "Autocomplete", 0};
 		if(equal(id, "Parser"))
 			return parser_commands;
 		if(equal(id, "Edit"))

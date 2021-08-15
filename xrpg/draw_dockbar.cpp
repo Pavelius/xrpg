@@ -56,7 +56,7 @@ void getdocked(controla& result, dock type) {
 }
 
 // View control on form
-static int paint_control(rect rc, const controla& elements, int& current) {
+static int paint_control(rect rc, const controla& elements, int& current, color back) {
 	int y1 = rc.y1;
 	if(current >= (int)elements.getcount())
 		current = elements.getcount() - 1;
@@ -70,7 +70,7 @@ static int paint_control(rect rc, const controla& elements, int& current) {
 			line(rc.x1, rc.y1 + dy, rc.x2, rc.y1 + dy, colors::border);
 		rect rct = {rc.x1, rc.y1, rc.x2, rc.y1 + dy};
 		if(tabs(rct, false, false, (void**)elements.begin(), 0, elements.getcount(),
-			current, &current_hilite, get_control_name, 0, colors::window)) {
+			current, &current_hilite, get_control_name, 0, back)) {
 			if(current_hilite != -1)
 				current = current_hilite;
 			else
@@ -117,13 +117,13 @@ static bool dock_paint(dock id, rect& client, const controla& p1, const controla
 		return false;
 	}
 	if(!p2)
-		paint_control(rc, p1, e1.current);
+		paint_control(rc, p1, e1.current, colors::form);
 	else if(!p1)
-		paint_control(rc, p2, e2.current);
+		paint_control(rc, p2, e2.current, colors::form);
 	else if(id == dock::Left || id == dock::Right) {
 		draw::splith(rc.x1, rc.y1, rc.width(), e2.size, sx, 64, 400, false);
-		paint_control({rc.x1, rc.y1, rc.x2, rc.y1 + e2.size}, p1, e1.current);
-		paint_control({rc.x1, rc.y1 + e2.size + sx, rc.x2, rc.y2}, p2, e2.current);
+		paint_control({rc.x1, rc.y1, rc.x2, rc.y1 + e2.size}, p1, e1.current, colors::form);
+		paint_control({rc.x1, rc.y1 + e2.size + sx, rc.x2, rc.y2}, p2, e2.current, colors::form);
 	}
 	return true;
 }
