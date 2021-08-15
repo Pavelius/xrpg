@@ -70,13 +70,13 @@ int draw::tabs(rect rc, bool show_close, bool right_side, void** data, int start
 		if((a || (i == current)) && show_close) {
 			const int dy = 12;
 			rect rcx;
-			rcx.y1 = element.y1 + (element.height() - dy) / 2;
+			rcx.y1 = element.y1 + (element.height() - dy) / 2 + 1;
 			rcx.y2 = rcx.y1 + dy;
 			rcx.x1 = element.x2 - dy - 4;
 			rcx.x2 = rcx.x1 + rcx.height();
 			if(ishilite(rcx)) {
-			//	if(buttonh(rcx, false, false, false, true, 0))
-			//		result = 2;
+				if(button(rcx, 0, 0, 0, colors::button, false, false, false, true))
+					result = 2;
 				tooltips(getnm("Close"));
 			}
 			line(rcx.x1 + 4, rcx.y1 + 4, rcx.x2 - 4, rcx.y2 - 4, fore);

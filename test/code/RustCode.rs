@@ -1,5 +1,7 @@
 ﻿// Unlike C/C++, there's no restriction on the order of function definitions
 fn main() {
+	let a = 10;
+	let b = is_divisible_by(12, 3);
     // We can use this function here, and define it somewhere later
     fizzbuzz_to(100);
 }

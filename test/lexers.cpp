@@ -17,6 +17,22 @@ static word c2_types[] = {
 	{"this"},
 	{"void"},
 };
+static word c2_operators[] = {
+	{"++"},
+	{"--"},
+	{"!="},
+	{"=="},
+	{"+="},
+	{"-="},
+	{"/="},
+	{"*="},
+	{"%="},
+	{"|="},
+	{"^="},
+	{"&="},
+	{"&&"},
+	{"||"},
+};
 static word rust_keywords[] = {
 	{"fn"},
 	{"mod"},
@@ -50,7 +66,7 @@ static word rust_constants[] = {
 };
 
 BSDATA(lexer) = {
-	{"C2", "*.c2", c2_keywords, c2_types, rust_constants},
+	{"C2", "*.c2", c2_keywords, c2_types, rust_constants, c2_operators},
 	{"Rust", "*.rs", rust_keywords, rust_types, rust_constants}
 };
 BSDATAF(lexer)

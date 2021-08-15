@@ -15,7 +15,17 @@ extern int				tabs;
 }
 struct typei {
 	const char*			id;
-	const char*			parent;
+	const char*			url;
+	explicit constexpr operator bool() const { return id != 0; }
+	void				clear();
+};
+struct memberi {
+	const char*			id;
+	const char*			type;
+	const char*			result;
+	const char*			url;
+	explicit constexpr operator bool() const { return id != 0; }
+	void				clear();
 };
 struct word {
 	const char*			id;
@@ -36,5 +46,5 @@ const word*				find(const worda& source, const char* sym, unsigned size);
 int						getindex(const char* p, pointl pos);
 const char*				getnext(const char* p, pointl& pos);
 const char*				getnext(const char* p, pointl& pos, group_s& type, const lexer* pk = 0);
-void					parse(const char* p, const lexer* pk);
+void					parse(const char* url, const char* p, const lexer* pk);
 }
