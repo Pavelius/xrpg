@@ -643,7 +643,12 @@ public:
 		delete p;
 	}
 	bool execute(const char* id, bool run) override {
-		if(equal(id, "Cut")) {
+		if(equal(id, "Edit")) {
+			if(readonly)
+				return false;
+		} else if(equal(id, "Parser")) {
+			return true;
+		} else if(equal(id, "Cut")) {
 			if(!isselected() || readonly)
 				return false;
 			if(run) {
@@ -682,6 +687,9 @@ public:
 				correction();
 				source_lexer = findlexer(szext(url));
 			}
+		} else if(equal(id, "ParseAll")) {
+			if(run)
+				code::parse(begin(), source_lexer);
 		} else if(equal(id, "SelectAll")) {
 			if(run) {
 				set(0, false, false);
@@ -710,8 +718,17 @@ public:
 		}
 		return 0;
 	}
+	const char** getcommands(const char* id) const override {
+		static const char* edit_commands[] = {"Cut", "Copy", "Paste", "SelectAll", 0};
+		static const char* parser_commands[] = {"ParseAll", 0};
+		if(equal(id, "Parser"))
+			return parser_commands;
+		if(equal(id, "Edit"))
+			return edit_commands;
+		return 0;
+	}
 	const char** getcommands() const override {
-		static const char* source[] = {"Cut", "Copy", "Paste", "SelectAll", 0};
+		static const char* source[] = {"#Edit", "#Parser", 0};
 		return source;
 	}
 };

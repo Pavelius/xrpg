@@ -87,10 +87,10 @@
     }
   },
   "window":{
-    "x":380,
-    "y":111,
-    "width":884,
-    "height":593,
+    "x":156,
+    "y":76,
+    "width":1163,
+    "height":609,
     "header_width":186,
     "flags":48
   },
@@ -104,7 +104,7 @@
         "columns":{
           "column":{
             "id":"Message",
-            "width":796
+            "width":200
           },
           "column":{
             "id":"Date",

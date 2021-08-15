@@ -80,13 +80,14 @@ static bool execute_command_by_keyboard(const controls::control* p, const char**
 		if(id[0] == '#') {
 			if(execute_command_by_keyboard(p, p->getcommands(id + 1)))
 				return true;
-		}
-		auto key = getkey(id);
-		if(!key || hot.key != key)
-			continue;
-		if(const_cast<control*>(p)->execute(id, false)) {
-			p->post(id);
-			return true;
+		} else {
+			auto key = getkey(id);
+			if(!key || hot.key != key)
+				continue;
+			if(const_cast<control*>(p)->execute(id, false)) {
+				p->post(id);
+				return true;
+			}
 		}
 	}
 	return false;

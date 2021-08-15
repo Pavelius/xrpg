@@ -1,8 +1,6 @@
 #include "crt.h"
 #include "code.h"
 
-using namespace code;
-
 int code::metrics::tabs = 4;
 
 int code::getindex(const char* source, pointl pt) {
@@ -140,21 +138,4 @@ const code::word* code::find(const worda& source, const char* sym) {
 			return &e;
 	}
 	return 0;
-}
-
-// This function must add 
-void code::parse(const char* p, lexer* px) {
-	group_s type;
-	pointl pos = {};
-	while(*p) {
-		p = getnext(p, pos, type, px);
-		switch(type) {
-		case Comment: case WhiteSpace:
-			continue;
-		case Identifier:
-			break;
-		case Type:
-			break;
-		}
-	}
 }

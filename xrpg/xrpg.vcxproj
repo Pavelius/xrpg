@@ -190,6 +190,7 @@
     <ClCompile Include="bsreq.cpp" />
     <ClCompile Include="bstream.cpp" />
     <ClCompile Include="code.cpp" />
+    <ClCompile Include="code_parse.cpp" />
     <ClCompile Include="metadata.cpp" />
     <ClCompile Include="widget_codeview.cpp" />
     <ClCompile Include="color.cpp" />

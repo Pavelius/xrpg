@@ -13,6 +13,10 @@ enum group_s : unsigned char {
 namespace metrics {
 extern int				tabs;
 }
+struct typei {
+	const char*			id;
+	const char*			parent;
+};
 struct word {
 	const char*			id;
 	size_t				size;
@@ -32,5 +36,5 @@ const word*				find(const worda& source, const char* sym, unsigned size);
 int						getindex(const char* p, pointl pos);
 const char*				getnext(const char* p, pointl& pos);
 const char*				getnext(const char* p, pointl& pos, group_s& type, const lexer* pk = 0);
-void					parse(const char* p, lexer* pk);
+void					parse(const char* p, const lexer* pk);
 }

@@ -335,5 +335,8 @@
     <ClCompile Include="metadata.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="code_parse.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

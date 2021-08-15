@@ -70,6 +70,7 @@ Open: Открыть
 OpenFile: Открыть файл
 OperatorColor: Цвет операторов
 Padding: Отступ
+ParseAll: Разобрать все
 Paste: Вставить
 Perfomer: Артист
 Plugins: Окна
