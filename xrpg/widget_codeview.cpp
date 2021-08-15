@@ -33,8 +33,14 @@ BSDATA(groupi) = {
 	{"String"},
 	{"Identifier"},
 	{"Type"},
+	{"BlockBegin"},
+	{"BlockEnd"},
+	{"IndexBegin"},
+	{"IndexEnd"},
+	{"ExpressionBegin"},
+	{"ExpressionEnd"},
 };
-assert_enum(groupi, Type)
+assert_enum(groupi, ExpressionEnd)
 
 static const sprite* default_font = (sprite*)loadb("art/fonts/code.pma");
 static point fontsize;
@@ -775,6 +781,15 @@ static setting::header headers[] = {
 	{"Colors", "Editor", 0, colors_editor},
 };
 
+static void update_theme_colors() {
+	bsdata<groupi>::elements[BlockBegin].fore = bsdata<groupi>::elements[Operator].fore;
+	bsdata<groupi>::elements[BlockEnd].fore = bsdata<groupi>::elements[Operator].fore;
+	bsdata<groupi>::elements[IndexBegin].fore = bsdata<groupi>::elements[Operator].fore;
+	bsdata<groupi>::elements[IndexEnd].fore = bsdata<groupi>::elements[Operator].fore;
+	bsdata<groupi>::elements[ExpressionBegin].fore = bsdata<groupi>::elements[Operator].fore;
+	bsdata<groupi>::elements[ExpressionEnd].fore = bsdata<groupi>::elements[Operator].fore;
+}
+
 static void update_theme() {
 	bsdata<groupi>::elements[IllegalSymbol].fore = colors::red;
 	bsdata<groupi>::elements[WhiteSpace].fore = colors::red;
@@ -801,9 +816,13 @@ void initialize_codeview() {
 	fontsize.x = draw::textw('A');
 	fontsize.y = draw::texth();
 	draw::font = old_font;
-	update_theme();
 }
 
 HANDLER(after_theme_change) {
 	update_theme();
+	update_theme_colors();
+}
+
+HANDLER(after_initialize) {
+	update_theme_colors();
 }

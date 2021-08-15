@@ -3,12 +3,16 @@
 
 using namespace code;
 
+static string		token;
 static const lexer*	current_parser;
 static pointl		current_pos;
 static group_s		current_group;
 static unsigned		current_index, current_forward;
 static const char*	current_url;
 static const char*	p;
+
+BSDATAD(memberi)
+BSDATAD(typei)
 
 void typei::clear() {
 	memset(this, 0, sizeof(*this));
@@ -21,9 +25,10 @@ void memberi::clear() {
 static void next() {
 	while(*p) {
 		auto pb = p;
-		p = getnext(pb, current_pos, current_group, current_parser);
+		p = getnext(p, current_pos, current_group, current_parser);
 		if(current_group == Comment || current_group == WhiteSpace)
 			continue;
+		token.set(pb, p - pb);
 		break;
 	}
 }
@@ -69,14 +74,35 @@ static memberi* addmember(const char* id, const char* type, const char* result) 
 	return p;
 }
 
-static void block() {
-
+static void block(const char* type) {
+	while(*p) {
+		next();
+		if(current_group == Keyword && token == "fn") {
+			next();
+			if(current_group == Identifier)
+				addmember(token.get(), type, 0);
+		} else if(current_group == Keyword && token == "struct") {
+			next();
+			if(current_group == Identifier)
+				addtype(token.get());
+		} else if(current_group == Keyword && token == "impl") {
+			next();
+			if(current_group == Identifier) {
+				auto name = token;
+				next();
+				if(current_group == BlockBegin)
+					block(name.get());
+			}
+		} else if(current_group == BlockEnd)
+			break;
+		else if(current_group == BlockBegin)
+			block(type);
+	}
 }
 
 void code::parse(const char* url, const char* source, const lexer* px) {
 	p = source;
 	current_parser = px;
-	while(*p) {
-		next();
-	}
+	current_url = url;
+	block("this");
 }

@@ -338,5 +338,8 @@
     <ClCompile Include="code_parse.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="string.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

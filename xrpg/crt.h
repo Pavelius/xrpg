@@ -12,6 +12,7 @@ typedef decltype(sizeof(0)) size_t;
 #define maprnd(t) t[rand()%(sizeof(t)/sizeof(t[0]))]
 #define	FO(T,R) ((size_t)&((T*)0)->R)
 #define BSDATA(e) template<> e bsdata<e>::elements[]
+#define BSDATAD(e) template<> array bsdata<e>::source(sizeof(e));
 #define BSDATAE(e) template<> array bsdata<e>::source(bsdata<e>::elements, sizeof(bsdata<e>::elements[0]), 0, sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]));
 #define BSDATAF(e) template<> array bsdata<e>::source(bsdata<e>::elements, sizeof(bsdata<e>::elements[0]), sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]), sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]));
 #define BSDATAC(e, c) template<> e bsdata<e>::elements[c]; BSDATAE(e)

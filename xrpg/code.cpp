@@ -98,6 +98,24 @@ const char* code::getnext(const char* p, pointl& pos, group_s& type, const lexer
 			if(pw)
 				type = Keyword;
 		}
+	} else if(*p == '{') {
+		type = BlockBegin;
+		pos.x++; p++;
+	} else if(*p == '}') {
+		type = BlockEnd;
+		pos.x++; p++;
+	} else if(*p == '[') {
+		type = IndexBegin;
+		pos.x++; p++;
+	} else if(*p == ']') {
+		type = IndexEnd;
+		pos.x++; p++;
+	} else if(*p == '(') {
+		type = ExpressionBegin;
+		pos.x++; p++;
+	} else if(*p == ')') {
+		type = ExpressionEnd;
+		pos.x++; p++;
 	} else if(*p <= 64 || (*p >= 123 && *p <= 127)) {
 		type = Operator;
 		auto pw = find(pk->operations, p);

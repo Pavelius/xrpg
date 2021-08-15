@@ -347,6 +347,14 @@ void stringbuilder::addint(int value, int precision, const int radix) {
 	adduint(value, precision, radix);
 }
 
+void stringbuilder::addnz(const char* format, unsigned count) {
+	unsigned n = pe - p - 1;
+	if(count > n)
+		count = n;
+	memcpy(p, format, count); p[count] = 0;
+	p += count;
+}
+
 const char* stringbuilder::readformat(const char* src, const char* vl) {
 	if(*src == '%') {
 		src++;

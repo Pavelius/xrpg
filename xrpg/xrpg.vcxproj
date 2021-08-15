@@ -192,6 +192,7 @@
     <ClCompile Include="code.cpp" />
     <ClCompile Include="code_parse.cpp" />
     <ClCompile Include="metadata.cpp" />
+    <ClCompile Include="string.cpp" />
     <ClCompile Include="widget_codeview.cpp" />
     <ClCompile Include="color.cpp" />
     <ClCompile Include="command.cpp" />

@@ -7,8 +7,8 @@ namespace code {
 enum group_s : unsigned char {
 	IllegalSymbol,
 	WhiteSpace, Operator, Keyword, Comment,
-	Number, String, Identifier,
-	Type,
+	Number, String, Identifier,	Type,
+	BlockBegin, BlockEnd, IndexBegin, IndexEnd, ExpressionBegin, ExpressionEnd,
 };
 namespace metrics {
 extern int				tabs;

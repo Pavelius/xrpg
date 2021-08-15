@@ -12,4 +12,6 @@ public:
 	constexpr bool operator==(const char* id) const { for(unsigned i=0; i<count; i++) if(p[i] != id[i]) return false; return true; }
 	constexpr bool operator==(const string& e) const { return e.p == p && e.count == count; }
 	static constexpr const char* end(const char* p) { if(!p) return 0; while(*p) p++; return p; }
+	const char*			get() const;
+	void				set(const char* p, unsigned v) { this->p = p; this->count = v; }
 };
