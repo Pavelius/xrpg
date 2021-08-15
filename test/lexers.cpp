@@ -1,15 +1,15 @@
-#include "codescan.h"
+#include "code.h"
 
-using namespace codescan;
+using namespace code;
 
-static lexer::word c2_keywords[] = {
+static word c2_keywords[] = {
 	{"auto"},
 	{"import"},
 	{"if"},
 	{"for"},
 	{"while"},
 };
-static lexer::word c2_types[] = {
+static word c2_types[] = {
 	{"char"},
 	{"int"},
 	{"short"},
@@ -17,7 +17,7 @@ static lexer::word c2_types[] = {
 	{"this"},
 	{"void"},
 };
-static lexer::word rust_keywords[] = {
+static word rust_keywords[] = {
 	{"fn"},
 	{"mod"},
 	{"mut"},
@@ -31,7 +31,7 @@ static lexer::word rust_keywords[] = {
 	{"struct"},
 	{"let"},
 };
-static lexer::word rust_types[] = {
+static word rust_types[] = {
 	{"i64"},
 	{"i32"},
 	{"i16"},
@@ -44,7 +44,7 @@ static lexer::word rust_types[] = {
 	{"bool"},
 	{"self"},
 };
-static lexer::word rust_constants[] = {
+static word rust_constants[] = {
 	{"true"},
 	{"false"},
 };

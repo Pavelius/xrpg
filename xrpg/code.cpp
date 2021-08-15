@@ -1,9 +1,11 @@
 #include "crt.h"
-#include "codescan.h"
+#include "code.h"
 
-int codescan::metrics::tabs = 4;
+using namespace code;
 
-int codescan::getindex(const char* source, pointl pt) {
+int code::metrics::tabs = 4;
+
+int code::getindex(const char* source, pointl pt) {
 	pointl pos = {0, 0};
 	auto p = source;
 	auto i = -1;
@@ -19,7 +21,7 @@ int codescan::getindex(const char* source, pointl pt) {
 	return p - source;
 }
 
-const char* codescan::getnext(const char* p, pointl& pos) {
+const char* code::getnext(const char* p, pointl& pos) {
 	switch(*p) {
 	case 0:
 		break;
@@ -46,7 +48,7 @@ const char* codescan::getnext(const char* p, pointl& pos) {
 	return p;
 }
 
-const char* codescan::getnext(const char* p, pointl& pos, group_s& type, const lexer* pk) {
+const char* code::getnext(const char* p, pointl& pos, group_s& type, const lexer* pk) {
 	type = IllegalSymbol;
 	if(*p == 0)
 		type = WhiteSpace;
@@ -94,20 +96,27 @@ const char* codescan::getnext(const char* p, pointl& pos, group_s& type, const l
 		while(ischa(*p) || *p == '_' || isnum(*p))
 			p = getnext(p, pos);
 		if(pk) {
-			auto pw = pk->find(pk->keywords, pb, p - pb);
+			auto pw = find(pk->keywords, pb, p - pb);
 			if(pw)
 				type = Keyword;
 		}
 	} else if(*p <= 64 || (*p >= 123 && *p <= 127)) {
 		type = Operator;
-		pos.x++;
-		return p + 1;
+		auto pw = find(pk->operations, p);
+		if(pw) {
+			pos.x += pw->size;
+			p += pw->size;
+		} else {
+			pos.x++;
+			p++;
+		}
+		return p;
 	} else
 		return getnext(p, pos);
 	return p;
 }
 
-const codescan::lexer::word* codescan::lexer::find(const worda& source, const char* sym, unsigned size) {
+const code::word* code::find(const worda& source, const char* sym, unsigned size) {
 	for(auto& e : source) {
 		if(e.size != size)
 			continue;
@@ -115,4 +124,37 @@ const codescan::lexer::word* codescan::lexer::find(const worda& source, const ch
 			return &e;
 	}
 	return 0;
+}
+
+static bool equal(const char* p1, const char* p2, int p1_size) {
+	for(auto i = 0; i < p1_size; i++) {
+		if(p1[i] != p2[i])
+			return false;
+	}
+	return true;
+}
+
+const code::word* code::find(const worda& source, const char* sym) {
+	for(auto& e : source) {
+		if(equal(e.id, sym, e.size))
+			return &e;
+	}
+	return 0;
+}
+
+// This function must add 
+void code::parse(const char* p, lexer* px) {
+	group_s type;
+	pointl pos = {};
+	while(*p) {
+		p = getnext(p, pos, type, px);
+		switch(type) {
+		case Comment: case WhiteSpace:
+			continue;
+		case Identifier:
+			break;
+		case Type:
+			break;
+		}
+	}
 }

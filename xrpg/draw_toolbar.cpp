@@ -82,7 +82,7 @@ static const char** getcommands_proc(const void* object, const char* id) {
 	return ((controls::control*)object)->getcommands(id);
 }
 
-int	controls::control::toolbar(int x, int y, int width, int* next_x, bool separator) const {
+int	controls::control::toolbar(int x, int y, int width, int* next_x) const {
 	auto commands = getcommands();
 	if(next_x)
 		*next_x = x;
@@ -93,7 +93,7 @@ int	controls::control::toolbar(int x, int y, int width, int* next_x, bool separa
 		return 0;
 	short height = images->get(0).getrect(0, 0, 0).height() + 4;
 	toolbar_builder e(x, y, width, {height, height});
-	e.render(getcommands(), this, isallow_proc, getcommands_proc, separator);
+	e.render(getcommands(), this, isallow_proc, getcommands_proc);
 	if(next_x)
 		*next_x = e.x;
 	if(e.x != x)

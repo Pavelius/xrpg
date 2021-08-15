@@ -145,7 +145,7 @@
     <ClInclude Include="bsreq.h" />
     <ClInclude Include="bstream.h" />
     <ClInclude Include="cflags.h" />
-    <ClInclude Include="codescan.h" />
+    <ClInclude Include="code.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="command.h" />
     <ClInclude Include="converter.h" />
@@ -189,7 +189,7 @@
     <ClCompile Include="archive.cpp" />
     <ClCompile Include="bsreq.cpp" />
     <ClCompile Include="bstream.cpp" />
-    <ClCompile Include="codescan.cpp" />
+    <ClCompile Include="code.cpp" />
     <ClCompile Include="metadata.cpp" />
     <ClCompile Include="widget_codeview.cpp" />
     <ClCompile Include="color.cpp" />

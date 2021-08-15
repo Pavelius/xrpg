@@ -1,4 +1,4 @@
-#include "codescan.h"
+#include "code.h"
 #include "draw.h"
 #include "draw_button.h"
 #include "draw_clipboard.h"
@@ -10,7 +10,7 @@
 #include "setting.h"
 #include "pointl.h"
 
-using namespace codescan;
+using namespace code;
 using namespace draw;
 using namespace draw::controls;
 
@@ -175,7 +175,7 @@ class widget_codeview : public control, vector<char> {
 		return pos1;
 	}
 	int	getindex(pointl pt) const {
-		return codescan::getindex(begin(), pt);
+		return code::getindex(begin(), pt);
 	}
 	bool isselected() const {
 		return p2 != -1 && p1 != -1;
@@ -272,14 +272,14 @@ class widget_codeview : public control, vector<char> {
 			auto x1 = x + pos.x * fontsize.x;
 			auto y1 = y + pos.y * fontsize.y;
 			auto pb = ps;
-			ps = codescan::getnext(ps, pos, type, source_lexer);
+			ps = code::getnext(ps, pos, type, source_lexer);
 			if(pb == ps)
 				break;
 			if(source_lexer) {
 				if(type == Identifier) {
-					if(source_lexer->istype(pb, ps - pb))
+					if(code::find(source_lexer->types, pb, ps - pb))
 						type = Type;
-					else if(source_lexer->isconstant(pb, ps - pb))
+					else if(code::find(source_lexer->constants, pb, ps - pb))
 						type = Number;
 				}
 			}

@@ -18,7 +18,7 @@
     },
     "DockBottom":{
       "current":0,
-      "size":301
+      "size":206
     },
     "DockWorkspace":{
       "current":0,
@@ -37,7 +37,7 @@
           "ShowLeftPanel":2,
           "ShowRightPanel":2,
           "ShowBottomPanel":0,
-          "ShowPadding":2
+          "ShowPadding":0
         },
         "Tabs":{
           "UseShortNameLabel":2,
@@ -54,23 +54,23 @@
         
       },
       "Form":{
-        "TextColor":16777215,
-        "WindowColor":2105376,
-        "FormColor":2960688,
-        "BorderColor":4144966,
-        "ActiveColor":11304960,
-        "ButtonColor":31436,
-        "TipsBackColor":6579320,
+        "TextColor":0,
+        "WindowColor":16777215,
+        "FormColor":15790320,
+        "BorderColor":11316396,
+        "ActiveColor":32940,
+        "ButtonColor":14671839,
+        "TipsBackColor":5263480,
         "TipsTextColor":16777215
       },
       "Editor":{
-        "IdentifierColor":16777215,
+        "IdentifierColor":0,
         "KeywordColor":5676246,
         "TypeColor":5163440,
-        "CommentColor":5744202,
+        "CommentColor":32768,
         "StringColor":14059602,
         "NumberColor":12113827,
-        "OperatorColor":16777215
+        "OperatorColor":0
       }
     },
     "Log":{
@@ -87,12 +87,12 @@
     }
   },
   "window":{
-    "x":215,
-    "y":90,
-    "width":784,
-    "height":539,
-    "header_width":163,
-    "flags":112
+    "x":380,
+    "y":111,
+    "width":884,
+    "height":593,
+    "header_width":186,
+    "flags":48
   },
   "controls":{
     "picture":{
@@ -104,7 +104,7 @@
         "columns":{
           "column":{
             "id":"Message",
-            "width":200
+            "width":796
           },
           "column":{
             "id":"Date",

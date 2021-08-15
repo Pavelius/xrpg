@@ -135,7 +135,7 @@
     <ClInclude Include="screenshoot.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="codescan.h">
+    <ClInclude Include="code.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="metadata.h">
@@ -329,7 +329,7 @@
     <ClCompile Include="widget_codeview.cpp">
       <Filter>Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="codescan.cpp">
+    <ClCompile Include="code.cpp">
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="metadata.cpp">

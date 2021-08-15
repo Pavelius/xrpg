@@ -785,8 +785,8 @@ void draw::application() {
 			rc.offset(metrics::padding);
 		pc->paint(rc);
 		pc->toolbar(rt.x1, rt.y1, rt.width(), &rt.x1);
-		if(current_active_control)
-			current_active_control->toolbar(rt.x1, rt.y1, rt.width(), 0, true);
+		if(current_active_control && pc==&widget_application_control)
+			current_active_control->toolbar(rt.x1, rt.y1, rt.width());
 		auto hilite_tab = -1;
 		auto reaction = draw::tabs(rt, false, true, (void**)layouts, 0,
 			sizeof(layouts) / sizeof(layouts[0]), current_tab, &hilite_tab,

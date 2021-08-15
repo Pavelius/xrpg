@@ -18,7 +18,7 @@ public:
 	virtual void			addseparator() = 0;
 	const char*				choose(const char** source, const void* object, fnallowid allowid = 0, fngetcommands getcommands = 0);
 	virtual const char*		finish() const { return 0; }
-	void					render(const char** commands, const void* object, fnallowid proc = 0, fngetcommands getcommands = 0, bool separator = false);
+	void					render(const char** commands, const void* object, fnallowid proc = 0, fngetcommands getcommands = 0);
 	virtual void			start() const {}
 };
 }
