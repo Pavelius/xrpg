@@ -77,9 +77,7 @@ static const char* skip(const char* p) {
 	return skipspcr(p);
 }
 
-static bool perror(error id, ...) {
-	this_errors++;
-	return false;
+static void possible(error id, ...) {
 }
 
 static bool identifier() {
@@ -118,9 +116,8 @@ static bool identifier() {
 // for : for(%declaration;%expression;%expression) %statements
 
 static rulei c2_grammar[] = {
-	{"file", {".%global"}},
 	{"?global", {"%import", "%variable", "%function"}},
-	{"import", {"import", "%url", "?%as_id"}},
+	{"import", {"import", "%url", "?%as_id", ";"}},
 	{"as_id", {"as", "%id"}},
 	{"url", {"%id", "?%trail_id"}},
 	{"trail_id", {".", "%id"}},
@@ -137,16 +134,20 @@ bool rulei::parse() const {
 			if(e.parse())
 				return true;
 		}
-		return perror(error::ExpectedOneOfP1, name.id);
+		possible(error::ExpectedOneOfP1, name.id);
+		return false;
 	} else {
+		auto count = 0;
 		for(auto& e : tokens) {
 			if(!e)
 				break;
 			if(!e.parse()) {
 				if(e.flags.is(Condition))
 					continue;
-				return perror(error::ExpectedP1, name.id);
-			}
+				possible(error::ExpectedP1, e.id);
+				return false;
+			} else
+				count++;
 		}
 		return true;
 	}
