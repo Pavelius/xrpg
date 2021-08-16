@@ -657,7 +657,7 @@ control* draw::openurl(const char* url) {
 			return p;
 		}
 	}
-	for(auto p = control::plugin::first; p; p = p->next) {
+	for(auto p = plugin::first; p; p = p->next) {
 		auto pc = p->getbuilder();
 		if(!pc)
 			continue;
@@ -960,7 +960,7 @@ static struct window_settings_strategy : io::strategy {
 
 static struct controls_settings_strategy : io::strategy {
 	void write(serializer& file, void* param) override {
-		for(auto pp = controls::control::plugin::first; pp; pp = pp->next) {
+		for(auto pp = controls::plugin::first; pp; pp = pp->next) {
 			auto id = pp->id;
 			if(!id || id[0] == 0)
 				continue;
@@ -977,7 +977,7 @@ static struct controls_settings_strategy : io::strategy {
 	void set(serializer::node& n, const char* value) override {
 		if(!n.parent || !n.parent->parent)
 			return;
-		auto e = const_cast<controls::control::plugin*>(controls::control::plugin::find(n.parent->name));
+		auto e = const_cast<controls::plugin*>(controls::plugin::find(n.parent->name));
 		if(!e)
 			return;
 		else if(n == "Docking") {

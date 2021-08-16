@@ -13,12 +13,11 @@ public:
 	bool				always_focus = false;
 	bool				auto_select = false;
 	void				add(const char* name);
-	void				appear(int x, int y);
+	void				appear(int x, int y, int width = 300);
 	void				clear() { source.clear(); }
 	int					getmaximum() const override { return source.getcount(); }
 	const char*			getname(int line, int column, stringbuilder& sb) const override;
 	bool				isfocused() const override;
-	void				paint(const rect& rc) override;
 };
 }
 }

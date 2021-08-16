@@ -136,15 +136,15 @@ bool draw::isfocused(const void* value, unsigned bits) {
 	return (current_focus == value) && (current_bits == bits);
 }
 
-bool draw::isfocused(const rect& rc, const void* value, unsigned bits) {
+bool draw::isfocused(const rect& rc, const void* value, unsigned bits, bool force_focused) {
 	setfocusable(rc, value, bits);
-	if(!isfocused())
+	if(!force_focused && !isfocused())
 		setfocus(value, bits, true);
 	if(ishilite(rc)) {
 		hilite_focus = value;
 		hilite_bits = bits;
 	}
-	auto result = isfocused(value, bits);
+	auto result = force_focused || isfocused(value, bits);
 	if(result)
 		hot.focus = rc;
 	return result;

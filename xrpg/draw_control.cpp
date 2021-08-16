@@ -34,9 +34,9 @@ static void open_context_menu() {
 	p->contextmenu(p->getcommands());
 }
 
-bool control::ishilited() const {
-	return (this == hilite_control);
-}
+//bool control::ishilited() const {
+//	return (this == hilite_control);
+//}
 
 bool control::isfocused() const {
 	return draw::isfocused(this);
@@ -54,24 +54,6 @@ void control::post(const char* id, int value) const {
 void control::icon(int x, int y, int index, bool disabled) const {
 	if(index!=-1)
 		image(x, y, getimages(), index, 0, disabled ? 0x80 : 0xFF);
-}
-
-bool control::plugin::builder::canopen(const char* url) const {
-	auto ext = szext(url);
-	if(!ext)
-		return false;
-	ext--;
-	char temp[1024 * 8]; stringbuilder sb(temp);
-	getextensions(sb);
-	sb.addsz();
-	auto ps = zend(temp);
-	while(ps[1]) {
-		auto pe = ps + 1;
-		if(szpmatch(ext, pe))
-			return true;
-		ps = zend(pe);
-	}
-	return false;
 }
 
 static bool execute_command_by_keyboard(const controls::control* p, const char** source) {
@@ -99,7 +81,7 @@ static bool execute_command_by_keyboard(const controls::control* p, const char**
 
 void control::paint(const rect& rc) {
 	client = rc;
-	auto focused = isfocusable() && draw::isfocused(rc, this);
+	auto focused = isfocusable() && draw::isfocused(rc, this, 0, isfocused());
 	if(ishilite(rc)) {
 		hilite_control = this;
 		if(!focused) {

@@ -17,24 +17,6 @@ enum class columnf : unsigned char { ReadOnly, Visible };
 namespace controls {
 class control {
 public:
-	struct plugin {
-		struct builder {
-			virtual bool	canopen(const char* url) const;
-			virtual control* create() = 0;
-			virtual void	destroy(control* v) {}
-			virtual void	getextensions(stringbuilder& sb) const {}
-			virtual bool	read(const char* url) { return false; }
-		};
-		const char*			id;
-		dock				position;
-		bool				visible;
-		plugin*				next;
-		static plugin*		first;
-		plugin(const char* id, dock position);
-		static const plugin* find(const char* id);
-		virtual builder*	getbuilder() { return 0; }
-		virtual control*	getcontrol() { return 0; }
-	};
 	rect					client;
 	constexpr control() : client() {}
 	virtual ~control() {}
@@ -42,6 +24,7 @@ public:
 	void					contextmenu(const char** source);
 	virtual void			deactivating() {}
 	bool					dropdown(const rect& rc);
+	//virtual unsigned		getblockkeys() { return 0xFFFFFFFF; }
 	virtual bool			execute(const char* id, bool run) { return false; }
 	virtual const char**	getcommands() const { return 0; }
 	virtual const char**	getcommands(const char* parent) const { return 0; }
@@ -51,7 +34,6 @@ public:
 	void					icon(int x, int y, int index, bool disabled) const;
 	virtual bool			isfocusable() const { return true; }
 	virtual bool			isfocused() const;
-	bool					ishilited() const;
 	virtual bool			ismodified() const { return false; }
 	virtual void			opening() {}
 	virtual void			paint(const rect& rc);
@@ -63,6 +45,24 @@ public:
 	int						toolbar(int x, int y, int width, int* next_x = 0) const;
 	virtual void			write(serializer& e) const {}
 	void					view(const rect& rc, bool show_border, bool show_background, bool show_toolbar = true, bool show_shadow = false);
+};
+struct plugin {
+	struct builder {
+		virtual bool		canopen(const char* url) const;
+		virtual control*	create() = 0;
+		virtual void		destroy(control* v) {}
+		virtual void		getextensions(stringbuilder& sb) const {}
+		virtual bool		read(const char* url) { return false; }
+	};
+	const char*				id;
+	dock					position;
+	bool					visible;
+	plugin*					next;
+	static plugin*			first;
+	plugin(const char* id, dock position);
+	static const plugin*	find(const char* id);
+	virtual builder*		getbuilder() { return 0; }
+	virtual control*		getcontrol() { return 0; }
 };
 class scrollable : public control {
 protected:

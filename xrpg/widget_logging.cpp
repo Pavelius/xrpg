@@ -51,7 +51,7 @@ static void before_application_exit() {
 		write_log_file();
 }
 
-static class widget_logging : public control::plugin, public table {
+static class widget_logging : public plugin, public table {
 	array	rows;
 	control* getcontrol() override {
 		return this;
@@ -78,7 +78,7 @@ public:
 		addcol("Date", ANREQ(logi, stamp), "Date").set(widtht::Fixed);
 		atexit(before_application_exit);
 	}
-	widget_logging() : control::plugin("MessageList", dock::Bottom), table(rows), rows(sizeof(logi)) {
+	widget_logging() : plugin("MessageList", dock::Bottom), table(rows), rows(sizeof(logi)) {
 		no_change_count = true;
 		read_only = true;
 		select_mode = selection::Row;

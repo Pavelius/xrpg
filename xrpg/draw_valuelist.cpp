@@ -9,7 +9,7 @@ void valuelist::add(const char* name) {
 	p->name = name;
 }
 
-void valuelist::appear(int x, int y) {
+void valuelist::appear(int x, int y, int width) {
 	pixels_per_line = getrowheight();
 	auto n = getmaximum();
 	if(n > 10)
@@ -24,12 +24,6 @@ const char* valuelist::getname(int line, int column, stringbuilder& sb) const {
 
 bool valuelist::isfocused() const {
 	return always_focus || draw::isfocused(this);
-}
-
-void valuelist::paint(const rect& rc) {
-	if(ishilite(rc))
-		hot.cursor = cursor::Arrow;
-	list::paint(rc);
 }
 
 //void valuelist::mouseclick() const {

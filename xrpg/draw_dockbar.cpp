@@ -22,18 +22,36 @@ BSDATA(docki) = {
 };
 assert_enum(docki, dock::Workspace)
 
-control::plugin* control::plugin::first;
+plugin* plugin::first;
 
-control::plugin::plugin(const char* id, dock position) : id(id), position(position), visible(true), next(0) {
+plugin::plugin(const char* id, dock position) : id(id), position(position), visible(true), next(0) {
 	seqlink(this);
 }
 
-const control::plugin* control::plugin::find(const char* id) {
+const plugin* plugin::find(const char* id) {
 	for(auto p = first; p; p = p->next) {
 		if(strcmp(p->id, id) == 0)
 			return p;
 	}
 	return 0;
+}
+
+bool plugin::builder::canopen(const char* url) const {
+	auto ext = szext(url);
+	if(!ext)
+		return false;
+	ext--;
+	char temp[1024 * 8]; stringbuilder sb(temp);
+	getextensions(sb);
+	sb.addsz();
+	auto ps = zend(temp);
+	while(ps[1]) {
+		auto pe = ps + 1;
+		if(szpmatch(ext, pe))
+			return true;
+		ps = zend(pe);
+	}
+	return false;
 }
 
 static const char* get_control_name(const void* p, stringbuilder& sb) {
@@ -44,7 +62,7 @@ static const char* get_control_name(const void* p, stringbuilder& sb) {
 }
 
 void getdocked(controla& result, dock type) {
-	for(auto p = control::plugin::first; p; p = p->next) {
+	for(auto p = plugin::first; p; p = p->next) {
 		if(!p->visible)
 			continue;
 		auto pc = p->getcontrol();
@@ -55,7 +73,6 @@ void getdocked(controla& result, dock type) {
 	}
 }
 
-// View control on form
 static int paint_control(rect rc, const controla& elements, int& current, color back) {
 	int y1 = rc.y1;
 	if(current >= (int)elements.getcount())

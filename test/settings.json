@@ -33,10 +33,10 @@
           "ScrollWidth":13
         },
         "View":{
-          "ShowStatusBar":0,
+          "ShowStatusBar":2,
           "ShowLeftPanel":2,
           "ShowRightPanel":2,
-          "ShowBottomPanel":1,
+          "ShowBottomPanel":0,
           "ShowPadding":0
         },
         "Tabs":{
@@ -87,10 +87,10 @@
     }
   },
   "window":{
-    "x":206,
-    "y":48,
-    "width":784,
-    "height":713,
+    "x":432,
+    "y":39,
+    "width":870,
+    "height":678,
     "header_width":186,
     "flags":48
   },
@@ -104,7 +104,7 @@
         "columns":{
           "column":{
             "id":"Message",
-            "width":696
+            "width":200
           },
           "column":{
             "id":"Date",

@@ -256,14 +256,12 @@ class widget_codeview : public control, vector<char> {
 		rc.y1 -= origin.y * fontsize.y;
 		rc.x1 -= origin.x;
 		auto x = rc.x1, y = rc.y1;
-		if(ishilite(r1)) {
+		if(ishilite(r1) && (!isdropdown() || !hot.mouse.in(dropdown.client))) {
 			pointl mpos;
 			mpos.x = (hot.mouse.x - r1.x1 + origin.x + fontsize.x / 2) / fontsize.x;
 			mpos.y = (hot.mouse.y - r1.y1) / fontsize.y + origin.y;
 			auto x1 = rc.x1 + mpos.x * fontsize.x;
 			auto y1 = rc.y1 + mpos.y * fontsize.y;
-			rect r2 = {x1, y1, x1 + fontsize.x, y1 + fontsize.y};
-			ishilite(r2);
 			switch(hot.key) {
 			case MouseLeft:
 			case MouseLeft | Shift:
@@ -778,7 +776,7 @@ public:
 	}
 };
 
-static class widget_codeview_plugin : controls::control::plugin, controls::control::plugin::builder {
+static class widget_codeview_plugin : controls::plugin, controls::plugin::builder {
 	builder* getbuilder() override {
 		return this;
 	}

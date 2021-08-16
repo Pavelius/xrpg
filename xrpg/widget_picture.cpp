@@ -38,12 +38,12 @@ public:
 	picture_widget() : source(), url(0) {}
 };
 
-static struct picture_plugin : control::plugin, control::plugin::builder {
+static struct picture_plugin : plugin, plugin::builder {
 	picture_plugin() : plugin("picture", dock::Bottom) {}
 	control* getcontrol() {
 		return 0;
 	}
-	control::plugin::builder* getbuilder() {
+	plugin::builder* getbuilder() {
 		return this;
 	}
 	control* create() override {
