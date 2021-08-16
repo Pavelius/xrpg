@@ -749,8 +749,10 @@ public:
 				source_lexer = findlexer(szext(url));
 			}
 		} else if(equal(id, "ParseAll")) {
-			if(run)
+			if(run) {
 				code::parse(url, begin(), source_lexer);
+				update_codetree();
+			}
 		} else if(equal(id, "SelectAll")) {
 			if(run) {
 				set(0, false, false);

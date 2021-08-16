@@ -19,6 +19,8 @@ ButtonColor: Цвет кнопки
 Cancel: Отмена
 Change: Изменить
 Close: Закрыть
+CodeTreeMembers: Члены типа
+CodeTreeTypes: Типы данных
 Colors: Цвета 
 Column: Колонка
 CombatVeteran: Солдат

@@ -166,11 +166,11 @@ public:
 		int					multiplier;
 	};
 	vector<column>			columns;
-	bool					no_change_order, no_change_count, read_only, show_totals;
+	bool					no_change_order, no_change_count, readonly, show_totals;
 	selection				select_mode;
 	static const visual		visuals[];
 	constexpr table(array& rows, selection mode = selection::Cell) : list(true), rows(rows), maximum_x(), columns(),
-		no_change_order(false), no_change_count(false), read_only(false), show_totals(false),
+		no_change_order(false), no_change_count(false), readonly(false), show_totals(false),
 		select_mode(mode) {}
 	column&					addcol(const char* id, const anyreq& req, const char* visual_id, array* source = 0);
 	column&					addcol(const char* id, const char* visual_id);
@@ -218,10 +218,12 @@ public:
 	bool					write(const char* url, bool include_header) const;
 };
 class tableref : public table {
+protected:
 	array					rows;
 public:
 	constexpr tableref() : table(rows), rows(sizeof(void*)) {}
 	virtual void			addref(void* v) { rows.add(&v); }
+	void					clear() { rows.clear(); }
 	virtual void*			get(int line) const override { return *((void**)rows.ptr(line)); }
 };
 struct visual {

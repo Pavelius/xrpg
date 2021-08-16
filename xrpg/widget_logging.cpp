@@ -80,7 +80,7 @@ public:
 	}
 	widget_logging() : plugin("MessageList", dock::Bottom), table(rows), rows(sizeof(logi)) {
 		no_change_count = true;
-		read_only = true;
+		readonly = true;
 		select_mode = selection::Row;
 	}
 } widget;

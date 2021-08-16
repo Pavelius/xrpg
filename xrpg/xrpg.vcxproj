@@ -195,6 +195,7 @@
     <ClCompile Include="draw_valuelist.cpp" />
     <ClCompile Include="metadata.cpp" />
     <ClCompile Include="string.cpp" />
+    <ClCompile Include="widget_codetree.cpp" />
     <ClCompile Include="widget_codeview.cpp" />
     <ClCompile Include="color.cpp" />
     <ClCompile Include="command.cpp" />

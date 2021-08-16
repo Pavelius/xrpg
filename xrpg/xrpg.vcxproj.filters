@@ -347,5 +347,8 @@
     <ClCompile Include="draw_valuelist.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
+    <ClCompile Include="widget_codetree.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

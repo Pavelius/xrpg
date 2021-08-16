@@ -678,7 +678,7 @@ bool table::execute(const char* id, bool run) {
 			select(current + 1, getcolumn());
 		}
 	} else if(equal(id, "Change") || equal(id, "Choose")) {
-		if(read_only)
+		if(readonly)
 			return false;
 		if(!columns)
 			return false;
@@ -723,7 +723,7 @@ bool table::execute(const char* id, bool run) {
 			}
 		}
 	} else if(equal(id, "Remove")) {
-		if(read_only)
+		if(readonly)
 			return false;
 		if(no_change_count)
 			return false;

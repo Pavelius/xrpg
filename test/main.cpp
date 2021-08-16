@@ -1,4 +1,5 @@
 #include "archive.h"
+#include "code.h"
 #include "draw.h"
 #include "draw_button.h"
 #include "draw_control.h"
@@ -83,8 +84,6 @@ static bool test_string() {
 	return t1 == "Answer";
 }
 
-void initialize_codeview();
-
 #ifdef _DEBUG
 void main_util();
 #endif
@@ -99,8 +98,8 @@ int main() {
 		return -1;
 	if(!initialize_translation("ru"))
 		return -1;
-	auto a = sizeof(size_t);
 	initialize_codeview();
+	initialize_codetree();
 	logmsgv("Тостовая строка залогирована в общий лог приложения.", 0);
 	draw::initialize("Test UI");
 	openurl("battle.bmp");

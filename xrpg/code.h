@@ -48,3 +48,6 @@ const char*				getnext(const char* p, pointl& pos);
 const char*				getnext(const char* p, pointl& pos, group_s& type, const lexer* pk = 0);
 void					parse(const char* url, const char* p, const lexer* pk);
 }
+void					initialize_codeview();
+void					initialize_codetree();
+void					update_codetree();

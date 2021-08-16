@@ -1,2 +1,2 @@
 ﻿Errors occurs in locale/ru/Names.txt.txt
-Define translate for 'ParseAll'
+Define translate for 'CodeTreeMembers'
