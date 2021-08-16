@@ -511,8 +511,9 @@ void draw::close(control* p) {
 	delete p;
 }
 
+static fnevent current_heartproc;
+
 static struct widget_application : draw::controls::control {
-	fnevent	heartproc;
 	const char* getvalue(const char* id, stringbuilder& sb) const override {
 		if(equal(id, "Name"))
 			return getnm("Main");
@@ -551,7 +552,7 @@ static struct widget_application : draw::controls::control {
 			fore = push_fore;
 		} else if(ct.getcount() == 1) {
 			current_active_control = ct[0];
-			current_active_control->view(rc, metrics::show::padding, false);
+			current_active_control->view(rc, metrics::show::padding, false, false);
 		} else {
 			auto current_select = getindexof(ct, current_active_control);
 			if(current_select == -1)
@@ -585,8 +586,8 @@ static struct widget_application : draw::controls::control {
 	}
 	void paint() const override {
 		auto rct = client;
-		if(heartproc)
-			heartproc();
+		if(current_heartproc)
+			current_heartproc();
 		dockbar(rct);
 		workspace(rct);
 	}

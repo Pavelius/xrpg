@@ -57,7 +57,7 @@ static memberi* findmember(const char* id, const char* type) {
 static typei* addtype(const char* id) {
 	auto p = findtype(id);
 	if(!p)
-		p = bsdata<typei>::add();
+		p = bsdata<typei>::addz();
 	p->id = szdup(id);
 	p->url = current_url;
 	return p;
@@ -66,7 +66,7 @@ static typei* addtype(const char* id) {
 static memberi* addmember(const char* id, const char* type, const char* result) {
 	auto p = findmember(id, type);
 	if(!p)
-		p = bsdata<memberi>::add();
+		p = bsdata<memberi>::addz();
 	p->id = szdup(id);
 	p->url = current_url;
 	p->type = szdup(type);
@@ -74,29 +74,47 @@ static memberi* addmember(const char* id, const char* type, const char* result) 
 	return p;
 }
 
-static void block(const char* type) {
+static void block(const char* type, int level) {
 	while(*p) {
 		next();
-		if(current_group == Keyword && token == "fn") {
-			next();
-			if(current_group == Identifier)
-				addmember(token.get(), type, 0);
-		} else if(current_group == Keyword && token == "struct") {
-			next();
-			if(current_group == Identifier)
-				addtype(token.get());
-		} else if(current_group == Keyword && token == "impl") {
-			next();
-			if(current_group == Identifier) {
-				auto name = token;
+		if(current_group == Keyword) {
+			if(token == "fn") {
 				next();
-				if(current_group == BlockBegin)
-					block(name.get());
+				if(current_group == Identifier)
+					addmember(token.get(), type, 0);
+			} else if(token == "struct") {
+				next();
+				if(current_group == Identifier) {
+					auto name = token;
+					addtype(token.get());
+					next();
+					if(current_group == BlockBegin)
+						block(name.get(), level);
+				}
+			} else if(token == "impl") {
+				next();
+				if(current_group == Identifier) {
+					auto name = token;
+					next();
+					if(current_group == BlockBegin)
+						block(name.get(), level); // Same level. Can use function defenition.
+				}
 			}
 		} else if(current_group == BlockEnd)
 			break;
 		else if(current_group == BlockBegin)
-			block(type);
+			block(type, level + 1);
+	}
+}
+
+static void remove_previous() {
+	for(auto& e : bsdata<typei>()) {
+		if(e.url == current_url)
+			e.clear();
+	}
+	for(auto& e : bsdata<memberi>()) {
+		if(e.url == current_url)
+			e.clear();
 	}
 }
 
@@ -104,5 +122,7 @@ void code::parse(const char* url, const char* source, const lexer* px) {
 	p = source;
 	current_parser = px;
 	current_url = url;
-	block("this");
+	remove_previous();
+	addtype("this");
+	block("this", 0);
 }

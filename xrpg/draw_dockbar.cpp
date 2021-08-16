@@ -95,7 +95,7 @@ static int paint_control(rect rc, const controla& elements, int& current, color 
 		}
 		rc.y1 += dy;
 		if(metrics::show::padding)
-			rc.offset(metrics::padding*2);
+			rc.offset(metrics::padding);
 		else
 			rc.y1 += metrics::padding;
 	}
