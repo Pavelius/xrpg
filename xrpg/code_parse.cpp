@@ -118,6 +118,30 @@ static void remove_previous() {
 	}
 }
 
+// Example grammatic visualization
+// -------------------------------
+// id		read identifier. Can test if this is identifier.
+// number	read number. Like 0x12, 9, 05.
+// literal	read string literal. Like "Simple string literal"
+// %		next defenition marker. After this symbol in pseudocode lead variable
+// ...		can repeat leading leateral
+// -------------------------------
+// Case types: Conditional, Pseudocode
+// -------------------------------
+// file : %global...
+// global : %import | %variable | %function
+// import type(url, last_id): import %url [as %id];
+// url : %id [.%id...]
+// variable member(parent, id, type): %type %id [=%initialization];
+// function member(parent, id, type): %type %id ([%parameters]) %block_statements
+// statements : %block_statements | %statement
+// block_statements : { [%statement...] }
+// statement : %statement_content;
+// statement_content : %local | %assignment | %calling | %if | %while | %for | %return | %break | %continue
+// while : while(%expression) %statements
+// if : if(%expression) %statements [else %statements]
+// for : for(%declaration;%expression;%expression) %statements
+
 void code::parse(const char* url, const char* source, const lexer* px) {
 	p = source;
 	current_parser = px;

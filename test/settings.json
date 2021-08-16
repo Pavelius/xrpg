@@ -6,7 +6,7 @@
     },
     "DockLeftBottom":{
       "current":0,
-      "size":193
+      "size":343
     },
     "DockRight":{
       "current":0,
@@ -18,7 +18,7 @@
     },
     "DockBottom":{
       "current":0,
-      "size":211
+      "size":276
     },
     "DockWorkspace":{
       "current":0,
@@ -67,7 +67,7 @@
           "ShowStatusBar":2,
           "ShowLeftPanel":2,
           "ShowRightPanel":2,
-          "ShowBottomPanel":0,
+          "ShowBottomPanel":2,
           "ShowPadding":2
         },
         "Tabs":{
@@ -87,10 +87,10 @@
     }
   },
   "window":{
-    "x":221,
-    "y":31,
-    "width":1063,
-    "height":709,
+    "x":84,
+    "y":67,
+    "width":1005,
+    "height":686,
     "header_width":132,
     "flags":48
   },
@@ -127,7 +127,7 @@
           "columns":{
             "column":{
               "id":"Message",
-              "width":200
+              "width":705
             },
             "column":{
               "id":"Date",
