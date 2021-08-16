@@ -36,7 +36,8 @@ public:
 	virtual bool			isfocused() const;
 	virtual bool			ismodified() const { return false; }
 	virtual void			opening() {}
-	virtual void			paint(const rect& rc);
+	virtual void			paintnc() { paint(); }
+	virtual void			paint() const;
 	void					post(const char* id) const;
 	void					post(const char* id, int value) const;
 	virtual void			read(serializer& e) {}
@@ -71,10 +72,9 @@ protected:
 	int						wheel_x, wheel_y;
 public:
 	constexpr scrollable() : control(), origin_x(), origin_y(), maximum_x(), maximum_y(), wheel_x(), wheel_y() {}
-	rect					centerview(const rect& rc);
+	rect					centerview(const rect& rc) const;
 	virtual void			invalidate() { maximum_x = 0; }
-	virtual void			redraw(const rect& rc) {}
-	void					paint(const rect& rc) override;
+	void					paintnc() override;
 	void					setmaximum(int x, int y) { maximum_x = x; maximum_y = y; }
 	void					setwheels(int x, int y) { wheel_x = x; wheel_y = y; }
 };
@@ -118,8 +118,9 @@ public:
 	bool					isopen(int index) const;
 	virtual void			mouseclick() const;
 	virtual void			mousehiliting(const rect& rc, point mouse) const;
-	void					paint(const rect& rc) override;
-	void					paintrows(const rect& rc);
+	void					paintnc() override;
+	void					paint() const override;
+	void					paintrows(const rect& rc) const;
 	virtual void			row(const rect& rc, int line) const;
 	virtual int				rowheader(const rect& rc) const { return 0; }
 	virtual void			rowhilite(const rect& rc, int index) const;
@@ -206,7 +207,7 @@ public:
 	int						getvalid(int column) const { return column; }
 	virtual const visual**	getvisuals() const;
 	void					mouseclick() const;
-	void					paint(const rect& rc) override;
+	void					paintnc() override;
 	void					row(const rect& rc, int index) const override;
 	int						rowheader(const rect& rc) const override;
 	void					rowtotal(const rect& rc) const;

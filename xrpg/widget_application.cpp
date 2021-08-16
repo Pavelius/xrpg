@@ -407,8 +407,8 @@ static struct widget_settings : controls::control {
 			return getnm("Settings");
 		return 0;
 	}
-	void paint(const rect& rcorigin) override {
-		auto rc = rcorigin;
+	void paint() const override {
+		auto rc = client;
 		auto push_fore = fore;
 		fore = colors::text;
 		splitv(rc.x1, rc.y1, window.header_width, rc.height(), 6, 64, 282, false);
@@ -583,8 +583,8 @@ static struct widget_application : draw::controls::control {
 			}
 		}
 	}
-	void paint(const rect& rc) override {
-		auto rct = rc;
+	void paint() const override {
+		auto rct = client;
 		if(heartproc)
 			heartproc();
 		dockbar(rct);
@@ -783,7 +783,8 @@ void draw::application() {
 		rt.offset(2, 1);
 		if(metrics::show::padding)
 			rc.offset(metrics::padding);
-		pc->paint(rc);
+		pc->client = rc;
+		pc->paint();
 		pc->toolbar(rt.x1, rt.y1, rt.width(), &rt.x1);
 		if(current_active_control && pc==&widget_application_control)
 			current_active_control->toolbar(rt.x1, rt.y1, rt.width());

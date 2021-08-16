@@ -5,22 +5,21 @@
 
 using namespace draw::controls;
 
-void scrollable::paint(const rect& rcc) {
-	rect rc = rcc;
-	draw::scroll scrollv(origin_y, rc.height(), maximum_y, rc, false, wheel_y);
-	draw::scroll scrollh(origin_x, rc.width(), maximum_x, rc, true, wheel_x);
+void scrollable::paintnc() {
+	draw::scroll scrollv(origin_y, client.height(), maximum_y, client, false, wheel_y);
+	draw::scroll scrollh(origin_x, client.width(), maximum_x, client, true, wheel_x);
 	scrollv.correct(); scrollh.correct();
 	scrollv.input(); scrollh.input();
-	control::paint(rcc);
+	control::paint();
 	auto push_clip = clipping;
-	setclip(rc);
-	redraw(rc);
+	setclip(client);
+	paint();
 	clipping = push_clip;
 	scrollv.view(isfocused());
 	scrollh.view(isfocused());
 }
 
-rect draw::controls::scrollable::centerview(const rect& rc) {
+rect draw::controls::scrollable::centerview(const rect& rc) const {
 	rect rs = rc;
 	if(rc.width() > maximum_x) {
 		rs.x1 = rc.x1 + (rc.width() - maximum_x) / 2;

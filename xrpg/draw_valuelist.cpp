@@ -9,24 +9,17 @@ void valuelist::add(const char* name) {
 	p->name = name;
 }
 
-void valuelist::appear(int x, int y, int width) {
-	pixels_per_line = getrowheight();
-	auto n = getmaximum();
-	if(n > 10)
-		n = 10;
-	auto h = n * pixels_per_line;
-	client.set(x, y, x + 300, y + h);
-}
-
 const char* valuelist::getname(int line, int column, stringbuilder& sb) const {
 	return source[line].name;
+}
+
+const char*	valuelist::getcurrentname() const {
+	if(!getmaximum())
+		return "";
+	char temp[260]; stringbuilder sb(temp);
+	return getname(current, 0, sb);
 }
 
 bool valuelist::isfocused() const {
 	return always_focus || draw::isfocused(this);
 }
-
-//void valuelist::mouseclick() const {
-//	if(hot.key == MouseLeft && hot.pressed)
-//		draw::execute(post_select, current_hilite_row, getcolumn(), this);
-//}

@@ -368,16 +368,16 @@ rect table::getrect(int row, int column) const {
 	return rs;
 }
 
-void table::paint(const rect& rc) {
+void table::paintnc() {
 	rect rt;
-	rt.y1 = rc.y1;
-	rt.y2 = rc.y2;
-	update_columns(rc);
+	rt.y1 = client.y1;
+	rt.y2 = client.y2;
+	update_columns(client);
 	maximum_x = 0;
 	for(unsigned i = 0; i < columns.count; i++) {
 		if(!columns[i].is(columnf::Visible))
 			continue;
-		rt.x1 = rc.x1 - origin_x + maximum_x;
+		rt.x1 = client.x1 - origin_x + maximum_x;
 		rt.x2 = rt.x1 + columns[i].width;
 		if(hot.mouse.in(rt))
 			current_hilite_column = i;
@@ -388,10 +388,13 @@ void table::paint(const rect& rc) {
 	if(maximum_x > 0)
 		maximum_x -= 1;
 	if(show_totals) {
-		list::paint({rc.x1, rc.y1, rc.x2, rc.y2 - getrowheight()});
-		rowtotal({rc.x1, rc.y2 - getrowheight(), rc.x2, rc.y2});
+		rect rc = client;
+		client.y2 -= getrowheight();
+		list::paintnc();
+		client = rc;
+		rowtotal({client.x1, client.y2 - getrowheight(), client.x2, client.y2});
 	} else
-		list::paint(rc);
+		list::paintnc();
 	if(isfocused()) {
 		int v;
 		switch(hot.key) {

@@ -58,6 +58,7 @@ class widget_codeview : public control, vector<char> {
 	pointl pos1 = {}, pos2 = {}, size = {};
 	pointl origin = {}, maximum = {};
 	rect rctext = {4, 4, 4, 4};
+	rect ddclient = {};
 	bool readonly = false, modified = false;
 	valuelist dropdown;
 
@@ -231,6 +232,21 @@ class widget_codeview : public control, vector<char> {
 		auto p = (widget_codeview*)hot.object;
 		p->dropdown.clear();
 	}
+	static void post_choose_dropdown() {
+		auto p = (widget_codeview*)hot.object;
+		auto n = p->dropdown.getcurrentname();
+		p->paste(n);
+		p->pastesnipets();
+		p->dropdown.clear();
+	}
+	void setdropdown(int x, int y, int width) {
+		dropdown.pixels_per_line = dropdown.getrowheight();
+		auto n = dropdown.getmaximum();
+		if(n > 10)
+			n = 10;
+		auto h = n * dropdown.pixels_per_line;
+		ddclient.set(x, y, x + 300, y + h);
+	}
 	void autocomplete() {
 		if(!source_lexer)
 			return;
@@ -238,19 +254,22 @@ class widget_codeview : public control, vector<char> {
 		dropdown.clear();
 		for(auto& e : source_lexer->keywords)
 			dropdown.add(e.id);
-		dropdown.appear(client.x1 + pos1.x * fontsize.x - origin.x, client.y1 + (pos1.y - origin.y) * fontsize.y + fontsize.y);
+		setdropdown(
+			client.x1 + pos1.x * fontsize.x - origin.x,
+			client.y1 + (pos1.y - origin.y) * fontsize.y + fontsize.y,
+			300);
 	}
 	bool isdropdown() const {
 		return dropdown.getmaximum();
 	}
-	void redraw(const rect& rco) {
+	void paint() const override {
 		if(!fontsize.x || !fontsize.y)
 			return;
 		auto push_font = font;
 		auto push_fore = fore;
 		draw::font = default_font;
 		auto focused = isfocused();
-		rect rc = rco + rctext;
+		rect rc = client + rctext;
 		// Mouse input handle
 		rect r1 = rc;
 		rc.y1 -= origin.y * fontsize.y;
@@ -290,7 +309,7 @@ class widget_codeview : public control, vector<char> {
 			hot.cursor = cursor::Edit;
 		}
 		pointl pos = {};
-		group_s type = IllegalSymbol;
+		auto type = IllegalSymbol;
 		const char* ps = begin();
 		while(true) {
 			auto x1 = x + pos.x * fontsize.x;
@@ -324,8 +343,8 @@ class widget_codeview : public control, vector<char> {
 			auto p1 = getbeginpos();
 			auto p2 = getendpos();
 			for(auto i = p1.y; i <= p2.y; i++) {
-				auto x1 = rco.x1;
-				auto x2 = rco.x2;
+				auto x1 = client.x1;
+				auto x2 = client.x2;
 				auto y1 = y + i * fontsize.y;
 				if(i == p1.y)
 					x1 = x + p1.x * fontsize.x;
@@ -419,9 +438,11 @@ class widget_codeview : public control, vector<char> {
 					draw::execute(post_paste_symbol, hot.param, 0, this);
 				break;
 			case KeyEnter:
-				if(isdropdown())
+				if(readonly)
 					break;
-				if(!readonly)
+				if(isdropdown())
+					draw::execute(post_choose_dropdown, 0, 0, this);
+				else
 					draw::execute(post_paste_cr, 0, 0, this);
 				break;
 			case KeyHome:
@@ -473,23 +494,23 @@ class widget_codeview : public control, vector<char> {
 	int	getpixelperline() const {
 		return fontsize.y;
 	}
-	void paint(const rect& rc) override {
+	void paintnc() override {
 		auto pixels_per_line = getpixelperline();
 		if(!pixels_per_line)
 			return;
 		if(!lines_per_page) {
-			lines_per_page = rc.height() / pixels_per_line;
+			lines_per_page = client.height() / pixels_per_line;
 			correction();
 		}
-		draw::scroll scrollv(origin.y, lines_per_page, maximum.y, rc); scrollv.input();
-		draw::scroll scrollh(origin.x, rc.width(), maximum.x, rc, true); scrollh.input();
-		control::paint(rc);
+		draw::scroll scrollv(origin.y, lines_per_page, maximum.y, client); scrollv.input();
+		draw::scroll scrollh(origin.x, client.width(), maximum.x, client, true); scrollh.input();
+		control::paint();
 		auto push_clip = clipping;
-		setclip(rc);
-		redraw(rc);
+		setclip(client);
+		paint();
 		clipping = push_clip;
 		if(dropdown.getmaximum())
-			dropdown.view(dropdown.client, true, true, false, true);
+			dropdown.view(ddclient, true, true, false, true);
 		scrollv.view(isfocused());
 		scrollh.view(isfocused());
 	}

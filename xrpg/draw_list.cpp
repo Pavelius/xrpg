@@ -137,13 +137,7 @@ int list::getlinesperpage(int height) const {
 	return height / pixels_per_line;
 }
 
-void list::paintrows(const rect& rc) {
-	auto maximum = getmaximum();
-	auto maximum_x = getmaximumwidth();
-	scroll scrollv(origin, page, maximum, rc, false);
-	scroll scrollh(origin_x, page_x, maximum_x, rc, true);
-	scrollv.input();
-	scrollh.input();
+void list::paintrows(const rect& rc) const {
 	auto focused = isfocused();
 	if(ishilite(rc)) {
 		mousehiliting(rc, hot.mouse);
@@ -164,10 +158,10 @@ void list::paintrows(const rect& rc) {
 			break;
 		}
 	}
-	auto push_clip = clipping; setclip(rc);
 	auto x1 = rc.x1 - origin_x, y1 = rc.y1;
 	auto x2 = rc.x2;
 	auto ix = origin;
+	auto maximum = getmaximum();
 	while(true) {
 		if(y1 >= rc.y2)
 			break;
@@ -184,25 +178,36 @@ void list::paintrows(const rect& rc) {
 		y1 += pixels_per_line;
 		ix++;
 	}
+}
+
+void list::paintnc() {
+	page_x = client.width() - 1;
+	if(show_header)
+		client.y1 += rowheader(client);
+	control::paint();
+	client.x1++; client.y1++;
+	if(!pixels_per_line)
+		pixels_per_line = getrowheight();
+	page = getlinesperpage(client.height());
+	correction();
+	if(!pixels_per_line)
+		return;
+	auto maximum = getmaximum();
+	auto maximum_x = getmaximumwidth();
+	scroll scrollv(origin, page, maximum, client, false);
+	scroll scrollh(origin_x, page_x, maximum_x, client, true);
+	scrollv.input();
+	scrollh.input();
+	auto push_clip = clipping; setclip(client);
+	auto focused = isfocused();
+	paint();
 	clipping = push_clip;
 	scrollv.view(focused);
 	scrollh.view(focused);
 }
 
-void list::paint(const rect& rcorigin) {
-	rect rc = rcorigin;
-	page_x = rc.width() - 1;
-	if(show_header)
-		rc.y1 += rowheader(rc);
-	rect rc1 = rc; rc.x1++; rc.y1++;
-	if(!pixels_per_line)
-		pixels_per_line = getrowheight();
-	page = getlinesperpage(rc.height());
-	correction();
-	control::paint(rc1);
-	if(!pixels_per_line)
-		return;
-	paintrows(rc);
+void list::paint() const {
+	paintrows(client);
 	auto focused = isfocused();
 	if(focused) {
 		int m;

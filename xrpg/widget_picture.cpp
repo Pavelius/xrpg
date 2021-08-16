@@ -9,8 +9,8 @@ using namespace draw::controls;
 class picture_widget : public scrollable {
 	surface			source;
 	const char*		url;
-	void redraw(const rect& rco) override {
-		rect rc = centerview(rco);
+	void paint() const override {
+		rect rc = centerview(client);
 		draw::blit(*draw::canvas, rc.x1, rc.y1, rc.width(), rc.height(), 0, source, origin_x, origin_y);
 		if(isfocused())
 			statuscolumn(0, 120, "%Size %1ix%2i", source.width, source.height);

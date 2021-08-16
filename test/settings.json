@@ -87,11 +87,11 @@
     }
   },
   "window":{
-    "x":432,
-    "y":39,
-    "width":870,
+    "x":262,
+    "y":72,
+    "width":907,
     "height":678,
-    "header_width":186,
+    "header_width":132,
     "flags":48
   },
   "controls":{

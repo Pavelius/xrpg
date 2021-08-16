@@ -9,12 +9,7 @@
 using namespace draw;
 using namespace draw::controls;
 
-static const control*	hilite_control;
-const sprite*			control::std_images = (sprite*)loadb("art/pma/toolbar.pma");
-
-HANDLER(before_modal) {
-	hilite_control = 0;
-}
+const sprite* control::std_images = (sprite*)loadb("art/pma/toolbar.pma");
 
 static void command_execute() {
 	auto p = (control*)hot.object;
@@ -33,10 +28,6 @@ static void open_context_menu() {
 	auto p = (control*)hot.object;
 	p->contextmenu(p->getcommands());
 }
-
-//bool control::ishilited() const {
-//	return (this == hilite_control);
-//}
 
 bool control::isfocused() const {
 	return draw::isfocused(this);
@@ -79,11 +70,9 @@ static bool execute_command_by_keyboard(const controls::control* p, const char**
 	return false;
 }
 
-void control::paint(const rect& rc) {
-	client = rc;
-	auto focused = isfocusable() && draw::isfocused(rc, this, 0, isfocused());
-	if(ishilite(rc)) {
-		hilite_control = this;
+void control::paint() const {
+	auto focused = isfocusable() && draw::isfocused(client, this, 0, isfocused());
+	if(ishilite(client)) {
 		if(!focused) {
 			if(isfocusable() && (hot.key == MouseLeft || hot.key == MouseRight) && !hot.pressed)
 				setfocus(this, 0, false);
@@ -123,7 +112,8 @@ void control::view(const rect& ro, bool show_border, bool show_background, bool 
 		rectf(rc, colors::window);
 	if(show_border)
 		rectb(rc, colors::border);
-	paint(rc);
+	client = rc;
+	paintnc();
 	if(show_shadow) {
 		rectf({rc.x2 + 1, rc.y1 + 4, rc.x2 + 5, rc.y2}, colors::black, 32);
 		rectf({rc.x1 + 4, rc.y2, rc.x2 + 5, rc.y2 + 5}, colors::black, 32);

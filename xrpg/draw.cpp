@@ -1967,7 +1967,7 @@ void draw::stroke(int x, int y, const sprite* e, int id, int flags, unsigned cha
 	}
 }
 
-void draw::blit(surface& ds, int x1, int y1, int w, int h, unsigned flags, surface& ss, int xs, int ys) {
+void draw::blit(surface& ds, int x1, int y1, int w, int h, unsigned flags, const surface& ss, int xs, int ys) {
 	if(ss.bpp != ds.bpp)
 		return;
 	int ox;
@@ -1980,16 +1980,16 @@ void draw::blit(surface& ds, int x1, int y1, int w, int h, unsigned flags, surfa
 	if(flags & ImageTransparent)
 		cpy32t(
 			ds.ptr(x1, y1), ds.scanline,
-			ss.ptr(xs, ys) + ox * 4, ss.scanline,
+			const_cast<surface&>(ss).ptr(xs, ys) + ox * 4, ss.scanline,
 			w, h);
 	else
 		cpy(
 			ds.ptr(x1, y1), ds.scanline,
-			ss.ptr(xs, ys) + ox * 4, ss.scanline,
+			const_cast<surface&>(ss).ptr(xs, ys) + ox * 4, ss.scanline,
 			w, h, 4);
 }
 
-void draw::blit(surface& dest, int x, int y, int width, int height, unsigned flags, surface& source, int x_source, int y_source, int width_source, int height_source) {
+void draw::blit(surface& dest, int x, int y, int width, int height, unsigned flags, const surface& source, int x_source, int y_source, int width_source, int height_source) {
 	if(width == width_source && height == height_source) {
 		blit(dest, x, y, width, height, flags, source, x_source, y_source);
 		return;
@@ -2005,7 +2005,7 @@ void draw::blit(surface& dest, int x, int y, int width, int height, unsigned fla
 		return;
 	scale32(
 		dest.ptr(x, y), dest.scanline, width, height,
-		source.ptr(x_source, y_source) + ox * 4, source.scanline, width_source, height_source);
+		const_cast<surface&>(source).ptr(x_source, y_source) + ox * 4, source.scanline, width_source, height_source);
 }
 
 const pma* pma::getheader(const char* id) const {
