@@ -2,7 +2,7 @@
   "dockbar":{
     "DockLeft":{
       "current":0,
-      "size":190
+      "size":154
     },
     "DockLeftBottom":{
       "current":0,
@@ -18,7 +18,7 @@
     },
     "DockBottom":{
       "current":0,
-      "size":276
+      "size":366
     },
     "DockWorkspace":{
       "current":0,
@@ -87,10 +87,10 @@
     }
   },
   "window":{
-    "x":84,
-    "y":67,
-    "width":1005,
-    "height":686,
+    "x":153,
+    "y":103,
+    "width":991,
+    "height":672,
     "header_width":132,
     "flags":48
   },
@@ -107,7 +107,7 @@
           "columns":{
             "column":{
               "id":"Name",
-              "width":182
+              "width":146
             }
           }
         },
@@ -117,7 +117,7 @@
           "columns":{
             "column":{
               "id":"Name",
-              "width":182
+              "width":146
             }
           }
         },
@@ -127,7 +127,7 @@
           "columns":{
             "column":{
               "id":"Message",
-              "width":705
+              "width":727
             },
             "column":{
               "id":"Date",

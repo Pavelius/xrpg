@@ -88,6 +88,8 @@ static bool test_string() {
 void main_util();
 #endif
 
+void initialize_complex_grammar();
+
 int main() {
 #ifdef _DEBUG
 	main_util();
@@ -98,6 +100,7 @@ int main() {
 		return -1;
 	if(!initialize_translation("ru"))
 		return -1;
+	initialize_complex_grammar();
 	initialize_codeview();
 	initialize_codetree();
 	logmsgv("Тостовая строка залогирована в общий лог приложения.", 0);
