@@ -800,7 +800,7 @@ public:
 };
 
 static class widget_codeview_plugin : controls::plugin, controls::plugin::builder {
-	builder* getbuilder() override {
+	plugin::builder* getbuilder() override {
 		return this;
 	}
 	bool canopen(const char* url) const override {

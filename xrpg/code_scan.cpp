@@ -47,6 +47,7 @@ struct rulei {
 typedef slice<rulei>	rulea;
 struct corei {
 	string				id, rule, url, comment;
+	long long           number;
 };
 
 static const char*		p;
@@ -87,6 +88,43 @@ static void errors(error id, ...) {
 	this_errors++;
 }
 
+static void number() {
+    core.number = 0;
+    if(!isnum(*p) || !(p[0]=='-' && isnum(p[1])))
+        return;
+	if(p[0] == '0') {
+		if(p[1] == 'x') {
+			p += 2;
+			while(true) {
+				char s = *p;
+				if(s >= 'a' && s <= 'f')
+					s = s - 'a' + 10;
+				else if(s >= 'A' && s <= 'F')
+					s = s - 'A' + 10;
+				else if(s >= '0' && s <= '9')
+					s = s - '0';
+				else
+					break;
+				core.number = core.number * 16 + s;
+				p++;
+			}
+		} else {
+			while(*p >= '0' && *p <= '7') {
+				core.number = core.number * 8 + *p - '0';
+				p++;
+			}
+		}
+	} else {
+		while(*p >= '0' && *p <= '9') {
+			core.number = core.number * 10 + *p - '0';
+			p++;
+		}
+	}
+	if(*p == 'f' || *p == 'e')
+		p++;
+	skipws();
+}
+
 static void identifier() {
 	if(!ischab(*p))
 		return;
@@ -103,8 +141,20 @@ static void add_type() {
 static void add_member() {
 }
 
+static void test_type() {
+}
+
+static void test_constant() {
+}
+
 static void set_url() {
 	core.url = core.rule;
+}
+
+static void apply_static() {
+}
+
+static void apply_public() {
 }
 
 // Example grammatic visualization
@@ -132,12 +182,27 @@ static void set_url() {
 // for : for(%declaration;%expression;%expression) %statements
 
 static rulei c2_grammar[] = {
-	{"?global", {"%import", "%variable", "%function"}},
+	{"?global", {"%import", "%enum", "%global_declaration"}},
 	{"import", {"import", "%url", "?%as_id", ";"}, add_type},
 	{"as_id", {"as", "%id"}},
-	{"url", {"%id", "?%.trail_id"}, set_url},
-	{"trail_id", {"\\.", "%id"}},
+	{"url", {"%id", "?%.next_id"}, set_url},
+	{"next_id", {"\\.", "%id"}},
 	{"id", {}, identifier},
+	{"number", {}, number},
+	{"type", {"%id", "?.*"}, test_type},
+	{"enum", {"enum", "{", ".%enum_values", "}", ";"}},
+	{"enum_values", {"%enum_value", "?.%next_enum_value"}},
+	{"next_enum_value", {",", "%enum_value"}},
+	{"enum_value", {"%id", "?%enum_assign"}},
+	{"enum_assign", {"=", "%constant"}},
+	{"?constant", {"%expression"}, test_constant},
+	{"static", {"static"}, apply_static},
+	{"public", {"public"}, apply_public},
+	{"?global_declaration", {"%member_variable", "%member_function"}},
+	{"member", {"?%static", "?%public", "%type", "%id", "member_case"}},
+	{"?member_case", {"%member_function", "%member_variable"}},
+	{"member_function", {"(", "%declare_parameters", ")", "%block_statements"}},
+	{"member_variable", {"%array_scope", "%initialization", ";"}},
 };
 
 void rulei::parse() const {
@@ -166,7 +231,8 @@ void rulei::parse() const {
 			if(pb != p)
 				// Some of previous tokens match. Error case
 				errors(error::ExpectedP1, e.id);
-			break;
+            if(!name.is(Condition))
+                break;
 		}
 	}
 	if(p != pb) {
@@ -193,6 +259,7 @@ void tokeni::parse() const {
 static const char* code_sample = "\
 import core.crt;\n\
 import core.collection.array as this;\n\
+enum {OK, Cancel};\n\
 ";
 
 void initialize_complex_grammar() {

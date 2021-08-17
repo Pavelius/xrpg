@@ -411,38 +411,40 @@
 1627845130 source:d:\projects\xrpg\test\trait.cpp
 	"main.h"
 
-1628777603 source:/home/ws-1113/projects/xrpg/test/main.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/test/main.cpp
 	"archive.h"
+	"code.h"
 	"draw.h"
 	"draw_button.h"
 	"draw_control.h"
 	"draw_figure.h"
 	"io_stream.h"
 	"main.h"
+	"string.h"
 
-1628677516 /home/ws-1113/projects/xrpg/xrpg/archive.h
+1629181108 /home/ws-1113/projects/xrpg/xrpg/archive.h
 	"crt.h"
 	"io_stream.h"
 
-1628677516 /home/ws-1113/projects/xrpg/xrpg/crt.h
+1629181108 /home/ws-1113/projects/xrpg/xrpg/crt.h
 
 1627371753 /home/ws-1113/projects/xrpg/xrpg/io_stream.h
 
-1628677576 /home/ws-1113/projects/xrpg/xrpg/draw.h
+1629181108 /home/ws-1113/projects/xrpg/xrpg/draw.h
 	"color.h"
 	"point.h"
 	"stringbuilder.h"
 
-1628677516 /home/ws-1113/projects/xrpg/xrpg/color.h
+1629181108 /home/ws-1113/projects/xrpg/xrpg/color.h
 
 1627282035 /home/ws-1113/projects/xrpg/xrpg/point.h
 	"rect.h"
 
 1627282035 /home/ws-1113/projects/xrpg/xrpg/rect.h
 
-1628677516 /home/ws-1113/projects/xrpg/xrpg/stringbuilder.h
+1629181108 /home/ws-1113/projects/xrpg/xrpg/stringbuilder.h
 
-1628677516 /home/ws-1113/projects/xrpg/xrpg/draw_button.h
+1629181108 /home/ws-1113/projects/xrpg/xrpg/draw_button.h
 	"color.h"
 	"markup.h"
 	"rect.h"
@@ -452,7 +454,7 @@
 	"crt.h"
 	"stringbuilder.h"
 
-1628677516 /home/ws-1113/projects/xrpg/xrpg/draw_control.h
+1629181108 /home/ws-1113/projects/xrpg/xrpg/draw_control.h
 	"anyreq.h"
 	"handler.h"
 	"markup.h"
@@ -489,7 +491,7 @@
 
 1627282035 /home/ws-1113/projects/xrpg/xrpg/bstream.h
 
-1627987500 source:/home/ws-1113/projects/xrpg/xrpg/color.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/color.cpp
 	"color.h"
 	"crt.h"
 
@@ -522,15 +524,15 @@
 
 1628677516 /home/ws-1113/projects/xrpg/xrpg/datetime.h
 
-1628677516 source:/home/ws-1113/projects/xrpg/xrpg/draw.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/draw.cpp
 	"color.h"
 	"crt.h"
 	"draw.h"
 
-1627987500 source:/home/ws-1113/projects/xrpg/xrpg/draw_builder.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/draw_builder.cpp
 	"draw_builder.h"
 
-1628677516 /home/ws-1113/projects/xrpg/xrpg/draw_builder.h
+1629181108 /home/ws-1113/projects/xrpg/xrpg/draw_builder.h
 
 1628677516 source:/home/ws-1113/projects/xrpg/xrpg/draw_button.cpp
 	"crt.h"
@@ -539,16 +541,16 @@
 	"draw_figure.h"
 	"draw_focus.h"
 
-1628677516 /home/ws-1113/projects/xrpg/xrpg/draw_focus.h
+1629181108 /home/ws-1113/projects/xrpg/xrpg/draw_focus.h
 	"rect.h"
 
-1628677516 source:/home/ws-1113/projects/xrpg/xrpg/draw_commands.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/draw_commands.cpp
 	"crt.h"
 	"command.h"
 	"draw.h"
 	"draw_button.h"
 
-1628677516 source:/home/ws-1113/projects/xrpg/xrpg/draw_control.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/draw_control.cpp
 	"crt.h"
 	"draw.h"
 	"draw_builder.h"
@@ -557,7 +559,7 @@
 	"draw_focus.h"
 	"handler.h"
 
-1628677516 source:/home/ws-1113/projects/xrpg/xrpg/draw_dockbar.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/draw_dockbar.cpp
 	"crt.h"
 	"draw.h"
 	"draw_button.h"
@@ -603,7 +605,7 @@
 	"draw.h"
 	"draw_figure.h"
 
-1628677516 source:/home/ws-1113/projects/xrpg/xrpg/draw_focus.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/draw_focus.cpp
 	"crt.h"
 	"draw.h"
 	"draw_button.h"
@@ -616,7 +618,7 @@
 	"draw_focus.h"
 	"handler.h"
 
-1628677516 source:/home/ws-1113/projects/xrpg/xrpg/draw_list.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/draw_list.cpp
 	"crt.h"
 	"draw.h"
 	"draw_button.h"
@@ -625,12 +627,12 @@
 	"draw_scroll.h"
 	"handler.h"
 
-1627987500 source:/home/ws-1113/projects/xrpg/xrpg/draw_scroll.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/draw_scroll.cpp
 	"draw.h"
 	"draw_button.h"
 	"draw_scroll.h"
 
-1627987500 source:/home/ws-1113/projects/xrpg/xrpg/draw_scrollable.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/draw_scrollable.cpp
 	"draw.h"
 	"draw_control.h"
 	"draw_focus.h"
@@ -640,13 +642,13 @@
 	"draw.h"
 	"draw_button.h"
 
-1628677516 source:/home/ws-1113/projects/xrpg/xrpg/draw_statusbar.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/draw_statusbar.cpp
 	"draw.h"
 	"draw_button.h"
 	"handler.h"
 	"stringbuilder.h"
 
-1628677516 source:/home/ws-1113/projects/xrpg/xrpg/draw_table.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/draw_table.cpp
 	"command.h"
 	"datetime.h"
 	"draw.h"
@@ -655,7 +657,7 @@
 	"draw_focus.h"
 	"io_plugin.h"
 
-1628677516 source:/home/ws-1113/projects/xrpg/xrpg/draw_tabs.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/draw_tabs.cpp
 	"crt.h"
 	"draw.h"
 	"draw_button.h"
@@ -667,14 +669,17 @@
 	"crt.h"
 	"draw.h"
 
-1627987500 source:/home/ws-1113/projects/xrpg/xrpg/draw_theme.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/draw_theme.cpp
 	"draw.h"
+	"draw_button.h"
+	"handler.h"
 
-1628677516 source:/home/ws-1113/projects/xrpg/xrpg/draw_toolbar.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/draw_toolbar.cpp
 	"draw.h"
 	"draw_control.h"
 	"draw_builder.h"
 	"draw_button.h"
+	"draw_focus.h"
 
 1628677516 source:/home/ws-1113/projects/xrpg/xrpg/draw_tooltips.cpp
 	"draw.h"
@@ -740,7 +745,7 @@
 1628677516 source:/home/ws-1113/projects/xrpg/xrpg/setting.cpp
 	"setting.h"
 
-1628777822 source:/home/ws-1113/projects/xrpg/xrpg/stringbuilder.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/stringbuilder.cpp
 	"crt.h"
 	"stringbuilder.h"
 
@@ -751,7 +756,7 @@
 1627569918 source:/home/ws-1113/projects/xrpg/xrpg/szdup.cpp
 	"crt.h"
 
-1628677516 source:/home/ws-1113/projects/xrpg/xrpg/widget_application.cpp
+1629199073 source:/home/ws-1113/projects/xrpg/xrpg/widget_application.cpp
 	"crt.h"
 	"draw.h"
 	"draw_button.h"
@@ -763,7 +768,7 @@
 	"io_plugin.h"
 	"setting.h"
 
-1628677516 source:/home/ws-1113/projects/xrpg/xrpg/widget_logging.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/widget_logging.cpp
 	"crt.h"
 	"datetime.h"
 	"draw_control.h"
@@ -787,7 +792,7 @@
 	"crt.h"
 	"converter.h"
 
-1628677516 source:/home/ws-1113/projects/xrpg/xrpg/draw_combobox.cpp
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/draw_combobox.cpp
 	"draw.h"
 	"draw_button.h"
 	"draw_control.h"
@@ -808,4 +813,63 @@
 1628764497 source:/home/ws-1113/projects/xrpg/xrpg/nix_draw_shell.cpp
 	"crt.h"
 	"draw_button.h"
+
+1629181108 /home/ws-1113/projects/xrpg/xrpg/code.h
+	"crt.h"
+	"pointl.h"
+
+1627282035 /home/ws-1113/projects/xrpg/xrpg/pointl.h
+
+1629181108 /home/ws-1113/projects/xrpg/xrpg/string.h
+
+1629209598 source:/home/ws-1113/projects/xrpg/xrpg/code_scan.cpp
+	"cflags.h"
+	"code.h"
+	"string.h"
+
+1627626399 /home/ws-1113/projects/xrpg/xrpg/cflags.h
+	<initializer_list>
+
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/widget_codetree.cpp
+	"code.h"
+	"draw_button.h"
+	"draw_control.h"
+	"handler.h"
+
+1629204246 source:/home/ws-1113/projects/xrpg/xrpg/widget_codeview.cpp
+	"code.h"
+	"draw.h"
+	"draw_button.h"
+	"draw_clipboard.h"
+	"draw_focus.h"
+	"draw_scroll.h"
+	"draw_valuelist.h"
+	"io_stream.h"
+	"handler.h"
+	"setting.h"
+	"pointl.h"
+
+1629181108 /home/ws-1113/projects/xrpg/xrpg/draw_valuelist.h
+	"draw_control.h"
+
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/code_parse.cpp
+	"code.h"
+	"string.h"
+
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/code.cpp
+	"crt.h"
+	"code.h"
+
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/string.cpp
+	"crt.h"
+	"string.h"
+	"stringbuilder.h"
+
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/draw_valuelist.cpp
+	"draw.h"
+	"draw_focus.h"
+	"draw_valuelist.h"
+
+1629181108 source:/home/ws-1113/projects/xrpg/test/lexers.cpp
+	"code.h"
 

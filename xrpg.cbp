@@ -33,6 +33,7 @@
 			<Add option="-Wall" />
 			<Add directory="xrpg" />
 		</Compiler>
+		<Unit filename="test/lexers.cpp" />
 		<Unit filename="test/main.cpp" />
 		<Unit filename="test/main.h" />
 		<Unit filename="test/planet.cpp" />
@@ -46,6 +47,10 @@
 		<Unit filename="xrpg/bstream.cpp" />
 		<Unit filename="xrpg/bstream.h" />
 		<Unit filename="xrpg/cflags.h" />
+		<Unit filename="xrpg/code.cpp" />
+		<Unit filename="xrpg/code.h" />
+		<Unit filename="xrpg/code_parse.cpp" />
+		<Unit filename="xrpg/code_scan.cpp" />
 		<Unit filename="xrpg/color.cpp" />
 		<Unit filename="xrpg/color.h" />
 		<Unit filename="xrpg/command.cpp" />
@@ -91,6 +96,8 @@
 		<Unit filename="xrpg/draw_theme.cpp" />
 		<Unit filename="xrpg/draw_toolbar.cpp" />
 		<Unit filename="xrpg/draw_tooltips.cpp" />
+		<Unit filename="xrpg/draw_valuelist.cpp" />
+		<Unit filename="xrpg/draw_valuelist.h" />
 		<Unit filename="xrpg/gender.cpp" />
 		<Unit filename="xrpg/gender.h" />
 		<Unit filename="xrpg/handler.h" />
@@ -122,11 +129,15 @@
 		<Unit filename="xrpg/screenshoot.h" />
 		<Unit filename="xrpg/setting.cpp" />
 		<Unit filename="xrpg/setting.h" />
+		<Unit filename="xrpg/string.cpp" />
+		<Unit filename="xrpg/string.h" />
 		<Unit filename="xrpg/stringbuilder.cpp" />
 		<Unit filename="xrpg/stringbuilder.h" />
 		<Unit filename="xrpg/surface_serial.cpp" />
 		<Unit filename="xrpg/szdup.cpp" />
 		<Unit filename="xrpg/widget_application.cpp" />
+		<Unit filename="xrpg/widget_codetree.cpp" />
+		<Unit filename="xrpg/widget_codeview.cpp" />
 		<Unit filename="xrpg/widget_logging.cpp" />
 		<Unit filename="xrpg/win.h" />
 		<Unit filename="xrpg/zip.cpp" />

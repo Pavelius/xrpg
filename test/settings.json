@@ -1,4 +1,4 @@
-﻿{
+{
   "dockbar":{
     "DockLeft":{
       "current":0,
@@ -26,37 +26,6 @@
     }
   },
   "settings":{
-    "Editor":{
-      "General":{
-        "Formating":{
-          "Tabulation":4
-        }
-      }
-    },
-    "Colors":{
-      "Editor":{
-        "IdentifierColor":16777215,
-        "KeywordColor":5676246,
-        "TypeColor":5163440,
-        "CommentColor":5744202,
-        "StringColor":14059602,
-        "NumberColor":12113827,
-        "OperatorColor":16777215
-      },
-      "General":{
-        
-      },
-      "Form":{
-        "TextColor":16777215,
-        "WindowColor":2105376,
-        "FormColor":2960688,
-        "BorderColor":4144966,
-        "ActiveColor":11304960,
-        "ButtonColor":31436,
-        "TipsBackColor":6579320,
-        "TipsTextColor":16777215
-      }
-    },
     "Workspace":{
       "General":{
         "Metrics":{
@@ -80,6 +49,37 @@
         
       }
     },
+    "Colors":{
+      "General":{
+        
+      },
+      "Form":{
+        "TextColor":16777215,
+        "WindowColor":2105376,
+        "FormColor":2960688,
+        "BorderColor":4144966,
+        "ActiveColor":11304960,
+        "ButtonColor":31436,
+        "TipsBackColor":6579320,
+        "TipsTextColor":16777215
+      },
+      "Editor":{
+        "IdentifierColor":16777215,
+        "KeywordColor":5676246,
+        "TypeColor":5163440,
+        "CommentColor":5744202,
+        "StringColor":14059602,
+        "NumberColor":12113827,
+        "OperatorColor":16777215
+      }
+    },
+    "Editor":{
+      "General":{
+        "Formating":{
+          "Tabulation":4
+        }
+      }
+    },
     "Log":{
       "General":{
         "SaveMessageFile":0
@@ -87,53 +87,50 @@
     }
   },
   "window":{
-    "x":153,
-    "y":103,
-    "width":991,
-    "height":672,
+    "x":0,
+    "y":0,
+    "width":0,
+    "height":0,
     "header_width":132,
     "flags":48
   },
   "controls":{
-    "picture":{
-      "Docking":4,
+    "CodeTreeTypes":{
+      "Docking":0,
       "Visible":1,
-      "Codeview":{
-        "Docking":5,
+      "columns":{
+        "column":{
+          "id":"Name",
+          "width":146
+        }
+      }
+    },
+    "CodeTreeMembers":{
+      "Docking":1,
+      "Visible":1,
+      "columns":{
+        "column":{
+          "id":"Name",
+          "width":146
+        }
+      }
+    },
+    "Codeview":{
+      "Docking":5,
+      "Visible":1,
+      "MessageList":{
+        "Docking":4,
         "Visible":1,
-        "CodeTreeTypes":{
-          "Docking":0,
-          "Visible":1,
-          "columns":{
-            "column":{
-              "id":"Name",
-              "width":146
-            }
-          }
-        },
-        "CodeTreeMembers":{
-          "Docking":1,
-          "Visible":1,
-          "columns":{
-            "column":{
-              "id":"Name",
-              "width":146
-            }
-          }
-        },
-        "MessageList":{
-          "Docking":4,
-          "Visible":1,
-          "columns":{
-            "column":{
-              "id":"Message",
-              "width":727
-            },
-            "column":{
-              "id":"Date",
-              "width":88
-            }
+        "columns":{
+          "column":{
+            "id":"Message",
+            "width":200
+          },
+          "column":{
+            "id":"Date",
+            "width":88
           }
         }
       }
     }
+  }
