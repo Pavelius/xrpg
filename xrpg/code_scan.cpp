@@ -6,24 +6,22 @@ enum flags_s : unsigned char {
 	Variable, Condition, Repeat
 };
 enum class error : unsigned char {
-	ExpectedP1, ExpectedOneOfP1,
+	ExpectedP1,
 };
-typedef bool (*fnparse)();
 typedef cflags<flags_s> tokenf;
-struct rulei;
 struct tokeni {
 	const char*			id;
-	tokenf				flags;
-	const rulei*		rule;
+	unsigned			flags;
+	const struct rulei*	rule;
 	constexpr tokeni() : flags(), id(0), rule(0) {}
 	constexpr tokeni(const char* p) : flags(), id(p), rule(0) {
 		while(*p) {
 			if(*p == '.')
-				flags.add(Repeat);
+				set(Repeat);
 			else if(*p == '%')
-				flags.add(Variable);
-			else if(*p== '?')
-				flags.add(Condition);
+				set(Variable);
+			else if(*p == '?')
+				set(Condition);
 			else {
 				id = p;
 				break;
@@ -32,21 +30,26 @@ struct tokeni {
 		}
 	}
 	constexpr explicit operator bool() const { return id != 0; }
-	bool				parse() const;
+	constexpr bool		is(flags_s v) const { return (flags & (1 << v)) != 0; }
+	void				parse() const;
+	constexpr void		set(flags_s v) { flags |= 1 << v; }
 };
 typedef tokeni tokena[16];
 struct rulei {
 	tokeni				name;
 	tokena				tokens;
-	fnparse				special;
-	bool				parse() const;
+	fnevent				special;
+	void				parse() const;
 };
 typedef slice<rulei>	rulea;
+struct corei {
+	string				id, rule, url, comment;
+};
 
 static const char*		p;
 static rulea			this_rules;
 static int				this_errors;
-static string			this_id;
+static corei			core;
 
 static rulei* find_rule(const char* id) {
 	for(auto& e : this_rules) {
@@ -61,7 +64,7 @@ static void update_rules() {
 		for(auto& e : r.tokens) {
 			if(!e)
 				break;
-			if(e.flags.is(Variable))
+			if(e.is(Variable))
 				e.rule = find_rule(e.id);
 		}
 	}
@@ -73,22 +76,30 @@ static bool ischab(char sym) {
 		|| (sym == '_');
 }
 
-static const char* skip(const char* p) {
-	return skipspcr(p);
+static void skipws() {
+	p = skipspcr(p);
 }
 
-static void possible(error id, ...) {
+static void errors(error id, ...) {
+	this_errors++;
 }
 
-static bool identifier() {
+static void identifier() {
 	if(!ischab(*p))
-		return false;
+		return;
 	auto pb = p;
 	while(ischa(*p))
 		p++;
-	this_id.set(pb, p - pb);
-	p = skip(p);
-	return true;
+	core.id.set(pb, p - pb);
+	skipws();
+}
+
+static void add_type() {
+
+}
+
+static void set_url() {
+	core.url = core.rule;
 }
 
 // Example grammatic visualization
@@ -117,53 +128,58 @@ static bool identifier() {
 
 static rulei c2_grammar[] = {
 	{"?global", {"%import", "%variable", "%function"}},
-	{"import", {"import", "%url", "?%as_id", ";"}},
+	{"import", {"import", "%url", "?%as_id", ";"}, add_type},
 	{"as_id", {"as", "%id"}},
-	{"url", {"%id", "?%trail_id"}},
+	{"url", {"%id", "?%trail_id"}, set_url},
 	{"trail_id", {".", "%id"}},
 	{"id", {}, identifier},
 };
 
-bool rulei::parse() const {
-	if(special)
-		return special();
-	else if(name.flags.is(Condition)) {
+void rulei::parse() const {
+	auto pb = p;
+	if(name.is(Condition)) {
+		// Take first matched token
 		for(auto& e : tokens) {
 			if(!e)
 				break;
-			if(e.parse())
-				return true;
+			e.parse();
+			if(p != pb)
+				break;
 		}
-		possible(error::ExpectedOneOfP1, name.id);
-		return false;
 	} else {
-		auto count = 0;
+		// Must match all ot these tokens.
 		for(auto& e : tokens) {
 			if(!e)
 				break;
-			if(!e.parse()) {
-				if(e.flags.is(Condition))
+			auto p1 = p;
+			e.parse();
+			// This token is not match, but some of previous match. Potential error.
+			if((p1 == p) && (pb != p)) {
+				// If tokens is optional this is not error case.
+				if(e.is(Condition))
 					continue;
-				possible(error::ExpectedP1, e.id);
-				return false;
-			} else
-				count++;
+				errors(error::ExpectedP1, e.id);
+				break;
+			}
 		}
-		return true;
 	}
+	if(p != pb)
+		core.rule.set(pb, p - pb);
+	if(special)
+		special();
 }
 
-bool tokeni::parse() const {
+void tokeni::parse() const {
 	if(rule)
 		// This is rule, not token
-		return rule->parse();
+		rule->parse();
 	else {
 		// This is determinal, that must match input string
 		auto n = zlen(id);
 		if(memcmp(p, id, n) != 0)
-			return false;
-		p = skip(p + n);
-		return true;
+			return;
+		p += n;
+		skipws();
 	}
 }
 
@@ -180,7 +196,9 @@ void initialize_complex_grammar() {
 		return;
 	p = code_sample;
 	while(*p) {
-		if(!pr->parse())
+		auto pb = p;
+		pr->parse();
+		if(pb == p)
 			break;
 	}
 }
