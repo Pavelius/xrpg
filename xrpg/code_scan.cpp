@@ -16,7 +16,10 @@ struct tokeni {
 	constexpr tokeni() : flags(), id(0), rule(0) {}
 	constexpr tokeni(const char* p) : flags(), id(p), rule(0) {
 		while(*p) {
-			if(*p == '.')
+			if(*p == '\\') {
+				id = p + 1;
+				break;
+			} else if(*p == '.')
 				set(Repeat);
 			else if(*p == '%')
 				set(Variable);
@@ -95,7 +98,9 @@ static void identifier() {
 }
 
 static void add_type() {
+}
 
+static void add_member() {
 }
 
 static void set_url() {
@@ -130,41 +135,43 @@ static rulei c2_grammar[] = {
 	{"?global", {"%import", "%variable", "%function"}},
 	{"import", {"import", "%url", "?%as_id", ";"}, add_type},
 	{"as_id", {"as", "%id"}},
-	{"url", {"%id", "?%trail_id"}, set_url},
-	{"trail_id", {".", "%id"}},
+	{"url", {"%id", "?%.trail_id"}, set_url},
+	{"trail_id", {"\\.", "%id"}},
 	{"id", {}, identifier},
 };
 
 void rulei::parse() const {
 	auto pb = p;
-	if(name.is(Condition)) {
-		// Take first matched token
-		for(auto& e : tokens) {
-			if(!e)
-				break;
-			e.parse();
-			if(p != pb)
-				break;
-		}
-	} else {
-		// Must match all ot these tokens.
-		for(auto& e : tokens) {
-			if(!e)
-				break;
-			auto p1 = p;
-			e.parse();
-			// This token is not match, but some of previous match. Potential error.
-			if((p1 == p) && (pb != p)) {
-				// If tokens is optional this is not error case.
-				if(e.is(Condition))
-					continue;
-				errors(error::ExpectedP1, e.id);
-				break;
+	for(auto& e : tokens) {
+		if(!e)
+			break;
+		auto p1 = p;
+		e.parse();
+		if(e.is(Repeat)) {
+			auto p2 = p1;
+			while(p2 != p) {
+				p2 = p;
+				e.parse();
 			}
 		}
+		if(name.is(Condition) && p1 != p) {
+			// This token is match and only one in list must be valid
+			break;
+		}
+		if(e.is(Condition))
+			// If tokens is optional this is not error case.
+			continue;
+		if(p1 == p) {
+			// This token is not match.
+			if(pb != p)
+				// Some of previous tokens match. Error case
+				errors(error::ExpectedP1, e.id);
+			break;
+		}
 	}
-	if(p != pb)
+	if(p != pb) {
 		core.rule.set(pb, p - pb);
+	}
 	if(special)
 		special();
 }
@@ -185,7 +192,7 @@ void tokeni::parse() const {
 
 static const char* code_sample = "\
 import core.crt;\n\
-import core.string as this;\n\
+import core.collection.array as this;\n\
 ";
 
 void initialize_complex_grammar() {
