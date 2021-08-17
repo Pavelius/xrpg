@@ -154,6 +154,9 @@ static void add_member() {
 
 static void test_type() {
 	auto name = core.id.get();
+	if(!findtype(name)) {
+
+	}
 }
 
 static void test_constant() {
@@ -172,7 +175,7 @@ static void apply_public() {
 static rulei c2_grammar[] = {
 	{"id", {}, identifier},
 	{"number", {}, number},
-	{"?global", {"%import", "%enum", "%global_declaration"}},
+	{"?global", {"%import", "%enum", "%member"}},
 	{"import", {"import", "%url", "?%pseudoname", ";"}, add_type},
 	{"pseudoname", {"as", "%id"}},
 	{"url", {"%id", "?%.next_id"}, set_url},
@@ -186,7 +189,6 @@ static rulei c2_grammar[] = {
 	{"?constant", {"%expression"}, test_constant},
 	{"static", {"static"}, apply_static},
 	{"public", {"public"}, apply_public},
-	{"?global_declaration", {"%member_variable", "%member_function"}},
 	{"member", {"?%static", "?%public", "%type", "%id", "member_case"}},
 	{"?member_case", {"%member_function", "%member_variable"}},
 	{"member_function", {"(", "%declare_parameters", ")", "%block_statements"}},
