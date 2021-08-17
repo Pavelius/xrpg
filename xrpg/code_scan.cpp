@@ -1,50 +1,11 @@
-#include "cflags.h"
 #include "code.h"
 #include "string.h"
 
-enum flags_s : unsigned char {
-	Variable, Condition, Repeat
-};
-enum class error : unsigned char {
-	ExpectedP1,
-};
-typedef cflags<flags_s> tokenf;
-struct tokeni {
-	const char*			id;
-	unsigned			flags;
-	const struct rulei*	rule;
-	constexpr tokeni() : flags(), id(0), rule(0) {}
-	constexpr tokeni(const char* p) : flags(), id(p), rule(0) {
-		while(*p) {
-			if(*p == '\\') {
-				id = p + 1;
-				break;
-			} else if(*p == '.')
-				set(Repeat);
-			else if(*p == '%')
-				set(Variable);
-			else if(*p == '?')
-				set(Condition);
-			else {
-				id = p;
-				break;
-			}
-			p++;
-		}
-	}
-	constexpr explicit operator bool() const { return id != 0; }
-	constexpr bool		is(flags_s v) const { return (flags & (1 << v)) != 0; }
-	void				parse() const;
-	constexpr void		set(flags_s v) { flags |= 1 << v; }
-};
-typedef tokeni tokena[16];
-struct rulei {
-	tokeni				name;
-	tokena				tokens;
-	fnevent				special;
-	void				parse() const;
-};
-typedef slice<rulei>	rulea;
+using namespace code;
+
+BSDATAD(memberi)
+BSDATAD(typei)
+
 struct corei {
 	string				id, rule, url, comment;
 	long long           number;
@@ -53,7 +14,57 @@ struct corei {
 static const char*		p;
 static rulea			this_rules;
 static int				this_errors;
+static const char*		this_url;
 static corei			core;
+
+void typei::clear() {
+	memset(this, 0, sizeof(*this));
+}
+
+void memberi::clear() {
+	memset(this, 0, sizeof(*this));
+}
+
+static typei* findtype(const char* id) {
+	for(auto& e : bsdata<typei>()) {
+		if(!e)
+			continue;
+		if(strcmp(e.id, id) == 0)
+			return &e;
+	}
+	return 0;
+}
+
+static memberi* findmember(const char* id, const char* type) {
+	for(auto& e : bsdata<memberi>()) {
+		if(!e)
+			continue;
+		if(strcmp(e.id, id) == 0
+			&& strcmp(e.type, type) == 0)
+			return &e;
+	}
+	return 0;
+}
+
+static typei* addtype(const char* id) {
+	auto p = findtype(id);
+	if(!p)
+		p = bsdata<typei>::addz();
+	p->id = szdup(id);
+	p->url = this_url;
+	return p;
+}
+
+static memberi* addmember(const char* id, const char* type, const char* result) {
+	auto p = findmember(id, type);
+	if(!p)
+		p = bsdata<memberi>::addz();
+	p->id = szdup(id);
+	p->url = this_url;
+	p->type = szdup(type);
+	p->result = szdup(result);
+	return p;
+}
 
 static rulei* find_rule(const char* id) {
 	for(auto& e : this_rules) {
@@ -68,7 +79,7 @@ static void update_rules() {
 		for(auto& e : r.tokens) {
 			if(!e)
 				break;
-			if(e.is(Variable))
+			if(e.is(flag::Variable))
 				e.rule = find_rule(e.id);
 		}
 	}
@@ -142,6 +153,7 @@ static void add_member() {
 }
 
 static void test_type() {
+	auto name = core.id.get();
 }
 
 static void test_constant() {
@@ -157,38 +169,14 @@ static void apply_static() {
 static void apply_public() {
 }
 
-// Example grammatic visualization
-// -------------------------------
-// id		read identifier. Can test if this is identifier.
-// number	read number. Like 0x12, 9, 05.
-// literal	read string literal. Like "Simple string literal"
-// %		next defenition marker. After this symbol in pseudocode lead variable
-// ...		can repeat leading leateral
-// -------------------------------
-// Case types: Conditional, Pseudocode
-// -------------------------------
-// file : %global...
-// global : %import | %variable | %function
-// import type(url, last_id): import %url [as %id];
-// url : %id [.%id...]
-// variable member(parent, id, type): %type %id [=%initialization];
-// function member(parent, id, type): %type %id ([%parameters]) %block_statements
-// statements : %block_statements | %statement
-// block_statements : { [%statement...] }
-// statement : %statement_content;
-// statement_content : %local | %assignment | %calling | %if | %while | %for | %return | %break | %continue
-// while : while(%expression) %statements
-// if : if(%expression) %statements [else %statements]
-// for : for(%declaration;%expression;%expression) %statements
-
 static rulei c2_grammar[] = {
-	{"?global", {"%import", "%enum", "%global_declaration"}},
-	{"import", {"import", "%url", "?%as_id", ";"}, add_type},
-	{"as_id", {"as", "%id"}},
-	{"url", {"%id", "?%.next_id"}, set_url},
-	{"next_id", {"\\.", "%id"}},
 	{"id", {}, identifier},
 	{"number", {}, number},
+	{"?global", {"%import", "%enum", "%global_declaration"}},
+	{"import", {"import", "%url", "?%pseudoname", ";"}, add_type},
+	{"pseudoname", {"as", "%id"}},
+	{"url", {"%id", "?%.next_id"}, set_url},
+	{"next_id", {"\\.", "%id"}},
 	{"type", {"%id", "?.*"}, test_type},
 	{"enum", {"enum", "{", ".%enum_values", "}", ";"}},
 	{"enum_values", {"%enum_value", "?.%next_enum_value"}},
@@ -212,33 +200,33 @@ void rulei::parse() const {
 			break;
 		auto p1 = p;
 		e.parse();
-		if(e.is(Repeat)) {
+		if(e.is(flag::Repeat)) {
 			auto p2 = p1;
 			while(p2 != p) {
 				p2 = p;
 				e.parse();
 			}
 		}
-		if(name.is(Condition) && p1 != p) {
+		if(name.is(flag::Condition) && p1 != p) {
 			// This token is match and only one in list must be valid
 			break;
 		}
-		if(e.is(Condition))
-			// If tokens is optional this is not error case.
-			continue;
 		if(p1 == p) {
+			// Case when token not work
+			if(e.is(flag::Condition))
+				// If tokens is optional continue executing
+				continue;
 			// This token is not match.
 			if(pb != p)
-				// Some of previous tokens match. Error case
+				// Some of previous tokens match. This is error case
 				errors(error::ExpectedP1, e.id);
-            if(!name.is(Condition))
+            if(!name.is(flag::Condition))
                 break;
 		}
 	}
-	if(p != pb) {
+	if(p != pb || !tokens[0])
 		core.rule.set(pb, p - pb);
-	}
-	if(special)
+	if(special && (p != pb || !tokens[0]))
 		special();
 }
 
@@ -265,14 +253,20 @@ enum {OK, Cancel};\n\
 void initialize_complex_grammar() {
 	this_rules = c2_grammar;
 	update_rules();
+}
+
+void code::parse(const char* url, const char* url_content, const lexer* pk) {
+	this_url = url;
+	p = code_sample;
 	auto pr = find_rule("global");
 	if(!pr)
 		return;
-	p = code_sample;
 	while(*p) {
 		auto pb = p;
 		pr->parse();
-		if(pb == p)
+		if(pb == p) {
+			errors(error::ExpectedP1, pr->name.id);
 			break;
+		}
 	}
 }

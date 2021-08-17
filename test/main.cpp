@@ -81,7 +81,17 @@ static bool test_string() {
 	string t2 = "Duke";
 	if(t1 == "Duke1")
 		return false;
-	return t1 == "Answer";
+	if(t1 != "Answer")
+		return false;
+	//cstring t3 = "Test";
+	//cstring t4 = "Test";
+	//cstring t5 = "LastUpdate";
+	//cstring t6 = "Mary land";
+	//if(t3 == t5)
+	//	return false;
+	//if(t4 != "Test")
+	//	return false;
+	return true;
 }
 
 #ifdef _DEBUG

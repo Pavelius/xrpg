@@ -1,12 +1,12 @@
-{
+﻿{
   "dockbar":{
     "DockLeft":{
       "current":0,
-      "size":154
+      "size":163
     },
     "DockLeftBottom":{
       "current":0,
-      "size":343
+      "size":359
     },
     "DockRight":{
       "current":0,
@@ -26,30 +26,23 @@
     }
   },
   "settings":{
-    "Workspace":{
+    "Editor":{
       "General":{
-        "Metrics":{
-          "Padding":4,
-          "ScrollWidth":13
-        },
-        "View":{
-          "ShowStatusBar":2,
-          "ShowLeftPanel":2,
-          "ShowRightPanel":2,
-          "ShowBottomPanel":2,
-          "ShowPadding":2
-        },
-        "Tabs":{
-          "UseShortNameLabel":2,
-          "NoUrlLabelExtension":2,
-          "UppercaseLabel":2
+        "Formating":{
+          "Tabulation":4
         }
-      },
-      "Plugins":{
-        
       }
     },
     "Colors":{
+      "Editor":{
+        "IdentifierColor":16777215,
+        "KeywordColor":5676246,
+        "TypeColor":5163440,
+        "CommentColor":5744202,
+        "StringColor":14059602,
+        "NumberColor":12113827,
+        "OperatorColor":16777215
+      },
       "General":{
         
       },
@@ -62,22 +55,29 @@
         "ButtonColor":31436,
         "TipsBackColor":6579320,
         "TipsTextColor":16777215
-      },
-      "Editor":{
-        "IdentifierColor":16777215,
-        "KeywordColor":5676246,
-        "TypeColor":5163440,
-        "CommentColor":5744202,
-        "StringColor":14059602,
-        "NumberColor":12113827,
-        "OperatorColor":16777215
       }
     },
-    "Editor":{
+    "Workspace":{
       "General":{
-        "Formating":{
-          "Tabulation":4
+        "Metrics":{
+          "Padding":4,
+          "ScrollWidth":13
+        },
+        "View":{
+          "ShowStatusBar":2,
+          "ShowLeftPanel":2,
+          "ShowRightPanel":2,
+          "ShowBottomPanel":0,
+          "ShowPadding":0
+        },
+        "Tabs":{
+          "UseShortNameLabel":2,
+          "NoUrlLabelExtension":2,
+          "UppercaseLabel":2
         }
+      },
+      "Plugins":{
+        
       }
     },
     "Log":{
@@ -87,50 +87,53 @@
     }
   },
   "window":{
-    "x":0,
-    "y":0,
-    "width":0,
-    "height":0,
+    "x":109,
+    "y":62,
+    "width":1074,
+    "height":656,
     "header_width":132,
     "flags":48
   },
   "controls":{
-    "CodeTreeTypes":{
-      "Docking":0,
+    "picture":{
+      "Docking":4,
       "Visible":1,
-      "columns":{
-        "column":{
-          "id":"Name",
-          "width":146
-        }
-      }
-    },
-    "CodeTreeMembers":{
-      "Docking":1,
-      "Visible":1,
-      "columns":{
-        "column":{
-          "id":"Name",
-          "width":146
-        }
-      }
-    },
-    "Codeview":{
-      "Docking":5,
-      "Visible":1,
-      "MessageList":{
-        "Docking":4,
+      "Codeview":{
+        "Docking":5,
         "Visible":1,
-        "columns":{
-          "column":{
-            "id":"Message",
-            "width":200
-          },
-          "column":{
-            "id":"Date",
-            "width":88
+        "CodeTreeTypes":{
+          "Docking":0,
+          "Visible":1,
+          "columns":{
+            "column":{
+              "id":"Name",
+              "width":163
+            }
+          }
+        },
+        "CodeTreeMembers":{
+          "Docking":1,
+          "Visible":1,
+          "columns":{
+            "column":{
+              "id":"Name",
+              "width":163
+            }
+          }
+        },
+        "MessageList":{
+          "Docking":4,
+          "Visible":1,
+          "columns":{
+            "column":{
+              "id":"Message",
+              "width":200
+            },
+            "column":{
+              "id":"Date",
+              "width":88
+            }
           }
         }
       }
     }
-  }

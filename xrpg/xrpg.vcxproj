@@ -150,6 +150,7 @@
     <ClInclude Include="command.h" />
     <ClInclude Include="converter.h" />
     <ClInclude Include="crt.h" />
+    <ClInclude Include="strlib.h" />
     <ClInclude Include="datamap.h" />
     <ClInclude Include="dataset.h" />
     <ClInclude Include="datetime.h" />
@@ -191,8 +192,8 @@
     <ClCompile Include="bsreq.cpp" />
     <ClCompile Include="bstream.cpp" />
     <ClCompile Include="code.cpp" />
-    <ClCompile Include="code_parse.cpp" />
     <ClCompile Include="code_scan.cpp" />
+    <ClCompile Include="strlib.cpp" />
     <ClCompile Include="draw_valuelist.cpp" />
     <ClCompile Include="metadata.cpp" />
     <ClCompile Include="string.cpp" />
