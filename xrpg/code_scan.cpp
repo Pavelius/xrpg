@@ -7,7 +7,7 @@ BSDATAD(memberi)
 BSDATAD(typei)
 
 struct corei {
-	string				id, rule, url, comment;
+	string				type, id, rule, url, comment;
 	long long           number;
 };
 
@@ -25,9 +25,11 @@ void memberi::clear() {
 	memset(this, 0, sizeof(*this));
 }
 
-static typei* findtype(const char* id) {
+static typei* find_type(const char* id) {
 	for(auto& e : bsdata<typei>()) {
 		if(!e)
+			continue;
+		if(e.url != this_url)
 			continue;
 		if(strcmp(e.id, id) == 0)
 			return &e;
@@ -46,11 +48,12 @@ static memberi* findmember(const char* id, const char* type) {
 	return 0;
 }
 
-static typei* addtype(const char* id) {
-	auto p = findtype(id);
+static typei* add_type(const char* id, const char* value) {
+	auto p = find_type(id);
 	if(!p)
 		p = bsdata<typei>::addz();
 	p->id = szdup(id);
+	p->value = szdup(value);
 	p->url = this_url;
 	return p;
 }
@@ -147,16 +150,17 @@ static void identifier() {
 }
 
 static void add_type() {
+	add_type(core.id.get(), core.url.get());
 }
 
 static void add_member() {
 }
 
 static void test_type() {
+	core.type = core.id;
 	auto name = core.id.get();
-	if(!findtype(name)) {
-
-	}
+	if(!find_type(name))
+		p = core.rule.begin();
 }
 
 static void test_constant() {
@@ -175,7 +179,7 @@ static void apply_public() {
 static rulei c2_grammar[] = {
 	{"id", {}, identifier},
 	{"number", {}, number},
-	{"?global", {"%import", "%enum", "%member"}},
+	{"?global", {"%import", "%enum", "%member_function", "%member_variable"}},
 	{"import", {"import", "%url", "?%pseudoname", ";"}, add_type},
 	{"pseudoname", {"as", "%id"}},
 	{"url", {"%id", "?%.next_id"}, set_url},
@@ -189,10 +193,11 @@ static rulei c2_grammar[] = {
 	{"?constant", {"%expression"}, test_constant},
 	{"static", {"static"}, apply_static},
 	{"public", {"public"}, apply_public},
-	{"member", {"?%static", "?%public", "%type", "%id", "member_case"}},
-	{"?member_case", {"%member_function", "%member_variable"}},
-	{"member_function", {"(", "%declare_parameters", ")", "%block_statements"}},
-	{"member_variable", {"%array_scope", "%initialization", ";"}},
+	{"member", {"?%static", "?%public", "%type", "%id"}},
+	{"member_function", {"%member", "(", "%declare_parameters", ")", "%block_statements"}},
+	{"member_variable", {"%member", "?%array_scope", "?%initialization", ";"}},
+	{"array_scope", {"[", "%number", "]"}},
+	{"expression", {"%number"}},
 };
 
 void rulei::parse() const {
@@ -226,7 +231,7 @@ void rulei::parse() const {
                 break;
 		}
 	}
-	if(p != pb || !tokens[0])
+	if(p != pb)
 		core.rule.set(pb, p - pb);
 	if(special && (p != pb || !tokens[0]))
 		special();
@@ -247,9 +252,10 @@ void tokeni::parse() const {
 }
 
 static const char* code_sample = "\
-import core.crt;\n\
+import geo.rect;\n\
 import core.collection.array as this;\n\
 enum {OK, Cancel};\n\
+static public rect rc;\n\
 ";
 
 void initialize_complex_grammar() {

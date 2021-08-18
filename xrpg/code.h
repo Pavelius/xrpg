@@ -21,6 +21,7 @@ extern int				tabs;
 }
 struct typei {
 	const char*			id;
+	const char*			value;
 	const char*			url;
 	explicit constexpr operator bool() const { return id != 0; }
 	void				clear();
