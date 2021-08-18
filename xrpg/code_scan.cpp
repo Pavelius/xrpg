@@ -193,9 +193,13 @@ static rulei c2_grammar[] = {
 	{"?constant", {"%expression"}, test_constant},
 	{"static", {"static"}, apply_static},
 	{"public", {"public"}, apply_public},
-	{"member", {"?%static", "?%public", "%type", "%id"}},
-	{"member_function", {"%member", "(", "%declare_parameters", ")", "%block_statements"}},
-	{"member_variable", {"%member", "?%array_scope", "?%initialization", ";"}},
+	{"member", {"%type", "%id"}},
+	{"parameter", {"%member"}},
+	{"next_parameter", {",", "%parameter"}},
+	{"declare_parameters", {"?%parameter", ".?%next_parameter"}},
+	{"global_flags", {"?%static", "?%public"}},
+	{"member_function", {"?%global_flags", "%member", "(", "%declare_parameters", ")", "%block_statements"}},
+	{"member_variable", {"?%global_flags", "%member", "?%array_scope", "?%initialization", ";"}},
 	{"array_scope", {"[", "%number", "]"}},
 	{"expression", {"%number"}},
 };
@@ -214,9 +218,9 @@ void rulei::parse() const {
 				e.parse();
 			}
 		}
-		if(name.is(flag::Condition) && p1 != p) {
-			// This token is match and only one in list must be valid
-			break;
+		if(name.is(flag::Condition)) {
+			if(p1 != p)
+				break; // This token is match and only one in list must be valid
 		}
 		if(p1 == p) {
 			// Case when token not work

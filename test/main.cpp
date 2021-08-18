@@ -113,6 +113,7 @@ int main() {
 	initialize_complex_grammar();
 	initialize_codeview();
 	initialize_codetree();
+	code::parse("main", 0, 0);
 	logmsgv("Тостовая строка залогирована в общий лог приложения.", 0);
 	draw::initialize("Test UI");
 	openurl("battle.bmp");
