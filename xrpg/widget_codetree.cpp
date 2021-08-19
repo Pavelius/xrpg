@@ -26,7 +26,7 @@ public:
 	void update() {
 		clear();
 		for(auto& e : bsdata<typei>()) {
-			if(!e)
+			if(!e || !e.url)
 				continue;
 			addref(&e);
 		}

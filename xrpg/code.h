@@ -7,7 +7,7 @@ namespace code {
 enum group_s : unsigned char {
 	IllegalSymbol,
 	WhiteSpace, Operator, Keyword, Comment,
-	Number, String, Identifier,	Type,
+	Number, String, Identifier, Type,
 	BlockBegin, BlockEnd, IndexBegin, IndexEnd, ExpressionBegin, ExpressionEnd,
 };
 enum class flag : unsigned char {
@@ -24,7 +24,9 @@ struct typei {
 	const char*			value;
 	const char*			url;
 	explicit constexpr operator bool() const { return id != 0; }
+	static typei*		add(const char* id, const char* value = 0, const char* url = 0);
 	void				clear();
+	static typei*		find(const char* id, const char* url);
 };
 struct memberi {
 	const char*			id;
@@ -44,12 +46,10 @@ struct tokeni {
 			if(*p == '\\') {
 				id = p + 1;
 				break;
-			} else if(p[0] == ',' && p[1]==' ') {
-                set(flag::ComaSeparated);
-                p++;
-			} else if(p[0] == '.' && p[1]==' ') {
-                set(flag::PointSeparated);
-                p++;
+			} else if(p[0] == ',' && p[1] == ' ') {
+				set(flag::ComaSeparated); p++;
+			} else if(p[0] == '.' && p[1] == ' ') {
+				set(flag::PointSeparated); p++;
 			} else if(*p == '.')
 				set(flag::Repeat);
 			else if(*p == '%')
@@ -70,7 +70,7 @@ struct tokeni {
 };
 typedef tokeni			tokena[16];
 struct rulei {
-	tokeni				name;
+	const char*			name;
 	tokena				tokens;
 	fnevent				special;
 	void				parse() const;

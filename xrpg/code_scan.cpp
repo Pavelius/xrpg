@@ -21,20 +21,32 @@ void typei::clear() {
 	memset(this, 0, sizeof(*this));
 }
 
-void memberi::clear() {
-	memset(this, 0, sizeof(*this));
-}
-
-static typei* find_type(const char* id) {
+typei* typei::find(const char* id, const char* url) {
 	for(auto& e : bsdata<typei>()) {
 		if(!e)
 			continue;
-		if(e.url != this_url)
+		if(e.url && e.url != url)
 			continue;
 		if(strcmp(e.id, id) == 0)
 			return &e;
 	}
 	return 0;
+}
+
+typei* typei::add(const char* id, const char* value, const char* url) {
+	auto p = find(id, url);
+	if(!p)
+		p = bsdata<typei>::addz();
+	p->id = szdup(id);
+	if(!value)
+		value = p->id;
+	p->value = szdup(value);
+	p->url = url; // can't be szdup(url) because szdup(0) return ""
+	return p;
+}
+
+void memberi::clear() {
+	memset(this, 0, sizeof(*this));
 }
 
 static memberi* findmember(const char* id, const char* type) {
@@ -46,16 +58,6 @@ static memberi* findmember(const char* id, const char* type) {
 			return &e;
 	}
 	return 0;
-}
-
-static typei* add_type(const char* id, const char* value) {
-	auto p = find_type(id);
-	if(!p)
-		p = bsdata<typei>::addz();
-	p->id = szdup(id);
-	p->value = szdup(value);
-	p->url = this_url;
-	return p;
 }
 
 static memberi* addmember(const char* id, const char* type, const char* result) {
@@ -71,7 +73,7 @@ static memberi* addmember(const char* id, const char* type, const char* result) 
 
 static rulei* find_rule(const char* id) {
 	for(auto& e : this_rules) {
-		if(strcmp(e.name.id, id) == 0)
+		if(strcmp(e.name, id) == 0)
 			return &e;
 	}
 	return 0;
@@ -102,10 +104,46 @@ static void errors(error id, ...) {
 	this_errors++;
 }
 
+static char next_literal() {
+	while(*p) {
+		if(*p != '\\')
+			return *p++;
+		p++;
+		switch(*p++) {
+		case 0: return 0;
+		case 'n': return '\n';
+		case 't': return '\t';
+		case 'r': return '\r';
+		case '\\': return '\\';
+		case '\'': return '\'';
+		case '\"': return '\"';
+		case '\n':
+			if(p[0] == '\r')
+				p++;
+			break;
+		case '\r':
+			if(p[0] == '\n')
+				p++;
+			break;
+		default: break;
+		}
+	}
+	return 0;
+}
+
+static void literal() {
+	if(*p != '\"')
+		return;
+	p++;
+	while(*p && *p!='\"') {
+		auto s = next_literal();
+	}
+}
+
 static void number() {
-    core.number = 0;
-    if(!isnum(*p) || !(p[0]=='-' && isnum(p[1])))
-        return;
+	core.number = 0;
+	if(!isnum(*p) || !(p[0] == '-' && isnum(p[1])))
+		return;
 	if(p[0] == '0') {
 		if(p[1] == 'x') {
 			p += 2;
@@ -150,7 +188,7 @@ static void identifier() {
 }
 
 static void add_type() {
-	add_type(core.id.get(), core.url.get());
+	typei::add(core.id.get(), core.url.get(), this_url);
 }
 
 static void add_member() {
@@ -159,7 +197,7 @@ static void add_member() {
 static void test_type() {
 	core.type = core.id;
 	auto name = core.id.get();
-	if(!find_type(name))
+	if(!typei::find(name, this_url))
 		p = core.rule.begin();
 }
 
@@ -179,7 +217,8 @@ static void apply_public() {
 static rulei c2_grammar[] = {
 	{"id", {}, identifier},
 	{"number", {}, number},
-	{"?global", {"%import", "%enum", "%member_function", "%member_variable"}},
+	{"string", {}, literal},
+	{"global", {"?%import", "?%enum", "?%member_function", "?%member_variable"}},
 	{"import", {"import", "%url", "?%pseudoname", ";"}, add_type},
 	{"pseudoname", {"as", "%id"}},
 	{"url", {"%id", ". ?%.id"}, set_url},
@@ -187,19 +226,21 @@ static rulei c2_grammar[] = {
 	{"enum", {"enum", "{", "%enum_value", ", ?.%enum_value", "}", ";"}},
 	{"enum_value", {"%id", "?%enum_assign"}},
 	{"enum_assign", {"=", "%constant"}},
-	{"?constant", {"%expression"}, test_constant},
+	{"constant", {"%expression"}, test_constant},
 	{"initialization", {"=", "%expression", ";"}},
 	{"static", {"static"}, apply_static},
 	{"public", {"public"}, apply_public},
 	{"member", {"%type", "%id"}},
 	{"parameter", {"%member"}},
-	{"next_parameter", {",", "%parameter"}},
-	{"declare_parameters", {"?%parameter", ".?%next_parameter"}},
+	{"parameters", {"%parameter", ", .?%parameter"}},
 	{"global_flags", {"?%static", "?%public"}},
-	{"member_function", {"?%global_flags", "%member", "(", "%declare_parameters", ")", "%block_statements"}},
+	{"member_function", {"?%global_flags", "%member", "(", "?%parameters", ")", "%block_statements"}},
 	{"member_variable", {"?%global_flags", "%member", "?%array_scope", "?%initialization", ";"}},
-	{"array_scope", {"[", "%number", "]"}},
-	{"expression", {"%number"}},
+	{"array_scope", {"[", "%expression", "]"}},
+	{"expression", {"?%number", "?%string"}},
+	{"block_statements", {"{", "?%statement", ".?%statement", "}"}},
+	{"statement", {"?%decloration"}},
+	{"decloration", {"%member", "?%initialization"}},
 };
 
 void rulei::parse() const {
@@ -208,15 +249,6 @@ void rulei::parse() const {
 		if(!e)
 			break;
 		auto p1 = p;
-        if(e.is(flag::ComaSeparated)) {
-            if(p[0]==',') {
-                p++; skipws();
-            }
-        } else if(e.is(flag::PointSeparated)) {
-            if(p[0]==',') {
-                p++; skipws();
-            }
-        }
 		e.parse();
 		if(e.is(flag::Repeat)) {
 			auto p2 = p1;
@@ -225,26 +257,13 @@ void rulei::parse() const {
 				e.parse();
 			}
 		}
-		if(name.is(flag::Condition)) {
-			if(p1 != p) {
-				if(this_errors > 0) {
-					this_errors = 0;
-					p = pb;
-				} else
-					break; // This token is match and only one in list must be valid
-			}
-		} else {
-			if(p1 == p) {
-				// Case when token not work
-				if(e.is(flag::Condition))
-					// If tokens is optional continue executing
-					continue;
-				// This token is not match.
-				if(pb != p)
-					// Some of previous tokens match. This is error case
-					errors(error::ExpectedP1, e.id);
-				break;
-			}
+		if(p1 == p) {
+			// Case when token not work
+			if(e.is(flag::Condition)) // If tokens is optional continue executing
+				continue;
+			if(pb != p)
+				errors(error::ExpectedP1, e.id); // Some of previous tokens match. This is error case
+			break;
 		}
 	}
 	if(p != pb)
@@ -254,6 +273,15 @@ void rulei::parse() const {
 }
 
 void tokeni::parse() const {
+	if(is(flag::ComaSeparated)) {
+		if(p[0] == ',') {
+			p++; skipws();
+		}
+	} else if(is(flag::PointSeparated)) {
+		if(p[0] == '.') {
+			p++; skipws();
+		}
+	}
 	if(rule)
 		// This is rule, not token
 		rule->parse();
@@ -290,7 +318,7 @@ void code::parse(const char* url, const char* url_content, const lexer* pk) {
 		auto pb = p;
 		pr->parse();
 		if(pb == p) {
-			errors(error::ExpectedP1, pr->name.id);
+			errors(error::ExpectedP1, pr->name);
 			break;
 		}
 	}

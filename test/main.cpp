@@ -100,6 +100,17 @@ void main_util();
 
 void initialize_complex_grammar();
 
+static void c2_lexer_initialize() {
+	code::typei::add("short");
+	code::typei::add("char");
+	code::typei::add("int");
+	code::typei::add("uchar");
+	code::typei::add("ushort");
+	code::typei::add("unsigned");
+	code::typei::add("bool");
+	code::typei::add("void");
+}
+
 int main() {
 #ifdef _DEBUG
 	main_util();
@@ -113,6 +124,7 @@ int main() {
 	initialize_complex_grammar();
 	initialize_codeview();
 	initialize_codetree();
+	c2_lexer_initialize();
 	//code::parse("main", 0, 0);
 	logmsgv("Тостовая строка залогирована в общий лог приложения.", 0);
 	draw::initialize("Test UI");
