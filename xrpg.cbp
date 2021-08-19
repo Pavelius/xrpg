@@ -49,7 +49,6 @@
 		<Unit filename="xrpg/cflags.h" />
 		<Unit filename="xrpg/code.cpp" />
 		<Unit filename="xrpg/code.h" />
-		<Unit filename="xrpg/code_parse.cpp" />
 		<Unit filename="xrpg/code_scan.cpp" />
 		<Unit filename="xrpg/color.cpp" />
 		<Unit filename="xrpg/color.h" />

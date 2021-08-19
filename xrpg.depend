@@ -411,7 +411,7 @@
 1627845130 source:d:\projects\xrpg\test\trait.cpp
 	"main.h"
 
-1629181108 source:/home/ws-1113/projects/xrpg/test/main.cpp
+1629266833 source:/home/ws-1113/projects/xrpg/test/main.cpp
 	"archive.h"
 	"code.h"
 	"draw.h"
@@ -814,16 +814,15 @@
 	"crt.h"
 	"draw_button.h"
 
-1629181108 /home/ws-1113/projects/xrpg/xrpg/code.h
+1629360686 /home/ws-1113/projects/xrpg/xrpg/code.h
 	"crt.h"
 	"pointl.h"
 
 1627282035 /home/ws-1113/projects/xrpg/xrpg/pointl.h
 
-1629181108 /home/ws-1113/projects/xrpg/xrpg/string.h
+1629266657 /home/ws-1113/projects/xrpg/xrpg/string.h
 
-1629209598 source:/home/ws-1113/projects/xrpg/xrpg/code_scan.cpp
-	"cflags.h"
+1629268617 source:/home/ws-1113/projects/xrpg/xrpg/code_scan.cpp
 	"code.h"
 	"string.h"
 

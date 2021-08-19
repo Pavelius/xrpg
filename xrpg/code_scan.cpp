@@ -182,15 +182,13 @@ static rulei c2_grammar[] = {
 	{"?global", {"%import", "%enum", "%member_function", "%member_variable"}},
 	{"import", {"import", "%url", "?%pseudoname", ";"}, add_type},
 	{"pseudoname", {"as", "%id"}},
-	{"url", {"%id", "?%.next_id"}, set_url},
-	{"next_id", {"\\.", "%id"}},
+	{"url", {"%id", ". ?%.id"}, set_url},
 	{"type", {"%id", "?.*"}, test_type},
-	{"enum", {"enum", "{", ".%enum_values", "}", ";"}},
-	{"enum_values", {"%enum_value", "?.%next_enum_value"}},
-	{"next_enum_value", {",", "%enum_value"}},
+	{"enum", {"enum", "{", "%enum_value", ", ?.%enum_value", "}", ";"}},
 	{"enum_value", {"%id", "?%enum_assign"}},
 	{"enum_assign", {"=", "%constant"}},
 	{"?constant", {"%expression"}, test_constant},
+	{"initialization", {"=", "%expression", ";"}},
 	{"static", {"static"}, apply_static},
 	{"public", {"public"}, apply_public},
 	{"member", {"?%static", "?%public", "%type", "%id"}},
@@ -206,6 +204,15 @@ void rulei::parse() const {
 		if(!e)
 			break;
 		auto p1 = p;
+        if(e.is(flag::ComaSeparated)) {
+            if(p[0]==',') {
+                p++; skipws();
+            }
+        } else if(e.is(flag::PointSeparated)) {
+            if(p[0]==',') {
+                p++; skipws();
+            }
+        }
 		e.parse();
 		if(e.is(flag::Repeat)) {
 			auto p2 = p1;

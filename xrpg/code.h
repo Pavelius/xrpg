@@ -11,7 +11,7 @@ enum group_s : unsigned char {
 	BlockBegin, BlockEnd, IndexBegin, IndexEnd, ExpressionBegin, ExpressionEnd,
 };
 enum class flag : unsigned char {
-	Variable, Condition, Repeat
+	Variable, Condition, Repeat, ComaSeparated, PointSeparated,
 };
 enum class error : unsigned char {
 	ExpectedP1,
@@ -38,12 +38,18 @@ struct tokeni {
 	const char*			id;
 	unsigned			flags;
 	const struct rulei*	rule;
-	constexpr tokeni() : flags(), id(0), rule(0) {}
-	constexpr tokeni(const char* p) : flags(), id(p), rule(0) {
+	constexpr tokeni() : id(0), flags(), rule(0) {}
+	constexpr tokeni(const char* p) : id(p), flags(), rule(0) {
 		while(*p) {
 			if(*p == '\\') {
 				id = p + 1;
 				break;
+			} else if(p[0] == ',' && p[1]==' ') {
+                set(flag::ComaSeparated);
+                p++;
+			} else if(p[0] == '.' && p[1]==' ') {
+                set(flag::PointSeparated);
+                p++;
 			} else if(*p == '.')
 				set(flag::Repeat);
 			else if(*p == '%')
