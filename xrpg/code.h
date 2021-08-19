@@ -13,9 +13,6 @@ enum group_s : unsigned char {
 enum class flag : unsigned char {
 	Variable, Condition, Repeat, ComaSeparated, PointSeparated,
 };
-enum class error : unsigned char {
-	ExpectedP1,
-};
 namespace metrics {
 extern int				tabs;
 }

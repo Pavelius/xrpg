@@ -49,28 +49,6 @@ void memberi::clear() {
 	memset(this, 0, sizeof(*this));
 }
 
-static memberi* findmember(const char* id, const char* type) {
-	for(auto& e : bsdata<memberi>()) {
-		if(!e)
-			continue;
-		if(strcmp(e.id, id) == 0
-			&& strcmp(e.type, type) == 0)
-			return &e;
-	}
-	return 0;
-}
-
-static memberi* addmember(const char* id, const char* type, const char* result) {
-	auto p = findmember(id, type);
-	if(!p)
-		p = bsdata<memberi>::addz();
-	p->id = szdup(id);
-	p->url = this_url;
-	p->type = szdup(type);
-	p->result = szdup(result);
-	return p;
-}
-
 static rulei* find_rule(const char* id) {
 	for(auto& e : this_rules) {
 		if(strcmp(e.name, id) == 0)
@@ -100,8 +78,7 @@ static void skipws() {
 	p = skipspcr(p);
 }
 
-static void errors(error id, ...) {
-	this_errors++;
+static void expected(const char* id) {
 }
 
 static char next_literal() {
@@ -138,11 +115,14 @@ static void literal() {
 	while(*p && *p!='\"') {
 		auto s = next_literal();
 	}
+	if(*p == '\"') {
+		p++; skipws();
+	}
 }
 
 static void number() {
 	core.number = 0;
-	if(!isnum(*p) || !(p[0] == '-' && isnum(p[1])))
+	if(!isnum(*p) && !(p[0] == '-' && isnum(p[1])))
 		return;
 	if(p[0] == '0') {
 		if(p[1] == 'x') {
@@ -227,7 +207,7 @@ static rulei c2_grammar[] = {
 	{"enum_value", {"%id", "?%enum_assign"}},
 	{"enum_assign", {"=", "%constant"}},
 	{"constant", {"%expression"}, test_constant},
-	{"initialization", {"=", "%expression", ";"}},
+	{"initialization", {"=", "%expression"}},
 	{"static", {"static"}, apply_static},
 	{"public", {"public"}, apply_public},
 	{"member", {"%type", "%id"}},
@@ -236,11 +216,12 @@ static rulei c2_grammar[] = {
 	{"global_flags", {"?%static", "?%public"}},
 	{"member_function", {"?%global_flags", "%member", "(", "?%parameters", ")", "%block_statements"}},
 	{"member_variable", {"?%global_flags", "%member", "?%array_scope", "?%initialization", ";"}},
+	{"local_variable", {"?%static", "%member", "?%array_scope", "?%initialization"}},
 	{"array_scope", {"[", "%expression", "]"}},
 	{"expression", {"?%number", "?%string"}},
-	{"block_statements", {"{", "?%statement", ".?%statement", "}"}},
-	{"statement", {"?%decloration"}},
-	{"decloration", {"%member", "?%initialization"}},
+	{"block_statements", {"{", "?%single_statement", ".?%single_statement", "}"}},
+	{"single_statement", {"?%statement", ";"}},
+	{"statement", {"?%local_variable"}},
 };
 
 void rulei::parse() const {
@@ -257,19 +238,20 @@ void rulei::parse() const {
 				e.parse();
 			}
 		}
-		if(p1 == p) {
-			// Case when token not work
+		if(p1 == p) { // Case when token did not work
 			if(e.is(flag::Condition)) // If tokens is optional continue executing
 				continue;
-			if(pb != p)
-				errors(error::ExpectedP1, e.id); // Some of previous tokens match. This is error case
+			if(pb != p) {
+				expected(e.id); // Some of previous tokens match. This is error case
+				p = pb; // Rollback parser
+			}
 			break;
 		}
 	}
-	if(p != pb)
+	if(special && (p != pb || !tokens[0])) {
 		core.rule.set(pb, p - pb);
-	if(special && (p != pb || !tokens[0]))
 		special();
+	}
 }
 
 void tokeni::parse() const {
@@ -295,13 +277,6 @@ void tokeni::parse() const {
 	}
 }
 
-static const char* code_sample = "\
-import geo.rect;\n\
-import core.collection.array as this;\n\
-enum {OK, Cancel};\n\
-static public rect rc;\n\
-";
-
 void initialize_complex_grammar() {
 	this_rules = c2_grammar;
 	update_rules();
@@ -309,7 +284,6 @@ void initialize_complex_grammar() {
 
 void code::parse(const char* url, const char* url_content, const lexer* pk) {
 	this_url = url;
-	//p = code_sample;
 	p = url_content;
 	auto pr = find_rule("global");
 	if(!pr)
@@ -318,7 +292,7 @@ void code::parse(const char* url, const char* url_content, const lexer* pk) {
 		auto pb = p;
 		pr->parse();
 		if(pb == p) {
-			errors(error::ExpectedP1, pr->name);
+			expected(pr->name);
 			break;
 		}
 	}
