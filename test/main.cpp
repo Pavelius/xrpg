@@ -113,12 +113,12 @@ int main() {
 	initialize_complex_grammar();
 	initialize_codeview();
 	initialize_codetree();
-	code::parse("main", "import core.crt;", 0);
+	//code::parse("main", 0, 0);
 	logmsgv("Тостовая строка залогирована в общий лог приложения.", 0);
 	draw::initialize("Test UI");
 	openurl("battle.bmp");
-	openurl("code/C2Code.c2");
 	openurl("code/RustCode.rs");
+	openurl("code/C2Code.c2");
 	//draw::setnext(test_table);
 	//draw::setnext(test_fields);
 	draw::setnext(draw::application);

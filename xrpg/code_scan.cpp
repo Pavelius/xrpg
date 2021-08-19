@@ -8,7 +8,7 @@ BSDATAD(typei)
 
 struct corei {
 	string				type, id, rule, url, comment;
-	long long           number;
+	long long           number = 0;
 };
 
 static const char*		p;
@@ -191,9 +191,13 @@ static rulei c2_grammar[] = {
 	{"initialization", {"=", "%expression", ";"}},
 	{"static", {"static"}, apply_static},
 	{"public", {"public"}, apply_public},
-	{"member", {"?%static", "?%public", "%type", "%id"}},
-	{"member_function", {"%member", "(", "%declare_parameters", ")", "%block_statements"}},
-	{"member_variable", {"%member", "?%array_scope", "?%initialization", ";"}},
+	{"member", {"%type", "%id"}},
+	{"parameter", {"%member"}},
+	{"next_parameter", {",", "%parameter"}},
+	{"declare_parameters", {"?%parameter", ".?%next_parameter"}},
+	{"global_flags", {"?%static", "?%public"}},
+	{"member_function", {"?%global_flags", "%member", "(", "%declare_parameters", ")", "%block_statements"}},
+	{"member_variable", {"?%global_flags", "%member", "?%array_scope", "?%initialization", ";"}},
 	{"array_scope", {"[", "%number", "]"}},
 	{"expression", {"%number"}},
 };
@@ -221,21 +225,26 @@ void rulei::parse() const {
 				e.parse();
 			}
 		}
-		if(name.is(flag::Condition) && p1 != p) {
-			// This token is match and only one in list must be valid
-			break;
-		}
-		if(p1 == p) {
-			// Case when token not work
-			if(e.is(flag::Condition))
-				// If tokens is optional continue executing
-				continue;
-			// This token is not match.
-			if(pb != p)
-				// Some of previous tokens match. This is error case
-				errors(error::ExpectedP1, e.id);
-            if(!name.is(flag::Condition))
-                break;
+		if(name.is(flag::Condition)) {
+			if(p1 != p) {
+				if(this_errors > 0) {
+					this_errors = 0;
+					p = pb;
+				} else
+					break; // This token is match and only one in list must be valid
+			}
+		} else {
+			if(p1 == p) {
+				// Case when token not work
+				if(e.is(flag::Condition))
+					// If tokens is optional continue executing
+					continue;
+				// This token is not match.
+				if(pb != p)
+					// Some of previous tokens match. This is error case
+					errors(error::ExpectedP1, e.id);
+				break;
+			}
 		}
 	}
 	if(p != pb)
@@ -272,7 +281,8 @@ void initialize_complex_grammar() {
 
 void code::parse(const char* url, const char* url_content, const lexer* pk) {
 	this_url = url;
-	p = code_sample;
+	//p = code_sample;
+	p = url_content;
 	auto pr = find_rule("global");
 	if(!pr)
 		return;
