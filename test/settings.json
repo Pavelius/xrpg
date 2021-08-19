@@ -2,11 +2,11 @@
   "dockbar":{
     "DockLeft":{
       "current":0,
-      "size":163
+      "size":124
     },
     "DockLeftBottom":{
       "current":0,
-      "size":359
+      "size":168
     },
     "DockRight":{
       "current":0,
@@ -87,10 +87,10 @@
     }
   },
   "window":{
-    "x":109,
-    "y":62,
-    "width":1074,
-    "height":656,
+    "x":142,
+    "y":63,
+    "width":1169,
+    "height":653,
     "header_width":132,
     "flags":48
   },
@@ -107,7 +107,7 @@
           "columns":{
             "column":{
               "id":"Name",
-              "width":163
+              "width":124
             }
           }
         },
@@ -117,7 +117,7 @@
           "columns":{
             "column":{
               "id":"Name",
-              "width":163
+              "width":124
             }
           }
         },
