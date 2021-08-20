@@ -23,14 +23,14 @@ extern "C" int						atexit(void(*func)(void));
 extern "C" void*					bsearch(const void* key, const void* base, unsigned num, size_t size, int(*compar)(const void*, const void*));
 extern "C" unsigned					clock(); // Returns the processor time consumed by the program.
 extern "C" void						exit(int exit_code);
-extern "C" int						memcmp(const void* p1, const void* p2, size_t size);
-extern "C" void*					memmove(void* destination, const void* source, size_t size);
-extern "C" void*					memcpy(void* destination, const void* source, size_t size);
-extern "C" void*					memset(void* destination, int value, size_t size);
+extern "C" int						memcmp(const void* p1, const void* p2, size_t size) noexcept(true);
+extern "C" void*					memmove(void* destination, const void* source, size_t size) noexcept(true);
+extern "C" void*					memcpy(void* destination, const void* source, size_t size) noexcept(true);
+extern "C" void*					memset(void* destination, int value, size_t size) noexcept(true);
 extern "C" void						qsort(void* base, unsigned num, size_t size, int(*compar)(const void*, const void*));
 extern "C" int						rand(void); // Get next random value
 extern "C" void						srand(unsigned seed); // Set random seed
-extern "C" int						strcmp(const char* s1, const char* s2); // Compare two strings
+extern "C" int						strcmp(const char* s1, const char* s2) noexcept(true); // Compare two strings
 extern "C" long long				time(long long* seconds);
 
 enum class codepages { None, W1251, UTF8, U16BE, U16LE };

@@ -17,11 +17,6 @@ enum group_s : unsigned char {
 enum class flag : unsigned char {
 	Variable, Condition, Repeat, ComaSeparated, PointSeparated, Stop,
 };
-struct corei {
-	string				type, id, member, rule, url, comment;
-	long long           number = 0;
-};
-extern corei			core;
 struct typei {
 	const char*			id;
 	const char*			result;
@@ -79,6 +74,14 @@ struct rulei {
 	fnevent				special;
 	void				parse() const;
 };
+struct corei {
+	typedef void (*fnevent)(string st, const rulei& rule, const tokeni& token);
+	string				type, id, member, rule, url, comment;
+	long long           number = 0;
+	const char*			expected;
+	fnevent				success;
+};
+extern corei			core;
 typedef slice<rulei>	rulea;
 struct word {
 	const char*			id;

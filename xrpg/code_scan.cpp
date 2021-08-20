@@ -269,7 +269,10 @@ void rulei::parse() const {
 				p = pb; // Rollback parser
 			}
 			break;
-		} else if(e.is(flag::Stop))
+		}
+		if(core.success)
+			core.success({pb, p - pb}, *this, e);
+		if(e.is(flag::Stop))
 			break;
 	}
 	if(special && (p != pb || !tokens[0])) {
