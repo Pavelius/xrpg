@@ -6,47 +6,65 @@ using namespace code;
 BSDATAD(memberi)
 BSDATAD(typei)
 
-struct corei {
-	string				type, id, rule, url, comment;
-	long long           number = 0;
-};
-
 static const char*		p;
 static rulea			this_rules;
 static int				this_errors;
 static const char*		this_url;
-static corei			core;
+corei					code::core;
 
 void typei::clear() {
 	memset(this, 0, sizeof(*this));
 }
 
-typei* typei::find(const char* id, const char* url) {
+typei* typei::find(string id, const char* url) {
 	for(auto& e : bsdata<typei>()) {
 		if(!e)
 			continue;
 		if(e.url && e.url != url)
 			continue;
-		if(strcmp(e.id, id) == 0)
+		if(id==e.id)
 			return &e;
 	}
 	return 0;
 }
 
-typei* typei::add(const char* id, const char* value, const char* url) {
+typei* typei::add(string id, const char* result, const char* url) {
 	auto p = find(id, url);
 	if(!p)
 		p = bsdata<typei>::addz();
-	p->id = szdup(id);
-	if(!value)
-		value = p->id;
-	p->value = szdup(value);
+	p->id = szdup(id.get());
+	if(!result)
+		result = p->id;
+	p->result = szdup(result);
 	p->url = url; // can't be szdup(url) because szdup(0) return ""
 	return p;
 }
 
 void memberi::clear() {
 	memset(this, 0, sizeof(*this));
+}
+
+memberi* memberi::find(string id, const char* url) {
+	for(auto& e : bsdata<memberi>()) {
+		if(!e)
+			continue;
+		if(e.url && e.url != url)
+			continue;
+		if(id == e.id)
+			return &e;
+	}
+	return 0;
+}
+
+memberi* memberi::add(string id, const char* result, const char* parent, const char* url) {
+	auto p = find(id, url);
+	if(!p)
+		p = bsdata<memberi>::addz();
+	p->id = szdup(id.get());
+	p->result = szdup(result);
+	p->parent = szdup(parent);
+	p->url = url; // can't be szdup(url) because szdup(0) return ""
+	return p;
 }
 
 static rulei* find_rule(const char* id) {
@@ -168,7 +186,7 @@ static void identifier() {
 }
 
 static void add_type() {
-	typei::add(core.id.get(), core.url.get(), this_url);
+	typei::add(core.id, core.url.get(), this_url);
 }
 
 static void add_member() {
@@ -176,8 +194,7 @@ static void add_member() {
 
 static void test_type() {
 	core.type = core.id;
-	auto name = core.id.get();
-	if(!typei::find(name, this_url))
+	if(!typei::find(core.id, this_url))
 		p = core.rule.begin();
 }
 
@@ -188,10 +205,18 @@ static void set_url() {
 	core.url = core.rule;
 }
 
+static void set_member() {
+	core.member = core.id;
+}
+
 static void apply_static() {
 }
 
 static void apply_public() {
+}
+
+static void add_function() {
+	memberi::add(core.member, core.type.get(), 0, this_url);
 }
 
 static rulei c2_grammar[] = {
@@ -210,18 +235,16 @@ static rulei c2_grammar[] = {
 	{"initialization", {"=", "%expression"}},
 	{"static", {"static"}, apply_static},
 	{"public", {"public"}, apply_public},
-	{"member", {"%type", "%id"}},
+	{"member", {"%type", "%id"}, set_member},
 	{"parameter", {"%member"}},
-	{"parameters", {"%parameter", ", .?%parameter"}},
-	{"global_flags", {"?%static", "?%public"}},
-	{"member_function", {"?%global_flags", "%member", "(", "?%parameters", ")", "%block_statements"}},
-	{"member_variable", {"?%global_flags", "%member", "?%array_scope", "?%initialization", ";"}},
+	{"member_function", {"?%static", "?%public", "%member", "(", "%parameter", ", .?%parameter", ")", "%block_statements"}, add_function},
+	{"member_variable", {"?%static", "?%public", "%member", "?%array_scope", "?%initialization", ";"}},
 	{"local_variable", {"?%static", "%member", "?%array_scope", "?%initialization"}},
 	{"array_scope", {"[", "%expression", "]"}},
-	{"expression", {"?%number", "?%string"}},
+	{"expression", {"^?%number", "^?%string"}},
 	{"block_statements", {"{", "?%single_statement", ".?%single_statement", "}"}},
 	{"single_statement", {"?%statement", ";"}},
-	{"statement", {"?%local_variable"}},
+	{"statement", {"^?%local_variable"}},
 };
 
 void rulei::parse() const {
@@ -246,7 +269,8 @@ void rulei::parse() const {
 				p = pb; // Rollback parser
 			}
 			break;
-		}
+		} else if(e.is(flag::Stop))
+			break;
 	}
 	if(special && (p != pb || !tokens[0])) {
 		core.rule.set(pb, p - pb);

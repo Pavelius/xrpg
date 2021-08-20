@@ -1,4 +1,6 @@
-﻿import core.crt;import core.string as str;
+﻿import geo.rect;
+import core.crt;import core.string as str;
 import core.io;
 int main() {
-	char* test = "Test another";	char temp[260];}
+	char* test = "Test another";	char temp[260];
+	rect rc;}

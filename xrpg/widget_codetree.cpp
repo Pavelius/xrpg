@@ -51,12 +51,12 @@ static class widget_codemembers : public controls::tableref {
 		return false;
 	}
 public:
-	void update(const char* type) {
+	void update(const char* parent) {
 		clear();
 		for(auto& e : bsdata<memberi>()) {
 			if(!e)
 				continue;
-			if(strcmp(e.type, type) != 0)
+			if(strcmp(e.parent, parent) != 0)
 				continue;
 			addref(&e);
 		}

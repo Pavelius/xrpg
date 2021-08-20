@@ -320,7 +320,7 @@ class widget_codeview : public control, vector<char> {
 				break;
 			if(source_lexer) {
 				if(type == Identifier) {
-					if(code::find(source_lexer->types, pb, ps - pb))
+					if(code::typei::find({pb, (unsigned)(ps - pb)}, url))
 						type = Type;
 					else if(code::find(source_lexer->constants, pb, ps - pb))
 						type = Number;

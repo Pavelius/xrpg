@@ -1,9 +1,13 @@
 #include "crt.h"
 #include "pointl.h"
+#include "string.h"
 
 #pragma once
 
 namespace code {
+namespace metrics {
+extern int				tabs;
+}
 enum group_s : unsigned char {
 	IllegalSymbol,
 	WhiteSpace, Operator, Keyword, Comment,
@@ -11,27 +15,28 @@ enum group_s : unsigned char {
 	BlockBegin, BlockEnd, IndexBegin, IndexEnd, ExpressionBegin, ExpressionEnd,
 };
 enum class flag : unsigned char {
-	Variable, Condition, Repeat, ComaSeparated, PointSeparated,
+	Variable, Condition, Repeat, ComaSeparated, PointSeparated, Stop,
 };
-namespace metrics {
-extern int				tabs;
-}
+struct corei {
+	string				type, id, member, rule, url, comment;
+	long long           number = 0;
+};
+extern corei			core;
 struct typei {
 	const char*			id;
-	const char*			value;
-	const char*			url;
-	explicit constexpr operator bool() const { return id != 0; }
-	static typei*		add(const char* id, const char* value = 0, const char* url = 0);
-	void				clear();
-	static typei*		find(const char* id, const char* url);
-};
-struct memberi {
-	const char*			id;
-	const char*			type;
 	const char*			result;
 	const char*			url;
 	explicit constexpr operator bool() const { return id != 0; }
+	static typei*		add(string id, const char* result = 0, const char* url = 0);
 	void				clear();
+	static typei*		find(string id, const char* url);
+};
+struct memberi : typei {
+	const char*			parent;
+	explicit constexpr operator bool() const { return id != 0; }
+	static memberi*		add(string id, const char* result, const char* parent, const char* url);
+	void				clear();
+	static memberi*		find(string id, const char* url);
 };
 struct tokeni {
 	const char*			id;
@@ -47,7 +52,9 @@ struct tokeni {
 				set(flag::ComaSeparated); p++;
 			} else if(p[0] == '.' && p[1] == ' ') {
 				set(flag::PointSeparated); p++;
-			} else if(*p == '.')
+			} else if(*p == '^')
+				set(flag::Stop);
+			else if(*p == '.')
 				set(flag::Repeat);
 			else if(*p == '%')
 				set(flag::Variable);
