@@ -216,7 +216,7 @@ static void apply_public() {
 }
 
 static void add_function() {
-	memberi::add(core.member, core.type.get(), 0, this_url);
+	memberi::add(core.member, core.type.get(), "this", this_url);
 }
 
 static rulei c2_grammar[] = {
@@ -237,7 +237,7 @@ static rulei c2_grammar[] = {
 	{"public", {"public"}, apply_public},
 	{"member", {"%type", "%id"}, set_member},
 	{"parameter", {"%member"}},
-	{"member_function", {"?%static", "?%public", "%member", "(", "%parameter", ", .?%parameter", ")", "%block_statements"}, add_function},
+	{"member_function", {"?%static", "?%public", "%member", "(", "?%parameter", ", .?%parameter", ")", "%block_statements"}, add_function},
 	{"member_variable", {"?%static", "?%public", "%member", "?%array_scope", "?%initialization", ";"}},
 	{"local_variable", {"?%static", "%member", "?%array_scope", "?%initialization"}},
 	{"array_scope", {"[", "%expression", "]"}},
