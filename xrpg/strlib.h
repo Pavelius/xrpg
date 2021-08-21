@@ -2,11 +2,11 @@
 
 #pragma once
 
-struct strlib {
-	array			source;
+class strlib : public array {
 	unsigned		add(const char* v, unsigned size);
 	unsigned		find(const char* v, unsigned size) const;
-	const char*		get(unsigned v) const { return (v == 0xFFFFFFFF) ? "" : (const char*)source.ptr(v); }
+public:
+	const char*		get(unsigned v) const { return (v == 0xFFFFFFFF) ? "" : (const char*)array::ptr(v); }
 	unsigned		get(const char* v);
 	unsigned		get(const char* v, unsigned size);
 };

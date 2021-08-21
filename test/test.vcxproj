@@ -148,7 +148,6 @@
     <ClCompile Include="..\xrpg\font_util.cpp" />
     <ClCompile Include="..\xrpg\io_plugin_json.cpp" />
     <ClCompile Include="..\xrpg\sprite_util.cpp" />
-    <ClCompile Include="..\xrpg\widget_picture.cpp" />
     <ClCompile Include="lexers.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="planet.cpp" />

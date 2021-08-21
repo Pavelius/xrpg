@@ -10,6 +10,8 @@
 
 using namespace draw;
 
+void initialize_picture();
+
 static void field(int x, int& y, int width, controls::control& v) {
 	setposition(x, y, width);
 	v.view({x, y, x + width, y + 300}, true, true);
@@ -121,6 +123,7 @@ int main() {
 		return -1;
 	if(!initialize_translation("ru"))
 		return -1;
+	initialize_picture();
 	initialize_complex_grammar();
 	initialize_codeview();
 	initialize_codetree();

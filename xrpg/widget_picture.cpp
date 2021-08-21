@@ -58,3 +58,6 @@ static struct picture_plugin : plugin, plugin::builder {
 		}
 	}
 } picture_plugin_instance;
+
+void initialize_picture() {
+}

@@ -686,6 +686,8 @@ public:
 	const char* getvalue(const char* id, stringbuilder& sb) const override {
 		if(equal(id, "URL"))
 			return url;
+		else if(equal(id, "URLPath"))
+			return url;
 		return control::getvalue(id, sb);
 	}
 	void copy() {
@@ -750,7 +752,7 @@ public:
 			}
 		} else if(equal(id, "ParseAll")) {
 			if(run) {
-				code::parse(url, begin(), source_lexer);
+				code::parse(url, begin(), "main");
 				update_codetree();
 			}
 		} else if(equal(id, "SelectAll")) {

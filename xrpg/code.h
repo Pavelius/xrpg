@@ -102,7 +102,7 @@ const word*				find(const worda& source, const char* sym, unsigned size);
 int						getindex(const char* p, pointl pos);
 const char*				getnext(const char* p, pointl& pos);
 const char*				getnext(const char* p, pointl& pos, group_s& type, const lexer* pk = 0);
-void					parse(const char* url, const char* p, const lexer* pk);
+void					parse(const char* url, const char* url_content, const char* this_type);
 }
 void					initialize_codeview();
 void					initialize_codetree();

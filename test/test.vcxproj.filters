@@ -38,9 +38,6 @@
     <ClCompile Include="planet.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrpg\widget_picture.cpp">
-      <Filter>Plugins</Filter>
-    </ClCompile>
     <ClCompile Include="lexers.cpp">
       <Filter>Logic</Filter>
     </ClCompile>

@@ -8,8 +8,8 @@ BSDATAD(typei)
 
 static const char*		p;
 static rulea			this_rules;
-static int				this_errors;
 static const char*		this_url;
+static const char*		this_type;
 corei					code::core;
 
 void typei::clear() {
@@ -216,7 +216,11 @@ static void apply_public() {
 }
 
 static void add_function() {
-	memberi::add(core.member, core.type.get(), "this", this_url);
+	memberi::add(core.member, core.type.get(), this_type, this_url);
+}
+
+static void add_variable() {
+	memberi::add(core.member, core.type.get(), this_type, this_url);
 }
 
 static rulei c2_grammar[] = {
@@ -237,14 +241,22 @@ static rulei c2_grammar[] = {
 	{"public", {"public"}, apply_public},
 	{"member", {"%type", "%id"}, set_member},
 	{"parameter", {"%member"}},
-	{"member_function", {"?%static", "?%public", "%member", "(", "?%parameter", ", .?%parameter", ")", "%block_statements"}, add_function},
-	{"member_variable", {"?%static", "?%public", "%member", "?%array_scope", "?%initialization", ";"}},
+	{"declare_function", {"?%static", "?%public", "%member", "(", "?%parameter", ", .?%parameter", ")"}, add_function},
+	{"declare_variable", {"?%static", "?%public", "%member", "?%array_scope"}, add_variable},
+	{"member_function", {"%declare_function", "%block_statements"}},
+	{"member_variable", {"%declare_variable", "?%initialization", ";"}},
 	{"local_variable", {"?%static", "%member", "?%array_scope", "?%initialization"}},
+	{"sizeof", {"sizeof", "(", "%expression", ")"}},
 	{"array_scope", {"[", "%expression", "]"}},
-	{"expression", {"^?%number", "^?%string"}},
+	{"expression", {"^?%number", "^?%string", "^?sizeof"}},
 	{"block_statements", {"{", "?%single_statement", ".?%single_statement", "}"}},
 	{"single_statement", {"?%statement", ";"}},
 	{"statement", {"^?%local_variable"}},
+	{"unary", {"^?%number", "^?%string", "^?sizeof"}},
+	{"addiction_op", {"^?+", "^?-"}},
+	{"addiction", {"%unary", "%addiction_op", "%unary"}},
+	{"multiplication_op", {"^?\\\\", "^?*", "^?%"}},
+	{"multiplication", {"%addiction", "%multiplication_op", "%addiction"}},
 };
 
 void rulei::parse() const {
@@ -309,12 +321,14 @@ void initialize_complex_grammar() {
 	update_rules();
 }
 
-void code::parse(const char* url, const char* url_content, const lexer* pk) {
+void code::parse(const char* url, const char* url_content, const char* url_type) {
 	this_url = url;
+	this_type = url_type;
 	p = url_content;
 	auto pr = find_rule("global");
 	if(!pr)
 		return;
+	typei::add(this_type, this_type, url);
 	while(*p) {
 		auto pb = p;
 		pr->parse();

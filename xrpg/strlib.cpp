@@ -1,22 +1,22 @@
 #include "strlib.h"
 
 unsigned strlib::add(const char* v, unsigned size) {
-	auto n = source.getcount();
-	source.reserve(n + size + 1);
-	auto p = (char*)source.ptr(n);
+	auto n = getcount();
+	reserve(n + size + 1);
+	auto p = (char*)ptr(n);
 	memcpy(p, v, size);
 	p[size] = 0;
-	source.setcount(n + size + 1);
+	setcount(n + size + 1);
 	return n;
 }
 
 unsigned strlib::find(const char* v, unsigned size) const {
-	size_t n = source.getcount();
+	size_t n = getcount();
 	auto c = v[0];
 	for(size_t i = 0; i < n; i++) {
-		if(c == ((char*)source.data)[i]) {
+		if(c == ((char*)data)[i]) {
 			size_t j = 1;
-			auto p = &((char*)source.data)[i];
+			auto p = &((char*)data)[i];
 			for(; j < size; j++)
 				if(p[j] != v[j])
 					break;

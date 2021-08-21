@@ -356,5 +356,8 @@
     <ClCompile Include="strlib.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="widget_picture.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
