@@ -1,4 +1,5 @@
 #include "code.h"
+#include "code_pack.h"
 #include "draw_button.h"
 #include "draw_control.h"
 #include "handler.h"
@@ -18,22 +19,27 @@ static class widget_codetypes : public controls::tableref {
 		return false;
 	}
 public:
-	typei* getcurrent() const {
+	pack* getcurrent() const {
 		if(!getmaximum())
 			return 0;
-		return (typei*)get(current);
+		return (pack*)get(current);
 	}
 	void update() {
 		clear();
-		for(auto& e : bsdata<typei>()) {
-			if(!e || !e.url)
+		for(auto& e : bsdata<pack>()) {
+			if(!e)
 				continue;
 			addref(&e);
 		}
 		ensurevisible();
 	}
+	static const char* getpackname(const void* object, stringbuilder& sb) {
+		return ((pack*)object)->getname();
+	}
 	void initialize() {
-		addcol("Name", ANREQ(typei, id), "Text").size = widtht::Auto;
+		auto& col = addcol("Name", {}, "Text");
+		col.size = widtht::Auto;
+		col.plist.getname = getpackname;
 		show_header = false;
 		readonly = true;
 		no_change_count = true;
@@ -56,17 +62,11 @@ public:
 		for(auto& e : bsdata<memberi>()) {
 			if(!e)
 				continue;
-			if(strcmp(e.parent, parent) != 0)
-				continue;
 			addref(&e);
 		}
 	}
 	void paintnc() override {
 		auto p = widget_codetypes_control.getcurrent();
-		if(p && p->id != cashe_type) {
-			update(p->id);
-			cashe_type = p->id;
-		}
 		tableref::paintnc();
 	}
 	void initialize() {
@@ -100,7 +100,7 @@ void initialize_codetree() {
 
 void update_codetree() {
 	widget_codetypes_control.update();
-	auto p = widget_codetypes_control.getcurrent();
-	if(p)
-		widget_codemembers_control.update(p->id);
+	//auto p = widget_codetypes_control.getcurrent();
+	//if(p)
+	//	widget_codemembers_control.update(p->id);
 }
