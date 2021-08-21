@@ -1,6 +1,12 @@
 ﻿import geo.rect;
 import core.crt;import core.string as str;
 import core.io;
+static int x;
+static int y;
+
+void print(int x, int y, char* format) {
+}
+
 int main() {
 	char* test = "Test another";	char temp[260];
 	rect rc;}

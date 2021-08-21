@@ -133,3 +133,7 @@ bool io::file::exist(const char* url) {
 bool io::file::makedir(const char* url) {
 	return CreateDirectoryA(url, 0) != 0;
 }
+
+bool io::file::getfullurl(const char* short_url, char* url, int size) {
+	return GetFullPathNameA(short_url, size, url, 0) != 0;
+}

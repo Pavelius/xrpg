@@ -647,7 +647,7 @@ const char* widget_application::commands_file[] = {"Create", "Open", "Save", 0};
 const char* widget_application::commands[] = {"File", 0};
 
 control* draw::openurl(const char* url) {
-	char temp[260];
+	char temp[1024];
 	for(auto p : active_controls) {
 		stringbuilder sb(temp);
 		auto purl = p->getvalue("URL", sb);
@@ -668,7 +668,7 @@ control* draw::openurl(const char* url) {
 			return 0;
 		auto result = pc->create();
 		if(result) {
-			result->setvalue("URL", (long)url);
+			result->setvalue("URL", (long)szfurl(url));
 			result->execute("Open", true);
 			active_controls.add(result);
 			activate(result);

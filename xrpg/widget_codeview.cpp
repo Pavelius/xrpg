@@ -1,4 +1,5 @@
 #include "code.h"
+#include "code_pack.h"
 #include "draw.h"
 #include "draw_button.h"
 #include "draw_clipboard.h"
@@ -51,6 +52,7 @@ class widget_codeview : public control, vector<char> {
 	};
 	const lexer* source_lexer = 0;
 	const char* url = 0;
+	const char* url_module = 0;
 	int	cash_origin = -1;
 	int	lines_per_page = 0;
 	int	p1 = 0, p2 = 0;
@@ -682,6 +684,12 @@ class widget_codeview : public control, vector<char> {
 		maximum.x = size.x * fontsize.x;
 		maximum.y = size.y;
 	}
+	pack* getpackage() {
+		auto p = pack::findmodule(url_module);
+		if(!p)
+			return 0;
+		return p;
+	}
 public:
 	const char* getvalue(const char* id, stringbuilder& sb) const override {
 		if(equal(id, "URL"))
@@ -704,6 +712,12 @@ public:
 		clear();
 		paste(p);
 		delete p;
+	}
+	void readpackage() {
+		url_module = pack::getmodule(url);
+		if(!url_module)
+			return;
+		pack::addmodule(url_module);
 	}
 	bool execute(const char* id, bool run) override {
 		if(equal(id, "Edit")) {
@@ -742,13 +756,13 @@ public:
 				auto p = loadt(url, &s);
 				if(!p)
 					return false;
-				this->url = szdup(url);
 				reserve(s + 1);
 				setcount(s);
 				memcpy(begin(), p, s + 1);
 				delete p;
 				correction();
 				source_lexer = findlexer(szext(url));
+				readpackage();
 			}
 		} else if(equal(id, "ParseAll")) {
 			if(run) {
@@ -836,9 +850,14 @@ static const setting::element colors_editor[] = {
 	{"OperatorColor", bsdata<groupi>::elements[Operator].fore},
 };
 static setting::element format_setting[] = {{"Tabulation", {common_padding}},
-//{"»спользовать пробелы вместо табул€ции", {use_space_instead_tab}},
+};
+static setting::element project_urls_general[] = {
+	{"Project", {urls::project, setting::Url}},
+	{"Projects", {urls::projects, setting::Url}},
+	{"Library", {urls::library, setting::Url}},
 };
 static setting::header headers[] = {
+	{"Project", "General", "URLs", project_urls_general},
 	{"Editor", "General", "Formating", format_setting},
 	{"Colors", "Editor", 0, colors_editor},
 };

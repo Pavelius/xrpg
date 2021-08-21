@@ -181,25 +181,14 @@ static void render_tooltips() {
 	dialog_y += rc.height() + gui.border * 2;
 }
 
-static void standart_domodal() {
-	render_tooltips();
-	hot.key = draw::rawinput();
-	if(!hot.key)
-		exit(0);
-	if(inputfocus())
-		return;
-	if(control_board())
-		return;
-}
-
-void ismodal_update() {
-	sb_tooltips.clear();
-	hilite_object.clear();
-	hilite_grid = {-100, -100};
-	dialog_y = gui.border * 2;
-	domodal = standart_domodal;
-	clearfocus();
-}
+//void ismodal_update() {
+//	sb_tooltips.clear();
+//	hilite_object.clear();
+//	hilite_grid = {-100, -100};
+//	dialog_y = gui.border * 2;
+//	domodal = standart_domodal;
+//	clearfocus();
+//}
 
 void ismodal_leaving() {
 	setfocus(0, 0, true);
@@ -520,15 +509,15 @@ void draw::bar(rect rc, color_s color, color_s border, color_s back, int value, 
 	fore = push;
 }
 
-bool draw::execute(const hotkey* source) {
-	for(auto p = source; *p; p++) {
-		if(hot.key == p->key) {
-			p->proc();
-			return true;
-		}
-	}
-	return false;
-}
+//bool draw::execute(const hotkey* source) {
+//	for(auto p = source; *p; p++) {
+//		if(hot.key == p->key) {
+//			p->proc();
+//			return true;
+//		}
+//	}
+//	return false;
+//}
 
 HANDLER(after_initialize) {
 	memset(&gui, 0, sizeof(gui));

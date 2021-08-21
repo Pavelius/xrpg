@@ -859,6 +859,7 @@ DLL int WINAPI				CloseHandle(void* hObject);
 WINGDIAPI void* WINAPI		CreateCompatibleDC(void*);
 DLL int WINAPI				CreateDirectoryA(const char* lpPathName, void* lpSecurityAttributes);
 DLL void* WINAPI			CreateFileA(const char* lpFileName, unsigned dwDesiredAccess, unsigned dwShareMode, void* lpSecurityAttributes, unsigned dwCreationDisposition, unsigned dwFlagsAndAttributes, void* hTemplateFile);
+DLL int WINAPI				GetFullPathNameA(const char* lpFileName, unsigned nBufferLength, char* lpBuffer, char** lpFilePart);
 WINGDIAPI void*	WINAPI		CreateFontA(int, int, int, int, int, DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, const char*);
 WINGDIAPI void*	WINAPI		CreateFontW(int, int, int, int, int, DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, const wchar_t*);
 DLL void* WINAPI			CreateMenu(void);

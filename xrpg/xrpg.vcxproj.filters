@@ -147,7 +147,10 @@
     <ClInclude Include="draw_valuelist.h">
       <Filter>Interface</Filter>
     </ClInclude>
-    <ClInclude Include="strlib.h">
+    <ClInclude Include="code_pack.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="cmap.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>
@@ -353,11 +356,14 @@
     <ClCompile Include="code_scan.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="strlib.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="widget_picture.cpp">
       <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="code_pack.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="crt_file.cpp">
+      <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

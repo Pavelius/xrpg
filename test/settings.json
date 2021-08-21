@@ -1,5 +1,14 @@
 ﻿{
   "settings":{
+    "Project":{
+      "General":{
+        "URLs":{
+          "Project":"",
+          "Projects":"code\\projects",
+          "Library":"code\\library"
+        }
+      }
+    },
     "Editor":{
       "General":{
         "Formating":{
@@ -45,9 +54,9 @@
           "ShowPadding":0
         },
         "Tabs":{
-          "UseShortNameLabel":0,
-          "NoUrlLabelExtension":0,
-          "UppercaseLabel":0
+          "UseShortNameLabel":2,
+          "NoUrlLabelExtension":2,
+          "UppercaseLabel":2
         }
       },
       "Plugins":{
@@ -61,63 +70,63 @@
     }
   },
   "window":{
-    "x":125,
-    "y":60,
-    "width":854,
-    "height":681,
+    "x":217,
+    "y":26,
+    "width":932,
+    "height":703,
     "header_width":160,
     "flags":48
   },
   "controls":{
-    "picture":{
-      "Docking":4,
+    "Codeview":{
+      "Docking":5,
       "Visible":1,
-      "Codeview":{
-        "Docking":5,
+      "CodeTreeTypes":{
+        "Docking":0,
         "Visible":1,
-        "CodeTreeTypes":{
-          "Docking":0,
-          "Visible":1,
-          "columns":{
-            "column":{
-              "id":"Name",
-              "width":206
-            }
-          }
-        },
-        "CodeTreeMembers":{
-          "Docking":1,
-          "Visible":1,
-          "columns":{
-            "column":{
-              "id":"Name",
-              "width":206
-            }
-          }
-        },
-        "MessageList":{
-          "Docking":4,
-          "Visible":1,
-          "columns":{
-            "column":{
-              "id":"Message",
-              "width":200
-            },
-            "column":{
-              "id":"Date",
-              "width":88
-            }
+        "columns":{
+          "column":{
+            "id":"Name",
+            "width":200
           }
         }
+      },
+      "CodeTreeMembers":{
+        "Docking":1,
+        "Visible":1,
+        "columns":{
+          "column":{
+            "id":"Name",
+            "width":200
+          }
+        }
+      },
+      "MessageList":{
+        "Docking":4,
+        "Visible":1,
+        "columns":{
+          "column":{
+            "id":"Message",
+            "width":200
+          },
+          "column":{
+            "id":"Date",
+            "width":88
+          }
+        }
+      },
+      "picture":{
+        "Docking":4,
+        "Visible":1
       },
       "dockbar":{
         "DockLeft":{
           "current":0,
-          "size":206
+          "size":200
         },
         "DockLeftBottom":{
           "current":0,
-          "size":241
+          "size":200
         },
         "DockRight":{
           "current":0,

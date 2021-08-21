@@ -18,9 +18,9 @@ enum class flag : unsigned char {
 	Variable, Condition, Repeat, ComaSeparated, PointSeparated, Stop,
 };
 struct typei {
-	const char*			id;
-	const char*			result;
-	const char*			url;
+	const char*			id; // Symbol identifier
+	const char*			result; // Type of symbol
+	const char*			url; // Source id
 	explicit constexpr operator bool() const { return id != 0; }
 	static typei*		add(string id, const char* result = 0, const char* url = 0);
 	void				clear();

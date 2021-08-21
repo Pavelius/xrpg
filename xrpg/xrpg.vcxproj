@@ -145,12 +145,13 @@
     <ClInclude Include="bsreq.h" />
     <ClInclude Include="bstream.h" />
     <ClInclude Include="cflags.h" />
+    <ClInclude Include="cmap.h" />
     <ClInclude Include="code.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="command.h" />
     <ClInclude Include="converter.h" />
     <ClInclude Include="crt.h" />
-    <ClInclude Include="strlib.h" />
+    <ClInclude Include="code_pack.h" />
     <ClInclude Include="datamap.h" />
     <ClInclude Include="dataset.h" />
     <ClInclude Include="datetime.h" />
@@ -193,7 +194,8 @@
     <ClCompile Include="bstream.cpp" />
     <ClCompile Include="code.cpp" />
     <ClCompile Include="code_scan.cpp" />
-    <ClCompile Include="strlib.cpp" />
+    <ClCompile Include="code_pack.cpp" />
+    <ClCompile Include="crt_file.cpp" />
     <ClCompile Include="draw_valuelist.cpp" />
     <ClCompile Include="metadata.cpp" />
     <ClCompile Include="string.cpp" />

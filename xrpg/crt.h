@@ -108,6 +108,7 @@ public:
 	constexpr array(unsigned size = 0) : count_maximum(0), data(0), count(0), size(size) {}
 	constexpr array(void* data, unsigned size, unsigned count) : count_maximum(count | 0x80000000), data(data), count(count), size(size) {}
 	constexpr array(void* data, unsigned size, unsigned count, unsigned count_maximum) : count_maximum(count_maximum | 0x80000000), data(data), count(count), size(size) {}
+	constexpr explicit operator bool() const { return count != 0; }
 	~array();
 	void*							add();
 	void*							addz() { auto p = add(); memset(p, 0, size); return p; }
@@ -216,6 +217,7 @@ const char*							szdup(const char* text);
 const char*							szext(const char* path);
 const char*							szfname(const char* text); // Get file name from string (no fail, always return valid value)
 char*								szfnamewe(char* result, const char* name); // get file name without extension (no fail)
+const char*							szfurl(const char* url); // get full absolute url
 unsigned							szlower(unsigned u); // to lower reg
 void								szlower(char* p); // to lower reg
 bool								szmatch(const char* text, const char* name); //

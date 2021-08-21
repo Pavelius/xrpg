@@ -58,6 +58,7 @@ IdentifierColor: Цвет идентификаторов
 Increase: Увеличить
 Inventor: Изобретатель
 KeywordColor: Цвет ключевых слов
+Library: Библиотека
 Log: Логирование
 Main: Главный
 MeanStreak: Торговая хватка
@@ -77,6 +78,8 @@ ParseAll: Разобрать все
 Paste: Вставить
 Perfomer: Артист
 Plugins: Окна
+Project: Проект
+Projects: Проекты
 Racketeer: Рекитер
 Ready: Готово
 Rebel: Бунтарь
@@ -102,6 +105,7 @@ TextColor: Цвет текста
 TipsBackColor: Цвет фона подсказки
 TipsTextColor: Цвет текста подсказки
 TypeColor: Цвет типов
+URLs: Пути
 UppercaseLabel: Первую букву имени закладки выводить в верхнем регистре.
 UseShortNameLabel: В имени закладки отображать только имя файла (без полного пути).
 View: Вид

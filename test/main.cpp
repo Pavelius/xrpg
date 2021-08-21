@@ -1,5 +1,6 @@
 #include "archive.h"
 #include "code.h"
+#include "code_pack.h"
 #include "draw.h"
 #include "draw_button.h"
 #include "draw_control.h"
@@ -113,6 +114,11 @@ static void c2_lexer_initialize() {
 	code::typei::add("void");
 }
 
+static void test_package() {
+	code::pack pk;
+	pk.create("main");
+}
+
 int main() {
 #ifdef _DEBUG
 	main_util();
@@ -123,6 +129,7 @@ int main() {
 		return -1;
 	if(!initialize_translation("ru"))
 		return -1;
+	test_package();
 	initialize_picture();
 	initialize_complex_grammar();
 	initialize_codeview();
@@ -133,7 +140,7 @@ int main() {
 	draw::initialize("Test UI");
 	openurl("battle.bmp");
 	openurl("code/RustCode.rs");
-	openurl("code/C2Code.c2");
+	openurl("code/projects/first/main.c2");
 	//draw::setnext(test_table);
 	//draw::setnext(test_fields);
 	draw::setnext(draw::application);
