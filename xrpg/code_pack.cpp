@@ -75,27 +75,20 @@ pckh pack::find(const char* v, unsigned len) const {
 	auto pe = strings.end();
 	auto s = *v;
 	auto ns = len - 1;
-	if(ns == 1) {
-		while(p < pe) {
-			p = (char*)memchr(p, s, pe - p);
-			if(!p)
+	while(p < pe) {
+		p = (char*)memchr(p, s, pe - p);
+		if(!p)
+			break;
+		unsigned n1 = pe - p - 1;
+		if(n1 < len)
+			return -1;
+		unsigned i = 1;
+		for(; i < len; i++)
+			if(p[i] != v[i])
 				break;
-			if(p[1] == 0)
-				return p - strings.begin();
-			p++;
-		}
-	} else {
-		while(p < pe) {
-			p = (char*)memchr(p, s, pe - p);
-			if(!p)
-				break;
-			unsigned n1 = pe - p - 1;
-			if(n1 < len)
-				return -1;
-			if(memcmp(p + 1, v + 1, ns) == 0 && p[len]==0)
-				return p - strings.begin();
-			p++;
-		}
+		if(i==len && p[i]==0)
+			return p - strings.begin();
+		p++;
 	}
 	return None;
 }
@@ -215,6 +208,7 @@ pckh pack::addsym(pckh id, pckh parent, pckh result, unsigned index, unsigned fl
 		p->index = index;
 		p->flags = flags;
 		p->ast = None;
+		p->local = 0;
 		v = p - (symbol*)symbols.begin();
 	}
 	return v;

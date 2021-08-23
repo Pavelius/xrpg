@@ -81,12 +81,17 @@ static bool test_archive(bool write_mode) {
 
 static bool test_pack() {
 	code::pack p1;
+	p1.addclass(p1.add("uint"), 0);
+	p1.addclass(p1.add("ushort"), 0);
+	p1.addclass(p1.add("uchar"), 0);
 	p1.addclass(p1.add("int"), 0);
 	p1.addclass(p1.add("short"), 0);
 	p1.addclass(p1.add("char"), 0);
 	for(auto hs : p1.getsymbols()) {
 		auto name = p1.getname(hs);
+		auto flags = p1.getflags(hs);
 	}
+	p1.write("test.pkg");
 	return true;
 }
 
