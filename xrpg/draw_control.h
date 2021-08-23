@@ -178,6 +178,7 @@ public:
 	virtual void*			addrow() { return rows.add(); }
 	void					cell(const rect& rc, int line, int column, const char* label);
 	void					cellbox(const rect& rc, int line, int column);
+	void					cellcustomtext(const rect& rc, int line, int column);
 	void					celldate(const rect& rc, int line, int column);
 	void					celldatetime(const rect& rc, int line, int column);
 	void					cellimage(const rect& rc, int line, int column);

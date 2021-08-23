@@ -79,6 +79,17 @@ static bool test_archive(bool write_mode) {
 	return true;
 }
 
+static bool test_pack() {
+	code::pack p1;
+	p1.addclass(p1.add("int"), 0);
+	p1.addclass(p1.add("short"), 0);
+	p1.addclass(p1.add("char"), 0);
+	for(auto hs : p1.getsymbols()) {
+		auto name = p1.getname(hs);
+	}
+	return true;
+}
+
 static bool test_string() {
 	string t1 = "Answer";
 	string t2 = "Duke";
@@ -101,40 +112,22 @@ static bool test_string() {
 void main_util();
 #endif
 
-void initialize_complex_grammar();
-
-static void c2_lexer_initialize() {
-	code::typei::add("short");
-	code::typei::add("char");
-	code::typei::add("int");
-	code::typei::add("uchar");
-	code::typei::add("ushort");
-	code::typei::add("unsigned");
-	code::typei::add("bool");
-	code::typei::add("void");
-}
-
-static void test_package() {
-	code::pack pk;
-	pk.create("main");
-}
-
 int main() {
 #ifdef _DEBUG
 	main_util();
 #endif
+	if(!test_pack())
+		return -1;
 	if(!test_string())
 		return -1;
 	if(!test_archive(true))
 		return -1;
 	if(!initialize_translation("ru"))
 		return -1;
-	test_package();
 	initialize_picture();
-	initialize_complex_grammar();
 	initialize_codeview();
 	initialize_codetree();
-	c2_lexer_initialize();
+	initialize_lexers();
 	//code::parse("main", 0, 0);
 	logmsgv("Тостовая строка залогирована в общий лог приложения.", 0);
 	draw::initialize("Test UI");

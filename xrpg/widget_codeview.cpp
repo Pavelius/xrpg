@@ -255,7 +255,7 @@ class widget_codeview : public control, vector<char> {
 		dropdown.always_focus = true;
 		dropdown.clear();
 		for(auto& e : source_lexer->keywords)
-			dropdown.add(e.id);
+			dropdown.add(e.begin());
 		setdropdown(
 			client.x1 + pos1.x * fontsize.x - origin.x,
 			client.y1 + (pos1.y - origin.y) * fontsize.y + fontsize.y,
@@ -267,6 +267,7 @@ class widget_codeview : public control, vector<char> {
 	void paint() const override {
 		if(!fontsize.x || !fontsize.y)
 			return;
+		auto package = getpackage();
 		auto push_font = font;
 		auto push_fore = fore;
 		draw::font = default_font;
@@ -322,10 +323,13 @@ class widget_codeview : public control, vector<char> {
 				break;
 			if(source_lexer) {
 				if(type == Identifier) {
-					if(code::typei::find({pb, ps - pb}, url))
-						type = Type;
-					else if(code::find(source_lexer->constants, pb, ps - pb))
-						type = Number;
+					if(package) {
+						auto sh = package->find(pb, ps-pb);
+						if(sh != None) {
+							if(package->find(sh, Class) != None)
+								type = Type;
+						}
+					}
 				}
 			}
 			auto& ei = bsdata<groupi>::elements[type];
@@ -684,7 +688,7 @@ class widget_codeview : public control, vector<char> {
 		maximum.x = size.x * fontsize.x;
 		maximum.y = size.y;
 	}
-	pack* getpackage() {
+	pack* getpackage() const {
 		auto p = pack::findmodule(url_module);
 		if(!p)
 			return 0;
@@ -717,7 +721,9 @@ public:
 		url_module = pack::getmodule(url);
 		if(!url_module)
 			return;
-		pack::addmodule(url_module);
+		auto p = pack::addmodule(url_module);
+		if(source_lexer)
+			p->addclasses(source_lexer->standart_classes);
 	}
 	bool execute(const char* id, bool run) override {
 		if(equal(id, "Edit")) {
@@ -765,8 +771,12 @@ public:
 				readpackage();
 			}
 		} else if(equal(id, "ParseAll")) {
+			auto pack = getpackage();
+			if(!pack)
+				return false;
 			if(run) {
-				code::parse(url, begin(), "main");
+				source_lexer->setgrammar();
+				pack->parse(begin());
 				update_codetree();
 			}
 		} else if(equal(id, "SelectAll")) {

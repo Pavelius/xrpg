@@ -1,6 +1,8 @@
 #include "crt.h"
 #include "code.h"
 
+using namespace code;
+
 int code::metrics::tabs = 4;
 
 int code::getindex(const char* source, pointl pt) {
@@ -94,7 +96,7 @@ const char* code::getnext(const char* p, pointl& pos, group_s& type, const lexer
 		while(ischa(*p) || *p == '_' || isnum(*p))
 			p = getnext(p, pos);
 		if(pk) {
-			auto pw = find(pk->keywords, pb, p - pb);
+			auto pw = find(pk->keywords, {pb, p - pb});
 			if(pw)
 				type = Keyword;
 		}
@@ -132,28 +134,13 @@ const char* code::getnext(const char* p, pointl& pos, group_s& type, const lexer
 	return p;
 }
 
-const code::word* code::find(const worda& source, const char* sym, unsigned size) {
+const string* code::find(const worda& source, const string& v) {
 	for(auto& e : source) {
-		if(e.size != size)
-			continue;
-		if(memcmp(e.id, sym, size) == 0)
+		if(e.equal(v))
 			return &e;
 	}
 	return 0;
 }
 
-static bool equal(const char* p1, const char* p2, int p1_size) {
-	for(auto i = 0; i < p1_size; i++) {
-		if(p1[i] != p2[i])
-			return false;
-	}
-	return true;
-}
-
-const code::word* code::find(const worda& source, const char* sym) {
-	for(auto& e : source) {
-		if(equal(e.id, sym, e.size))
-			return &e;
-	}
-	return 0;
+void lexer::addclass(const char* id, int size, bool type_unsigned) {
 }

@@ -47,7 +47,7 @@ public:
 } widget_codetypes_control;
 
 static class widget_codemembers : public controls::tableref {
-	const char* cashe_type = 0;
+	pack* parent = 0;
 	const char* getvalue(const char* id, stringbuilder& sb) const override {
 		if(equal(id, "Name"))
 			return getnm("CodeTreeMembers");
@@ -57,20 +57,31 @@ static class widget_codemembers : public controls::tableref {
 		return false;
 	}
 public:
-	void update(const char* parent) {
+	void update() {
 		clear();
-		for(auto& e : bsdata<memberi>()) {
-			if(!e)
-				continue;
-			addref(&e);
-		}
+		//for(auto& e : parent->symbols) {
+		//	if(e.parent==This)
+		//		addref(&e);
+		//}
 	}
 	void paintnc() override {
 		auto p = widget_codetypes_control.getcurrent();
+		if(p != parent) {
+			parent = p;
+			update();
+		}
 		tableref::paintnc();
 	}
+	const char* getname(int line, int column, stringbuilder& sb) const override {
+		auto& col = columns[column];
+		//if(equal(col.id, "Name")) {
+		//	auto p = (symbol*)get(line);
+		//	return parent->getname(p->id);
+		//} else
+			return col.id;
+	}
 	void initialize() {
-		addcol("Name", ANREQ(memberi, id), "Text").size = widtht::Auto;
+		auto& col = addcol("Name", {}, "CustomText").size = widtht::Auto;
 		show_header = false;
 		readonly = true;
 		no_change_count = true;

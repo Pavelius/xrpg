@@ -9,33 +9,39 @@ const char* urls::project;
 const char* urls::projects = "projects";
 const char* urls::library = "library";
 
-symbol def_symbols[] = {
-	{I32, Class, Class},
-	{I16, Class, Class},
-	{I8, Class, Class},
-	{U32, Class, Class},
-	{U16, Class, Class},
-	{U8, Class, Class},
-	{Void, Class, Class},
-	{Bool, Class, Class},
-	{None, Pointer, I8},
-	{None, Pointer, Void},
-	{True, This, Bool}, {False, This, Bool},
-	{Pointer}, {Platform}, {Class},
-	{SecStr}, {SecData}, {SecCode}, {SecBSS}, {SecLoc},
+namespace code {
+const unsigned ValuseMask = 0x3FFFFFFF;
+enum class base : unsigned {
+	Literals, Symbols, ASTs,
 };
-static_assert(sizeof(def_symbols) / sizeof(def_symbols[0]) == ((LastDef - FirstDef) + 1), "Invalid default symbols count");
-
-const char* def_strings[] = {
-	"i32", "i16", "i8",
-	"u32", "u16", "u8",
-	"void", "bool",
-	"*i8", "*void",
-	"true", "false",
-	"*", "platform", "classes",
-	"strings", "data", "code", "bss", "locale"
+struct ast {
+	operation			type;
+	pckh				right;
+	pckh				left;
+	constexpr bool isliteral() const { return type == operation::Literal; }
+	constexpr bool issymbol() const { return type == operation::Symbol; }
+	constexpr bool isnumber() const { return type == operation::Number; }
 };
-static_assert(sizeof(def_strings) / sizeof(def_strings[0]) == ((LastDef - FirstDef) + 1), "Invalid symbol strings count");
+struct symbol {
+	pckh				id = None; // String identificator
+	pckh				parent = None; // Parent symbol
+	pckh				result = None; // Result symbol type of expression
+	unsigned			index = 0; // Position in source file
+	unsigned			flags = 0;
+	unsigned			local = 0;
+	pckh				ast = None; // Abstract syntaxis tree index
+	constexpr bool		is(symf v) const { return (flags & (1 << static_cast<int>(v))) != 0; }
+	constexpr void		set(symf v) { flags |= 1 << static_cast<int>(v); }
+};
+union pcks {
+	struct {
+		unsigned		b : 2;
+		unsigned		v : 30;
+	};
+	unsigned			u;
+};
+static_assert(sizeof(pcks) == sizeof(unsigned), "Must be sizeof(unsigned)");
+}
 
 static bool isnostrictorder(operation id) {
 	switch(id) {
@@ -47,55 +53,78 @@ static bool isnostrictorder(operation id) {
 	}
 }
 
-unsigned stringv::find(const char* v, unsigned len) const {
-	if(v && len) {
-		for(auto& e : def_strings) {
-			if(strcmp(e, v) == 0)
-				return (&e - def_strings) + FirstDef;
+static base getbase(pckh v) {
+	return base(v >> 30);
+}
+
+static unsigned getvalue(pckh v) {
+	return v & ValuseMask;
+}
+
+static unsigned getbasevalue(base b, pckh v) {
+	return (static_cast<int>(b) << 30) | v;
+}
+
+pack::pack() : strings(sizeof(char)), asts(sizeof(ast)), symbols(sizeof(symbol)) {
+}
+
+pckh pack::find(const char* v, unsigned len) const {
+	if(!v || !len)
+		return None;
+	auto p = strings.begin();
+	auto pe = strings.end();
+	auto s = *v;
+	auto ns = len - 1;
+	if(ns == 1) {
+		while(p < pe) {
+			p = (char*)memchr(p, s, pe - p);
+			if(!p)
+				break;
+			if(p[1] == 0)
+				return p - strings.begin();
+			p++;
 		}
-		auto pe = end();
-		auto s = *v;
-		// Signature have first 4 bytes
-		for(auto p = begin(); p < pe; p++) {
-			if(*p != s)
-				continue;
+	} else {
+		while(p < pe) {
+			p = (char*)memchr(p, s, pe - p);
+			if(!p)
+				break;
 			unsigned n1 = pe - p - 1;
 			if(n1 < len)
 				return -1;
-			if(memcmp(p + 1, v + 1, len) == 0)
-				return p - begin();
+			if(memcmp(p + 1, v + 1, ns) == 0 && p[len]==0)
+				return p - strings.begin();
+			p++;
 		}
 	}
 	return None;
 }
 
-unsigned stringv::add(const char* v, unsigned len) {
-	auto result = count;
-	reserve(result + len + 1);
-	memcpy(ptr(result), v, len + 1);
-	setcount(result + len + 1);
+pckh pack::find(const char* v) const {
+	if(!v)
+		return None;
+	return find(v, zlen(v));
+}
+
+pckh pack::add(const char* v, unsigned len) {
+	if(!v || !len)
+		return None;
+	auto h = find(v, len);
+	if(h != None)
+		return h;
+	auto result = strings.getcount();
+	strings.reserve(result + len + 1);
+	auto p = (char*)strings.ptr(result);
+	memcpy(p, v, len + 1);
+	p[len] = 0;
+	strings.setcount(result + len + 1);
 	return result;
 }
 
-unsigned stringv::add(const char* v) {
-	if(!v || v[0] == 0)
-		return 0;
-	auto c = zlen(v);
-	auto i = find(v, c);
-	if(i != None)
-		return i;
-	return add(v, c);
-}
-
-const char* stringv::get(pckh v) const {
-	if(v >= FirstDef) {
-		v -= FirstDef;
-		if(v < sizeof(def_strings) / sizeof(def_strings[0]))
-			return def_strings[v];
-		return "";
-	} else if(v < count)
-		return (const char*)ptr(v);
-	return "";
+pckh pack::add(const char* v) {
+	if(!v)
+		return None;
+	return add(v, zlen(v));
 }
 
 pack* pack::addmodule(const char* url) {
@@ -119,11 +148,15 @@ pack* pack::findmodule(const char* url) {
 }
 
 pckh pack::find(operation type, pckh left, pckh right) const {
-	for(auto& e : asts) {
+	for(auto& e : asts.records<ast>()) {
 		if(e.type == type && e.left == left && e.right == right)
-			return &e - asts.begin();
+			return &e - (ast*)asts.begin();
 	}
 	return None;
+}
+
+pack::record pack::getsymbols() const {
+	return record(getbasevalue(base::Symbols, 0), getbasevalue(base::Symbols, symbols.getcount()));
 }
 
 pckh pack::add(operation type, pckh left, pckh right) {
@@ -135,17 +168,22 @@ pckh pack::add(operation type, pckh left, pckh right) {
 		if(i != None)
 			return i;
 	}
-	auto p = asts.add();
+	auto p = (ast*)asts.add();
 	p->type = type;
 	p->left = left;
 	p->right = right;
-	return p - asts.begin();
+	return p - (ast*)asts.begin();
 }
 
 pckh pack::addclass(pckh id, pckh result) {
-	if(ispredefined(id))
-		return id;
 	return addsym(id, Class, result, 0, 0);
+}
+
+void pack::addclasses(slice<string> source) {
+	for(auto v : source) {
+		auto id = add(v);
+		addclass(id, id);
+	}
 }
 
 void pack::create(const char* url) {
@@ -159,37 +197,27 @@ void pack::clear() {
 	asts.clear();
 }
 
-pckh pack::findsym(pckh id, pckh parent) const {
-	for(auto& e : def_symbols) {
+pckh pack::find(pckh id, pckh parent) const {
+	for(auto& e : symbols.records<symbol>()) {
 		if(e.id == id && e.parent == parent)
-			return &e - def_symbols + FirstDef;
-	}
-	for(auto& e : symbols) {
-		if(e.id == id && e.parent == parent)
-			return &e - symbols.begin();
+			return &e - (symbol*)symbols.begin();
 	}
 	return None;
 }
 
 pckh pack::addsym(pckh id, pckh parent, pckh result, unsigned index, unsigned flags) {
-	auto v = findsym(id, parent);
+	auto v = find(id, parent);
 	if(v == None) {
-		auto p = symbols.add();
+		auto p = (symbol*)symbols.add();
 		p->id = id;
 		p->parent = parent;
 		p->result = result;
 		p->index = index;
 		p->flags = flags;
 		p->ast = None;
-		v = p - symbols.begin();
+		v = p - (symbol*)symbols.begin();
 	}
 	return v;
-}
-
-void pack::setast(pckh sym, pckh ast) {
-	auto p = getsymbol(sym);
-	if(p)
-		p->ast = ast;
 }
 
 const char* pack::getmodule(const char* url) {
@@ -211,75 +239,60 @@ const char* pack::getmodule(const char* url) {
 	return 0;
 }
 
-unsigned pack::getresult(pckh sym) const {
-	auto p = getsymbol(sym);
-	if(!p)
-		return None;
-	if(p->parent == Class)
-		return Class;
-	return p->result;
+const char* pack::getname(pckh v0) const {
+	auto v = getvalue(v0);
+	switch(getbase(v0)) {
+	case base::Literals:
+		if(v < strings.getcount())
+			return (const char*)strings.ptr(v);
+		return "ErrorString";
+	case base::Symbols:
+		if(v >= symbols.getcount())
+			return "ErrorSymbols";
+		return getname(((symbol*)symbols.ptr(v))->id);
+	default:
+		return "";
+	}
 }
 
-pckh pack::getparent(pckh v) const {
-	auto p = getsymbol(v);
-	if(!p)
+pckh pack::getresult(pckh vm) const {
+	auto v = getvalue(vm);
+	switch(getbase(vm)) {
+	case base::Symbols:
+		if(v >= symbols.getcount())
+			return None;
+		return ((symbol*)symbols.ptr(v))->result;
+	default:
 		return None;
-	return p->parent;
+	}
+}
+
+pckh pack::getparent(pckh vm) const {
+	auto v = getvalue(vm);
+	switch(getbase(vm)) {
+	case base::Symbols:
+		if(v >= symbols.getcount())
+			return None;
+		return ((symbol*)symbols.ptr(v))->parent;
+	default:
+		return None;
+	}
+}
+
+unsigned pack::getflags(pckh vm) const {
+	auto v = getvalue(vm);
+	switch(getbase(vm)) {
+	case base::Symbols:
+		if(v >= symbols.getcount())
+			return None;
+		return ((symbol*)symbols.ptr(v))->parent;
+	default:
+		return None;
+	}
 }
 
 unsigned pack::reference(pckh sym) {
 	return addsym(None, Pointer, sym, 0, 0);
-}
-
-symbol* pack::getsymbol(pckh v) const {
-	if(v < symbols.getcount())
-		return const_cast<symbol*>(symbols.ptr(v));
-	else if(v >= FirstDef && v <= (sizeof(def_strings) / sizeof(def_strings[0]) + FirstDef))
-		return &def_symbols[v - FirstDef];
-	return 0;
-}
-
-const ast* pack::getast(pckh v) const {
-	if(v >= asts.getcount())
-		return 0;
-	return asts.ptr(v);
-}
-
-//pckh package::getleft(pckh v) const {
-//	auto p = getast(v);
-//	if(!p)
-//		return None;
-//	return p->left;
-//}
-
-bool pack::issymbol(pckh ast) const {
-	auto p = getast(ast);
-	if(!p)
-		return false;
-	return p->type == operation::Symbol;
-}
-
-bool pack::ispointer(pckh sym) const {
-	auto p = getsymbol(sym);
-	if(!p)
-		return false;
-	return p->parent == Pointer;
-}
-
-bool pack::ismethod(pckh sym) const {
-	auto p = getsymbol(sym);
-	if(!p)
-		return false;
-	return p->is(symf::Method);
-}
-
-void pack::addurl(stringbuilder& sb, const char* url, const char* id, const char* ext) {
-	char temp[512]; stringbuilder s1(temp);
-	s1.add(id); s1.change((char)'.', (char)'//');
-	sb.add(url);
-	sb.add(s1);
-	sb.add(".");
-	sb.add(ext);
 }
 
 static void serialx(io::stream& file, array& e, bool write_mode) {

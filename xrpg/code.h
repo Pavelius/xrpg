@@ -17,22 +17,6 @@ enum group_s : unsigned char {
 enum class flag : unsigned char {
 	Variable, Condition, Repeat, ComaSeparated, PointSeparated, Stop,
 };
-struct typei {
-	const char*			id; // Symbol identifier
-	const char*			result; // Type of symbol
-	const char*			url; // Source id
-	explicit constexpr operator bool() const { return id != 0; }
-	static typei*		add(string id, const char* result = 0, const char* url = 0);
-	void				clear();
-	static typei*		find(string id, const char* url);
-};
-struct memberi : typei {
-	const char*			parent;
-	explicit constexpr operator bool() const { return id != 0; }
-	static memberi*		add(string id, const char* result, const char* parent, const char* url);
-	void				clear();
-	static memberi*		find(string id, const char* url);
-};
 struct tokeni {
 	const char*			id;
 	unsigned			flags;
@@ -83,28 +67,23 @@ struct corei {
 };
 extern corei			core;
 typedef slice<rulei>	rulea;
-struct word {
-	const char*			id;
-	size_t				size;
-	constexpr word(const char* id) : id(id), size(len(id)) {}
-	static constexpr const char* end(const char* p) { while(*p) p++; return p; }
-	static constexpr unsigned len(const char* p) { return end(p) - p; }
-};
-typedef slice<word>		worda;
+typedef vector<string>	worda;
 struct lexer {
 	const char*			id;
 	const char*			extensions;
-	worda				keywords, types, operations;
-	worda				constants;
+	rulea				grammar;
+	slice<string>		standart_classes;
+	worda				keywords, classes, operations;
+	void				addclass(const char* id, int size, bool type_unsigned = false);
+	void				initialize();
+	void				setgrammar() const;
 };
-const word*				find(const worda& source, const char* sym);
-const word*				find(const worda& source, const char* sym, unsigned size);
+const string*			find(const worda& source, const string& v);
 int						getindex(const char* p, pointl pos);
 const char*				getnext(const char* p, pointl& pos);
 const char*				getnext(const char* p, pointl& pos, group_s& type, const lexer* pk = 0);
-void					parse(const char* url, const char* url_content, const char* this_type);
 }
 void					initialize_codeview();
 void					initialize_codetree();
-void					initialize_complex_grammar();
+void					initialize_lexers();
 void					update_codetree();

@@ -572,6 +572,12 @@ void table::celltext(const rect& rc, int line, int column) {
 	cell(rc, line, column, ps);
 }
 
+void table::cellcustomtext(const rect& rc, int line, int column) {
+	char temp[260]; stringbuilder sb(temp);
+	auto ps = getname(line, column, sb);
+	cell(rc, line, column, ps);
+}
+
 void table::cellimagest(const rect& rc, int line, int column) {
 	auto s = gettreeimages();
 	if(!s)
@@ -815,4 +821,5 @@ const visual table::visuals[] = {
 	{"Percent", AlignRight, 40, 60, widtht::Resized, totalt::Average, &table::cellpercent, &table::changenumber},
 	{"Image", AlignCenter, 20, 20, widtht::Inner, totalt::None, &table::cellimage, 0, &table::comparenm},
 	{"StandartImage", AlignCenter, 20, 20, widtht::Inner, totalt::None, &table::cellimagest, 0, 0},
+	{"CustomText", AlignLeft, 8, 200, widtht::Resized, totalt::None, &table::cellcustomtext, 0, &table::comparest},
 	{}};

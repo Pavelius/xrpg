@@ -25,6 +25,7 @@ extern "C" unsigned					clock(); // Returns the processor time consumed by the p
 extern "C" void						exit(int exit_code);
 extern "C" int						memcmp(const void* p1, const void* p2, size_t size) noexcept(true);
 extern "C" void*					memmove(void* destination, const void* source, size_t size) noexcept(true);
+extern "C" void*					memchr(void* ptr, int value, size_t num);
 extern "C" void*					memcpy(void* destination, const void* source, size_t size) noexcept(true);
 extern "C" void*					memset(void* destination, int value, size_t size) noexcept(true);
 extern "C" void						qsort(void* base, unsigned num, size_t size, int(*compar)(const void*, const void*));

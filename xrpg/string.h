@@ -2,17 +2,18 @@
 
 class string {
 	const char*			p;
-	long				count;
 public:
-	constexpr string() : p(0), count(0) {}
-	constexpr string(const char* p) : p(p), count(end(p) - p) {}
-	constexpr string(const char* p, long count) : p(p), count(count) {}
+	long				size;
+	constexpr string() : p(0), size(0) {}
+	constexpr string(const char* p) : p(p), size(end(p) - p) {}
+	constexpr string(const char* p, long size) : p(p), size(size) {}
 	constexpr const char* begin() const { return p; }
-	constexpr const char* end() const { return p + count; }
-	constexpr bool operator==(const char* id) const { for(auto i=0; i<count; i++) if(p[i] != id[i]) return false; return id[count]==0; }
-	constexpr bool operator==(const string& e) const { return e.p == p && e.count == count; }
-	constexpr bool operator!=(const string& e) const { return e.p != p || e.count != count; }
+	constexpr const char* end() const { return p + size; }
+	constexpr bool operator==(const char* id) const { for(auto i=0; i< size; i++) if(p[i] != id[i]) return false; return id[size]==0; }
+	constexpr bool operator==(const string& e) const { return e.p == p && e.size == size; }
+	constexpr bool operator!=(const string& e) const { return e.p != p || e.size != size; }
 	static constexpr const char* end(const char* p) { if(!p) return 0; while(*p) p++; return p; }
+	bool				equal(const string& v) const;
 	const char*			get() const;
-	void				set(const char* p, unsigned v) { this->p = p; this->count = v; }
+	void				set(const char* p, unsigned v) { this->p = p; this->size = v; }
 };
