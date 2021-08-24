@@ -141,6 +141,3 @@ const string* code::find(const worda& source, const string& v) {
 	}
 	return 0;
 }
-
-void lexer::addclass(const char* id, int size, bool type_unsigned) {
-}

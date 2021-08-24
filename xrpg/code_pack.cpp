@@ -33,14 +33,6 @@ struct symbol {
 	constexpr bool		is(symf v) const { return (flags & (1 << static_cast<int>(v))) != 0; }
 	constexpr void		set(symf v) { flags |= 1 << static_cast<int>(v); }
 };
-union pcks {
-	struct {
-		unsigned		b : 2;
-		unsigned		v : 30;
-	};
-	unsigned			u;
-};
-static_assert(sizeof(pcks) == sizeof(unsigned), "Must be sizeof(unsigned)");
 }
 
 static bool isnostrictorder(operation id) {
@@ -63,9 +55,6 @@ static unsigned getvalue(pckh v) {
 
 static unsigned getbasevalue(base b, pckh v) {
 	return (static_cast<int>(b) << 30) | v;
-}
-
-pack::pack() : strings(sizeof(char)), asts(sizeof(ast)), symbols(sizeof(symbol)) {
 }
 
 pckh pack::find(const char* v, unsigned len) const {
@@ -125,7 +114,7 @@ pack* pack::addmodule(const char* url) {
 	if(p)
 		return p;
 	p = bsdata<pack>::add();
-	*p = pack();
+	memset(p, 0, sizeof(*p));
 	p->create(url);
 	return p;
 }
@@ -181,6 +170,9 @@ void pack::addclasses(slice<string> source) {
 
 void pack::create(const char* url) {
 	clear();
+	strings.setup(sizeof(char));
+	symbols.setup(sizeof(symbol));
+	asts.setup(sizeof(asts));
 	addclass(This, add(url));
 }
 
@@ -279,7 +271,7 @@ unsigned pack::getflags(pckh vm) const {
 	case base::Symbols:
 		if(v >= symbols.getcount())
 			return None;
-		return ((symbol*)symbols.ptr(v))->parent;
+		return ((symbol*)symbols.ptr(v))->flags;
 	default:
 		return None;
 	}
@@ -337,7 +329,7 @@ bool pack::serial(const char* url, bool write_mode) {
 	io::file file(url, write_mode ? StreamWrite : StreamRead);
 	if(!file)
 		return false;
-	version(file, "PKG", 0, 1, write_mode);
+	version(file, "AST", 0, 1, write_mode);
 	serialx(file, strings, write_mode);
 	serialx(file, symbols, write_mode);
 	serialx(file, asts, write_mode);

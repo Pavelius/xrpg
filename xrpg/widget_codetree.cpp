@@ -59,10 +59,10 @@ static class widget_codemembers : public controls::tableref {
 public:
 	void update() {
 		clear();
-		//for(auto& e : parent->symbols) {
-		//	if(e.parent==This)
-		//		addref(&e);
-		//}
+		for(auto h : parent->getsymbols()) {
+			if(parent->getparent(h)==This)
+				addref((void*)h);
+		}
 	}
 	void paintnc() override {
 		auto p = widget_codetypes_control.getcurrent();
@@ -74,10 +74,10 @@ public:
 	}
 	const char* getname(int line, int column, stringbuilder& sb) const override {
 		auto& col = columns[column];
-		//if(equal(col.id, "Name")) {
-		//	auto p = (symbol*)get(line);
-		//	return parent->getname(p->id);
-		//} else
+		if(equal(col.id, "Name")) {
+			auto h = (pckh)get(line);
+			return parent->getname(h);
+		} else
 			return col.id;
 	}
 	void initialize() {

@@ -1,6 +1,10 @@
 ﻿import geo.rect;
 import core.crt;import core.string as str;
 import core.io;
+enum {
+	OK, Cancel, Accept
+};
+
 static int x;
 static int y;
 

@@ -50,7 +50,6 @@ public:
 		element			begin() const { return r1; }
 		element			end() const { return r2; }
 	};
-	pack();
 	explicit operator bool() const { return symbols.getcount() != 0; }
 	pckh				add(const char* v);
 	pckh				add(const string& v) { return add(v.begin(), v.size); }

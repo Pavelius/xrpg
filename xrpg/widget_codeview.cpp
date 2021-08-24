@@ -719,11 +719,12 @@ public:
 	}
 	void readpackage() {
 		url_module = pack::getmodule(url);
-		if(!url_module)
+		if(!url_module || !source_lexer)
 			return;
+		source_lexer->setgrammar();
 		auto p = pack::addmodule(url_module);
-		if(source_lexer)
-			p->addclasses(source_lexer->standart_classes);
+		p->addclasses(source_lexer->standart_classes);
+		p->parse(getbegin());
 	}
 	bool execute(const char* id, bool run) override {
 		if(equal(id, "Edit")) {
@@ -769,6 +770,7 @@ public:
 				correction();
 				source_lexer = findlexer(szext(url));
 				readpackage();
+				update_codetree();
 			}
 		} else if(equal(id, "ParseAll")) {
 			auto pack = getpackage();

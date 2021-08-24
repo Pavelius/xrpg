@@ -74,7 +74,6 @@ struct lexer {
 	rulea				grammar;
 	slice<string>		standart_classes;
 	worda				keywords, classes, operations;
-	void				addclass(const char* id, int size, bool type_unsigned = false);
 	void				initialize();
 	void				setgrammar() const;
 };

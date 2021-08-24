@@ -81,6 +81,7 @@ static bool test_archive(bool write_mode) {
 
 static bool test_pack() {
 	code::pack p1;
+	p1.create("test.ui");
 	p1.addclass(p1.add("uint"), 0);
 	p1.addclass(p1.add("ushort"), 0);
 	p1.addclass(p1.add("uchar"), 0);
@@ -91,7 +92,7 @@ static bool test_pack() {
 		auto name = p1.getname(hs);
 		auto flags = p1.getflags(hs);
 	}
-	p1.write("test.pkg");
+	p1.write("test.ast");
 	return true;
 }
 
@@ -102,14 +103,6 @@ static bool test_string() {
 		return false;
 	if(t1 != "Answer")
 		return false;
-	//cstring t3 = "Test";
-	//cstring t4 = "Test";
-	//cstring t5 = "LastUpdate";
-	//cstring t6 = "Mary land";
-	//if(t3 == t5)
-	//	return false;
-	//if(t4 != "Test")
-	//	return false;
 	return true;
 }
 
@@ -133,7 +126,6 @@ int main() {
 	initialize_codeview();
 	initialize_codetree();
 	initialize_lexers();
-	//code::parse("main", 0, 0);
 	logmsgv("Тостовая строка залогирована в общий лог приложения.", 0);
 	draw::initialize("Test UI");
 	openurl("battle.bmp");
