@@ -120,6 +120,8 @@ pack* pack::addmodule(const char* url) {
 }
 
 pack* pack::findmodule(const char* url) {
+	if(!url)
+		return 0;
 	for(auto& e : bsdata<pack>()) {
 		if(!e.strings)
 			continue;
