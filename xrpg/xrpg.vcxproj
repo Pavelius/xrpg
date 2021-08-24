@@ -163,7 +163,9 @@
     <ClInclude Include="draw_dockbar.h" />
     <ClInclude Include="draw_figure.h" />
     <ClInclude Include="draw_focus.h" />
+    <ClInclude Include="draw_input.h" />
     <ClInclude Include="draw_scroll.h" />
+    <ClInclude Include="draw_simple.h" />
     <ClInclude Include="draw_valuelist.h" />
     <ClInclude Include="gender.h" />
     <ClInclude Include="handler.h" />
@@ -196,8 +198,8 @@
     <ClCompile Include="code_scan.cpp" />
     <ClCompile Include="code_pack.cpp" />
     <ClCompile Include="crt_file.cpp" />
+    <ClCompile Include="draw_simple.cpp" />
     <ClCompile Include="draw_valuelist.cpp" />
-    <ClCompile Include="metadata.cpp" />
     <ClCompile Include="string.cpp" />
     <ClCompile Include="widget_codetree.cpp" />
     <ClCompile Include="widget_codeview.cpp" />

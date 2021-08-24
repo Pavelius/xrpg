@@ -153,6 +153,12 @@
     <ClInclude Include="cmap.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="draw_simple.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="draw_input.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -341,9 +347,6 @@
     <ClCompile Include="code.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="metadata.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="string.cpp">
       <Filter>Support</Filter>
     </ClCompile>
@@ -364,6 +367,9 @@
     </ClCompile>
     <ClCompile Include="crt_file.cpp">
       <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_simple.cpp">
+      <Filter>Interface</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

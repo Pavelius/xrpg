@@ -71,10 +71,10 @@
     }
   },
   "window":{
-    "x":141,
-    "y":58,
-    "width":920,
-    "height":655,
+    "x":165,
+    "y":142,
+    "width":784,
+    "height":561,
     "header_width":102,
     "flags":48
   },
@@ -108,7 +108,7 @@
         "columns":{
           "column":{
             "id":"Message",
-            "width":200
+            "width":490
           },
           "column":{
             "id":"Date",
@@ -139,11 +139,11 @@
         },
         "DockBottom":{
           "current":0,
-          "size":0
+          "size":200
         },
         "DockWorkspace":{
           "current":0,
-          "size":0
+          "size":200
         }
       }
     }

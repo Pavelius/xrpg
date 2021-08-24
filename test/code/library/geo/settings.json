@@ -49,7 +49,7 @@
         "View":{
           "ShowStatusBar":2,
           "ShowLeftPanel":2,
-          "ShowRightPanel":2,
+          "ShowRightPanel":0,
           "ShowBottomPanel":0,
           "ShowPadding":0
         },
@@ -71,11 +71,11 @@
     }
   },
   "window":{
-    "x":141,
-    "y":58,
-    "width":920,
-    "height":655,
-    "header_width":102,
+    "x":131,
+    "y":33,
+    "width":876,
+    "height":720,
+    "header_width":160,
     "flags":48
   },
   "controls":{

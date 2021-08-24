@@ -4,6 +4,7 @@
 #include "draw_button.h"
 #include "draw_control.h"
 #include "draw_focus.h"
+#include "draw_input.h"
 #include "io_plugin.h"
 
 using namespace draw;

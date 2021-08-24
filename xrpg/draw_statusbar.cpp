@@ -1,5 +1,6 @@
 #include "draw.h"
 #include "draw_button.h"
+#include "draw_input.h"
 #include "handler.h"
 #include "stringbuilder.h"
 

@@ -4,6 +4,7 @@
 #include "draw.h"
 #include "draw_button.h"
 #include "draw_control.h"
+#include "draw_input.h"
 #include "draw_figure.h"
 #include "io_stream.h"
 #include "main.h"

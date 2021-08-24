@@ -25,15 +25,9 @@ bool						save(const char* title, char* path, const char* filter, int filter_ind
 void						application();
 bool						addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const char* tt1);
 int							addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const char* tt1, const char* t2, unsigned k2, const char* tt2);
-void						breakmodal(int result);
-void						breakparam();
 bool						button(const rect& rc, const char* title, const char* tips, unsigned key, color value, bool focused, bool checked, bool press, bool border);
-void						buttoncancel();
 void						buttonl(int& x, int y, const char* title, fnevent proc, unsigned key = 0, void* focus_value = 0);
 void						buttonr(int& x, int y, const char* title, fnevent proc, unsigned key = 0);
-void						buttonok();
-void						cbsetint();
-void						cbsetptr();
 void						checkbox(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips = 0);
 const char*					contextmenu(const char** commands, const void* object, fnallowid allowid, fngetcommands getcommands);
 bool						edit(const rect& rc, void* source, int size, unsigned align, bool isnumber);
@@ -48,20 +42,15 @@ const char*					getenumname(const void* object, stringbuilder& sb);
 int							getimage(const char* id);
 unsigned					getkey(const char* id);
 const char*					getpresent(void* source, int size, bool isnumber, const array* database, stringbuilder& sb);
-int							getresult();
 long						getsource(void* source, int size);
 void						initialize(const char* title);
-bool						ismodal();
 void						logmsgv(const char* format, const char* arguments);
 void						radio(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips = 0);
-void						setneedupdate();
-void						setnext(fnevent v);
 void						setposition(int& x, int& y, int& width, int padding = -1);
 void						setsource(void* source, int size, long value);
 int							sheetline(rect rc, bool background);
 void						splith(int x, int y, int width, int& value, int size, int minimum, int maximum, bool down_align);
 void						splitv(int x, int y, int& value, int height, int size, int minimum, int maximum, bool right_align);
-void						start();
 void						statusbar(const char* format, ...);
 void						statusbar(rect& rc);
 void						statuscolumn(int index, int width, const char* format, ...);
@@ -71,10 +60,3 @@ void						titletext(int& x, int y, int& width, const char* label, int label_widt
 void						tooltips(const char* format, ...);
 void						tooltips(int x, int y, int width, const char* format, ...);
 }
-extern struct handler*	after_initialize; // After initialization made
-extern struct handler*	after_input; // After input handled
-extern struct handler*	after_theme_change; // After initialization made
-extern struct handler*	before_modal; // Before next step of modal cicle
-extern struct handler*	before_input; // Before next step of modal cicle
-extern struct handler*	before_setfocus; // Before focus change
-extern struct handler*	leave_modal; // When leaving current modal loop
