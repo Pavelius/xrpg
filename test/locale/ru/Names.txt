@@ -97,6 +97,7 @@ ShowLeftPanel: Показать левую боковую панель
 ShowPadding: Отступы на главном экране
 ShowRightPanel: Показать правую боковую панель
 ShowStatusBar: Показать панель статуса
+ShowTabsAlways: Показывать закладки всегда, даже если осталась одна.
 Size: Размер
 StringColor: Цвет строк
 Tabs: Закладки

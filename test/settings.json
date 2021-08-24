@@ -56,7 +56,8 @@
         "Tabs":{
           "UseShortNameLabel":2,
           "NoUrlLabelExtension":2,
-          "UppercaseLabel":2
+          "UppercaseLabel":2,
+          "ShowTabsAlways":2
         }
       },
       "Plugins":{
@@ -70,10 +71,10 @@
     }
   },
   "window":{
-    "x":149,
-    "y":83,
+    "x":75,
+    "y":28,
     "width":876,
-    "height":628,
+    "height":720,
     "header_width":160,
     "flags":48
   },
@@ -87,7 +88,7 @@
         "columns":{
           "column":{
             "id":"Name",
-            "width":159
+            "width":200
           }
         }
       },
@@ -97,7 +98,7 @@
         "columns":{
           "column":{
             "id":"Name",
-            "width":159
+            "width":200
           }
         }
       },
@@ -122,7 +123,7 @@
       "dockbar":{
         "DockLeft":{
           "current":0,
-          "size":159
+          "size":200
         },
         "DockLeftBottom":{
           "current":0,

@@ -29,6 +29,7 @@ bool						metrics::show::right;
 static bool					use_short_name_label;
 static bool					use_no_extension_label;
 static bool					use_uppercase_label;
+static bool					show_tabs_always;
 static const header*		current_header;
 static int					current_tab;
 static char					last_open_file[260];
@@ -504,8 +505,10 @@ void draw::close(control* p) {
 			activate(active_controls[i - 1]);
 		else if(i < (int)(active_controls.getcount() - 1))
 			activate(active_controls[i + 1]);
-		else
+		else {
 			p->deactivating();
+			current_active_control = 0;
+		}
 	}
 	active_controls.remove(i, 1);
 	delete p;
@@ -550,7 +553,7 @@ static struct widget_application : draw::controls::control {
 			fore = colors::border;
 			text(rc, getnm("NotFoundOpenDocuments"), AlignCenterCenter);
 			fore = push_fore;
-		} else if(ct.getcount() == 1) {
+		} else if(ct.getcount() == 1 && !show_tabs_always) {
 			current_active_control = ct[0];
 			current_active_control->view(rc, metrics::show::padding, false, false);
 		} else {
@@ -710,6 +713,7 @@ static const element appearance_general_tabs[] = {
 	{"UseShortNameLabel", use_short_name_label},
 	{"NoUrlLabelExtension", use_no_extension_label},
 	{"UppercaseLabel", use_uppercase_label},
+	{"ShowTabsAlways", show_tabs_always},
 };
 static const element plugin_elements[] = {{0, {Control, static_cast<control*>(&control_viewer), 0}}};
 static header setting_headers[] = {
