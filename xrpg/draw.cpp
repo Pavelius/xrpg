@@ -6,8 +6,8 @@
 #pragma optimize("t", on)
 #endif
 
-extern "C" void* malloc(unsigned size);
-extern "C" void* realloc(void *ptr, unsigned size);
+extern "C" void* malloc(unsigned long size);
+extern "C" void* realloc(void *ptr, unsigned long size);
 extern "C" void	free(void* pointer);
 
 using namespace draw;
