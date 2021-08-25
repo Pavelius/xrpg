@@ -3,6 +3,12 @@
 typedef void(*fnevent)();
 
 namespace draw {
+struct awindowi {
+	int						x, y, width, height;
+	int						header_width;
+	unsigned				flags;
+};
+extern awindowi				awindow;
 void						breakmodal(int result);
 void						breakparam();
 void						buttoncancel();
@@ -10,6 +16,7 @@ void						buttonok();
 void						cbsetint();
 void						cbsetptr();
 int							getresult();
+void						initialize(const char* title);
 bool						ismodal();
 void						setneedupdate();
 void						setnext(fnevent v);

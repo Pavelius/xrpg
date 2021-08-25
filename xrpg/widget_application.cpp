@@ -14,12 +14,6 @@ using namespace	setting;
 using namespace	draw;
 using namespace	draw::controls;
 
-struct application_window {
-	int						x, y, width, height;
-	int						header_width;
-	unsigned				flags;
-};
-
 typedef adat<control*>		controla;
 bool						metrics::show::padding;
 bool						metrics::show::statusbar;
@@ -35,8 +29,6 @@ static const header*		current_header;
 static int					current_tab;
 static char					last_open_file[260];
 static controls::control*	current_active_control;
-static application_window	window = {0, 0, 0, 0, 160, WFMinmax | WFResize};
-static const char*			settings_file_name = "settings.json";
 static vector<controls::control*> active_controls;
 
 void getdocked(controla& result, dock type);
@@ -413,9 +405,9 @@ static struct widget_settings : controls::control {
 		auto rc = client;
 		auto push_fore = fore;
 		fore = colors::text;
-		splitv(rc.x1, rc.y1, window.header_width, rc.height(), 6, 64, 282, false);
-		setting_header.view({rc.x1, rc.y1, rc.x1 + window.header_width, rc.y2}, metrics::show::padding, true);
-		rc.x1 += window.header_width + 6;
+		splitv(rc.x1, rc.y1, awindow.header_width, rc.height(), 6, 64, 282, false);
+		setting_header.view({rc.x1, rc.y1, rc.x1 + awindow.header_width, rc.y2}, metrics::show::padding, true);
+		rc.x1 += awindow.header_width + 6;
 		auto top = setting_header.getcurrent();
 		if(top != current_header) {
 			current_header = top;
@@ -817,18 +809,6 @@ void draw::application() {
 void set_dark_theme();
 void set_light_theme();
 
-static int getnum(const char* value) {
-	if(strcmp(value, "true") == 0)
-		return 1;
-	if(strcmp(value, "false") == 0)
-		return 0;
-	if(strcmp(value, "null") == 0)
-		return 0;
-	int int_value = 0;
-	stringbuilder::read(value, int_value);
-	return int_value;
-}
-
 static struct settings_settings_strategy : io::strategy {
 	void write(serializer& file, const element& e) {
 		switch(e.var.type) {
@@ -923,7 +903,7 @@ static struct settings_settings_strategy : io::strategy {
 		case setting::Number:
 		case setting::Color:
 		case setting::Bool:
-			e->var.set(getnum(value));
+			e->var.set(stringbuilder::getnum(value));
 			break;
 		case setting::Radio:
 			e->var.set(e->var.value);
@@ -938,32 +918,6 @@ static struct settings_settings_strategy : io::strategy {
 	}
 	settings_settings_strategy() : strategy("settings", "settings") {}
 } settings_settings_strategy_instance;
-
-static struct window_settings_strategy : io::strategy {
-	void write(serializer& file, void* param) override {
-		file.set("x", window.x);
-		file.set("y", window.y);
-		file.set("width", window.width);
-		file.set("height", window.height);
-		file.set("header_width", window.header_width);
-		file.set("flags", window.flags);
-	}
-	void set(serializer::node& n, const char* value) override {
-		if(n == "x")
-			window.x = getnum(value);
-		else if(n == "y")
-			window.y = getnum(value);
-		else if(n == "width")
-			window.width = getnum(value);
-		else if(n == "height")
-			window.height = getnum(value);
-		else if(n == "header_width")
-			window.header_width = getnum(value);
-		else if(n == "flags")
-			window.flags = getnum(value);
-	}
-	window_settings_strategy() : strategy("window", "settings") {}
-} window_settings_strategy_instance;
 
 static struct controls_settings_strategy : io::strategy {
 	void write(serializer& file, void* param) override {
@@ -992,33 +946,12 @@ static struct controls_settings_strategy : io::strategy {
 			stringbuilder::read(value, int_value);
 			e->position = static_cast<dock>(int_value);
 		} else if(n == "Visible")
-			e->visible = getnum(value);
+			e->visible = stringbuilder::getnum(value);
 	}
 	controls_settings_strategy() : strategy("controls", "settings") {}
 } controls_settings_strategy_instance;
 
-static void exit_application() {
-	point pos, size; getwindowpos(pos, size, &window.flags);
-	if((window.flags & WFMaximized) == 0) {
-		window.x = pos.x;
-		window.y = pos.y;
-		window.width = size.x;
-		window.height = size.y;
-	}
-	io::write(settings_file_name, "settings", 0);
-}
-
-void draw::initialize(const char* title) {
-	set_light_theme();
-	atexit(exit_application);
-	io::read(settings_file_name, "settings", 0);
-	after_initialize->execute();
+HANDLER(after_initialize) {
 	setting_header.initialize();
 	control_viewer.initialize();
-	draw::font = metrics::font;
-	draw::fore = colors::text;
-	draw::fore_stroke = colors::blue;
-	create(window.x, window.y, window.width, window.height, window.flags, 32);
-	setcaption(title);
-	setnext(application);
 }

@@ -43,7 +43,6 @@ int							getimage(const char* id);
 unsigned					getkey(const char* id);
 const char*					getpresent(void* source, int size, bool isnumber, const array* database, stringbuilder& sb);
 long						getsource(void* source, int size);
-void						initialize(const char* title);
 void						logmsgv(const char* format, const char* arguments);
 void						radio(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips = 0);
 void						setposition(int& x, int& y, int& width, int padding = -1);

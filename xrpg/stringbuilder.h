@@ -40,6 +40,7 @@ public:
 	void				copy(const char* v);
 	const char*			end() const { return pe; }
 	char*				get() const { return p; }
+	static int			getnum(const char* v);
 	unsigned			getlenght() const { return pb - p; }
 	unsigned			getmaximum() const { return pe - pb - 1; }
 	bool				isempthy() const { return !pb || pb[0] == 0; }

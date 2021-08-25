@@ -6,6 +6,7 @@
 #include "draw_control.h"
 #include "draw_input.h"
 #include "draw_figure.h"
+#include "draw_simple.h"
 #include "io_stream.h"
 #include "main.h"
 #include "string.h"
@@ -107,6 +108,9 @@ static bool test_string() {
 	return true;
 }
 
+static void test_scene() {
+}
+
 #ifdef _DEBUG
 void main_util();
 #endif
@@ -134,7 +138,8 @@ int main() {
 	openurl("code/projects/first/main.c2");
 	//draw::setnext(test_table);
 	//draw::setnext(test_fields);
-	draw::setnext(draw::application);
+	//draw::setnext(draw::application);
+	draw::setnext(draw::simplerun);
 	draw::start();
 	return 0;
 }

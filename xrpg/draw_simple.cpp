@@ -1,5 +1,6 @@
 #include "answers.h"
 #include "draw.h"
+#include "draw_button.h"
 #include "draw_input.h"
 #include "draw_simple.h"
 
@@ -7,6 +8,7 @@ using namespace draw;
 
 static point			pos;
 static int				width = 200;
+scenei					draw::scene;
 
 namespace metrics {
 int						border = 4;
@@ -31,6 +33,10 @@ static bool window(rect rc, bool hilight, int border) {
 	rectf(rc, c, op);
 	rectb(rc, b);
 	return rs;
+}
+
+void draw::setpostion(point v) {
+	pos = v;
 }
 
 void draw::stext(const char* string) {
@@ -75,6 +81,10 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 
 void draw::simplerun() {
 	while(ismodal()) {
+		if(scene.background)
+			scene.background();
+		if(scene.window)
+			scene.window();
 		domodal();
 	}
 }

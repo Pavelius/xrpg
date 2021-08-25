@@ -12,79 +12,71 @@
     "Editor":{
       "General":{
         "Formating":{
-          "Tabulation":4
+          "Tabulation":0
         }
       }
     },
     "Colors":{
       "Editor":{
-        "IdentifierColor":16777215,
-        "KeywordColor":5676246,
-        "TypeColor":5163440,
-        "CommentColor":5744202,
-        "StringColor":14059602,
-        "NumberColor":12113827,
-        "OperatorColor":16777215
+        "IdentifierColor":0,
+        "KeywordColor":0,
+        "TypeColor":0,
+        "CommentColor":0,
+        "StringColor":0,
+        "NumberColor":0,
+        "OperatorColor":0
       },
       "General":{
         
       },
       "Form":{
-        "TextColor":16777215,
-        "WindowColor":2105376,
-        "FormColor":2960688,
-        "BorderColor":4144966,
-        "ActiveColor":11304960,
-        "ButtonColor":31436,
-        "TipsBackColor":6579320,
-        "TipsTextColor":16777215
-      }
-    },
-    "Workspace":{
-      "General":{
-        "Metrics":{
-          "Padding":4,
-          "ScrollWidth":16
-        },
-        "View":{
-          "ShowStatusBar":2,
-          "ShowLeftPanel":2,
-          "ShowRightPanel":2,
-          "ShowBottomPanel":0,
-          "ShowPadding":0
-        },
-        "Tabs":{
-          "UseShortNameLabel":2,
-          "NoUrlLabelExtension":2,
-          "UppercaseLabel":2,
-          "ShowTabsAlways":2
-        }
-      },
-      "Plugins":{
-        
+        "TextColor":0,
+        "WindowColor":0,
+        "FormColor":0,
+        "BorderColor":0,
+        "ActiveColor":0,
+        "ButtonColor":0,
+        "TipsBackColor":0,
+        "TipsTextColor":0
       }
     },
     "Log":{
       "General":{
         "SaveMessageFile":0
       }
+    },
+    "Workspace":{
+      "General":{
+        "Metrics":{
+          "Padding":0,
+          "ScrollWidth":0
+        },
+        "View":{
+          "ShowStatusBar":0,
+          "ShowLeftPanel":0,
+          "ShowRightPanel":0,
+          "ShowBottomPanel":0,
+          "ShowPadding":0
+        },
+        "Tabs":{
+          "UseShortNameLabel":0,
+          "NoUrlLabelExtension":0,
+          "UppercaseLabel":0,
+          "ShowTabsAlways":0
+        }
+      },
+      "Plugins":{
+        
+      }
     }
-  },
-  "window":{
-    "x":141,
-    "y":58,
-    "width":920,
-    "height":655,
-    "header_width":102,
-    "flags":48
   },
   "controls":{
     "Codeview":{
       "Docking":5,
-      "Visible":1,
+      "Visible":0,
       "CodeTreeTypes":{
         "Docking":0,
-        "Visible":1,
+        "Visible":0,
         "columns":{
           "column":{
             "id":"Name",
@@ -94,7 +86,7 @@
       },
       "CodeTreeMembers":{
         "Docking":1,
-        "Visible":1,
+        "Visible":0,
         "columns":{
           "column":{
             "id":"Name",
@@ -104,7 +96,7 @@
       },
       "MessageList":{
         "Docking":4,
-        "Visible":1,
+        "Visible":0,
         "columns":{
           "column":{
             "id":"Message",
@@ -118,16 +110,24 @@
       },
       "picture":{
         "Docking":4,
-        "Visible":1
+        "Visible":0
+      },
+      "window":{
+        "x":292,
+        "y":221,
+        "width":784,
+        "height":561,
+        "header_width":160,
+        "flags":48
       },
       "dockbar":{
         "DockLeft":{
           "current":0,
-          "size":200
+          "size":0
         },
         "DockLeftBottom":{
           "current":0,
-          "size":200
+          "size":0
         },
         "DockRight":{
           "current":0,
