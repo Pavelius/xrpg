@@ -561,9 +561,9 @@ void stringbuilder::addsym(int sym) {
 int stringbuilder::getnum(const char* value) {
 	if(equal(value, "true"))
 		return 1;
-	if(equal(value, "false") == 0)
+	if(equal(value, "false"))
 		return 0;
-	if(equal(value, "null") == 0)
+	if(equal(value, "null"))
 		return 0;
 	long int_value = 0;
 	read(value, int_value);

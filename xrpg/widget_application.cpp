@@ -30,6 +30,7 @@ static int					current_tab;
 static char					last_open_file[260];
 static controls::control*	current_active_control;
 static vector<controls::control*> active_controls;
+static const char* settings_file_name = "settings.json";
 
 void getdocked(controla& result, dock type);
 
@@ -929,9 +930,8 @@ static struct controls_settings_strategy : io::strategy {
 			file.set("Docking", static_cast<int>(pp->position));
 			file.set("Visible", pp->visible);
 			auto pc = pp->getcontrol();
-			if(!pc)
-				continue;
-			pc->write(file);
+			if(pc)
+				pc->write(file);
 			file.close(id);
 		}
 	}
@@ -950,6 +950,49 @@ static struct controls_settings_strategy : io::strategy {
 	}
 	controls_settings_strategy() : strategy("controls", "settings") {}
 } controls_settings_strategy_instance;
+
+static struct window_settings_strategy : io::strategy {
+	void write(serializer& file, void* param) override {
+		file.set("x", draw::awindow.x);
+		file.set("y", draw::awindow.y);
+		file.set("width", draw::awindow.width);
+		file.set("height", draw::awindow.height);
+		file.set("header_width", draw::awindow.header_width);
+		file.set("flags", draw::awindow.flags);
+	}
+	void set(serializer::node& n, const char* value) override {
+		if(n == "x")
+			draw::awindow.x = stringbuilder::getnum(value);
+		else if(n == "y")
+			draw::awindow.y = stringbuilder::getnum(value);
+		else if(n == "width")
+			draw::awindow.width = stringbuilder::getnum(value);
+		else if(n == "height")
+			draw::awindow.height = stringbuilder::getnum(value);
+		else if(n == "header_width")
+			draw::awindow.header_width = stringbuilder::getnum(value);
+		else if(n == "flags")
+			draw::awindow.flags = stringbuilder::getnum(value);
+	}
+	window_settings_strategy() : strategy("window", "settings") {}
+} window_settings_strategy_instance;
+
+static void exit_application() {
+	point pos, size; draw::getwindowpos(pos, size, &draw::awindow.flags);
+	if((draw::awindow.flags & WFMaximized) == 0) {
+		draw::awindow.x = pos.x;
+		draw::awindow.y = pos.y;
+		draw::awindow.width = size.x;
+		draw::awindow.height = size.y;
+	}
+	io::write(settings_file_name, "settings", 0);
+}
+
+HANDLER(before_initialize) {
+	set_light_theme();
+	atexit(exit_application);
+	io::read(settings_file_name, "settings", 0);
+}
 
 HANDLER(after_initialize) {
 	setting_header.initialize();

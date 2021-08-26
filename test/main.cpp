@@ -138,8 +138,8 @@ int main() {
 	openurl("code/projects/first/main.c2");
 	//draw::setnext(test_table);
 	//draw::setnext(test_fields);
-	//draw::setnext(draw::application);
-	draw::setnext(draw::simplerun);
+	draw::setnext(draw::application);
+	//draw::setnext(draw::simplerun);
 	draw::start();
 	return 0;
 }

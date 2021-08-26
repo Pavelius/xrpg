@@ -11,10 +11,10 @@ static fnevent	next_proc;
 extern rect		sys_static_area;
 handler*		after_initialize;
 handler*		after_input;
+handler*		before_initialize;
 handler*		before_input;
 handler*		before_modal;
 handler*		leave_modal;
-static const char* settings_file_name = "settings.json";
 draw::awindowi	draw::awindow = {100, 100, 800, 600, 160, WFMinmax | WFResize};
 
 static void standart_domodal() {
@@ -90,49 +90,8 @@ void draw::setneedupdate() {
 	hot.key = InputNeedUpdate;
 }
 
-static void exit_application() {
-	point pos, size; draw::getwindowpos(pos, size, &draw::awindow.flags);
-	if((draw::awindow.flags & WFMaximized) == 0) {
-		draw::awindow.x = pos.x;
-		draw::awindow.y = pos.y;
-		draw::awindow.width = size.x;
-		draw::awindow.height = size.y;
-	}
-	io::write(settings_file_name, "settings", 0);
-}
-
-static struct window_settings_strategy : io::strategy {
-	void write(serializer& file, void* param) override {
-		file.set("x", draw::awindow.x);
-		file.set("y", draw::awindow.y);
-		file.set("width", draw::awindow.width);
-		file.set("height", draw::awindow.height);
-		file.set("header_width", draw::awindow.header_width);
-		file.set("flags", draw::awindow.flags);
-	}
-	void set(serializer::node& n, const char* value) override {
-		if(n == "x")
-			draw::awindow.x = stringbuilder::getnum(value);
-		else if(n == "y")
-			draw::awindow.y = stringbuilder::getnum(value);
-		else if(n == "width")
-			draw::awindow.width = stringbuilder::getnum(value);
-		else if(n == "height")
-			draw::awindow.height = stringbuilder::getnum(value);
-		else if(n == "header_width")
-			draw::awindow.header_width = stringbuilder::getnum(value);
-		else if(n == "flags")
-			draw::awindow.flags = stringbuilder::getnum(value);
-	}
-	window_settings_strategy() : strategy("window", "settings") {}
-} window_settings_strategy_instance;
-
-void set_light_theme();
-
 void draw::initialize(const char* title) {
-	set_light_theme();
-	atexit(exit_application);
-	io::read(settings_file_name, "settings", 0);
+	before_initialize->execute();
 	after_initialize->execute();
 	draw::font = metrics::font;
 	draw::fore = colors::text;
