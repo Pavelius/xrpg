@@ -70,12 +70,9 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 		image(pos.x, pos.y, image_surface, 0, 0);
 		pos.y += image_height + padding_height;
 	}
-	if(string) {
-		auto py = pos.y;
+	if(string)
 		stext(string);
-		pos.y = py;
-	}
-	pos.y += rc.height() + metrics::border * 2;
+	pos.y += metrics::border * 2;
 	return rs;
 }
 
