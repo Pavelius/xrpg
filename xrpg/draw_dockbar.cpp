@@ -10,6 +10,12 @@
 using namespace draw;
 using namespace draw::controls;
 
+bool						metrics::show::padding;
+bool						metrics::show::bottom;
+bool						metrics::show::top;
+bool						metrics::show::left;
+bool						metrics::show::right;
+
 typedef adat<control*> controla;
 
 BSDATA(docki) = {

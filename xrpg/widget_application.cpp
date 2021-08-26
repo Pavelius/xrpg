@@ -15,12 +15,7 @@ using namespace	draw;
 using namespace	draw::controls;
 
 typedef adat<control*>		controla;
-bool						metrics::show::padding;
 bool						metrics::show::statusbar;
-bool						metrics::show::bottom;
-bool						metrics::show::top;
-bool						metrics::show::left;
-bool						metrics::show::right;
 static bool					use_short_name_label;
 static bool					use_no_extension_label;
 static bool					use_uppercase_label;

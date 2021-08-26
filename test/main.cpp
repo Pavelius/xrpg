@@ -119,27 +119,24 @@ int main() {
 #ifdef _DEBUG
 	main_util();
 #endif
-	if(!test_pack())
-		return -1;
-	if(!test_string())
-		return -1;
-	if(!test_archive(true))
-		return -1;
+	//if(!test_pack())
+	//	return -1;
+	//if(!test_string())
+	//	return -1;
 	if(!initialize_translation("ru"))
 		return -1;
-	initialize_picture();
-	initialize_codeview();
-	initialize_codetree();
-	initialize_lexers();
-	logmsgv("Тостовая строка залогирована в общий лог приложения.", 0);
+	//initialize_picture();
+	//initialize_codeview();
+	//initialize_codetree();
+	//initialize_lexers();
 	draw::initialize("Test UI");
-	openurl("battle.bmp");
-	openurl("code/RustCode.rs");
-	openurl("code/projects/first/main.c2");
+	//openurl("battle.bmp");
+	//openurl("code/RustCode.rs");
+	//openurl("code/projects/first/main.c2");
 	//draw::setnext(test_table);
 	//draw::setnext(test_fields);
-	draw::setnext(draw::application);
-	//draw::setnext(draw::simplerun);
+	//draw::setnext(draw::application);
+	draw::setnext(draw::simplerun);
 	draw::start();
 	return 0;
 }

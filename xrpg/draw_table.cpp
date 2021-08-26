@@ -759,12 +759,11 @@ void table::write(serializer& file) const {
 		return;
 	file.open("columns");
 	for(auto& e : columns) {
-		file.open("column");
-		file.set("id", e.id);
+		file.open(e.id);
 		file.set("width", e.width);
-		//file.set("size", e.size);
-		//file.set("total", e.total);
-		file.close("column");
+		file.set("size", static_cast<int>(e.size));
+		file.set("total", static_cast<int>(e.total));
+		file.close(e.id);
 	}
 	file.close("columns");
 }
