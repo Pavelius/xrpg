@@ -3,6 +3,7 @@
 #include "draw_button.h"
 #include "draw_figure.h"
 #include "draw_focus.h"
+#include "draw_simple.h"
 
 using namespace draw;
 

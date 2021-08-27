@@ -115,6 +115,11 @@ static void test_scene() {
 void main_util();
 #endif
 
+static void common_window() {
+	draw::setposition();
+	window(false, "Test window draw", "spaceport");
+}
+
 int main() {
 #ifdef _DEBUG
 	main_util();
@@ -136,7 +141,9 @@ int main() {
 	//draw::setnext(test_table);
 	//draw::setnext(test_fields);
 	//draw::setnext(draw::application);
-	draw::setnext(draw::simplerun);
+	scene.resurl = "wild";
+	scene.window = common_window;
+	draw::setnext(draw::simpleui);
 	draw::start();
 	return 0;
 }
