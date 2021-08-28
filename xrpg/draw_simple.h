@@ -15,6 +15,8 @@ bool				buttonfd(const char* title);
 bool				buttonfd(const char* title, unsigned key);
 void				fog(int n);
 void				grid();
+void				paintclear();
+void				paintimage();
 void				simpleui();
 void				setposition();
 inline void			setposition(int x, int y) { scene.x = x; scene.y = y; }

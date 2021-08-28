@@ -104,18 +104,29 @@ void draw::answerbt(int i, long id, const char* title) {
 		execute(breakparam, id);
 }
 
-static void renderbitmap() {
+void draw::paintclear() {
+	rectf({0, 0, getwidth(), getheight()}, colors::window);
+}
+
+void draw::paintimage() {
 	if(!scene.resurl)
 		return;
 	auto p = gres(scene.resurl, "art/background");
 	if(!p)
 		return;
-	image(0, 0, p, 0, 0);
+	auto& fr = p->get(0);
+	auto x = 0, y = 0;
+	if(fr.sx < getwidth())
+		x = (getwidth() - fr.sx) / 2;
+	if(fr.sy < getheight())
+		y = (getheight() - fr.sy) / 2;
+	if(x || y)
+		paintclear();
+	image(x, y, p, 0, 0);
 }
 
 void draw::simpleui() {
 	while(ismodal()) {
-		renderbitmap();
 		if(scene.background)
 			scene.background();
 		if(scene.window)
@@ -128,7 +139,6 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 	if(!interactive)
 		return random();
 	while(ismodal()) {
-		renderbitmap();
 		if(scene.background)
 			scene.background();
 		if(scene.window)
@@ -171,4 +181,6 @@ void set_dark_theme();
 
 HANDLER(before_initialize) {
 	set_dark_theme();
+	if(!scene.background)
+		scene.background = paintimage;
 }
