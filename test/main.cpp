@@ -117,7 +117,7 @@ void main_util();
 #endif
 
 static void common_status() {
-	setposition(metrics::padding * 2, getheight() - metrics::padding * 3 - texth());
+	setpositionrd();
 	buttonrd("Test");
 	buttonrd("Apply");
 }

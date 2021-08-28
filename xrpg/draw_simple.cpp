@@ -39,6 +39,10 @@ void draw::setposition() {
 	scene.y = metrics::border + metrics::padding;
 }
 
+void draw::setpositionrd() {
+	setposition(metrics::padding * 2, getheight() - metrics::padding * 3 - texth());
+}
+
 void draw::stext(const char* string) {
 	draw::link[0] = 0;
 	scene.y += textf(scene.x, scene.y, scene.width, string);
@@ -90,8 +94,8 @@ bool draw::buttonfd(const char* title) {
 	return result;
 }
 
-bool draw::buttonfd(const char* title, unsigned key) {
-	auto hilite = buttonfd(title);
+bool draw::button(const char* title, unsigned key, bool(*p)(const char*)) {
+	auto hilite = p(title);
 	return (key && hot.key == key)
 		|| (hot.key == MouseLeft && hilite && !hot.pressed);
 }
@@ -187,6 +191,16 @@ void draw::fog(int n) {
 		rectf({scene.x, scene.y, scene.x + scene.grid, scene.y + scene.grid}, colors::black);
 	else
 		rectf({scene.x, scene.y, scene.x + scene.grid, scene.y + scene.grid}, colors::black, n);
+}
+
+void draw::windows(const command* source) {
+	for(auto p = source; *p; p++) {
+		if(scene.window == p->proc)
+			continue;
+		if(buttonrd(getnm(p->id), p->key)) {
+
+		}
+	}
 }
 
 void set_dark_theme();
