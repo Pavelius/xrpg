@@ -1,3 +1,4 @@
+#include "answers.h"
 #include "archive.h"
 #include "code.h"
 #include "code_pack.h"
@@ -115,9 +116,12 @@ static void test_scene() {
 void main_util();
 #endif
 
-static void common_window() {
-	draw::setposition();
-	window(false, "Test window draw", "spaceport");
+static int test_answers() {
+	answers an;
+	an.add(1, "Test #%1i", 1);
+	an.add(2, "Test #%1i", 2);
+	an.choose("Выбирайте положенный ответ", getnm("Cancel"), true, "space");
+	return true;
 }
 
 int main() {
@@ -142,9 +146,9 @@ int main() {
 	//draw::setnext(test_fields);
 	//draw::setnext(draw::application);
 	scene.resurl = "wild";
-	scene.window = common_window;
-	draw::setnext(draw::simpleui);
-	draw::start();
+	test_answers();
+	//draw::setnext(draw::simpleui);
+	//draw::start();
 	return 0;
 }
 

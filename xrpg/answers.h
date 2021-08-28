@@ -1,5 +1,4 @@
 #include "crt.h"
-#include "rect.h"
 #include "stringbuilder.h"
 
 #pragma once

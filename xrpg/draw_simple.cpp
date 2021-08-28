@@ -15,7 +15,7 @@ unsigned char			opacity = 186;
 unsigned char			opacity_hilighted = 210;
 }
 
-static bool window(rect rc, bool hilight, int border) {
+static bool swindow(rect rc, bool hilight, int border) {
 	if(border == 0)
 		border = metrics::padding;
 	rc.offset(-border, -border);
@@ -32,11 +32,6 @@ static bool window(rect rc, bool hilight, int border) {
 	rectf(rc, c, op);
 	rectb(rc, b);
 	return rs;
-}
-
-void draw::setposition(int x, int y) {
-	scene.x = x;
-	scene.y = y;
 }
 
 void draw::setposition() {
@@ -64,7 +59,6 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 	}
 	if(resid) {
 		image_surface = gres(resid, "art/images");
-		image_height = 200;
 		if(image_surface)
 			image_height = image_surface->get(0).sy;
 	}
@@ -72,7 +66,7 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 	if(image_height && text_height)
 		padding_height = metrics::padding;
 	rect rc = {scene.x, scene.y, scene.x + scene.width, scene.y + image_height + text_height + padding_height};
-	auto rs = window(rc, hilite, 0);
+	auto rs = swindow(rc, hilite, 0);
 	if(image_surface) {
 		image(scene.x, scene.y, image_surface, 0, 0);
 		scene.y += image_height + padding_height;
@@ -81,6 +75,33 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 		stext(string);
 	scene.y += metrics::border * 2;
 	return rs;
+}
+
+bool draw::buttonfd(const char* title) {
+	if(!title)
+		return false;
+	rect rc = {scene.x, scene.y, scene.x + scene.width, scene.y};
+	textw(rc, title);
+	rc.x2 = rc.x1 + scene.width;
+	rc.y2 = rc.y2 + metrics::padding;
+	auto result = swindow(rc, true, 0);
+	text(rc, title, AlignCenterCenter);
+	scene.y += metrics::border * 2 + rc.height();
+	return result;
+}
+
+bool draw::buttonfd(const char* title, unsigned key) {
+	auto hilite = buttonfd(title);
+	return (key && hot.key == key)
+		|| (hot.key == MouseLeft && hilite && !hot.pressed);
+}
+
+void draw::answerbt(int i, long id, const char* title) {
+	static char answer_hotkeys[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'};
+	if(i >= sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]))
+		i = sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]) - 1;
+	if(buttonfd(title, answer_hotkeys[i]))
+		execute(breakparam, id);
 }
 
 static void renderbitmap() {
@@ -101,6 +122,49 @@ void draw::simpleui() {
 			scene.window();
 		domodal();
 	}
+}
+
+long answers::choose(const char* title, const char* cancel_text, bool interactive, const char* resid) const {
+	if(!interactive)
+		return random();
+	while(ismodal()) {
+		renderbitmap();
+		if(scene.background)
+			scene.background();
+		if(scene.window)
+			scene.window();
+		setposition();
+		auto y1 = scene.y, x1 = scene.y;
+		window(false, title, resid);
+		auto index = 0;
+		for(auto& e : *this)
+			answerbt(index++, e.id, e.text);
+		if(cancel_text) {
+			if(buttonfd(cancel_text, KeyEscape))
+				execute(buttoncancel);
+		}
+		domodal();
+	}
+	return getresult();
+}
+
+void draw::grid() {
+	auto push = fore;
+	fore = colors::border;
+	auto x2 = getwidth(), y2 = getheight();
+	auto sx = scene.grid, sy = scene.grid;
+	for(auto x = 0; x < x2; x += sx)
+		rectf({x, 0, x + 1, y2}, colors::border, 64);
+	for(auto y = 0; y < y2; y += sy)
+		rectf({0, y, x2, y + 1}, colors::border, 64);
+	fore = push;
+}
+
+void draw::fog(int n) {
+	if(n == 0xFF)
+		rectf({scene.x, scene.y, scene.x + scene.grid, scene.y + scene.grid}, colors::black);
+	else
+		rectf({scene.x, scene.y, scene.x + scene.grid, scene.y + scene.grid}, colors::black, n);
 }
 
 void set_dark_theme();

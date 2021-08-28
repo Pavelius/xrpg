@@ -149,7 +149,6 @@
     <ClInclude Include="code.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="command.h" />
-    <ClInclude Include="converter.h" />
     <ClInclude Include="crt.h" />
     <ClInclude Include="code_pack.h" />
     <ClInclude Include="datamap.h" />
@@ -200,12 +199,12 @@
     <ClCompile Include="crt_file.cpp" />
     <ClCompile Include="draw_simple.cpp" />
     <ClCompile Include="draw_valuelist.cpp" />
+    <ClCompile Include="png.cpp" />
     <ClCompile Include="string.cpp" />
     <ClCompile Include="widget_codetree.cpp" />
     <ClCompile Include="widget_codeview.cpp" />
     <ClCompile Include="color.cpp" />
     <ClCompile Include="command.cpp" />
-    <ClCompile Include="converter.cpp" />
     <ClCompile Include="crt.cpp" />
     <ClCompile Include="datetime.cpp" />
     <ClCompile Include="draw_builder.cpp" />
@@ -259,6 +258,7 @@
     <ClCompile Include="win_io_file.cpp" />
     <ClCompile Include="win_menu.cpp" />
     <ClCompile Include="win_time.cpp" />
+    <ClCompile Include="zip.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

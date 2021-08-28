@@ -1,6 +1,5 @@
 ﻿#include "bstream.h"
 #include "crt.h"
-#include "converter.h"
 
 #define FIRST_LENGTH_CODE_INDEX 257
 #define LAST_LENGTH_CODE_INDEX 285
@@ -448,7 +447,7 @@ static int decode_stream(unsigned char* output, const unsigned char* input, int 
 	return p - output;
 }
 
-static int decode_deflate(unsigned char* output, const unsigned char* input, int input_size) {
+int decode_zip(unsigned char* output, const unsigned char* input, int input_size) {
 	if(input_size < 2) {
 		// error: too small size
 		assert(0);
@@ -478,18 +477,3 @@ static int decode_deflate(unsigned char* output, const unsigned char* input, int
 	}
 	return decode_stream(output, input + 2, input_size - 2);
 }
-
-static struct zip_plugin : public converter {
-
-	zip_plugin() : converter("zip") {
-	}
-
-	unsigned decode(void* output, int output_size, const void* input, int input_size) const override {
-		return decode_deflate((unsigned char*)output, (const unsigned char*)input, input_size);
-	}
-
-	unsigned encode(void* output, int output_size, const void* input, int input_size) const override {
-		return 0;
-	}
-
-} instance;

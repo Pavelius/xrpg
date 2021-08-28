@@ -13,6 +13,9 @@
     <Filter Include="Widgets">
       <UniqueIdentifier>{9dd295e4-bd8d-4ef2-83a4-fa373c9369b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Format">
+      <UniqueIdentifier>{eea7a22c-bfae-45e9-b662-14ca5e665019}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="win.h">
@@ -28,9 +31,6 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="color.h">
-      <Filter>Support</Filter>
-    </ClInclude>
-    <ClInclude Include="converter.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="crt.h">
@@ -180,9 +180,6 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="color.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
-    <ClCompile Include="converter.cpp">
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="crt.cpp">
@@ -370,6 +367,12 @@
     </ClCompile>
     <ClCompile Include="draw_simple.cpp">
       <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="zip.cpp">
+      <Filter>Format</Filter>
+    </ClCompile>
+    <ClCompile Include="png.cpp">
+      <Filter>Format</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

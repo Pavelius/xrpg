@@ -1,5 +1,4 @@
 ﻿#include "crt.h"
-#include "converter.h"
 #include "draw.h"
 
 enum colortypes {
@@ -402,6 +401,8 @@ static void postprocess_scanlines(unsigned char* out, unsigned char* in, unsigne
 	}
 }
 
+int decode_zip(unsigned char* output, const unsigned char* input, int input_size);
+
 static struct png_bitmap_plugin : public draw::surface::plugin {
 
 	png_bitmap_plugin() : plugin("png", "PNG images\0*.png\0") {}
@@ -414,8 +415,6 @@ static struct png_bitmap_plugin : public draw::surface::plugin {
 		if(!inspect(image_width, image_height, input_bpp, input, input_size))
 			return false;
 		auto bpp = iabs(input_bpp);
-		// Get encoder plugin
-		auto zlib = converter::find("zip"); assert(zlib);
 		//auto colortype = (colortypes)input[25];
 		//auto compression = input[26];
 		//auto filter = input[27];
@@ -430,7 +429,7 @@ static struct png_bitmap_plugin : public draw::surface::plugin {
 		// try to optimize input if only one 'idat' section
 		image_size = image_width * image_height*(bpp / 8);
 		if(single_input) {
-			if(!zlib->decode(output, image_size, single_input, size_compressed))
+			if(!decode_zip(output, single_input, size_compressed))
 				return false;
 		} else {
 			unsigned char* ptemp = new unsigned char[size_compressed];
@@ -438,7 +437,7 @@ static struct png_bitmap_plugin : public draw::surface::plugin {
 				delete ptemp;
 				return false;
 			}
-			unsigned result = zlib->decode(output, image_size, ptemp, size_compressed);
+			unsigned result = decode_zip(output, ptemp, size_compressed);
 			if(!result) {
 				delete ptemp;
 				return false;
