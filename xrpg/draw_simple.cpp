@@ -96,6 +96,18 @@ bool draw::buttonfd(const char* title, unsigned key) {
 		|| (hot.key == MouseLeft && hilite && !hot.pressed);
 }
 
+bool draw::buttonrd(const char* title) {
+	if(!title)
+		return false;
+	rect rc = {scene.x, scene.y, scene.x + scene.width, scene.y};
+	textw(rc, title);
+	rc.y2 = rc.y2 + metrics::padding;
+	auto result = swindow(rc, true, 0);
+	text(rc, title, AlignCenterCenter);
+	scene.x += rc.width() + metrics::padding * 3;
+	return result;
+}
+
 void draw::answerbt(int i, long id, const char* title) {
 	static char answer_hotkeys[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'};
 	if(i >= sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]))

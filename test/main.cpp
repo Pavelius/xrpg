@@ -116,11 +116,20 @@ static void test_scene() {
 void main_util();
 #endif
 
+static void common_status() {
+	setposition(metrics::padding * 2, getheight() - metrics::padding * 3 - texth());
+	buttonrd("Test");
+	buttonrd("Apply");
+}
+
 static int test_answers() {
+	auto push_proc = scene.window;
+	scene.window = common_status;
 	answers an;
 	an.add(1, "Test #%1i", 1);
 	an.add(2, "Test #%1i", 2);
 	an.choose("Выбирайте положенный ответ", getnm("Cancel"), true, "space");
+	scene.window = push_proc;
 	return true;
 }
 

@@ -13,6 +13,7 @@ extern scenei		scene;
 void				answerbt(int index, long id, const char* title);
 bool				buttonfd(const char* title);
 bool				buttonfd(const char* title, unsigned key);
+bool				buttonrd(const char* title);
 void				fog(int n);
 void				grid();
 void				paintclear();
