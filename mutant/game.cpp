@@ -10,13 +10,6 @@ static void field(int x, int& y, int dx, color_s border, color_s color, int valu
 	y += dy;
 }
 
-static void paint_panel() {
-	static std::initializer_list<const char*> source = {"CharacterSheet"};
-	for(auto p : source) {
-
-	}
-}
-
 point gamei::getp(indext v) {
 	return {
 		(short)(worldmap::getx(v) * gui.grid + gui.grid / 2),

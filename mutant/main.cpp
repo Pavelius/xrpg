@@ -1,3 +1,4 @@
+#include "draw_input.h"
 #include "main.h"
 
 using namespace draw;
@@ -17,7 +18,7 @@ static void test_answers() {
 }
 
 void gamei::main_menu() {
-	form.bitmap = "mutant_title";
+	draw::scene.resurl = "mutant_title";
 	menui::choose("Main", "city", 0);
 }
 
@@ -31,69 +32,12 @@ const char* get_tab_text(const void* object, stringbuilder& sb) {
 	return (const char*)object;
 }
 
-struct test_control : controls::control {
-	const char** getcommands() const override {
-		static const char* cmd[] = {"#Edit", 0};
-		return cmd;
-	}
-};
-static test_control test;
-
-static void test_window_proc() {
-	static int current_tab;
-	int x, y, width;
-	dialogul(x, y, width);
-	char temp[260]; stringbuilder sb(temp);
-	sb.add("You have %ScrapAxe.");
-	text(x, y, temp);
-	y += texth() + gui.padding;
-	static const char* tabs[] = {"Вывод", "Ввод", "Параметры"};
-	int hilite;
-	auto result = draw::tabv({x, y, x + width, y + 260}, false, false, (void**)&tabs, 0, 3, current_tab, &hilite, get_tab_text);
-	if(result == 1)
-		execute(cbsetint, hilite, 0, &current_tab);
-	int x2 = x + width;
-	int y2 = y + 263;
-	buttonr(x2, y2, "Назад", buttoncancel);
-	buttonr(x2, y2, "OK", buttonok);
-}
-
-//static void test_window() {
-//	form.window = test_window_proc;
-//	form.bitmap = "mutant_title";
-//	menui::choose("Main", "city", 0);
-//}
-
-int draw::getimage(const char* id) {
-	if(equal(id, "Save"))
-		return 2;
-	else if(equal(id, "Open"))
-		return 1;
-	else if(equal(id, "Cut"))
-		return 3;
-	else if(equal(id, "Copy"))
-		return 4;
-	else if(equal(id, "Paste"))
-		return 5;
-	return 0;
-}
-
-void draw::statusbar(const char* format, ...) {
-
-}
-
-unsigned draw::getkey(const char* id) {
-	return 0;
-}
-
 int main() {
 	if(!initialize_translation("ru"))
 		return -1;
 	test_overload();
-	draw::initialize("Mutants: Zero point", 100);
+	draw::initialize("Mutants: Zero point");
 	draw::setnext(game.main_menu);
-	//draw::setnext(test_window);
-	draw::application();
 	return 0;
 }
 

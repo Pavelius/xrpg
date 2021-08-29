@@ -1,31 +1,30 @@
 ﻿{
   "settings":{
-    "Project":{
+    "Workspace":{
       "General":{
-        "URLs":{
-          "Project":"",
-          "Projects":"code\\projects",
-          "Library":"code\\library"
+        "Metrics":{
+          "Padding":4,
+          "ScrollWidth":16
+        },
+        "View":{
+          "ShowStatusBar":2,
+          "ShowLeftPanel":2,
+          "ShowRightPanel":2,
+          "ShowBottomPanel":1,
+          "ShowPadding":2
+        },
+        "Tabs":{
+          "UseShortNameLabel":2,
+          "NoUrlLabelExtension":2,
+          "UppercaseLabel":2,
+          "ShowTabsAlways":2
         }
-      }
-    },
-    "Editor":{
-      "General":{
-        "Formating":{
-          "Tabulation":4
-        }
+      },
+      "Plugins":{
+        
       }
     },
     "Colors":{
-      "Editor":{
-        "IdentifierColor":16777215,
-        "KeywordColor":5676246,
-        "TypeColor":5163440,
-        "CommentColor":5744202,
-        "StringColor":14059602,
-        "NumberColor":12113827,
-        "OperatorColor":16777215
-      },
       "General":{
         
       },
@@ -39,111 +38,43 @@
         "TipsBackColor":6579320,
         "TipsTextColor":16777215
       }
-    },
-    "Workspace":{
-      "General":{
-        "Metrics":{
-          "Padding":4,
-          "ScrollWidth":16
-        },
-        "View":{
-          "ShowStatusBar":2,
-          "ShowLeftPanel":2,
-          "ShowRightPanel":2,
-          "ShowBottomPanel":0,
-          "ShowPadding":0
-        },
-        "Tabs":{
-          "UseShortNameLabel":2,
-          "NoUrlLabelExtension":2,
-          "UppercaseLabel":2,
-          "ShowTabsAlways":2
-        }
-      },
-      "Plugins":{
-        
-      }
-    },
-    "Log":{
-      "General":{
-        "SaveMessageFile":0
-      }
     }
-  },
-  "window":{
-    "x":165,
-    "y":142,
-    "width":784,
-    "height":561,
-    "header_width":102,
-    "flags":48
   },
   "controls":{
-    "Codeview":{
-      "Docking":5,
-      "Visible":1,
-      "CodeTreeTypes":{
-        "Docking":0,
-        "Visible":1,
-        "columns":{
-          "column":{
-            "id":"Name",
-            "width":200
-          }
-        }
-      },
-      "CodeTreeMembers":{
-        "Docking":1,
-        "Visible":1,
-        "columns":{
-          "column":{
-            "id":"Name",
-            "width":200
-          }
-        }
-      },
-      "MessageList":{
-        "Docking":4,
-        "Visible":1,
-        "columns":{
-          "column":{
-            "id":"Message",
-            "width":490
-          },
-          "column":{
-            "id":"Date",
-            "width":88
-          }
-        }
-      },
-      "picture":{
-        "Docking":4,
-        "Visible":1
-      },
-      "dockbar":{
-        "DockLeft":{
-          "current":0,
-          "size":200
-        },
-        "DockLeftBottom":{
-          "current":0,
-          "size":200
-        },
-        "DockRight":{
-          "current":0,
-          "size":0
-        },
-        "DockRightBottom":{
-          "current":0,
-          "size":0
-        },
-        "DockBottom":{
-          "current":0,
-          "size":200
-        },
-        "DockWorkspace":{
-          "current":0,
-          "size":200
-        }
-      }
+    
+  },
+  "window":{
+    "x":196,
+    "y":84,
+    "width":1169,
+    "height":617,
+    "header_width":160,
+    "flags":48
+  },
+  "dockbar":{
+    "DockLeft":{
+      "current":0,
+      "size":200
+    },
+    "DockLeftBottom":{
+      "current":0,
+      "size":200
+    },
+    "DockRight":{
+      "current":0,
+      "size":0
+    },
+    "DockRightBottom":{
+      "current":0,
+      "size":0
+    },
+    "DockBottom":{
+      "current":0,
+      "size":200
+    },
+    "DockWorkspace":{
+      "current":0,
+      "size":200
     }
+  }
+}

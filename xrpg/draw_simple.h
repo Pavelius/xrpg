@@ -1,13 +1,19 @@
 #include "command.h"
+#include "pointl.h"
 
 #pragma once
 
 typedef void(*fnevent)();
 
 namespace draw {
-struct scenei{
-	int				x = 0, y = 0, width = 320, grid = 32;
+enum class backm : unsigned char {
+	Static, Scrolled,
+};
+struct scenei : public pointl {
+	int				width = 320, grid = 32;
+	pointl			camera;
 	const char*		resurl = 0;
+	backm			background_mode = backm::Static;
 	fnevent			background = 0;
 	fnevent			window = 0;
 };
@@ -23,6 +29,7 @@ void				grid();
 void				paintclear();
 void				paintimage();
 void				simpleui();
+void				set(int x, int y);
 void				setposition();
 void				setpositionrd();
 inline void			setposition(int x, int y) { scene.x = x; scene.y = y; }

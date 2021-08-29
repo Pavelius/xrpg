@@ -111,8 +111,6 @@ int	character::getmaximum(attribute_s v) const {
 
 void character::create_new() {
 	static const char* character_panel[] = {"CharacterSheet", 0};
-	draw::form.window = getcommand("CharacterSheet");
-	draw::form.commands = character_panel;
 	current_character = bsdata<character>::add();
 	current_character->clear();
 	current_character->kind.setvariant(Role, choose_role());

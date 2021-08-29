@@ -8,6 +8,8 @@
 using namespace draw;
 
 scenei					draw::scene;
+static pointl			camera_drag;
+static rect				board;
 
 namespace metrics {
 int						border = 4;
@@ -125,21 +127,84 @@ void draw::paintclear() {
 }
 
 void draw::paintimage() {
+	paintclear();
 	if(!scene.resurl)
 		return;
 	auto p = gres(scene.resurl, "art/background");
 	if(!p)
 		return;
 	auto& fr = p->get(0);
-	auto x = 0, y = 0;
+	board.x1 = -scene.camera.x;
+	board.y1 = -scene.camera.y;
 	if(fr.sx < getwidth())
-		x = (getwidth() - fr.sx) / 2;
+		board.x1 = (getwidth() - fr.sx) / 2;
 	if(fr.sy < getheight())
-		y = (getheight() - fr.sy) / 2;
-	if(x || y)
-		paintclear();
-	image(x, y, p, 0, 0);
+		board.y1 = (getheight() - fr.sy) / 2;
+	board.x2 = board.x1 + fr.sx;
+	board.y2 = board.y1 + fr.sy;
+	ishilite(board);
+	image(board.x1, board.y1, p, 0, 0);
 }
+
+void draw::set(int x, int y) {
+	scene.x = x - scene.camera.x + getwidth() / 2;
+	scene.y = y - scene.camera.y + getheight() / 2;
+}
+
+static void inputimage() {
+	const int step = 32;
+	switch(hot.key) {
+	case KeyLeft: execute(cbsetint, scene.camera.x - step, 0, &scene.camera.x); break;
+	case KeyRight: execute(cbsetint, scene.camera.x + step, 0, &scene.camera.x); break;
+	case KeyUp: execute(cbsetint, scene.camera.y - step, 0, &scene.camera.y); break;
+	case KeyDown: execute(cbsetint, scene.camera.y + step, 0, &scene.camera.y); break;
+	case MouseWheelUp: execute(cbsetint, scene.camera.y - step, 0, &scene.camera.y); break;
+	case MouseWheelDown: execute(cbsetint, scene.camera.y + step, 0, &scene.camera.y); break;
+	case MouseLeft:
+		if(hot.pressed && hot.hilite == board) {
+			dragbegin(&scene.camera);
+			camera_drag = scene.camera;
+		}
+		break;
+	default:
+		if(dragactive(&scene.camera)) {
+			hot.cursor = cursor::All;
+			if(hot.mouse.x >= 0 && hot.mouse.y >= 0) {
+				pointl pt;
+				pt.x = dragmouse.x - hot.mouse.x;
+				pt.y = dragmouse.y - hot.mouse.y;
+				scene.camera = camera_drag + pt;
+			}
+		}
+		break;
+	}
+}
+
+static void inputall() {
+	inputimage();
+}
+
+//void draw::painttips() {
+//	if(!text_tooltips[0])
+//		return;
+//	rect rc;
+//	rc.x1 = metrics::padding * 2;
+//	rc.y1 = metrics::padding * 2;
+//	rc.x2 = rc.x1 + scene.width;
+//	rc.y2 = rc.y1;
+//	draw::textf(rc, text_tooltips);
+//	// Correct border
+//	int height = draw::getheight();
+//	int width = draw::getwidth();
+//	if(rc.y2 >= height)
+//		rc.move(0, height - 2 - rc.y2);
+//	if(rc.x2 >= width)
+//		rc.move(width - 2 - rc.x2, 0);
+//	window(rc, false, 0);
+//	draw::fore = colors::tips::text;
+//	draw::textf(rc.x1, rc.y1, rc.width(), text_tooltips, 0, 0, 0, 0, gui.tips_tab);
+//	scene.y += rc.height() + metrics::padding * 2;
+//}
 
 void draw::simpleui() {
 	while(ismodal()) {
@@ -147,6 +212,7 @@ void draw::simpleui() {
 			scene.background();
 		if(scene.window)
 			scene.window();
+		inputall();
 		domodal();
 	}
 }
@@ -169,6 +235,7 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 			if(buttonfd(cancel_text, KeyEscape))
 				execute(buttoncancel);
 		}
+		inputall();
 		domodal();
 	}
 	return getresult();
@@ -193,13 +260,16 @@ void draw::fog(int n) {
 		rectf({scene.x, scene.y, scene.x + scene.grid, scene.y + scene.grid}, colors::black, n);
 }
 
+static void choose_window() {
+	scene.window = (fnevent)hot.object;
+}
+
 void draw::windows(const command* source) {
 	for(auto p = source; *p; p++) {
 		if(scene.window == p->proc)
 			continue;
-		if(buttonrd(getnm(p->id), p->key)) {
-
-		}
+		if(buttonrd(getnm(p->id), p->key))
+			execute(choose_window, 0, 0, p->proc);
 	}
 }
 

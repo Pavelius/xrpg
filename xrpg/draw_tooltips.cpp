@@ -20,7 +20,6 @@ HANDLER(before_input) {
 		return;
 	if(!draw::font)
 		return;
-	auto push_fore = draw::fore;
 	// Calculate rect
 	rect rc = sb_rect;
 	if(!rc) {
@@ -51,6 +50,7 @@ HANDLER(before_input) {
 	draw::rectb(rc, colors::border);
 	rc = rc + metrics::padding;
 	// Show text
+	auto push_fore = draw::fore;
 	draw::fore = colors::tips::text;
 	draw::textf(rc.x1, rc.y1, rc.width(), sb_text);
 	draw::fore = push_fore;

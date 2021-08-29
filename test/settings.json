@@ -1,34 +1,43 @@
 ﻿{
-  "dockbar":{
-    "DockLeft":{
-      "current":0,
-      "size":200
-    },
-    "DockLeftBottom":{
-      "current":0,
-      "size":200
-    },
-    "DockRight":{
-      "current":0,
-      "size":0
-    },
-    "DockRightBottom":{
-      "current":0,
-      "size":0
-    },
-    "DockBottom":{
-      "current":0,
-      "size":200
-    },
-    "DockWorkspace":{
-      "current":0,
-      "size":200
-    }
-  },
   "settings":{
-    "Log":{
+    "Project":{
       "General":{
-        "SaveMessageFile":0
+        "URLs":{
+          "Project":"",
+          "Projects":"projects",
+          "Library":"library"
+        }
+      }
+    },
+    "Editor":{
+      "General":{
+        "Formating":{
+          "Tabulation":4
+        }
+      }
+    },
+    "Colors":{
+      "Editor":{
+        "IdentifierColor":16777215,
+        "KeywordColor":5676246,
+        "TypeColor":5163440,
+        "CommentColor":5744202,
+        "StringColor":14059602,
+        "NumberColor":12113827,
+        "OperatorColor":16777215
+      },
+      "General":{
+        
+      },
+      "Form":{
+        "TextColor":16777215,
+        "WindowColor":2105376,
+        "FormColor":2960688,
+        "BorderColor":4144966,
+        "ActiveColor":11304960,
+        "ButtonColor":31436,
+        "TipsBackColor":6579320,
+        "TipsTextColor":16777215
       }
     },
     "Workspace":{
@@ -54,47 +63,72 @@
       "Plugins":{
         
       }
-    },
-    "Colors":{
-      "General":{
-        
-      },
-      "Form":{
-        "TextColor":16777215,
-        "WindowColor":2105376,
-        "FormColor":2960688,
-        "BorderColor":4144966,
-        "ActiveColor":11304960,
-        "ButtonColor":31436,
-        "TipsBackColor":6579320,
-        "TipsTextColor":16777215
-      }
     }
   },
   "controls":{
-    "MessageList":{
-      "Docking":4,
+    "Codeview":{
+      "Docking":5,
+      "Visible":1
+    },
+    "CodeTreeTypes":{
+      "Docking":0,
       "Visible":1,
       "columns":{
-        "Message":{
-          "width":200,
+        "Name":{
+          "width":156,
           "size":4,
-          "total":0
-        },
-        "Date":{
-          "width":88,
-          "size":2,
           "total":0
         }
       }
+    },
+    "CodeTreeMembers":{
+      "Docking":1,
+      "Visible":1,
+      "columns":{
+        "Name":{
+          "width":156,
+          "size":4,
+          "total":0
+        }
+      }
+    },
+    "picture":{
+      "Docking":4,
+      "Visible":1
     }
   },
   "window":{
-    "x":196,
-    "y":84,
+    "x":181,
+    "y":78,
     "width":1169,
     "height":617,
     "header_width":160,
     "flags":48
+  },
+  "dockbar":{
+    "DockLeft":{
+      "current":0,
+      "size":156
+    },
+    "DockLeftBottom":{
+      "current":0,
+      "size":200
+    },
+    "DockRight":{
+      "current":0,
+      "size":0
+    },
+    "DockRightBottom":{
+      "current":0,
+      "size":0
+    },
+    "DockBottom":{
+      "current":0,
+      "size":200
+    },
+    "DockWorkspace":{
+      "current":0,
+      "size":200
+    }
   }
 }

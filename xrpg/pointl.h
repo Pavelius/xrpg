@@ -2,6 +2,8 @@
 
 struct pointl {
 	int					x, y;
-	inline bool			operator!=(const pointl pt) const { return pt.x != x || pt.y != y; }
-	inline bool			operator==(const pointl pt) const { return pt.x == x && pt.y == y; }
+	constexpr bool		operator!=(const pointl v) const { return v.x != x || v.y != y; }
+	constexpr bool		operator==(const pointl v) const { return v.x == x && v.y == y; }
+	constexpr pointl operator+(const pointl& v) const { return {x + v.x, y + v.y}; }
+	constexpr pointl operator-(const pointl& v) const { return {x - v.x, y - v.y}; }
 };

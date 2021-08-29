@@ -1,5 +1,6 @@
 #include "answers.h"
 #include "command.h"
+#include "draw_simple.h"
 #include "datamap.h"
 #include "dataset.h"
 #include "command.h"
@@ -7,7 +8,6 @@
 #include "menu.h"
 #include "moveable.h"
 #include "point.h"
-#include "view.h"
 #include "varianta.h"
 
 #pragma once
@@ -165,7 +165,7 @@ class gamei {
 	static void			update_moving();
 	static void			worldmap_input();
 public:
-	static indext		geti(point v) { return worldmap::geti(v.x / gui.grid, v.y / gui.grid); }
+	static indext		geti(point v) { return worldmap::geti(v.x / draw::scene.grid, v.y / draw::scene.grid); }
 	static point		getp(indext v);
 	static character*	getplayer();
 	static void			playworld();

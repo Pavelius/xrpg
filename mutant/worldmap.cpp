@@ -20,7 +20,7 @@ void worldmap::set(indext i, int r, int v, bool check) {
 }
 
 point worldmap::getp(int x, int y) { return {
-	(short)(x * gui.grid + gui.grid/2), (short)(y * gui.grid + gui.grid / 2)};
+	(short)(x * draw::scene.grid + draw::scene.grid/2), (short)(y * draw::scene.grid + draw::scene.grid / 2)};
 }
 
 
@@ -39,9 +39,10 @@ void worldmap::fow() {
 	for(auto x = 0; x < xmax; x++) {
 		for(auto y = 0; y < ymax; y++) {
 			auto v = get(geti(x, y));
+			draw::setposition(x * draw::scene.grid, y * draw::scene.grid);
 			switch(v) {
-			case 0: draw::fog(x, y, 0xFF); break;
-			case 1: draw::fog(x, y, 128); break;
+			case 0: draw::fog(0xFF); break;
+			case 1: draw::fog(128); break;
 			default: break;
 			}
 		}
