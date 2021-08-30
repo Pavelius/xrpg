@@ -176,6 +176,14 @@ NOBSDATA(char)
 NOBSDATA(unsigned char)
 NOBSDATA(const char*)
 NOBSDATA(bool)
+template<typename T> struct islice {
+	unsigned						start, count;
+	constexpr islice() : start(0), count(0) {}
+	constexpr explicit operator bool() const { return count != 0; }
+	T*								begin() const { return (T*)bsdata<T>::source.ptr(start); }
+	T*								end() const { return (T*)bsdata<T>::source.ptr(start + count); }
+	constexpr unsigned				size() const { return count; }
+};
 // Callback function of any command executing
 typedef void(*fnevent)();
 // Callback function of status probing. Return true if `object` allow `index` status.
