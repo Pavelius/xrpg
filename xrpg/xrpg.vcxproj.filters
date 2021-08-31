@@ -159,6 +159,12 @@
     <ClInclude Include="draw_input.h">
       <Filter>Interface</Filter>
     </ClInclude>
+    <ClInclude Include="flagable.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="dialog.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -373,6 +379,9 @@
     </ClCompile>
     <ClCompile Include="png.cpp">
       <Filter>Format</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog.cpp">
+      <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -2,6 +2,7 @@
 #include "archive.h"
 #include "code.h"
 #include "code_pack.h"
+#include "dialog.h"
 #include "draw.h"
 #include "draw_button.h"
 #include "draw_control.h"
@@ -171,6 +172,8 @@ int main() {
 	//	return -1;
 	//if(!test_string())
 	//	return -1;
+	if(!initialize_speech("ru"))
+		return -1;
 	if(!initialize_translation("ru"))
 		return -1;
 	test_variant();

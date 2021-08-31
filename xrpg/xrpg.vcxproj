@@ -154,6 +154,7 @@
     <ClInclude Include="datamap.h" />
     <ClInclude Include="dataset.h" />
     <ClInclude Include="datetime.h" />
+    <ClInclude Include="dialog.h" />
     <ClInclude Include="draw.h" />
     <ClInclude Include="draw_builder.h" />
     <ClInclude Include="draw_button.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="draw_scroll.h" />
     <ClInclude Include="draw_simple.h" />
     <ClInclude Include="draw_valuelist.h" />
+    <ClInclude Include="flagable.h" />
     <ClInclude Include="gender.h" />
     <ClInclude Include="handler.h" />
     <ClInclude Include="io_stream.h" />
@@ -193,6 +195,7 @@
     <ClCompile Include="archive.cpp" />
     <ClCompile Include="bsreq.cpp" />
     <ClCompile Include="bstream.cpp" />
+    <ClCompile Include="dialog.cpp" />
     <ClCompile Include="code.cpp" />
     <ClCompile Include="code_scan.cpp" />
     <ClCompile Include="code_pack.cpp" />
