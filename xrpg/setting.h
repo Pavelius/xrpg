@@ -27,10 +27,10 @@ struct reference {
 	constexpr reference(bool& v) : reference(Bool, &v, sizeof(v)) {}
 	constexpr reference(color& v) : reference(Color, &v, sizeof(v)) {}
 	constexpr reference(pcall v) : reference(Button, (void*)v, sizeof(v)) {}
-	int					get() const;
+	long				get() const;
 	void*				getptr() const { return data; }
 	bool				iszero() const { return get() == 0; }
-	void				set(int v) const;
+	void				set(long v) const;
 };
 struct element {
 	const char*			name;

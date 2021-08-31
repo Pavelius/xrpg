@@ -141,7 +141,7 @@ struct column {
 	unsigned				align;
 	fnlist					plist;
 	explicit operator bool() const { return method != 0; }
-	int						get(const void* object) const;
+	long					get(const void* object) const;
 	const char*				get(const void* object, stringbuilder& sb) const;
 	bool					is(columnf v) const { return flags & (1 << static_cast<int>(v)); }
 	column&					set(widtht v) { size = v; return *this; }

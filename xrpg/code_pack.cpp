@@ -279,7 +279,7 @@ unsigned pack::getflags(pckh vm) const {
 	}
 }
 
-unsigned pack::reference(pckh sym) {
+pckh pack::reference(pckh sym) {
 	return addsym(None, Pointer, sym, 0, 0);
 }
 

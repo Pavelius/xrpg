@@ -4,7 +4,7 @@ using namespace setting;
 
 typedef decltype(sizeof(0)) size_t;
 
-int reference::get() const {
+long reference::get() const {
 	if(!data)
 		return 0;
 	switch(type) {
@@ -21,7 +21,7 @@ int reference::get() const {
 	}
 }
 
-void reference::set(int v) const {
+void reference::set(long v) const {
 	switch(type) {
 	case Text: case Url:
 		if(size == sizeof(const char*))
