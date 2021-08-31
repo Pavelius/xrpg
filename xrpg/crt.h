@@ -15,7 +15,7 @@ typedef decltype(sizeof(0)) size_t;
 #define BSDATAD(e) template<> array bsdata<e>::source(sizeof(e));
 #define BSDATAE(e) template<> array bsdata<e>::source(bsdata<e>::elements, sizeof(bsdata<e>::elements[0]), 0, sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]));
 #define BSDATAF(e) template<> array bsdata<e>::source(bsdata<e>::elements, sizeof(bsdata<e>::elements[0]), sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]), sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]));
-#define BSDATAC(e, c) template<> e bsdata<e>::elements[c]; BSDATAE(e)
+#define BSDATAC(e, c) e bsdata<e>::elements[c]; BSDATAE(e)
 #define NOBSDATA(e) template<> struct bsdata<e> : bsdata<int> {};
 #define assert_enum(e, last) static_assert(sizeof(bsdata<e>::elements) / sizeof(bsdata<e>::elements[0]) == static_cast<int>(last) + 1, "Invalid count of " #e " elements"); BSDATAF(e)
 
@@ -114,6 +114,7 @@ public:
 	void*							add();
 	void*							addz() { auto p = add(); memset(p, 0, size); return p; }
 	void*							add(const void* element);
+	void*							addc(const void* element, unsigned count);
 	char*							begin() const { return (char*)data; }
 	void							change(unsigned offset, int size);
 	void							clear();
@@ -121,6 +122,7 @@ public:
 	int								find(const char* value, unsigned offset) const;
 	int								find(int i1, int i2, void* value, unsigned offset, unsigned size) const;
 	int								find(void* value, unsigned offset, unsigned size) const { return find(0, -1, value, offset, size); }
+	const void*						findu(const void* value, unsigned size) const;
 	unsigned						getmaximum() const { return count_maximum & 0x7FFFFFFF; }
 	unsigned						getcount() const { return count; }
 	unsigned						getsize() const { return size; }
@@ -176,12 +178,14 @@ NOBSDATA(char)
 NOBSDATA(unsigned char)
 NOBSDATA(const char*)
 NOBSDATA(bool)
-template<typename T> struct islice {
+template<typename T> struct sliceu {
 	unsigned						start, count;
-	constexpr islice() : start(0), count(0) {}
+	constexpr sliceu() : start(0), count(0) {}
+	template<size_t N> sliceu(T(&v)[N]) { set(v, N); }
 	constexpr explicit operator bool() const { return count != 0; }
 	T*								begin() const { return (T*)bsdata<T>::source.ptr(start); }
 	T*								end() const { return (T*)bsdata<T>::source.ptr(start + count); }
+	void							set(const T* v, unsigned count) { start = bsdata<T>::source.indexof(bsdata<T>::source.addc(v, count)); this->count = count; }
 	constexpr unsigned				size() const { return count; }
 };
 // Callback function of any command executing

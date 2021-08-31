@@ -72,25 +72,11 @@
     },
     "CodeTreeTypes":{
       "Docking":0,
-      "Visible":1,
-      "columns":{
-        "Name":{
-          "width":156,
-          "size":4,
-          "total":0
-        }
-      }
+      "Visible":1
     },
     "CodeTreeMembers":{
       "Docking":1,
-      "Visible":1,
-      "columns":{
-        "Name":{
-          "width":156,
-          "size":4,
-          "total":0
-        }
-      }
+      "Visible":1
     },
     "picture":{
       "Docking":4,

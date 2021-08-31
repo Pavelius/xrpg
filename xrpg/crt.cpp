@@ -512,3 +512,31 @@ void array::change(unsigned offset, int size) {
 	} else
 		shrink(offset, -size);
 }
+
+const void* array::findu(const void* value, unsigned size) const {
+	auto p = (char*)data;
+	auto pe = (char*)data + count*(this->size);
+	auto s = *((char*)value);
+	while(p < pe) {
+		p = (char*)memchr(p, s, pe - p);
+		if(!p || (unsigned(pe - p) < size))
+			break;
+		if(memcmp(p, value, size) == 0)
+			return p;
+		p++;
+	}
+	return 0;
+}
+
+void* array::addc(const void* element, unsigned count) {
+	auto s = count * size;
+	auto p = findu(element, s);
+	if(p)
+		return (void*)p;
+	auto ci = this->count;
+	reserve(this->count + count);
+	auto pr = ptr(ci);
+	memcpy(pr, element, s);
+	this->count += count;
+	return pr;
+}

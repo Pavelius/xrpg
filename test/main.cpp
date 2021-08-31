@@ -14,6 +14,14 @@
 
 using namespace draw;
 
+BSDATA(varianti) = {
+	{""},
+	{"Trait", 0, bsdata<traiti>::source_ptr},
+	{"Planet", 0, bsdata<planeti>::source_ptr},
+};
+BSDATAF(varianti)
+BSDATAC(variant, 1024)
+
 void initialize_picture();
 
 static void field(int x, int& y, int width, controls::control& v) {
@@ -122,7 +130,21 @@ static void common_status() {
 	buttonrd("Apply");
 }
 
-static int test_answers() {
+static void test_appliaction() {
+	initialize_picture();
+	initialize_codeview();
+	initialize_codetree();
+	initialize_lexers();
+	draw::initialize("Test UI");
+	openurl("battle.bmp");
+	openurl("code/RustCode.rs");
+	openurl("code/projects/first/main.c2");
+	draw::setnext(draw::application);
+}
+
+static void test_simpleui() {
+	draw::initialize("Test UI");
+	scene.resurl = "wild";
 	auto push_proc = scene.window;
 	scene.window = common_status;
 	answers an;
@@ -130,7 +152,15 @@ static int test_answers() {
 	an.add(2, "Test #%1i", 2);
 	an.choose("Выбирайте положенный ответ", getnm("Cancel"), true, "space");
 	scene.window = push_proc;
-	return true;
+}
+
+static void test_variant() {
+	static variant s1[] = {"Earth", "Moon", "Commander"};
+	static variant s2[] = {"Moon", "Commander"};
+	static variant s3[] = {"Mercury", "Mars"};
+	sliceu<variant> v1(s1);
+	sliceu<variant> v2(s2);
+	sliceu<variant> v3(s3);
 }
 
 int main() {
@@ -143,20 +173,11 @@ int main() {
 	//	return -1;
 	if(!initialize_translation("ru"))
 		return -1;
-	initialize_picture();
-	initialize_codeview();
-	initialize_codetree();
-	initialize_lexers();
-	draw::initialize("Test UI");
-	openurl("battle.bmp");
-	openurl("code/RustCode.rs");
-	openurl("code/projects/first/main.c2");
+	test_variant();
 	//draw::setnext(test_table);
 	//draw::setnext(test_fields);
-	draw::setnext(draw::application);
-	scene.resurl = "wild";
 	//test_answers();
-	//draw::setnext(draw::simpleui);
+	test_simpleui();
 	draw::start();
 	return 0;
 }
