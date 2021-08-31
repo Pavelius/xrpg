@@ -71,7 +71,7 @@ void table::clickcolumn(int column) const {
 	draw::execute(table_sort_column, column, 0, this);
 }
 
-int	column::get(const void* object) const {
+long column::get(const void* object) const {
 	return value.get(value.ptr(object));
 }
 

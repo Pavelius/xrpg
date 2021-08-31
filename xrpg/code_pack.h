@@ -5,7 +5,7 @@
 #pragma once
 
 namespace code {
-typedef unsigned pckh;
+typedef unsigned long pckh;
 enum class operation {
 	Number, Literal, Symbol,
 	Statement, Assign, If, While, Do,

@@ -269,7 +269,7 @@ void draw::windows(const command* source) {
 		if(scene.window == p->proc)
 			continue;
 		if(buttonrd(getnm(p->id), p->key))
-			execute(choose_window, 0, 0, p->proc);
+			execute(choose_window, 0, 0, (void*)p->proc);
 	}
 }
 
