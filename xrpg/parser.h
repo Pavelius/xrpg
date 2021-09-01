@@ -1,19 +1,9 @@
 #include "crt.h"
-#include "pointl.h"
 #include "string.h"
 
 #pragma once
 
 namespace code {
-namespace metrics {
-extern int				tabs;
-}
-enum group_s : unsigned char {
-	IllegalSymbol,
-	WhiteSpace, Operator, Keyword, Comment,
-	Number, String, Identifier, Type,
-	BlockBegin, BlockEnd, IndexBegin, IndexEnd, ExpressionBegin, ExpressionEnd,
-};
 enum class flag : unsigned char {
 	Variable, Condition, Repeat, ComaSeparated, PointSeparated, Stop,
 };
@@ -58,6 +48,7 @@ struct rulei {
 	fnevent				special;
 	void				parse() const;
 };
+typedef slice<rulei>	rulea;
 struct corei {
 	typedef void (*fnevent)(string st, const rulei& rule, const tokeni& token);
 	string				type, id, member, rule, url, comment;
@@ -65,24 +56,10 @@ struct corei {
 	const char*			expected;
 	fnevent				success;
 };
+extern const char*		p;
 extern corei			core;
-typedef slice<rulei>	rulea;
-typedef vector<string>	worda;
-struct lexer {
-	const char*			id;
-	const char*			extensions;
-	rulea				grammar;
-	slice<string>		standart_classes;
-	worda				keywords, classes, operations;
-	void				initialize();
-	void				setgrammar() const;
-};
-const string*			find(const worda& source, const string& v);
-int						getindex(const char* p, pointl pos);
-const char*				getnext(const char* p, pointl& pos);
-const char*				getnext(const char* p, pointl& pos, group_s& type, const lexer* pk = 0);
+extern rulea			this_rules;
+void					parse(const char* url_content);
+void					skipws();
+void					updaterules();
 }
-void					initialize_codeview();
-void					initialize_codetree();
-void					initialize_lexers();
-void					update_codetree();

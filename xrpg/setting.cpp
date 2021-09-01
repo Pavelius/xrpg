@@ -29,8 +29,8 @@ void reference::set(long v) const {
 		break;
 	default:
 		switch(size) {
-		case sizeof(char) : *((char*)data) = v; break;
-		case sizeof(short) : *((short*)data) = v; break;
+		case sizeof(char) : *((char*)data) = (char)v; break;
+		case sizeof(short) : *((short*)data) = (short)v; break;
 		default: *((int*)data) = v; break;
 		}
 	}

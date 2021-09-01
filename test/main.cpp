@@ -1,6 +1,5 @@
 #include "answers.h"
 #include "archive.h"
-#include "code.h"
 #include "code_pack.h"
 #include "dialog.h"
 #include "draw.h"
@@ -10,6 +9,7 @@
 #include "draw_figure.h"
 #include "draw_simple.h"
 #include "io_stream.h"
+#include "lexer.h"
 #include "main.h"
 #include "string.h"
 

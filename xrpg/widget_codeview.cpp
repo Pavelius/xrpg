@@ -1,4 +1,3 @@
-#include "code.h"
 #include "code_pack.h"
 #include "draw.h"
 #include "draw_button.h"
@@ -8,6 +7,7 @@
 #include "draw_scroll.h"
 #include "draw_valuelist.h"
 #include "io_stream.h"
+#include "lexer.h"
 #include "handler.h"
 #include "setting.h"
 #include "pointl.h"
@@ -725,7 +725,8 @@ public:
 		source_lexer->setgrammar();
 		auto p = pack::addmodule(url_module);
 		p->addclasses(source_lexer->standart_classes);
-		p->parse(getbegin());
+		this_pack = p;
+		parse(getbegin());
 	}
 	bool execute(const char* id, bool run) override {
 		if(equal(id, "Edit")) {
@@ -779,7 +780,8 @@ public:
 				return false;
 			if(run) {
 				source_lexer->setgrammar();
-				pack->parse(begin());
+				this_pack = pack;
+				parse(begin());
 				update_codetree();
 			}
 		} else if(equal(id, "SelectAll")) {

@@ -1,5 +1,5 @@
 #include "crt.h"
-#include "code.h"
+#include "lexer.h"
 
 using namespace code;
 
@@ -140,4 +140,49 @@ const string* code::find(const worda& source, const string& v) {
 			return &e;
 	}
 	return 0;
+}
+
+static const string* find(const array& source, string v) {
+	for(auto& e : source.records<string>()) {
+		if(e.equal(v))
+			return &e;
+	}
+	return 0;
+}
+
+static void add(array& source, string v) {
+	auto p = find(source, v);
+	if(p)
+		return;
+	auto p1 = (string*)source.add();
+	*p1 = v;
+}
+
+static void addkeywords(array& source) {
+	for(auto& e : this_rules) {
+		for(auto& t : e.tokens) {
+			if(!t)
+				break;
+			if(t.is(code::flag::Variable))
+				continue;
+			if(ischa(t.id[0]))
+				add(source, t.id);
+		}
+	}
+}
+
+void lexer::setgrammar() const {
+	this_rules = grammar;
+}
+
+void lexer::initialize() {
+	updaterules();
+	addkeywords(keywords);
+}
+
+void initialize_lexers() {
+	for(auto& e : bsdata<lexer>()) {
+		e.setgrammar();
+		e.initialize();
+	}
 }

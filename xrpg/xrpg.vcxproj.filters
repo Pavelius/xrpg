@@ -135,7 +135,7 @@
     <ClInclude Include="screenshoot.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="code.h">
+    <ClInclude Include="lexer.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="metadata.h">
@@ -163,6 +163,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="dialog.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="parser.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>
@@ -359,7 +362,7 @@
     <ClCompile Include="widget_codetree.cpp">
       <Filter>Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="code_scan.cpp">
+    <ClCompile Include="parser.cpp">
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="widget_picture.cpp">

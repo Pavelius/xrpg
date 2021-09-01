@@ -8,6 +8,7 @@ BSDATAD(pack)
 const char* urls::project;
 const char* urls::projects = "projects";
 const char* urls::library = "library";
+pack*		code::this_pack;
 
 namespace code {
 const unsigned ValuseMask = 0x3FFFFFFF;

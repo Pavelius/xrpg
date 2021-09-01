@@ -72,7 +72,6 @@ public:
 	const char*			getname(pckh v) const;
 	pckh				getparent(pckh v) const;
 	pckh				getresult(pckh v) const;
-	void				parse(const char* url_content);
 	void				read(const char* url) { serial(url, false); }
 	pckh				reference(pckh v);
 	void				write(const char* url) { serial(url, true); }

@@ -1,12 +1,10 @@
-#include "code.h"
-#include "code_pack.h"
+#include "parser.h"
 #include "string.h"
 
 using namespace code;
 
 const char*		code::p;
-static rulea	this_rules;
-pack*			code::this_pack;
+rulea			code::this_rules;
 corei			code::core;
 
 static rulei* find_rule(const char* id) {
@@ -17,7 +15,7 @@ static rulei* find_rule(const char* id) {
 	return 0;
 }
 
-static void update_rules() {
+void code::updaterules() {
 	for(auto& r : this_rules) {
 		for(auto& e : r.tokens) {
 			if(!e)
@@ -92,8 +90,7 @@ void tokeni::parse() const {
 	}
 }
 
-void pack::parse(const char* url_content) {
-	this_pack = this;
+void code::parse(const char* url_content) {
 	p = url_content;
 	auto pr = find_rule("global");
 	if(!pr)
@@ -105,50 +102,5 @@ void pack::parse(const char* url_content) {
 			expected(pr->name);
 			break;
 		}
-	}
-}
-
-static const string* find(const array& source, string v) {
-	for(auto& e : source.records<string>()) {
-		if(e.equal(v))
-			return &e;
-	}
-	return 0;
-}
-
-static void add(array& source, string v) {
-	auto p = find(source, v);
-	if(p)
-		return;
-	auto p1 = (string*)source.add();
-	*p1 = v;
-}
-
-static void addkeywords(array& source) {
-	for(auto& e : this_rules) {
-		for(auto& t : e.tokens) {
-			if(!t)
-				break;
-			if(t.is(flag::Variable))
-				continue;
-			if(ischa(t.id[0]))
-				add(source, t.id);
-		}
-	}
-}
-
-void lexer::setgrammar() const {
-	this_rules = grammar;
-}
-
-void lexer::initialize() {
-	update_rules();
-	addkeywords(keywords);
-}
-
-void initialize_lexers() {
-	for(auto& e : bsdata<lexer>()) {
-		e.setgrammar();
-		e.initialize();
 	}
 }
