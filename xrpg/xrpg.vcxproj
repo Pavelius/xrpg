@@ -144,7 +144,9 @@
     <ClInclude Include="archive.h" />
     <ClInclude Include="bsreq.h" />
     <ClInclude Include="bstream.h" />
-    <ClInclude Include="cflags.h" />
+    <ClInclude Include="cflags.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="cmap.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="color.h" />

@@ -16,4 +16,4 @@
 //	char* test = "Test another";//	char temp[260];
 //	rect rc;//}
 
-int a = 10;
+int a = 5*2 + 10;

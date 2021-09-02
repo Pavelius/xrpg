@@ -73,15 +73,15 @@ static rulei c2_grammar[] = {
 	{"local_variable", {"?%static", "%member", "?%array_scope", "?%initialization"}},
 	{"sizeof", {"sizeof", "(", "%expression", ")"}},
 	{"array_scope", {"[", "%expression", "]"}},
-	{"expression", {"^?%number", "^?%string", "^?sizeof"}},
 	{"block_statements", {"{", "?%single_statement", ".?%single_statement", "}"}},
 	{"single_statement", {"?%statement", ";"}},
 	{"statement", {"^?%local_variable"}},
 	{"unary", {"^?%number", "^?%string", "^?sizeof"}},
-	{"addiction_op", {"^?+", "^?-"}},
-	{"addiction", {"%unary", "%addiction_op", "%unary"}},
 	{"multiplication_op", {"^?/", "^?*", "^?%"}},
-	{"multiplication", {"%addiction", "%multiplication_op", "%addiction"}},
+	{"multiplication", {"%unary", "%multiplication_op", "%unary"}},
+	{"addiction_op", {"^?+", "^?-"}},
+	{"addiction", {"%multiplication", "%addiction_op", "%multiplication"}},
+	{"expression", {"%addiction"}},
 };
 
 BSDATA(lexer) = {

@@ -140,6 +140,9 @@ static void test_appliaction() {
 	openurl("battle.bmp");
 	openurl("code/RustCode.rs");
 	openurl("code/projects/first/main.c2");
+	bsdata<code::lexer>::elements[0].setgrammar();
+	if(!code::parse("10*2 + 5"))
+		return;
 	draw::setnext(draw::application);
 }
 
