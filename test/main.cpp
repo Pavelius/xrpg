@@ -138,10 +138,10 @@ static void test_appliaction() {
 	initialize_lexers();
 	draw::initialize("Test UI");
 	openurl("battle.bmp");
-	openurl("code/RustCode.rs");
-	openurl("code/projects/first/main.c2");
+	//openurl("code/RustCode.rs");
+	//openurl("code/projects/first/main.c2");
 	bsdata<code::lexer>::elements[0].setgrammar();
-	if(!code::parse("10*2 + 5"))
+	if(!code::parse("10*2 + 5", "expression"))
 		return;
 	draw::setnext(draw::application);
 }

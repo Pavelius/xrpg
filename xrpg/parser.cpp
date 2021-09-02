@@ -211,12 +211,14 @@ void code::identifier() {
 	skipws();
 }
 
-bool code::parse(const char* url_content) {
+bool code::parse(const char* url_content, const char* rule_name) {
 	error.clear();
 	p = url_content;
-	auto pr = find_rule("global");
+	if(!rule_name)
+		rule_name = "global";
+	auto pr = find_rule(rule_name);
 	if(!pr) {
-		error.expected = "global";
+		error.expected = rule_name;
 		return false;
 	}
 	skipws();

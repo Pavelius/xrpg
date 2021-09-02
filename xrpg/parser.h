@@ -67,7 +67,7 @@ extern rulea			this_rules;
 void					identifier();
 void					literal();
 void					number();
-bool					parse(const char* url_content);
+bool					parse(const char* url_content, const char* rule_name = 0);
 void					skipws();
 void					updaterules();
 }
