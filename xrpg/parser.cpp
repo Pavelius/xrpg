@@ -49,7 +49,12 @@ void code::updaterules() {
 }
 
 static void comments() {
-	// TODO: parse comments
+	if(p[0] == '/' && p[1] == '/') {
+		p += 2;
+		while(*p && *p != 10 && *p != 13)
+			p++;
+		p = skipspcr(p);
+	}
 }
 
 void code::skipws() {
@@ -214,6 +219,7 @@ bool code::parse(const char* url_content) {
 		error.expected = "global";
 		return false;
 	}
+	skipws();
 	while(*p) {
 		auto pb = p;
 		pr->parse();
