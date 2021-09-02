@@ -54,12 +54,20 @@ struct corei {
 	string				type, id, member, rule, url, comment;
 	long long           number = 0;
 	const char*			expected;
-	fnevent				success;
+};
+struct errori {
+	const char*			p;
+	const char*			expected;
+	void				clear();
 };
 extern const char*		p;
+extern errori			error;
 extern corei			core;
 extern rulea			this_rules;
-void					parse(const char* url_content);
+void					identifier();
+void					literal();
+void					number();
+bool					parse(const char* url_content);
 void					skipws();
 void					updaterules();
 }

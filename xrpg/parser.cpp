@@ -3,9 +3,27 @@
 
 using namespace code;
 
-const char*		code::p;
-rulea			code::this_rules;
-corei			code::core;
+const char*			code::p;
+rulea				code::this_rules;
+corei				code::core;
+errori				code::error;
+static const char*	potent_p;
+static const char*	potent_expected;
+
+void errori::clear() {
+	memset(this, 0, sizeof(*this));
+}
+
+static void expected(const char* id) {
+	potent_p = p;
+	potent_expected = id;
+}
+
+static bool ischab(char sym) {
+	return (sym >= 'A' && sym <= 'Z')
+		|| (sym >= 'a' && sym <= 'z')
+		|| (sym == '_');
+}
 
 static rulei* find_rule(const char* id) {
 	for(auto& e : this_rules) {
@@ -20,17 +38,29 @@ void code::updaterules() {
 		for(auto& e : r.tokens) {
 			if(!e)
 				break;
-			if(e.is(flag::Variable))
+			if(e.is(flag::Variable)) {
 				e.rule = find_rule(e.id);
+				if(!e.rule) {
+					// TODO: fix error
+				}
+			}
 		}
 	}
 }
 
-void code::skipws() {
-	p = skipspcr(p);
+static void comments() {
+	// TODO: parse comments
 }
 
-static void expected(const char* id) {
+void code::skipws() {
+	while(*p) {
+		p = skipspcr(p);
+		auto p1 = p;
+		comments();
+		if(p1 != p)
+			continue;
+		break;
+	}
 }
 
 void rulei::parse() const {
@@ -56,8 +86,6 @@ void rulei::parse() const {
 			}
 			break;
 		}
-		if(core.success)
-			core.success({pb, p - pb}, *this, e);
 		if(e.is(flag::Stop))
 			break;
 	}
@@ -71,11 +99,13 @@ void tokeni::parse() const {
 	if(is(flag::ComaSeparated)) {
 		if(p[0] == ',') {
 			p++; skipws();
-		}
+		} else
+			return;
 	} else if(is(flag::PointSeparated)) {
 		if(p[0] == '.') {
 			p++; skipws();
-		}
+		} else
+			return;
 	}
 	if(rule)
 		// This is rule, not token
@@ -90,17 +120,108 @@ void tokeni::parse() const {
 	}
 }
 
-void code::parse(const char* url_content) {
+static char next_literal() {
+	while(*p) {
+		if(*p != '\\')
+			return *p++;
+		p++;
+		switch(*p++) {
+		case 0: return 0;
+		case 'n': return '\n';
+		case 't': return '\t';
+		case 'r': return '\r';
+		case '\\': return '\\';
+		case '\'': return '\'';
+		case '\"': return '\"';
+		case '\n':
+			if(p[0] == '\r')
+				p++;
+			break;
+		case '\r':
+			if(p[0] == '\n')
+				p++;
+			break;
+		default: break;
+		}
+	}
+	return 0;
+}
+
+void code::literal() {
+	if(*p == '\"') {
+		p++;
+		while(*p && *p != '\"') {
+			auto s = next_literal();
+		}
+		if(*p == '\"') {
+			p++; skipws();
+		}
+	}
+}
+
+void code::number() {
+	core.number = 0;
+	if(!isnum(*p) && !(p[0] == '-' && isnum(p[1])))
+		return;
+	if(p[0] == '0') {
+		if(p[1] == 'x') {
+			p += 2;
+			while(true) {
+				char s = *p;
+				if(s >= 'a' && s <= 'f')
+					s = s - 'a' + 10;
+				else if(s >= 'A' && s <= 'F')
+					s = s - 'A' + 10;
+				else if(s >= '0' && s <= '9')
+					s = s - '0';
+				else
+					break;
+				core.number = core.number * 16 + s;
+				p++;
+			}
+		} else {
+			while(*p >= '0' && *p <= '7') {
+				core.number = core.number * 8 + *p - '0';
+				p++;
+			}
+		}
+	} else {
+		while(*p >= '0' && *p <= '9') {
+			core.number = core.number * 10 + *p - '0';
+			p++;
+		}
+	}
+	if(*p == 'f' || *p == 'e')
+		p++;
+	skipws();
+}
+
+void code::identifier() {
+	if(!ischab(*p))
+		return;
+	auto pb = p;
+	while(ischa(*p))
+		p++;
+	core.id.set(pb, p - pb);
+	skipws();
+}
+
+bool code::parse(const char* url_content) {
+	error.clear();
 	p = url_content;
 	auto pr = find_rule("global");
-	if(!pr)
-		return;
+	if(!pr) {
+		error.expected = "global";
+		return false;
+	}
 	while(*p) {
 		auto pb = p;
 		pr->parse();
 		if(pb == p) {
-			expected(pr->name);
-			break;
+			error.p = potent_p;
+			error.expected = potent_expected;
+			return false;
 		}
 	}
+	return true;
 }

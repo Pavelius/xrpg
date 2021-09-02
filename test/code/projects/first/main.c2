@@ -1,6 +1,7 @@
 ﻿import geo.rect;
 import core.crt;import core.string as str;
-import core.io;
+import core.io;
+import sys.platform.ui;
 enum {
 	OK, Cancel, Accept
 };

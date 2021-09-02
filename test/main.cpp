@@ -180,7 +180,8 @@ int main() {
 	//draw::setnext(test_table);
 	//draw::setnext(test_fields);
 	//test_answers();
-	test_simpleui();
+	//test_simpleui();
+	test_appliaction();
 	draw::start();
 	return 0;
 }
