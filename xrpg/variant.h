@@ -7,6 +7,7 @@
 
 enum variant_s : unsigned char;
 struct bsreq;
+
 struct varianti {
 	const char*			id;
 	const bsreq*		metadata;

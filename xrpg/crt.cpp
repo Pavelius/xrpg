@@ -275,13 +275,6 @@ void szencode(char* output, int output_count, codepages output_code, const char*
 	}
 }
 
-int	serializer::node::getlevel() const {
-	auto result = 0;
-	for(auto p = parent; p; p = p->parent)
-		result++;
-	return result;
-}
-
 void* array::add() {
 	if(count >= getmaximum()) {
 		if(isgrowable())
@@ -312,7 +305,7 @@ void array::clear() {
 	data = 0;
 }
 
-void array::setup(unsigned size) {
+void array::setup(size_t size) {
 	if(!isgrowable())
 		return;
 	clear();
@@ -345,7 +338,7 @@ int array::find(const char* value, unsigned offset) const {
 	return -1;
 }
 
-int array::find(int i1, int i2, void* value, unsigned offset, unsigned size) const {
+int array::find(int i1, int i2, void* value, unsigned offset, size_t size) const {
 	if(i2 == -1)
 		i2 = getcount() - 1;
 	switch(size) {
@@ -427,7 +420,7 @@ void array::swap(int i1, int i2) {
 	}
 }
 
-void array::shift(int i1, int i2, unsigned c1, unsigned c2) {
+void array::shift(int i1, int i2, size_t c1, size_t c2) {
 	if(i2 < i1) {
 		iswap(i2, i1);
 		iswap(c1, c2);
@@ -444,7 +437,7 @@ void array::shift(int i1, int i2, unsigned c1, unsigned c2) {
 	}
 }
 
-void array::shrink(unsigned offset, unsigned delta) {
+void array::shrink(unsigned offset, size_t delta) {
 	if(offset + delta > size)
 		return;
 	auto p1 = (char*)data;
@@ -467,7 +460,7 @@ void array::shrink(unsigned offset, unsigned delta) {
 	size = new_size;
 }
 
-void array::grow(unsigned offset, unsigned delta) {
+void array::grow(unsigned offset, size_t delta) {
 	if(!delta)
 		return;
 	if(!isgrowable())
@@ -495,7 +488,7 @@ void array::grow(unsigned offset, unsigned delta) {
 	size = new_size;
 }
 
-void array::zero(unsigned offset, unsigned delta) {
+void array::zero(unsigned offset, size_t delta) {
 	if(!delta)
 		return;
 	auto pe = (char*)data + size * count;
@@ -513,7 +506,7 @@ void array::change(unsigned offset, int size) {
 		shrink(offset, -size);
 }
 
-const void* array::findu(const void* value, unsigned size) const {
+const void* array::findu(const void* value, size_t size) const {
 	auto p = (char*)data;
 	auto pe = (char*)data + count*(this->size);
 	auto s = *((char*)value);
@@ -541,7 +534,7 @@ void* array::addu(const void* element, unsigned count) {
 	return pr;
 }
 
-const char* array::findus(const char* value, unsigned size) const {
+const char* array::findus(const char* value, size_t size) const {
 	auto p = (char*)data;
 	auto pe = (char*)data + count * (this->size);
 	auto s = *value;

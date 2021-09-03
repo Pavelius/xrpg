@@ -61,7 +61,7 @@ template<class T> inline void		zshuffle(T* p, int count) { for(int i = 0; i < co
 template<class T, int count_max = 128>
 struct adat {
 	T								data[count_max];
-	unsigned						count;
+	size_t							count;
 	constexpr adat() : data{}, count(0) {}
 	constexpr const T& operator[](unsigned index) const { return data[index]; }
 	constexpr T& operator[](unsigned index) { return data[index]; }
@@ -86,7 +86,7 @@ struct adat {
 template<class T>
 class slice {
 	T*								data;
-	unsigned						count;
+	size_t							count;
 public:
 	constexpr slice() : data(0), count(0) {}
 	template<size_t N> constexpr slice(T(&v)[N]) : data(v), count(N) {}
@@ -98,17 +98,17 @@ public:
 };
 // Abstract array vector
 class array {
-	unsigned						count_maximum;
-	void							grow(unsigned offset, unsigned delta);
-	void							shrink(unsigned offset, unsigned delta);
-	void							zero(unsigned offset, unsigned delta);
+	size_t							count_maximum;
+	void							grow(unsigned offset, size_t delta);
+	void							shrink(unsigned offset, size_t delta);
+	void							zero(unsigned offset, size_t delta);
 public:
 	void*							data;
-	unsigned						count, size;
+	size_t							count, size;
 	typedef int(*pcompare)(const void* p1, const void* p2, void* param);
-	constexpr array(unsigned size = 0) : count_maximum(0), data(0), count(0), size(size) {}
-	constexpr array(void* data, unsigned size, unsigned count) : count_maximum(count | 0x80000000), data(data), count(count), size(size) {}
-	constexpr array(void* data, unsigned size, unsigned count, unsigned count_maximum) : count_maximum(count_maximum | 0x80000000), data(data), count(count), size(size) {}
+	constexpr array(size_t size = 0) : count_maximum(0), data(0), count(0), size(size) {}
+	constexpr array(void* data, size_t size, size_t count) : count_maximum(count | 0x80000000), data(data), count(count), size(size) {}
+	constexpr array(void* data, size_t size, size_t count, unsigned count_maximum) : count_maximum(count_maximum | 0x80000000), data(data), count(count), size(size) {}
 	constexpr explicit operator bool() const { return count != 0; }
 	~array();
 	void*							add();
@@ -121,10 +121,10 @@ public:
 	void							clear();
 	char*							end() const { return (char*)data + size * count; }
 	int								find(const char* value, unsigned offset) const;
-	int								find(int i1, int i2, void* value, unsigned offset, unsigned size) const;
-	int								find(void* value, unsigned offset, unsigned size) const { return find(0, -1, value, offset, size); }
-	const void*						findu(const void* value, unsigned size) const;
-	const char*						findus(const char* value, unsigned size) const;
+	int								find(int i1, int i2, void* value, unsigned offset, size_t size) const;
+	int								find(void* value, unsigned offset, size_t size) const { return find(0, -1, value, offset, size); }
+	const void*						findu(const void* value, size_t size) const;
+	const char*						findus(const char* value, size_t size) const;
 	unsigned						getmaximum() const { return count_maximum & 0x7FFFFFFF; }
 	unsigned						getcount() const { return count; }
 	unsigned						getsize() const { return size; }
@@ -135,9 +135,9 @@ public:
 	void*							ptr(int index) const { return (char*)data + size * index; }
 	template<class T> slice<T> records() const { return slice<T>((T*)data, count); }
 	void							remove(int index, int elements_count = 1);
-	void							shift(int i1, int i2, unsigned c1, unsigned c2);
+	void							shift(int i1, int i2, size_t c1, size_t c2);
 	void							setcount(unsigned value) { count = value; }
-	void							setup(unsigned size);
+	void							setup(size_t size);
 	void							sort(int i1, int i2, pcompare compare, void* param);
 	void							sort(pcompare compare, void* param) { sort(-1, -1, compare, param); }
 	void							swap(int i1, int i2);
@@ -245,37 +245,6 @@ void								szupper(char* p); // to upper reg
 char*								szurl(char* p, const char* path, const char* name, const char* ext = 0, const char* suffix = 0);
 char*								szurlc(char* p1);
 inline int							xrand(int n1, int n2) { return n1 + rand() % (n2 - n1 + 1); }
-// Abstract serializer
-struct serializer {
-	enum class kind { Text, Number, Array, Struct };
-	struct node {
-		node*						parent;
-		const char*					name;
-		kind						type;
-		int							index;
-		void*						object; // application defined data
-		void*						metadata; // application defined metadata
-		bool						skip; // set this if you want skip block
-		//
-		constexpr node(kind type = kind::Text) : parent(0), name(""), type(type), index(0), object(0), metadata(0), skip(false) {}
-		constexpr node(node& parent, const char* name = "", kind type = kind::Text) : parent(&parent), name(name), type(type), index(0), object(0), metadata(0), skip(false) {}
-		bool						operator==(const char* name) const { return name && strcmp(this->name, name) == 0; }
-		//
-		int							getlevel() const;
-		bool						isparent(const char* id) const { return parent && *parent == id; }
-	};
-	struct reader {
-		virtual void				error(const char* format, ...) {}
-		virtual void				open(node& e) {}
-		virtual void				set(node& e, const char* value) = 0;
-		virtual void				close(node& e) {}
-	};
-	virtual ~serializer() {}
-	virtual void					open(const char* id, kind type = kind::Text) = 0;
-	virtual void					set(const char* id, int v, kind type = kind::Number) = 0;
-	virtual void					set(const char* id, const char* v, kind type = kind::Text) = 0;
-	virtual void					close(const char* id, kind type = kind::Text) = 0;
-};
 // Get base type
 template<class T> struct meta_decoy { typedef T value; };
 template<> struct meta_decoy<const char*> { typedef const char* value; };

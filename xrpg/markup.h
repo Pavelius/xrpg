@@ -21,11 +21,11 @@ sizeof(R),\
 struct markup;
 
 struct fnlist {
-	fntext							getname;
-	fnallow							allow;
-	fnsource						source;
-	fnchoose						choose;
-	fndraw							preview;
+	fntext				getname;
+	fnallow				allow;
+	fnsource			source;
+	fnchoose			choose;
+	fndraw				preview;
 };
 struct fnelement {
 	fnvisible			visible;
@@ -73,10 +73,10 @@ struct markup {
 namespace draw {
 int						field(int x, int y, int width, markcontext& ctx, const markup* type);
 }
-const markup*			getpropertiesmarkup();
-void*					getpropertiesobject();
-void					setproperties(void* object, const markup* type);
-void					setpropertiesfocus();
+//const markup*			getpropertiesmarkup();
+//void*					getpropertiesobject();
+//void					setproperties(void* object, const markup* type);
+//void					setpropertiesfocus();
 DGLNK(char, int)
 DGLNK(short, int)
 DGLNK(unsigned char, int)

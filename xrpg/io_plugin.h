@@ -1,4 +1,5 @@
 #include "io_stream.h"
+#include "serializer.h"
 #include "stringbuilder.h"
 
 #pragma once

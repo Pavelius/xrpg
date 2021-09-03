@@ -2,6 +2,7 @@
 #include "handler.h"
 #include "markup.h"
 #include "point.h"
+#include "serializer.h"
 
 #pragma once
 

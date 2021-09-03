@@ -93,9 +93,6 @@
     <ClInclude Include="command.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="cflags.h">
-      <Filter>Support</Filter>
-    </ClInclude>
     <ClInclude Include="draw_control.h">
       <Filter>Interface</Filter>
     </ClInclude>
@@ -166,6 +163,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="parser.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="serializer.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>
@@ -384,6 +384,9 @@
       <Filter>Format</Filter>
     </ClCompile>
     <ClCompile Include="dialog.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="serializer.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
