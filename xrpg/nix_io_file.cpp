@@ -111,3 +111,7 @@ bool io::file::exist(const char* url) {
 bool io::file::makedir(const char* url) {
 	return false;
 }
+
+bool io::file::getfullurl(const char* short_url, char* url, int size) {
+	return false;
+}

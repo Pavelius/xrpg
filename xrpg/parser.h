@@ -58,6 +58,7 @@ struct corei {
 struct errori {
 	const char*			p;
 	const char*			expected;
+	const char*			format;
 	void				clear();
 };
 extern const char*		p;
