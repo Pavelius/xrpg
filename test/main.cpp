@@ -1,6 +1,5 @@
 #include "answers.h"
 #include "archive.h"
-#include "code_pack.h"
 #include "dialog.h"
 #include "draw.h"
 #include "draw_button.h"
@@ -11,6 +10,7 @@
 #include "io_stream.h"
 #include "lexer.h"
 #include "main.h"
+#include "package.h"
 #include "string.h"
 
 using namespace draw;
@@ -92,7 +92,7 @@ static bool test_archive(bool write_mode) {
 }
 
 static bool test_pack() {
-	code::pack p1;
+	code::package p1;
 	p1.create("test.ui");
 	p1.addclass(p1.add("uint"), 0);
 	p1.addclass(p1.add("ushort"), 0);

@@ -26,7 +26,7 @@ enum symbol_s : pckh {
 	None = 0xFFFFFFFF
 };
 struct symbol;
-class pack {
+class package {
 	array				strings;
 	array				symbols;
 	array				asts;
@@ -57,14 +57,14 @@ public:
 	pckh				add(operation type, pckh left, pckh right = 0);
 	pckh				addclass(pckh id, pckh result);
 	void				addclasses(slice<string> source);
-	static pack*		addmodule(const char* url);
+	static package*		addmodule(const char* url);
 	pckh				addsym(pckh id, pckh parent, pckh result, unsigned index, unsigned flags);
 	void				clear();
 	void				create(const char* url);
 	pckh				find(const char* v) const;
 	pckh				find(const char* v, unsigned s) const;
 	pckh				find(pckh id, pckh parent) const;
-	static pack*		findmodule(const char* url);
+	static package*		findmodule(const char* url);
 	record				getsymbols() const;
 	unsigned			getflags(pckh vm) const;
 	static const char*	getmodule(const char* url);
@@ -78,7 +78,7 @@ public:
 };
 extern const char*		p;
 void					skipws();
-extern pack*			this_pack;
+extern package*			this_pack;
 namespace urls {
 extern const char*		project;
 extern const char*		projects;

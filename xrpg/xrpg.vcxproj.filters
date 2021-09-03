@@ -147,7 +147,7 @@
     <ClInclude Include="draw_valuelist.h">
       <Filter>Interface</Filter>
     </ClInclude>
-    <ClInclude Include="code_pack.h">
+    <ClInclude Include="package.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="cmap.h">
@@ -350,7 +350,7 @@
     <ClCompile Include="widget_codeview.cpp">
       <Filter>Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="code.cpp">
+    <ClCompile Include="lexer.cpp">
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="string.cpp">
@@ -368,7 +368,7 @@
     <ClCompile Include="widget_picture.cpp">
       <Filter>Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="code_pack.cpp">
+    <ClCompile Include="package.cpp">
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="crt_file.cpp">

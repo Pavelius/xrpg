@@ -114,7 +114,8 @@ public:
 	void*							add();
 	void*							addz() { auto p = add(); memset(p, 0, size); return p; }
 	void*							add(const void* element);
-	void*							addc(const void* element, unsigned count);
+	void*							addu(const void* element, unsigned count);
+	const char*						addus(const char* element, unsigned count);
 	char*							begin() const { return (char*)data; }
 	void							change(unsigned offset, int size);
 	void							clear();
@@ -123,6 +124,7 @@ public:
 	int								find(int i1, int i2, void* value, unsigned offset, unsigned size) const;
 	int								find(void* value, unsigned offset, unsigned size) const { return find(0, -1, value, offset, size); }
 	const void*						findu(const void* value, unsigned size) const;
+	const char*						findus(const char* value, unsigned size) const;
 	unsigned						getmaximum() const { return count_maximum & 0x7FFFFFFF; }
 	unsigned						getcount() const { return count; }
 	unsigned						getsize() const { return size; }
@@ -185,7 +187,7 @@ template<typename T> struct sliceu {
 	constexpr explicit operator bool() const { return count != 0; }
 	T*								begin() const { return (T*)bsdata<T>::source.ptr(start); }
 	T*								end() const { return (T*)bsdata<T>::source.ptr(start + count); }
-	void							set(const T* v, unsigned count) { start = bsdata<T>::source.indexof(bsdata<T>::source.addc(v, count)); this->count = count; }
+	void							set(const T* v, unsigned count) { start = bsdata<T>::source.indexof(bsdata<T>::source.addu(v, count)); this->count = count; }
 	constexpr unsigned				size() const { return count; }
 };
 // Callback function of any command executing

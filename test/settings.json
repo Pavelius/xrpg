@@ -75,7 +75,7 @@
       "Visible":1,
       "columns":{
         "Name":{
-          "width":221,
+          "width":237,
           "size":4,
           "total":0
         }
@@ -86,7 +86,7 @@
       "Visible":1,
       "columns":{
         "Name":{
-          "width":221,
+          "width":237,
           "size":4,
           "total":0
         }
@@ -108,7 +108,7 @@
   "dockbar":{
     "DockLeft":{
       "current":0,
-      "size":221
+      "size":237
     },
     "DockLeftBottom":{
       "current":0,

@@ -1,5 +1,5 @@
 #include "lexer.h"
-#include "code_pack.h"
+#include "package.h"
 
 using namespace code;
 
@@ -77,9 +77,14 @@ static rulei c2_grammar[] = {
 	{"single_statement", {"?%statement", ";"}},
 	{"statement", {"^?%local_variable"}},
 	{"unary", {"^?%number", "^?%string", "^?sizeof"}},
+	{"prefix_op", {"^?++", "^?--", "^?\\&"}},
+	{"prefix", {"?.%prefix_op", "%unary"}},
+	{"indirection", {"\\.", "id"}},
+	{"postfix_op", {"^?++", "^?--", "?%indirection"}},
+	{"postfix", {"%unary", "?.%postfix_op"}},
 	{"multiplication_op", {"^?/", "^?*", "^?%"}},
-	{"multiplication_op_state", {"%multiplication_op", "%unary"}},
-	{"multiplication", {"%unary", "?%multiplication_op_state"}},
+	{"multiplication_op_state", {"%multiplication_op", "%postfix"}},
+	{"multiplication", {"%postfix", "?%multiplication_op_state"}},
 	{"addiction_op", {"^?+", "^?-"}},
 	{"addiction_op_state", {"%addiction_op", "%multiplication"}},
 	{"addiction", {"%multiplication", "?%addiction_op_state"}},
@@ -93,6 +98,9 @@ static rulei c2_grammar[] = {
 	{"logical_op_state", {"%logical_op", "%conditional"}},
 	{"logical", {"%conditional", "?%logical_op_state"}},
 	{"expression", {"%logical"}},
+	{"while", {"while", "(", "%expression", ")", "%single_statement"}},
+	{"if", {"if", "(", "%expression", ")", "%single_statement"}},
+	{"switch", {"switch", "(", "%expression", ")", "{", "}"}},
 };
 
 BSDATA(lexer) = {

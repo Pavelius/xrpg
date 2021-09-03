@@ -1,14 +1,14 @@
-#include "code_pack.h"
+#include "package.h"
 #include "io_stream.h"
 
 using namespace code;
 
-BSDATAD(pack)
+BSDATAD(package)
 
 const char* urls::project;
 const char* urls::projects = "projects";
 const char* urls::library = "library";
-pack*		code::this_pack;
+package*	code::this_pack;
 
 namespace code {
 const unsigned ValuseMask = 0x3FFFFFFF;
@@ -58,7 +58,7 @@ static unsigned getbasevalue(base b, pckh v) {
 	return (static_cast<int>(b) << 30) | v;
 }
 
-pckh pack::find(const char* v, unsigned len) const {
+pckh package::find(const char* v, unsigned len) const {
 	if(!v || !len)
 		return None;
 	auto p = strings.begin();
@@ -83,13 +83,13 @@ pckh pack::find(const char* v, unsigned len) const {
 	return None;
 }
 
-pckh pack::find(const char* v) const {
+pckh package::find(const char* v) const {
 	if(!v)
 		return None;
 	return find(v, zlen(v));
 }
 
-pckh pack::add(const char* v, unsigned len) {
+pckh package::add(const char* v, unsigned len) {
 	if(!v || !len)
 		return None;
 	auto h = find(v, len);
@@ -104,26 +104,26 @@ pckh pack::add(const char* v, unsigned len) {
 	return result;
 }
 
-pckh pack::add(const char* v) {
+pckh package::add(const char* v) {
 	if(!v)
 		return None;
 	return add(v, zlen(v));
 }
 
-pack* pack::addmodule(const char* url) {
+package* package::addmodule(const char* url) {
 	auto p = findmodule(url);
 	if(p)
 		return p;
-	p = bsdata<pack>::add();
+	p = bsdata<package>::add();
 	memset(p, 0, sizeof(*p));
 	p->create(url);
 	return p;
 }
 
-pack* pack::findmodule(const char* url) {
+package* package::findmodule(const char* url) {
 	if(!url)
 		return 0;
-	for(auto& e : bsdata<pack>()) {
+	for(auto& e : bsdata<package>()) {
 		if(!e.strings)
 			continue;
 		if(strcmp((char*)e.strings.data, url) == 0)
@@ -132,7 +132,7 @@ pack* pack::findmodule(const char* url) {
 	return 0;
 }
 
-pckh pack::find(operation type, pckh left, pckh right) const {
+pckh package::find(operation type, pckh left, pckh right) const {
 	for(auto& e : asts.records<ast>()) {
 		if(e.type == type && e.left == left && e.right == right)
 			return &e - (ast*)asts.begin();
@@ -140,11 +140,11 @@ pckh pack::find(operation type, pckh left, pckh right) const {
 	return None;
 }
 
-pack::record pack::getsymbols() const {
+package::record package::getsymbols() const {
 	return record(getbasevalue(base::Symbols, 0), getbasevalue(base::Symbols, symbols.getcount()));
 }
 
-pckh pack::add(operation type, pckh left, pckh right) {
+pckh package::add(operation type, pckh left, pckh right) {
 	auto i = find(type, left, right);
 	if(i != None)
 		return i;
@@ -160,18 +160,18 @@ pckh pack::add(operation type, pckh left, pckh right) {
 	return p - (ast*)asts.begin();
 }
 
-pckh pack::addclass(pckh id, pckh result) {
+pckh package::addclass(pckh id, pckh result) {
 	return addsym(id, Class, result, 0, 0);
 }
 
-void pack::addclasses(slice<string> source) {
+void package::addclasses(slice<string> source) {
 	for(auto v : source) {
 		auto id = add(v);
 		addclass(id, id);
 	}
 }
 
-void pack::create(const char* url) {
+void package::create(const char* url) {
 	clear();
 	strings.setup(sizeof(char));
 	symbols.setup(sizeof(symbol));
@@ -179,13 +179,13 @@ void pack::create(const char* url) {
 	addclass(This, add(url));
 }
 
-void pack::clear() {
+void package::clear() {
 	strings.clear();
 	symbols.clear();
 	asts.clear();
 }
 
-pckh pack::find(pckh id, pckh parent) const {
+pckh package::find(pckh id, pckh parent) const {
 	for(auto& e : symbols.records<symbol>()) {
 		if(e.id == id && e.parent == parent)
 			return &e - (symbol*)symbols.begin();
@@ -193,7 +193,7 @@ pckh pack::find(pckh id, pckh parent) const {
 	return None;
 }
 
-pckh pack::addsym(pckh id, pckh parent, pckh result, unsigned index, unsigned flags) {
+pckh package::addsym(pckh id, pckh parent, pckh result, unsigned index, unsigned flags) {
 	auto v = find(id, parent);
 	if(v == None) {
 		auto p = (symbol*)symbols.add();
@@ -209,7 +209,7 @@ pckh pack::addsym(pckh id, pckh parent, pckh result, unsigned index, unsigned fl
 	return v;
 }
 
-const char* pack::getmodule(const char* url) {
+const char* package::getmodule(const char* url) {
 	const char* collection[] = {szfurl(urls::projects), szfurl(urls::library)};
 	for(auto p : collection) {
 		auto n = zlen(p);
@@ -228,7 +228,7 @@ const char* pack::getmodule(const char* url) {
 	return 0;
 }
 
-const char* pack::getname(pckh v0) const {
+const char* package::getname(pckh v0) const {
 	auto v = getvalue(v0);
 	switch(getbase(v0)) {
 	case base::Literals:
@@ -244,7 +244,7 @@ const char* pack::getname(pckh v0) const {
 	}
 }
 
-pckh pack::getresult(pckh vm) const {
+pckh package::getresult(pckh vm) const {
 	auto v = getvalue(vm);
 	switch(getbase(vm)) {
 	case base::Symbols:
@@ -256,7 +256,7 @@ pckh pack::getresult(pckh vm) const {
 	}
 }
 
-pckh pack::getparent(pckh vm) const {
+pckh package::getparent(pckh vm) const {
 	auto v = getvalue(vm);
 	switch(getbase(vm)) {
 	case base::Symbols:
@@ -268,7 +268,7 @@ pckh pack::getparent(pckh vm) const {
 	}
 }
 
-unsigned pack::getflags(pckh vm) const {
+unsigned package::getflags(pckh vm) const {
 	auto v = getvalue(vm);
 	switch(getbase(vm)) {
 	case base::Symbols:
@@ -280,7 +280,7 @@ unsigned pack::getflags(pckh vm) const {
 	}
 }
 
-pckh pack::reference(pckh sym) {
+pckh package::reference(pckh sym) {
 	return addsym(None, Pointer, sym, 0, 0);
 }
 
@@ -328,7 +328,7 @@ static bool version(io::stream& file, const char* signature, int major, int mino
 	return true;
 }
 
-bool pack::serial(const char* url, bool write_mode) {
+bool package::serial(const char* url, bool write_mode) {
 	io::file file(url, write_mode ? StreamWrite : StreamRead);
 	if(!file)
 		return false;

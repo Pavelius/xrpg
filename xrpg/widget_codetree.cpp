@@ -19,14 +19,14 @@ static class widget_codetypes : public controls::tableref {
 		return false;
 	}
 public:
-	pack* getcurrent() const {
+	package* getcurrent() const {
 		if(!getmaximum())
 			return 0;
-		return (pack*)get(current);
+		return (package*)get(current);
 	}
 	void update() {
 		clear();
-		for(auto& e : bsdata<pack>()) {
+		for(auto& e : bsdata<package>()) {
 			if(!e)
 				continue;
 			addref(&e);
@@ -34,7 +34,7 @@ public:
 		ensurevisible();
 	}
 	static const char* getpackname(const void* object, stringbuilder& sb) {
-		return ((pack*)object)->getname();
+		return ((package*)object)->getname();
 	}
 	void initialize() {
 		auto& col = addcol("Name", {}, "Text");
@@ -47,7 +47,7 @@ public:
 } widget_codetypes_control;
 
 static class widget_codemembers : public controls::tableref {
-	pack* parent = 0;
+	package* parent = 0;
 	const char* getvalue(const char* id, stringbuilder& sb) const override {
 		if(equal(id, "Name"))
 			return getnm("CodeTreeMembers");

@@ -689,8 +689,8 @@ class widget_codeview : public control, vector<char> {
 		maximum.x = size.x * fontsize.x;
 		maximum.y = size.y;
 	}
-	pack* getpackage() const {
-		auto p = pack::findmodule(url_module);
+	package* getpackage() const {
+		auto p = package::findmodule(url_module);
 		if(!p)
 			return 0;
 		return p;
@@ -719,11 +719,11 @@ public:
 		delete p;
 	}
 	void readpackage() {
-		url_module = pack::getmodule(url);
+		url_module = package::getmodule(url);
 		if(!url_module || !source_lexer)
 			return;
 		source_lexer->setgrammar();
-		auto p = pack::addmodule(url_module);
+		auto p = package::addmodule(url_module);
 		p->addclasses(source_lexer->standart_classes);
 		this_pack = p;
 		parse(getbegin());
@@ -775,12 +775,12 @@ public:
 				update_codetree();
 			}
 		} else if(equal(id, "ParseAll")) {
-			auto pack = getpackage();
-			if(!pack)
+			auto package = getpackage();
+			if(!package)
 				return false;
 			if(run) {
 				source_lexer->setgrammar();
-				this_pack = pack;
+				this_pack = package;
 				parse(begin());
 				update_codetree();
 			}

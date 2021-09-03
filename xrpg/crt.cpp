@@ -528,7 +528,7 @@ const void* array::findu(const void* value, unsigned size) const {
 	return 0;
 }
 
-void* array::addc(const void* element, unsigned count) {
+void* array::addu(const void* element, unsigned count) {
 	auto s = count * size;
 	auto p = findu(element, s);
 	if(p)
@@ -538,5 +538,33 @@ void* array::addc(const void* element, unsigned count) {
 	auto pr = ptr(ci);
 	memcpy(pr, element, s);
 	this->count += count;
+	return pr;
+}
+
+const char* array::findus(const char* value, unsigned size) const {
+	auto p = (char*)data;
+	auto pe = (char*)data + count * (this->size);
+	auto s = *value;
+	while(p < pe) {
+		p = (char*)memchr(p, s, pe - p);
+		if(!p || (unsigned(pe - p) < size))
+			break;
+		if(memcmp(p, value, size) == 0 && p[size]==0)
+			return p;
+		p++;
+	}
+	return 0;
+}
+
+const char* array::addus(const char* element, unsigned count) {
+	auto p = findus(element, count);
+	if(p)
+		return p;
+	auto ci = this->count;
+	reserve(this->count + count + 1);
+	auto pr = (char*)ptr(ci);
+	memcpy(pr, element, count);
+	pr[count] = 0;
+	this->count += count + 1;
 	return pr;
 }
