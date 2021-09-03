@@ -1,19 +1,17 @@
-﻿//import geo.rect;
-//import core.crt;//import core.string as str;
-//import core.io;
-//import sys.platform.ui;
-//enum {
-//	OK, Cancel, Accept
-//};
+﻿import geo.rect;
+import core.crt;import core.string as str;
+import core.io;
+import sys.platform.ui;
+enum {
+	OK, Cancel, Accept
+};
 
-//static int x;
-//static int y;
+static int x;
+static int y;
 
-//void print(int x, int y, char* format) {
-//}
+void print(int x, int y, char* format) {
+}
 
-//int main() {
-//	char* test = "Test another";//	char temp[260];
-//	rect rc;//}
-
-int a = 5*2 + 10;
+int main() {
+	char* test = "Test another";	char temp[260];
+	rect rc;}

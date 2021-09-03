@@ -4,13 +4,11 @@
 
 using namespace draw::controls;
 
-void valuelist::add(const char* name) {
+void valuelist::add(const char* name, size_t value, int image) {
 	auto p = source.add();
 	p->name = name;
-}
-
-const char* valuelist::getname(int line, int column, stringbuilder& sb) const {
-	return source[line].name;
+	p->value = value;
+	p->image = image;
 }
 
 const char*	valuelist::getcurrentname() const {
@@ -18,6 +16,12 @@ const char*	valuelist::getcurrentname() const {
 		return "";
 	char temp[260]; stringbuilder sb(temp);
 	return getname(current, 0, sb);
+}
+
+size_t valuelist::getcurrentvalue() const {
+	if(!getmaximum())
+		return 0;
+	return source[current].value;
 }
 
 bool valuelist::isfocused() const {

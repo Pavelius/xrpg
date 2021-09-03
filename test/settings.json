@@ -98,11 +98,11 @@
     }
   },
   "window":{
-    "x":164,
-    "y":32,
+    "x":321,
+    "y":37,
     "width":784,
     "height":671,
-    "header_width":160,
+    "header_width":125,
     "flags":48
   },
   "dockbar":{
