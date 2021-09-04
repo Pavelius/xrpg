@@ -102,6 +102,7 @@ Size: Размер
 StringColor: Цвет строк
 Tabs: Закладки
 Tabulation: Табуляция
+Test: Тестирование
 TextColor: Цвет текста
 TipsBackColor: Цвет фона подсказки
 TipsTextColor: Цвет текста подсказки

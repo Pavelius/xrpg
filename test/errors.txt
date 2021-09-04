@@ -1,2 +1,2 @@
 ﻿Errors occurs in locale/ru/Names.txt.txt
-Define translate for 'ShowTabsAlways'
+Define translate for 'Test'

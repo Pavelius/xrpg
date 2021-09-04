@@ -536,8 +536,10 @@ void table::cell(const rect& rc, int line, int column, const char* label) {
 	rect r1 = rc + metrics::edit;
 	textc(r1.x1, r1.y1, r1.width(), label, -1, align, &clipped);
 	if(clipped) {
-		if(ishilite(r1))
-			tooltips(r1.x1, r1.y1, 200, label);
+		if(ishilite(r1)) {
+			tooltips(r1.x1, r1.y1, 200);
+			tooltips(label);
+		}
 	}
 }
 

@@ -1,5 +1,6 @@
 #include "command.h"
 #include "pointl.h"
+#include "variant.h"
 
 #pragma once
 
@@ -19,11 +20,11 @@ struct scenei : public pointl {
 };
 extern scenei		scene;
 void				answerbt(int index, long id, const char* title);
-bool				button(const char* title, unsigned key, bool(*p)(const char*));
+bool				button(const char* title, unsigned key, bool(*p)(const char*), const char* description);
 bool				buttonfd(const char* title);
-inline bool			buttonfd(const char* title, unsigned key) { return button(title, key, buttonfd); }
+inline bool			buttonfd(const char* title, unsigned key, const char* description) { return button(title, key, buttonfd, description); }
 bool				buttonrd(const char* title);
-inline bool			buttonrd(const char* title, unsigned key) { return button(title, key, buttonrd); }
+inline bool			buttonrd(const char* title, unsigned key, const char* description) { return button(title, key, buttonrd, description); }
 void				fog(int n);
 void				grid();
 void				paintclear();
@@ -36,4 +37,5 @@ inline void			setposition(int x, int y) { scene.x = x; scene.y = y; }
 void				stext(const char* string);
 bool				window(bool hilite, const char* string, const char* resid);
 void				windows(const command* source);
+void				windows(const variant* source);
 }

@@ -10,7 +10,7 @@
           "ShowStatusBar":2,
           "ShowLeftPanel":2,
           "ShowRightPanel":2,
-          "ShowBottomPanel":0,
+          "ShowBottomPanel":2,
           "ShowPadding":0
         },
         "Tabs":{
@@ -72,25 +72,11 @@
     },
     "CodeTreeTypes":{
       "Docking":0,
-      "Visible":1,
-      "columns":{
-        "Name":{
-          "width":237,
-          "size":4,
-          "total":0
-        }
-      }
+      "Visible":1
     },
     "CodeTreeMembers":{
       "Docking":1,
-      "Visible":1,
-      "columns":{
-        "Name":{
-          "width":237,
-          "size":4,
-          "total":0
-        }
-      }
+      "Visible":1
     },
     "picture":{
       "Docking":4,
@@ -98,21 +84,21 @@
     }
   },
   "window":{
-    "x":321,
-    "y":37,
-    "width":784,
-    "height":671,
-    "header_width":125,
+    "x":276,
+    "y":93,
+    "width":862,
+    "height":561,
+    "header_width":198,
     "flags":48
   },
   "dockbar":{
     "DockLeft":{
       "current":0,
-      "size":237
+      "size":176
     },
     "DockLeftBottom":{
       "current":0,
-      "size":200
+      "size":173
     },
     "DockRight":{
       "current":0,

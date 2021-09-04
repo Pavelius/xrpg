@@ -1,6 +1,5 @@
 #include "crt.h"
 #include "draw.h"
-#include "draw_button.h"
 #include "draw_control.h"
 #include "draw_input.h"
 #include "draw_focus.h"
@@ -9,6 +8,10 @@
 
 using namespace draw;
 using namespace draw::controls;
+
+namespace metrics {
+extern int				edit;
+}
 
 const sprite*			list::std_tree_images = (sprite*)loadb("art/pma/tree.pma");
 static char				search_text[32];

@@ -85,7 +85,7 @@ static bool test_archive(bool write_mode) {
 	archive e(file, write_mode);
 	if(!e.signature("TST"))
 		return false;
-	if(!e.version(0,1))
+	if(!e.version(0, 1))
 		return false;
 	e.set(bsdata<planeti>::source);
 	return true;
@@ -126,9 +126,11 @@ void main_util();
 #endif
 
 static void common_status() {
+	static command commands[] = {
+		{"Test", test_scene},
+		{}};
 	setpositionrd();
-	buttonrd("Test");
-	buttonrd("Apply");
+	windows(commands);
 }
 
 static void test_appliaction() {
@@ -183,8 +185,8 @@ int main() {
 	//draw::setnext(test_table);
 	//draw::setnext(test_fields);
 	//test_answers();
-	//test_simpleui();
-	test_appliaction();
+	test_simpleui();
+	//test_appliaction();
 	draw::start();
 	return 0;
 }

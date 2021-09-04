@@ -149,7 +149,6 @@ struct surface {
 	void				write(const char* url, color* pallette);
 };
 extern surface*			canvas;
-//extern point			caret;
 extern rect				clipping; // Clipping area
 extern fnevent			domodal;
 extern point			dragmouse;

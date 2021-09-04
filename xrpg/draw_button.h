@@ -57,5 +57,5 @@ int							tabs(rect rc, bool show_close, bool right_side, void** data, int start
 int							tabv(rect rc, bool show_close, bool right_side, void** data, int start, int count, int current, int* hilite, fntext gtext);
 void						titletext(int& x, int y, int& width, const char* label, int label_width, const char* separator = 0);
 void						tooltips(const char* format, ...);
-void						tooltips(int x, int y, int width, const char* format, ...);
+void						tooltips(int x, int y, int width);
 }

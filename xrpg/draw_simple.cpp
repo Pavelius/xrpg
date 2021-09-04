@@ -36,6 +36,10 @@ static bool swindow(rect rc, bool hilight, int border) {
 	return rs;
 }
 
+static void standart_background(rect rc) {
+	swindow(rc, false, 0);
+}
+
 void draw::setposition() {
 	scene.x = getwidth() - scene.width - metrics::border - metrics::padding;
 	scene.y = metrics::border + metrics::padding;
@@ -96,8 +100,10 @@ bool draw::buttonfd(const char* title) {
 	return result;
 }
 
-bool draw::button(const char* title, unsigned key, bool(*p)(const char*)) {
+bool draw::button(const char* title, unsigned key, bool(*p)(const char*), const char* description) {
 	auto hilite = p(title);
+	if(hilite && description)
+		tooltips(description);
 	return (key && hot.key == key)
 		|| (hot.key == MouseLeft && hilite && !hot.pressed);
 }
@@ -118,12 +124,13 @@ void draw::answerbt(int i, long id, const char* title) {
 	static char answer_hotkeys[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'};
 	if(i >= sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]))
 		i = sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]) - 1;
-	if(buttonfd(title, answer_hotkeys[i]))
+	if(buttonfd(title, answer_hotkeys[i], 0))
 		execute(breakparam, id);
 }
 
 void draw::paintclear() {
 	rectf({0, 0, getwidth(), getheight()}, colors::window);
+	tooltips(metrics::padding * 3, metrics::padding * 3, 320);
 }
 
 void draw::paintimage() {
@@ -184,28 +191,6 @@ static void inputall() {
 	inputimage();
 }
 
-//void draw::painttips() {
-//	if(!text_tooltips[0])
-//		return;
-//	rect rc;
-//	rc.x1 = metrics::padding * 2;
-//	rc.y1 = metrics::padding * 2;
-//	rc.x2 = rc.x1 + scene.width;
-//	rc.y2 = rc.y1;
-//	draw::textf(rc, text_tooltips);
-//	// Correct border
-//	int height = draw::getheight();
-//	int width = draw::getwidth();
-//	if(rc.y2 >= height)
-//		rc.move(0, height - 2 - rc.y2);
-//	if(rc.x2 >= width)
-//		rc.move(width - 2 - rc.x2, 0);
-//	window(rc, false, 0);
-//	draw::fore = colors::tips::text;
-//	draw::textf(rc.x1, rc.y1, rc.width(), text_tooltips, 0, 0, 0, 0, gui.tips_tab);
-//	scene.y += rc.height() + metrics::padding * 2;
-//}
-
 void draw::simpleui() {
 	while(ismodal()) {
 		if(scene.background)
@@ -232,7 +217,7 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 		for(auto& e : *this)
 			answerbt(index++, e.id, e.text);
 		if(cancel_text) {
-			if(buttonfd(cancel_text, KeyEscape))
+			if(buttonfd(cancel_text, KeyEscape, 0))
 				execute(buttoncancel);
 		}
 		inputall();
@@ -268,15 +253,29 @@ void draw::windows(const command* source) {
 	for(auto p = source; *p; p++) {
 		if(scene.window == p->proc)
 			continue;
-		if(buttonrd(getnm(p->id), p->key))
+		if(buttonrd(getnm(p->id), p->key, getdescription(p->id)))
 			execute(choose_window, 0, 0, (void*)p->proc);
 	}
 }
 
+void draw::windows(const variant* source) {
+}
+
 void set_dark_theme();
+
+extern fnevent tooltips_custom;
+extern bool tooltips_use_idle;
+
+static void custom_window() {
+	rect rc = hot.hilite;
+	rc = rc + metrics::padding;
+	swindow(hot.hilite, false, 0);
+}
 
 HANDLER(before_initialize) {
 	set_dark_theme();
 	if(!scene.background)
 		scene.background = paintimage;
+	tooltips_custom = custom_window;
+	tooltips_use_idle = false;
 }
