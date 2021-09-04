@@ -8,6 +8,7 @@
 using namespace draw;
 
 scenei					draw::scene;
+point					draw::camera;
 static point			camera_drag;
 static rect				board;
 static const void*		current_hilite;
@@ -45,12 +46,14 @@ bool draw::ishilite(int s, const void* object) {
 }
 
 void draw::setpositionru() {
+	width = 320;
 	caret.x = getwidth() - width - metrics::border - metrics::padding;
 	caret.y = metrics::border + metrics::padding;
 }
 
 void draw::setpositionlu() {
 	setposition(metrics::padding * 2, metrics::padding * 2);
+	width = 400;
 }
 
 void draw::setposition(int x, int y) {
@@ -124,14 +127,6 @@ bool draw::buttonfd(const char* title) {
 	return result;
 }
 
-bool draw::button(const char* title, unsigned key, bool(*p)(const char*), const char* description) {
-	auto hilite = p(title);
-	if(hilite && description)
-		tooltips(description);
-	return (key && hot.key == key)
-		|| (hot.key == MouseLeft && hilite && !hot.pressed);
-}
-
 bool draw::buttonrd(const char* title) {
 	if(!title)
 		return false;
@@ -144,12 +139,27 @@ bool draw::buttonrd(const char* title) {
 	return result;
 }
 
+bool draw::button(const char* title, unsigned key, bool(*p)(const char*), const char* description) {
+	auto hilite = p(title);
+	if(hilite && description)
+		tooltips(description);
+	return (key && hot.key == key)
+		|| (hot.key == MouseLeft && hilite && !hot.pressed);
+}
+
 void draw::answerbt(int i, long id, const char* title) {
 	static char answer_hotkeys[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'};
 	if(i >= sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]))
 		i = sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]) - 1;
 	if(buttonfd(title, answer_hotkeys[i], 0))
 		execute(breakparam, id);
+}
+
+void draw::customwindow() {
+	setpositionlu();
+	auto height = 300;
+	swindow({caret.x, caret.y, caret.x + width, caret.y + height}, false, 0);
+	tooltips(caret.x + metrics::padding, caret.y + height + metrics::padding * 4, width);
 }
 
 void draw::paintclear() {
@@ -165,8 +175,8 @@ void draw::paintimage() {
 	if(!p)
 		return;
 	auto& fr = p->get(0);
-	board.x1 = -scene.camera.x;
-	board.y1 = -scene.camera.y;
+	board.x1 = -camera.x;
+	board.y1 = -camera.y;
 	if(fr.sx < getwidth())
 		board.x1 = (getwidth() - fr.sx) / 2;
 	if(fr.sy < getheight())
@@ -178,30 +188,30 @@ void draw::paintimage() {
 }
 
 void draw::set(int x, int y) {
-	caret.x = x - scene.camera.x + getwidth() / 2;
-	caret.y = y - scene.camera.y + getheight() / 2;
+	caret.x = x - camera.x + getwidth() / 2;
+	caret.y = y - camera.y + getheight() / 2;
 }
 
 static void inputimage() {
 	const int step = 32;
 	switch(hot.key) {
-	case KeyLeft: execute(cbsetint, scene.camera.x - step, 0, &scene.camera.x); break;
-	case KeyRight: execute(cbsetint, scene.camera.x + step, 0, &scene.camera.x); break;
-	case KeyUp: execute(cbsetint, scene.camera.y - step, 0, &scene.camera.y); break;
-	case KeyDown: execute(cbsetint, scene.camera.y + step, 0, &scene.camera.y); break;
-	case MouseWheelUp: execute(cbsetint, scene.camera.y - step, 0, &scene.camera.y); break;
-	case MouseWheelDown: execute(cbsetint, scene.camera.y + step, 0, &scene.camera.y); break;
+	case KeyLeft: execute(cbsetint, camera.x - step, 0, &camera.x); break;
+	case KeyRight: execute(cbsetint, camera.x + step, 0, &camera.x); break;
+	case KeyUp: execute(cbsetint, camera.y - step, 0, &camera.y); break;
+	case KeyDown: execute(cbsetint, camera.y + step, 0, &camera.y); break;
+	case MouseWheelUp: execute(cbsetint, camera.y - step, 0, &camera.y); break;
+	case MouseWheelDown: execute(cbsetint, camera.y + step, 0, &camera.y); break;
 	case MouseLeft:
 		if(hot.pressed && hot.hilite == board) {
-			dragbegin(&scene.camera);
-			camera_drag = scene.camera;
+			dragbegin(&camera);
+			camera_drag = camera;
 		}
 		break;
 	default:
-		if(dragactive(&scene.camera)) {
+		if(dragactive(&camera)) {
 			hot.cursor = cursor::All;
 			if(hot.mouse.x >= 0 && hot.mouse.y >= 0)
-				scene.camera = camera_drag + (dragmouse - hot.mouse);
+				camera = camera_drag + (dragmouse - hot.mouse);
 		}
 		break;
 	}
@@ -237,8 +247,13 @@ static int getcolumns(const answers& an) {
 long answers::choose(const char* title, const char* cancel_text, bool interactive, const char* resid) const {
 	if(!interactive)
 		return random();
+	auto push_caret = caret;
+	auto push_width = width;
+	setpositionru();
 	auto columns = getcolumns(*this);
-	auto column_width = width;
+	auto column_width = 320;
+	width = push_width;
+	caret = push_caret;
 	if(columns > 1)
 		column_width = column_width / columns - metrics::padding;
 	while(ismodal()) {
@@ -300,31 +315,22 @@ void draw::avatar(const char* id, unsigned char alpha) {
 	auto p = gres(id, "art/portraits");
 	if(!p)
 		return;
-	rect rc;
-	rc.x1 = caret.x - p->width / 2;
-	rc.x2 = rc.x1 + p->width;
-	rc.y1 = caret.y - p->height / 2;
-	rc.y2 = rc.y1 + p->height;
-	image(rc.x1, rc.y1, p, 0, 0, alpha);
+	image(caret.x, caret.y, p, 0, 0, alpha);
+	width = p->get(0).sx;
+	rectb({caret.x, caret.y, caret.x + width, caret.y + width});
+	caret.y += p->get(0).sy + 1;
 }
 
 void draw::bar(int value, int maximum) {
 	if(!value || !maximum)
 		return;
-	auto push_fore = fore;
-	rect rc = {caret.x, caret.y, caret.x + width, caret.y + 6};
+	rect rc = {caret.x, caret.y, caret.x + width, caret.y + 5};
 	rect r1 = rc; r1.x1++; r1.y1++;
 	if(value != maximum)
 		r1.x2 = r1.x1 + (rc.width() - 2) * value / maximum;
-	//	if(back != NoColor) {
-	//		fore = getcolor(back);
-	//		rectf(rc);
-	//	}
-	fore = push_fore;
+	rectf(rc, colors::form);
 	rectf(r1);
-	fore = colors::border;
-	rectb(rc);
-	fore = push_fore;
+	rectb(rc, colors::border);
 	caret.y += rc.height();
 }
 
@@ -339,9 +345,6 @@ void draw::windows(const command* source) {
 		if(buttonrd(getnm(p->id), p->key, getdescription(p->id)))
 			execute(choose_window, 0, 0, (void*)p->proc);
 	}
-}
-
-void draw::windows(const variant* source) {
 }
 
 void set_dark_theme();

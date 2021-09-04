@@ -18,19 +18,40 @@ static void test_answers() {
 	draw::setnext(game.playworld);
 }
 
-static void test_window() {
+static void avatardr(const char* id) {
+	auto push_caret = caret;
+	auto push_width = width;
 	auto push_fore = fore;
-	setpositionlu();
-	sheader("Test header");
-	stext("Some text must be written. This is *bold* version.");
+	fore = get(ColorBorder);
+	avatar(id);
 	fore = get(ColorGreen);
 	bar(30, 100);
+	fore = get(ColorRed);
+	bar(50, 100);
 	fore = push_fore;
+	caret = push_caret;
+	caret.x += width + 4;
+	width = push_width;
+}
+
+static void avatar_line() {
+	setpositionld();
+	caret.y -= 22;
+	avatardr("stalker");
+	avatardr("druid");
+	avatardr("northmen");
+}
+
+static void character_sheet() {
+	customwindow();
+	sheader(getnm("Attributes"));
+	stext("Some text must be written. This is *bold* version.");
+	//avatar_line();
 }
 
 void gamei::main_menu() {
 	draw::scene.resurl = "mutant_title";
-	draw::scene.window = test_window;
+	draw::scene.window = character_sheet;
 	menui::choose("Main", "city", 0);
 }
 

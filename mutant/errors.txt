@@ -1,4 +1,2 @@
 ﻿Errors occurs in locale/ru/Names.txt.txt
-Define translate for 'BargeThrought'
-Define translate for 'MeanStreak'
-Define translate for 'SuckerPunch'
+Define translate for 'Abilities'

@@ -1,3 +1,4 @@
+#include "draw.h"
 #include "draw_color.h"
 
 color draw::get(color_s v) {
@@ -7,7 +8,10 @@ color draw::get(color_s v) {
 		{52, 69, 99}, {0, 194, 224}, {81, 232, 152},
 		{0, 0, 0}, {255, 255, 255}, {179, 186, 197},
 	};
-	return theme_colors[v];
+	switch(v) {
+	case ColorBorder: return colors::border;
+	default: return theme_colors[v];
+	}
 }
 
 void draw::set(color_s v) {
