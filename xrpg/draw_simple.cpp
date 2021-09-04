@@ -18,6 +18,15 @@ unsigned char			opacity = 186;
 unsigned char			opacity_hilighted = 210;
 }
 
+color draw::get(color_s v) {
+	static color theme_colors[] = {
+		{235, 90, 70}, {97, 189, 79}, {0, 121, 191}, {242, 214, 0}, {255, 159, 26},
+		{52, 69, 99}, {0, 194, 224}, {81, 232, 152},
+		{0, 0, 0}, {255, 255, 255}, {179, 186, 197},
+	};
+	return theme_colors[v];
+}
+
 static bool swindow(rect rc, bool hilight, int border) {
 	if(border == 0)
 		border = metrics::padding;
@@ -49,8 +58,24 @@ void draw::setposition() {
 	scene.y = metrics::border + metrics::padding;
 }
 
+void draw::setpositionlu() {
+	scene.x = metrics::padding * 2;
+	scene.y = metrics::padding * 2;
+}
+
 void draw::setpositionrd() {
 	setposition(metrics::padding * 2, getheight() - metrics::padding * 3 - texth());
+}
+
+void draw::sheader(const char* string) {
+	auto push_font = font;
+	auto push_fore = fore;
+	font = metrics::h2;
+	fore = colors::h2;
+	text(scene.x, scene.y, string);
+	scene.y += texth() + 2;
+	fore = push_fore;
+	font = push_font;
 }
 
 void draw::stext(const char* string) {
@@ -162,6 +187,10 @@ void draw::set(int x, int y) {
 	scene.y = y - scene.camera.y + getheight() / 2;
 }
 
+void draw::set(color_s v) {
+	fore = get(v);
+}
+
 static void inputimage() {
 	const int step = 32;
 	switch(hot.key) {
@@ -206,20 +235,50 @@ void draw::simpleui() {
 	}
 }
 
+static int getcolumns(const answers& an) {
+	auto divider = an.getcount() % 2;
+	if(an.getcount() <= 4 && divider > 0)
+		return 1;
+	for(auto& e : an) {
+		auto len = zlen(e.text);
+		if(len > 20)
+			return 1;
+	}
+	return 2;
+}
+
 long answers::choose(const char* title, const char* cancel_text, bool interactive, const char* resid) const {
 	if(!interactive)
 		return random();
+	auto columns = getcolumns(*this);
+	auto column_width = scene.width;
+	if(columns > 1)
+		column_width = column_width / columns - metrics::padding;
 	while(ismodal()) {
 		if(scene.background)
 			scene.background();
 		if(scene.window)
 			scene.window();
 		setposition();
-		auto y1 = scene.y, x1 = scene.y;
 		window(false, title, resid);
 		auto index = 0;
-		for(auto& e : *this)
-			answerbt(index++, e.id, e.text);
+		auto y1 = scene.y, x1 = scene.y;
+		auto y2 = scene.y;
+		auto next_column = (elements.getcount() + columns - 1) / columns;
+		auto push_width = scene.width;
+		scene.width = column_width;
+		for(auto& e : *this) {
+			answerbt(index, e.id, e.text);
+			if(scene.y > y2)
+				y2 = scene.y;
+			if((index % next_column) == next_column - 1) {
+				scene.y = y1;
+				scene.x += column_width + metrics::padding * 2;
+			}
+			index++;
+		}
+		scene.x = x1; scene.y = y2;
+		scene.width = push_width;
 		if(cancel_text) {
 			if(buttonfd(cancel_text, KeyEscape, 0))
 				execute(buttoncancel);
@@ -247,6 +306,38 @@ void draw::fog(int n) {
 		rectf({scene.x, scene.y, scene.x + scene.grid, scene.y + scene.grid}, colors::black);
 	else
 		rectf({scene.x, scene.y, scene.x + scene.grid, scene.y + scene.grid}, colors::black, n);
+}
+
+void draw::avatar(const char* id, unsigned char alpha) {
+	auto p = gres(id, "art/portraits");
+	if(!p)
+		return;
+	rect rc;
+	rc.x1 = scene.x - p->width / 2;
+	rc.x2 = rc.x1 + p->width;
+	rc.y1 = scene.y - p->height / 2;
+	rc.y2 = rc.y1 + p->height;
+	image(rc.x1, rc.y1, p, 0, 0, alpha);
+}
+
+void draw::bar(int value, int maximum) {
+	if(!value || !maximum)
+		return;
+	auto push_fore = fore;
+	rect rc = {scene.x, scene.y, scene.x + scene.width, scene.y + 6};
+	rect r1 = rc; r1.x1++; r1.y1++;
+	if(value != maximum)
+		r1.x2 = r1.x1 + (rc.width() - 2) * value / maximum;
+	//	if(back != NoColor) {
+	//		fore = getcolor(back);
+	//		rectf(rc);
+	//	}
+	fore = push_fore;
+	rectf(r1);
+	fore = colors::border;
+	rectb(rc);
+	fore = push_fore;
+	scene.y += rc.height();
 }
 
 static void choose_window() {

@@ -1,4 +1,4 @@
 ﻿Errors occurs in locale/ru/Names.txt.txt
-Define translate for 'Copy'
-Define translate for 'Cut'
-Define translate for 'Paste'
+Define translate for 'BargeThrought'
+Define translate for 'MeanStreak'
+Define translate for 'SuckerPunch'

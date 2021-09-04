@@ -17,25 +17,25 @@ static void test_answers() {
 	draw::setnext(game.playworld);
 }
 
+static void test_window() {
+	auto push_fore = fore;
+	setpositionlu();
+	sheader("Test header");
+	stext("Some text must be written. This is *bold* version.");
+	fore = get(ColorGreen);
+	bar(30, 100);
+	fore = push_fore;
+}
+
 void gamei::main_menu() {
 	draw::scene.resurl = "mutant_title";
+	draw::scene.window = test_window;
 	menui::choose("Main", "city", 0);
-}
-
-static bool test_overload() {
-	variant m1("Enforcer");
-	variant m2(Enforcer);
-	return m2.type == Role;
-}
-
-const char* get_tab_text(const void* object, stringbuilder& sb) {
-	return (const char*)object;
 }
 
 int main() {
 	if(!initialize_translation("ru"))
 		return -1;
-	test_overload();
 	draw::initialize("Mutants: Zero point");
 	draw::setnext(game.main_menu);
 	draw::start();

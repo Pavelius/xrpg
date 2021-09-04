@@ -6,4 +6,5 @@ enum class figure : unsigned char {
 };
 namespace draw {
 void			field(int x, int y, figure type, int size);
+void			field(int x, int y, figure type, int size, const char* format);
 }

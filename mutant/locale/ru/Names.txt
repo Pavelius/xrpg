@@ -2,6 +2,7 @@
 Agility: Ловкость
 Attributes: Атрибуты
 Back: Назад
+BargeThrought: Живой таран
 BaseballBat: Бейсбольная бита
 BatWithSpikes: Шипованная бита
 BicycleChain: Мотоциклетная цепь
@@ -36,6 +37,7 @@ LoadGame: Загрузить игру
 Machete: Мачете
 Male: Мужчина
 Manipulate: Влияние
+MeanStreak: Зловещий вид
 Move: Проворство
 NewGame: Новая игра
 Next: Далее
@@ -57,5 +59,6 @@ Sneak: Скрытность
 Sound: Звук
 Stalker: Разведчик
 Strenght: Телостожение
+SuckerPunch: Железный кулак
 Video: Видео
 Wits: Смекалка

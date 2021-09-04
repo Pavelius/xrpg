@@ -45,3 +45,9 @@ void draw::field(int x, int y, figure type, int size) {
 		break;
 	}
 }
+
+void draw::field(int x, int y, figure type, int size, const char* format) {
+	field(x, y, type, size);
+	if(format)
+		text(x - textw(format)/2, y + size + 2, format);
+}

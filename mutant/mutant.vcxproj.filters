@@ -55,9 +55,6 @@
     <ClCompile Include="talent.cpp">
       <Filter>Логика</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrpg\view.cpp">
-      <Filter>Логика</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Логика">
@@ -72,9 +69,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
-      <Filter>Логика</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrpg\view.h">
       <Filter>Логика</Filter>
     </ClInclude>
     <ClInclude Include="cflags.h">
