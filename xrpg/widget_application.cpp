@@ -221,28 +221,32 @@ static const char* getname(char* temp, const setting::element& e) {
 	return temp;
 }
 
-static void button(int x, int& y, int width, const char* title, const element& e) {
-	setposition(x, y, width, 1);
-	rect rc = {x, y, x + width, y + texth() + 8};
+static void button(const char* title, const element& e) {
+	auto push_caret = caret;
+	auto push_width = width;
+	setposition();
+	rect rc = {caret.x, caret.y, caret.x + width, caret.y + texth() + 8};
 	auto result = false;
 	auto focus = isfocused(rc, &e);
 	if(button(rc, title, 0, 0, colors::button, focus, false, false, true))
 		draw::execute(callback_button, (size_t)&e);
-	y += rc.height() + metrics::padding;
+	caret = push_caret;
+	width = push_width;
+	caret.y += rc.height() + metrics::padding;
 }
 
-static int render_element(int x, int y, int width, unsigned flags, const setting::element& e) {
+static void render_element(unsigned flags, const setting::element& e) {
 	const auto title = 200;
 	char temp[512]; temp[0] = 0;
 	if(e.test && !e.test())
-		return 0;
-	auto y1 = y; int d;
+		return;
+	int d;
 	switch(e.var.type) {
 	case setting::Radio:
-		radio(x, y, width, e.var.data, sizeof(int), e.var.value, getname(temp, e), 0);
+		radio(e.var.data, sizeof(int), e.var.value, getname(temp, e), 0);
 		break;
 	case setting::Bool:
-		checkbox(x, y, width, e.var.data, sizeof(bool), 1, getname(temp, e), 0);
+		checkbox(e.var.data, sizeof(bool), 1, getname(temp, e), 0);
 		break;
 	case setting::Number:
 		d = 0;
@@ -252,52 +256,55 @@ static int render_element(int x, int y, int width, unsigned flags, const setting
 			if(title + w < width)
 				width = title + w;
 		}
-		fieln(x, y, width, getnm(e.name), e.var.data, e.var.size, title, d);
+		fieln(getnm(e.name), e.var.data, e.var.size, title, d);
 		break;
 	case setting::Color:
-		y += field(x, y, width, getnm(e.name), *((color*)e.var.data), title, 0);
+		field(getnm(e.name), *((color*)e.var.data), title, 0);
 		break;
 	case setting::Button:
-		button(x, y, width, getnm(e.name), e);
+		button(getnm(e.name), e);
 		break;
 	case setting::Text:
-		field(x, y, width, getnm(e.name), *((const char**)e.var.data), title, 0);
+		field(getnm(e.name), *((const char**)e.var.data), title, 0);
 		break;
 	case setting::Url:
-		field(x, y, width, getnm(e.name), *((const char**)e.var.data), title, choose_folder);
+		field(getnm(e.name), *((const char**)e.var.data), title, choose_folder);
 		break;
 	case setting::Control:
 		break;
 	}
-	return y - y1;
 }
 
-static int render_element(int x, int y, int width, unsigned flags, const setting::header& e) {
-	auto x1 = x, y2 = y, w1 = width;
+static void render_element(unsigned flags, const setting::header& e) {
+	auto push_caret = caret;
+	auto push_width = width;
 	auto height = draw::texth() + metrics::padding * 2;
 	if(e.group) {
-		y += height;
-		x1 += metrics::padding;
-		w1 -= metrics::padding * 2;
+		caret.y += height;
+		caret.x += metrics::padding;
+		width -= metrics::padding * 2;
 	}
-	auto yc = y;
 	for(auto& pe : e.elements)
-		y += render_element(x1, y, w1, flags, pe);
-	if(y == yc)
-		return 0;
+		render_element(flags, pe);
+	if(push_caret == caret)
+		return;
+	auto y2 = caret.y;
+	width = push_width;
+	caret = push_caret;
 	if(e.group) {
 		color c1 = colors::border.mix(colors::window, 128);
 		color c2 = c1.darken();
-		gradv({x, y2, x + width, y2 + height}, c1, c2);
+		gradv({caret.x, caret.y, caret.x + width, caret.y + height}, c1, c2);
 		auto push_fore = fore;
 		fore = colors::text.mix(c1, 196);
 		auto label = getnm(e.group);
-		text(x + (width - textw(label)) / 2, y2 + metrics::padding, label);
+		text(caret.x + (width - textw(label)) / 2, caret.y + metrics::padding, label);
 		fore = push_fore;
-		rectb({x, y2, x + width, y + metrics::padding}, colors::border);
-		y += metrics::padding * 2;
+		rectb({caret.x, caret.y, caret.x + width, y2 + metrics::padding}, colors::border);
 	}
-	return y - y2;
+	caret.y = y2;
+	if(e.group)
+		caret.y += metrics::padding * 2;
 }
 
 static struct widget_settings_header : controls::list {
@@ -345,22 +352,25 @@ static struct widget_control_viewer : controls::tableref {
 	}
 } control_viewer;
 
-int draw::field(int x, int& y, int width, const char* label, color& value, int header_width, const char* tips) {
+void draw::field(const char* label, color& value, int header_width, const char* tips) {
 	char temp[128]; stringbuilder sb(temp);
 	sb.add("%1i, %2i, %3i", value.r, value.g, value.b);
-	setposition(x, y, width);
-	titletext(x, y, width, label, header_width);
+	auto push_caret = caret;
+	auto push_width = width;
+	setposition(); titletext(label, header_width);
 	auto push_fore = fore;
 	if(value.isdark())
 		fore = colors::white;
 	else
 		fore = colors::black;
-	rect rc = {x, y, x + width, y + draw::texth() + 8};
+	rect rc = {caret.x, caret.y, caret.x + width, caret.y + draw::texth() + 8};
 	auto focused = isfocused(rc, &value);
 	if(button(rc, temp, tips, 0, value, focused, false, false, true))
 		execute(callback_choose_color, (size_t)&value);
 	fore = push_fore;
-	return rc.height() + metrics::padding * 2;
+	width = push_width;
+	caret = push_caret;
+	caret.y += rc.height() + metrics::padding * 2;
 }
 
 const char* draw::getlabel(const void* object, stringbuilder& sb) {
@@ -442,21 +452,27 @@ static struct widget_settings : controls::control {
 		if(!elements)
 			return;
 		elements.sort();
-		int w3, w4;
 		auto e1 = p1->elements.begin();
+		auto push_caret = caret;
+		caret.x = rc.x1;
+		caret.y = rc.y1;
+		auto push_width = width;
+		width = rc.width();
+		int push_width2;
 		switch(e1->var.type) {
 		case setting::Control:
-			rc.y1 += h1;
+			caret.y += h1;
 			if(metrics::show::padding)
-				rc.y1 += metrics::padding;
-			((control*)e1->var.data)->view(rc, metrics::show::padding, true);
+				caret.y += metrics::padding;
+			((control*)e1->var.data)->view({caret.x, caret.y, caret.x+width, rc.y2}, metrics::show::padding, true);
 			break;
 		default:
-			rc.y1 += h1 + metrics::padding;
-			w4 = rc.width();
-			w3 = imin(w4, 620);
+			caret.y += h1 + metrics::padding;
+			push_width2 = width;
+			width = imin(width, 620);
 			for(auto pe : elements)
-				rc.y1 += render_element(rc.x1, rc.y1, w3, 0, *pe);
+				render_element(0, *pe);
+			width = push_width2;
 			break;
 		}
 	}

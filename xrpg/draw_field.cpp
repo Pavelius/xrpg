@@ -473,36 +473,32 @@ static void fieldf(const rect& rco, unsigned flags, void* source, int size, bool
 	}
 }
 
-void draw::fieln(int x, int& y, int width, const char* label, void* source, int size, int label_width, int digits) {
-	setposition(x, y, width);
-	titletext(x, y, width, label, label_width);
-	rect rc = {x, y, x + width, y + draw::texth() + metrics::edit * 2};
-	fieldf(rc, AlignRight | TextSingleLine, source, size, true, false, 0);
-	y += rc.height() + metrics::padding;
+static void field_common(const char* label, int line_height, unsigned align, void* source, bool increment, bool istext, int size, int label_width, int digits, fnchoose choosep) {
+	auto push_caret = caret;
+	auto push_width = width;
+	setposition();
+	titletext(label, label_width);
+	rect rc = {caret.x, caret.y, caret.x + width, caret.y + draw::texth()*line_height + metrics::edit * 2};
+	fieldf(rc, align, source, size, increment, istext, choosep);
+	caret = push_caret;
+	caret.y += rc.height() + metrics::padding;
+	width = push_width;
 }
 
-void draw::field(int x, int& y, int width, const char* label, char* source, unsigned size, int label_width, fnchoose choosep) {
-	setposition(x, y, width);
-	titletext(x, y, width, label, label_width);
-	rect rc = {x, y, x + width, y + draw::texth() + metrics::edit * 2};
-	fieldf(rc, AlignLeft | TextSingleLine, source, size, false, true, choosep);
-	y += rc.height() + metrics::padding;
+void draw::fieln(const char* label, void* source, int size, int label_width, int digits) {
+	field_common(label, 1, AlignRight | TextSingleLine, source, true, false, size, label_width, digits, 0);
 }
 
-void draw::field(int x, int& y, int width, int line_height, const char* label, char* source, unsigned size, int label_width, fnchoose choosep) {
-	setposition(x, y, width);
-	titletext(x, y, width, label, label_width);
-	rect rc = {x, y, x + width, y + draw::texth() * line_height + metrics::edit * 2};
-	fieldf(rc, AlignLeft, source, size, false, true, choosep);
-	y += rc.height() + metrics::padding;
+void draw::field(const char* label, char* source, unsigned size, int label_width, fnchoose choosep) {
+	field_common(label, 1, AlignLeft | TextSingleLine, source, false, true, size, label_width, 0, choosep);
 }
 
-void draw::field(int x, int& y, int width, const char* label, const char*& source, int label_width, fnchoose choosep) {
-	setposition(x, y, width);
-	titletext(x, y, width, label, label_width);
-	rect rc = {x, y, x + width, y + draw::texth() + metrics::edit * 2};
-	fieldf(rc, AlignLeft | TextSingleLine, &source, sizeof(source), false, true, choosep);
-	y += rc.height() + metrics::padding;
+void draw::field(const char* label, int line_height, char* source, unsigned size, int label_width, fnchoose choosep) {
+	field_common(label, line_height, AlignLeft, source, false, true, size, label_width, 0, choosep);
+}
+
+void draw::field(const char* label, const char*& source, int label_width, fnchoose choosep) {
+	field_common(label, 1, AlignLeft, &source, false, true, sizeof(source), label_width, 0, choosep);
 }
 
 bool draw::edit(const rect& rc, void* source, int size, unsigned align, bool isnumber) {

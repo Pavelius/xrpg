@@ -39,15 +39,13 @@ static void cbsetsource() {
 	setsource(p, s, v);
 }
 
-void draw::setposition(int& x, int& y, int& width, int padding) {
-	if(padding == -1)
-		padding = metrics::padding;
-	x += padding;
-	y += padding;
-	width -= padding * 2;
+void draw::setposition() {
+	caret.x += metrics::padding;
+	caret.y += metrics::padding;
+	width -= metrics::padding * 2;
 }
 
-void draw::titletext(int& x, int y, int& width, const char* label, int label_width, const char* separator) {
+void draw::titletext(const char* label, int label_width, const char* separator) {
 	if(!label || !label[0])
 		return;
 	if(!separator)
@@ -55,8 +53,8 @@ void draw::titletext(int& x, int y, int& width, const char* label, int label_wid
 	char temp[1024]; stringbuilder sb(temp);
 	sb.add(label);
 	sb.add(separator);
-	text(x, y + 4, temp);
-	x += label_width;
+	text(caret.x, caret.y + 4, temp);
+	caret.x += label_width;
 	width -= label_width;
 }
 
@@ -190,9 +188,11 @@ void draw::buttonl(int& x, int y, const char* label, fnevent proc, unsigned key,
 	x += w + metrics::padding;
 }
 
-void draw::radio(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips) {
-	setposition(x, y, width, 1);
-	rect rc = {x, y, x + width, y};
+void draw::radio(void* source, int size, unsigned bits, const char* label, const char* tips) {
+	auto push_caret = caret;
+	auto push_width = width;
+	setposition();
+	rect rc = {caret.x, caret.y, caret.x + width, caret.y};
 	rect rc1 = {rc.x1 + 22, rc.y1, rc.x2, rc.y2};
 	draw::textw(rc1, label);
 	rc1.offset(-2);
@@ -220,7 +220,9 @@ void draw::radio(int x, int& y, int width, void* source, int size, unsigned bits
 	draw::text(rc, label);
 	if(tips && a && !hot.pressed)
 		tooltips(tips);
-	y += rc1.height() + 2;
+	width = push_width;
+	caret = push_caret;
+	caret.y += rc1.height() + 2;
 }
 
 static color getcolor(color normal, bool disabled) {
@@ -248,9 +250,11 @@ static void mark_check(int x, int y, int size, bool focused, bool checked, bool 
 	fore = push_fore;
 }
 
-void draw::checkbox(int x, int& y, int width, void* source, int size, unsigned bits, const char* label, const char* tips) {
-	setposition(x, y, width);
-	rect rc = {x, y, x + width, y};
+void draw::checkbox(void* source, int size, unsigned bits, const char* label, const char* tips) {
+	auto push_caret = caret;
+	auto push_width = width;
+	setposition();
+	rect rc = {caret.x, caret.y, caret.x + width, caret.y};
 	rect rc1 = {rc.x1 + 22, rc.y1, rc.x2, rc.y2};
 	draw::textw(rc1, label);
 	rc.y1 = rc1.y1;
@@ -260,7 +264,7 @@ void draw::checkbox(int x, int& y, int width, void* source, int size, unsigned b
 	auto value = getsource(source, size);
 	auto checked = (value & (1 << bits)) != 0;
 	auto a = draw::ishilite(rc);
-	mark_check(x + 10, y + imax((rc1.height()) / 2, 0), 7, focused, checked, a);
+	mark_check(caret.x + 10, caret.y + imax((rc1.height()) / 2, 0), 7, focused, checked, a);
 	auto need_value = false;
 	if(a && hot.key == MouseLeft) {
 		if(!hot.pressed)
@@ -276,5 +280,7 @@ void draw::checkbox(int x, int& y, int width, void* source, int size, unsigned b
 	draw::text(rc1, label);
 	if(tips && a && !hot.pressed)
 		tooltips(tips);
-	y += rc1.height() + metrics::padding;
+	caret = push_caret;
+	width = push_width;
+	caret.y += rc1.height() + metrics::padding;
 }

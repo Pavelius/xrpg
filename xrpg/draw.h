@@ -153,6 +153,7 @@ extern rect				clipping; // Clipping area
 extern fnevent			domodal;
 extern point			dragmouse, caret;
 extern color			fore, fore_stroke;
+extern int				width;
 extern const sprite*	font; // Currently selected font
 extern double			linw;
 extern char				link[4096];

@@ -29,6 +29,7 @@ color				colors::tips::back;
 fnevent				draw::domodal;
 color				draw::fore;
 color				draw::fore_stroke;
+int					draw::width;
 const sprite*		draw::font;
 double				draw::linw = 1.0;
 color*				draw::palt;

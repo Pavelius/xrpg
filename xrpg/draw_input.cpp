@@ -93,6 +93,7 @@ void draw::setneedupdate() {
 void draw::initialize(const char* title) {
 	before_initialize->execute();
 	after_initialize->execute();
+	draw::width = 320;
 	draw::font = metrics::font;
 	draw::fore = colors::text;
 	draw::fore_stroke = colors::blue;

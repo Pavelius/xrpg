@@ -195,12 +195,16 @@ static void fielc(const rect& rc, unsigned flags, void* source, int size, array&
 		fielcd(rc, source, size, database, object, plist, false);
 }
 
-void draw::field(int x, int& y, int width, const char* label, void* source, int size, int label_width, array& database, const fnlist& plist, const char* tips) {
+void draw::field(const char* label, void* source, int size, int label_width, array& database, const fnlist& plist, const char* tips) {
 	if(!plist.getname)
 		return;
-	setposition(x, y, width);
-	titletext(x, y, width, label, label_width);
-	rect rc = {x, y, x + width, y + draw::texth() + metrics::edit * 2};
+	auto push_caret = caret;
+	auto push_width = width;
+	setposition();
+	titletext(label, label_width);
+	rect rc = {caret.x, caret.y, caret.x + width, caret.y + draw::texth() + metrics::edit * 2};
 	fielc(rc, AlignLeft | TextSingleLine, source, size, database, 0, plist, tips);
-	y += rc.height() + metrics::padding;
+	width = push_width;
+	caret = push_caret;
+	caret.y += rc.height() + metrics::padding;
 }

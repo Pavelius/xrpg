@@ -8,7 +8,7 @@ typedef void(*fnevent)();
 
 namespace draw {
 struct scenei {
-	int				width = 320, grid = 32;
+	int				grid = 32;
 	point			camera;
 	const char*		resurl = 0;
 	fnevent			background = 0;
@@ -31,10 +31,10 @@ void				paintclear();
 void				paintimage();
 void				simpleui();
 void				set(int x, int y);
-void				setposition();
 void				setposition(int x, int y);
+void				setpositionru();
 void				setpositionlu();
-void				setpositionrd();
+void				setpositionld();
 void				sheader(const char* string);
 void				stext(const char* string);
 bool				window(bool hilite, const char* string, const char* resid);

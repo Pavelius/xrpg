@@ -44,8 +44,8 @@ bool draw::ishilite(int s, const void* object) {
 	return true;
 }
 
-void draw::setposition() {
-	caret.x = getwidth() - scene.width - metrics::border - metrics::padding;
+void draw::setpositionru() {
+	caret.x = getwidth() - width - metrics::border - metrics::padding;
 	caret.y = metrics::border + metrics::padding;
 }
 
@@ -58,7 +58,7 @@ void draw::setposition(int x, int y) {
 	caret.y = y;
 }
 
-void draw::setpositionrd() {
+void draw::setpositionld() {
 	setposition(metrics::padding * 2, getheight() - metrics::padding * 3 - texth());
 }
 
@@ -75,7 +75,7 @@ void draw::sheader(const char* string) {
 
 void draw::stext(const char* string) {
 	draw::link[0] = 0;
-	caret.y += textf(caret.x, caret.y, scene.width, string);
+	caret.y += textf(caret.x, caret.y, width, string);
 	if(draw::link[0])
 		tooltips(draw::link);
 }
@@ -88,7 +88,7 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 	const sprite* image_surface = 0;
 	if(string) {
 		auto push_clipping = clipping; clipping.clear();
-		text_height = draw::textf(0, 0, scene.width, string);
+		text_height = draw::textf(0, 0, width, string);
 		clipping = push_clipping;
 	}
 	if(resid) {
@@ -99,7 +99,7 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 	auto padding_height = 0;
 	if(image_height && text_height)
 		padding_height = metrics::padding;
-	rect rc = {caret.x, caret.y, caret.x + scene.width, caret.y + image_height + text_height + padding_height};
+	rect rc = {caret.x, caret.y, caret.x + width, caret.y + image_height + text_height + padding_height};
 	auto rs = swindow(rc, hilite, 0);
 	if(image_surface) {
 		image(caret.x, caret.y, image_surface, 0, 0);
@@ -114,9 +114,9 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 bool draw::buttonfd(const char* title) {
 	if(!title)
 		return false;
-	rect rc = {caret.x, caret.y, caret.x + scene.width, caret.y};
+	rect rc = {caret.x, caret.y, caret.x + width, caret.y};
 	textw(rc, title);
-	rc.x2 = rc.x1 + scene.width;
+	rc.x2 = rc.x1 + width;
 	rc.y2 = rc.y2 + metrics::padding;
 	auto result = swindow(rc, true, 0);
 	text(rc, title, AlignCenterCenter);
@@ -135,7 +135,7 @@ bool draw::button(const char* title, unsigned key, bool(*p)(const char*), const 
 bool draw::buttonrd(const char* title) {
 	if(!title)
 		return false;
-	rect rc = {caret.x, caret.y, caret.x + scene.width, caret.y};
+	rect rc = {caret.x, caret.y, caret.x + width, caret.y};
 	textw(rc, title);
 	rc.y2 = rc.y2 + metrics::padding;
 	auto result = swindow(rc, true, 0);
@@ -238,7 +238,7 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 	if(!interactive)
 		return random();
 	auto columns = getcolumns(*this);
-	auto column_width = scene.width;
+	auto column_width = width;
 	if(columns > 1)
 		column_width = column_width / columns - metrics::padding;
 	while(ismodal()) {
@@ -246,14 +246,15 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 			scene.background();
 		if(scene.window)
 			scene.window();
-		setposition();
+		auto push_caret = caret;
+		auto push_width = width;
+		setpositionru();
 		window(false, title, resid);
 		auto index = 0;
-		auto y1 = caret.y, x1 = caret.y;
+		auto y1 = caret.y, x1 = caret.x;
 		auto y2 = caret.y;
 		auto next_column = (elements.getcount() + columns - 1) / columns;
-		auto push_width = scene.width;
-		scene.width = column_width;
+		width = column_width;
 		for(auto& e : *this) {
 			answerbt(index, e.id, e.text);
 			if(caret.y > y2)
@@ -265,7 +266,7 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 			index++;
 		}
 		caret.x = x1; caret.y = y2;
-		scene.width = push_width;
+		width = push_width;
 		if(cancel_text) {
 			if(buttonfd(cancel_text, KeyEscape, 0))
 				execute(buttoncancel);
@@ -311,7 +312,7 @@ void draw::bar(int value, int maximum) {
 	if(!value || !maximum)
 		return;
 	auto push_fore = fore;
-	rect rc = {caret.x, caret.y, caret.x + scene.width, caret.y + 6};
+	rect rc = {caret.x, caret.y, caret.x + width, caret.y + 6};
 	rect r1 = rc; r1.x1++; r1.y1++;
 	if(value != maximum)
 		r1.x2 = r1.x1 + (rc.width() - 2) * value / maximum;
