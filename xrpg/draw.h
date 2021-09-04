@@ -151,9 +151,8 @@ struct surface {
 extern surface*			canvas;
 extern rect				clipping; // Clipping area
 extern fnevent			domodal;
-extern point			dragmouse;
-extern color			fore; // Foreground color (curently selected color)
-extern color			fore_stroke; // foreground stroke color
+extern point			dragmouse, caret;
+extern color			fore, fore_stroke;
 extern const sprite*	font; // Currently selected font
 extern double			linw;
 extern char				link[4096];

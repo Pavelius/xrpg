@@ -8,7 +8,7 @@
 using namespace draw;
 
 scenei					draw::scene;
-static pointl			camera_drag;
+static point			camera_drag;
 static rect				board;
 static const void*		current_hilite;
 
@@ -16,15 +16,6 @@ namespace metrics {
 int						border = 4;
 unsigned char			opacity = 186;
 unsigned char			opacity_hilighted = 210;
-}
-
-color draw::get(color_s v) {
-	static color theme_colors[] = {
-		{235, 90, 70}, {97, 189, 79}, {0, 121, 191}, {242, 214, 0}, {255, 159, 26},
-		{52, 69, 99}, {0, 194, 224}, {81, 232, 152},
-		{0, 0, 0}, {255, 255, 255}, {179, 186, 197},
-	};
-	return theme_colors[v];
 }
 
 static bool swindow(rect rc, bool hilight, int border) {
@@ -47,20 +38,24 @@ static bool swindow(rect rc, bool hilight, int border) {
 }
 
 bool draw::ishilite(int s, const void* object) {
-	if(!ishilite({scene.x - s, scene.y - s, scene.x + s, scene.y + s}))
+	if(!ishilite({caret.x - s, caret.y - s, caret.x + s, caret.y + s}))
 		return false;
 	current_hilite = object;
 	return true;
 }
 
 void draw::setposition() {
-	scene.x = getwidth() - scene.width - metrics::border - metrics::padding;
-	scene.y = metrics::border + metrics::padding;
+	caret.x = getwidth() - scene.width - metrics::border - metrics::padding;
+	caret.y = metrics::border + metrics::padding;
 }
 
 void draw::setpositionlu() {
-	scene.x = metrics::padding * 2;
-	scene.y = metrics::padding * 2;
+	setposition(metrics::padding * 2, metrics::padding * 2);
+}
+
+void draw::setposition(int x, int y) {
+	caret.x = x;
+	caret.y = y;
 }
 
 void draw::setpositionrd() {
@@ -72,15 +67,15 @@ void draw::sheader(const char* string) {
 	auto push_fore = fore;
 	font = metrics::h2;
 	fore = colors::h2;
-	text(scene.x, scene.y, string);
-	scene.y += texth() + 2;
+	text(caret.x, caret.y, string);
+	caret.y += texth() + 2;
 	fore = push_fore;
 	font = push_font;
 }
 
 void draw::stext(const char* string) {
 	draw::link[0] = 0;
-	scene.y += textf(scene.x, scene.y, scene.width, string);
+	caret.y += textf(caret.x, caret.y, scene.width, string);
 	if(draw::link[0])
 		tooltips(draw::link);
 }
@@ -104,28 +99,28 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 	auto padding_height = 0;
 	if(image_height && text_height)
 		padding_height = metrics::padding;
-	rect rc = {scene.x, scene.y, scene.x + scene.width, scene.y + image_height + text_height + padding_height};
+	rect rc = {caret.x, caret.y, caret.x + scene.width, caret.y + image_height + text_height + padding_height};
 	auto rs = swindow(rc, hilite, 0);
 	if(image_surface) {
-		image(scene.x, scene.y, image_surface, 0, 0);
-		scene.y += image_height + padding_height;
+		image(caret.x, caret.y, image_surface, 0, 0);
+		caret.y += image_height + padding_height;
 	}
 	if(string)
 		stext(string);
-	scene.y += metrics::border * 2;
+	caret.y += metrics::border * 2;
 	return rs;
 }
 
 bool draw::buttonfd(const char* title) {
 	if(!title)
 		return false;
-	rect rc = {scene.x, scene.y, scene.x + scene.width, scene.y};
+	rect rc = {caret.x, caret.y, caret.x + scene.width, caret.y};
 	textw(rc, title);
 	rc.x2 = rc.x1 + scene.width;
 	rc.y2 = rc.y2 + metrics::padding;
 	auto result = swindow(rc, true, 0);
 	text(rc, title, AlignCenterCenter);
-	scene.y += metrics::border * 2 + rc.height();
+	caret.y += metrics::border * 2 + rc.height();
 	return result;
 }
 
@@ -140,12 +135,12 @@ bool draw::button(const char* title, unsigned key, bool(*p)(const char*), const 
 bool draw::buttonrd(const char* title) {
 	if(!title)
 		return false;
-	rect rc = {scene.x, scene.y, scene.x + scene.width, scene.y};
+	rect rc = {caret.x, caret.y, caret.x + scene.width, caret.y};
 	textw(rc, title);
 	rc.y2 = rc.y2 + metrics::padding;
 	auto result = swindow(rc, true, 0);
 	text(rc, title, AlignCenterCenter);
-	scene.x += rc.width() + metrics::padding * 3;
+	caret.x += rc.width() + metrics::padding * 3;
 	return result;
 }
 
@@ -183,12 +178,8 @@ void draw::paintimage() {
 }
 
 void draw::set(int x, int y) {
-	scene.x = x - scene.camera.x + getwidth() / 2;
-	scene.y = y - scene.camera.y + getheight() / 2;
-}
-
-void draw::set(color_s v) {
-	fore = get(v);
+	caret.x = x - scene.camera.x + getwidth() / 2;
+	caret.y = y - scene.camera.y + getheight() / 2;
 }
 
 static void inputimage() {
@@ -209,12 +200,8 @@ static void inputimage() {
 	default:
 		if(dragactive(&scene.camera)) {
 			hot.cursor = cursor::All;
-			if(hot.mouse.x >= 0 && hot.mouse.y >= 0) {
-				pointl pt;
-				pt.x = dragmouse.x - hot.mouse.x;
-				pt.y = dragmouse.y - hot.mouse.y;
-				scene.camera = camera_drag + pt;
-			}
+			if(hot.mouse.x >= 0 && hot.mouse.y >= 0)
+				scene.camera = camera_drag + (dragmouse - hot.mouse);
 		}
 		break;
 	}
@@ -262,22 +249,22 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 		setposition();
 		window(false, title, resid);
 		auto index = 0;
-		auto y1 = scene.y, x1 = scene.y;
-		auto y2 = scene.y;
+		auto y1 = caret.y, x1 = caret.y;
+		auto y2 = caret.y;
 		auto next_column = (elements.getcount() + columns - 1) / columns;
 		auto push_width = scene.width;
 		scene.width = column_width;
 		for(auto& e : *this) {
 			answerbt(index, e.id, e.text);
-			if(scene.y > y2)
-				y2 = scene.y;
+			if(caret.y > y2)
+				y2 = caret.y;
 			if((index % next_column) == next_column - 1) {
-				scene.y = y1;
-				scene.x += column_width + metrics::padding * 2;
+				caret.y = y1;
+				caret.x += column_width + metrics::padding * 2;
 			}
 			index++;
 		}
-		scene.x = x1; scene.y = y2;
+		caret.x = x1; caret.y = y2;
 		scene.width = push_width;
 		if(cancel_text) {
 			if(buttonfd(cancel_text, KeyEscape, 0))
@@ -303,9 +290,9 @@ void draw::grid() {
 
 void draw::fog(int n) {
 	if(n == 0xFF)
-		rectf({scene.x, scene.y, scene.x + scene.grid, scene.y + scene.grid}, colors::black);
+		rectf({caret.x, caret.y, caret.x + scene.grid, caret.y + scene.grid}, colors::black);
 	else
-		rectf({scene.x, scene.y, scene.x + scene.grid, scene.y + scene.grid}, colors::black, n);
+		rectf({caret.x, caret.y, caret.x + scene.grid, caret.y + scene.grid}, colors::black, n);
 }
 
 void draw::avatar(const char* id, unsigned char alpha) {
@@ -313,9 +300,9 @@ void draw::avatar(const char* id, unsigned char alpha) {
 	if(!p)
 		return;
 	rect rc;
-	rc.x1 = scene.x - p->width / 2;
+	rc.x1 = caret.x - p->width / 2;
 	rc.x2 = rc.x1 + p->width;
-	rc.y1 = scene.y - p->height / 2;
+	rc.y1 = caret.y - p->height / 2;
 	rc.y2 = rc.y1 + p->height;
 	image(rc.x1, rc.y1, p, 0, 0, alpha);
 }
@@ -324,7 +311,7 @@ void draw::bar(int value, int maximum) {
 	if(!value || !maximum)
 		return;
 	auto push_fore = fore;
-	rect rc = {scene.x, scene.y, scene.x + scene.width, scene.y + 6};
+	rect rc = {caret.x, caret.y, caret.x + scene.width, caret.y + 6};
 	rect r1 = rc; r1.x1++; r1.y1++;
 	if(value != maximum)
 		r1.x2 = r1.x1 + (rc.width() - 2) * value / maximum;
@@ -337,7 +324,7 @@ void draw::bar(int value, int maximum) {
 	fore = colors::border;
 	rectb(rc);
 	fore = push_fore;
-	scene.y += rc.height();
+	caret.y += rc.height();
 }
 
 static void choose_window() {

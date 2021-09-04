@@ -168,6 +168,9 @@
     <ClInclude Include="serializer.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="draw_color.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -388,6 +391,9 @@
     </ClCompile>
     <ClCompile Include="serializer.cpp">
       <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_color.cpp">
+      <Filter>Interface</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

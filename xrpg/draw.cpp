@@ -40,7 +40,7 @@ rect				sys_static_area;
 // Locale draw variables
 static draw::surface default_surface;
 draw::surface*		draw::canvas = &default_surface;
-//point				draw::caret;
+point				draw::caret;
 static bool			line_antialiasing = true;
 // Drag
 static const void*	drag_object;

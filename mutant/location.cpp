@@ -3,5 +3,5 @@
 void locationi::paint() const {
 	auto s = 5;
 	auto h = draw::ishilite(s, this);
-	draw::field(draw::scene.x, draw::scene.y, figure::TrianlgeUp, s);
+	draw::field(draw::caret.x, draw::caret.y, figure::TrianlgeUp, s);
 }

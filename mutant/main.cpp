@@ -1,3 +1,4 @@
+#include "draw_color.h"
 #include "draw_input.h"
 #include "main.h"
 
