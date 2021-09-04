@@ -38,6 +38,7 @@ int main() {
 	test_overload();
 	draw::initialize("Mutants: Zero point");
 	draw::setnext(game.main_menu);
+	draw::start();
 	return 0;
 }
 

@@ -1,5 +1,7 @@
 #include "answers.h"
 #include "command.h"
+#include "cflags.h"
+#include "draw_figure.h"
 #include "draw_simple.h"
 #include "datamap.h"
 #include "dataset.h"

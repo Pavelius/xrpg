@@ -10,6 +10,7 @@ using namespace draw;
 scenei					draw::scene;
 static pointl			camera_drag;
 static rect				board;
+static const void*		current_hilite;
 
 namespace metrics {
 int						border = 4;
@@ -36,8 +37,11 @@ static bool swindow(rect rc, bool hilight, int border) {
 	return rs;
 }
 
-static void standart_background(rect rc) {
-	swindow(rc, false, 0);
+bool draw::ishilite(int s, const void* object) {
+	if(!ishilite({scene.x - s, scene.y - s, scene.x + s, scene.y + s}))
+		return false;
+	current_hilite = object;
+	return true;
 }
 
 void draw::setposition() {

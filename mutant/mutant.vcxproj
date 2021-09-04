@@ -148,6 +148,7 @@
     <ClInclude Include="..\xrpg\view.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="cflags.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
