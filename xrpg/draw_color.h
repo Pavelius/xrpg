@@ -8,7 +8,7 @@ enum color_s : unsigned char {
 	ColorRed, ColorGreen, ColorBlue, ColorYellow, ColorOrange,
 	ColorDarkGray, ColorLightBlue, ColorLightGreen,
 	ColorBlack, ColorWhite, ColorGray,
-	ColorBorder
+	ColorBorder, ColorForm, ColorWindow,
 };
 extern color			fore;
 color					get(color_s v);

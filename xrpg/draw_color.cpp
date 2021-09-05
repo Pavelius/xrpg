@@ -10,6 +10,8 @@ color draw::get(color_s v) {
 	};
 	switch(v) {
 	case ColorBorder: return colors::border;
+	case ColorForm: return colors::form;
+	case ColorWindow: return colors::window;
 	default: return theme_colors[v];
 	}
 }
