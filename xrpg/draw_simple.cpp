@@ -168,7 +168,6 @@ void draw::paintclear() {
 }
 
 void draw::paintimage() {
-	paintclear();
 	if(!scene.resurl)
 		return;
 	auto p = gres(scene.resurl, "art/background");
@@ -185,6 +184,19 @@ void draw::paintimage() {
 	board.y2 = board.y1 + fr.sy;
 	ishilite(board);
 	image(board.x1, board.y1, p, 0, 0);
+}
+
+void draw::paintcommands() {
+	if(!scene.commands)
+		return;
+	setpositionld();
+	windows(scene.commands);
+}
+
+void draw::paintall() {
+	paintclear();
+	paintimage();
+	paintcommands();
 }
 
 void draw::set(int x, int y) {
@@ -361,7 +373,7 @@ static void custom_window() {
 HANDLER(before_initialize) {
 	set_dark_theme();
 	if(!scene.background)
-		scene.background = paintimage;
+		scene.background = paintall;
 	tooltips_custom = custom_window;
 	tooltips_use_idle = false;
 }

@@ -158,6 +158,7 @@ extern const sprite*	font; // Currently selected font
 extern double			linw;
 extern char				link[4096];
 extern color*			palt;
+extern int				tab_pixels;
 int						aligned(int x, int width, unsigned state, int string_width);
 int						alignedh(const rect& rc, const char* string, unsigned state);
 void					bezier(int x0, int y0, int x1, int y1, int x2, int y2);
@@ -221,8 +222,8 @@ int						text(rect rc, const char* string, unsigned state = 0, int* max_width = 
 int						textc(int x, int y, int width, const char* string, int count = -1, unsigned flags = 0, bool* clipped = 0);
 int						textbc(const char* string, int width);
 int						texte(rect rc, const char* string, unsigned flags, int i1, int i2);
-int						textf(int x, int y, int width, const char* text, int* max_width = 0, int min_height = 0, int* cashe_height = 0, const char** cashe_string = 0, int tab_width = 0);
-int						textf(rect& rc, const char* string, int tab_width = 0);
+int						textf(int x, int y, int width, const char* text, int* max_width = 0, int min_height = 0, int* cashe_height = 0, const char** cashe_string = 0);
+int						textf(rect& rc, const char* string);
 int						texth();
 int						texth(const char* string, int width);
 int						textw(int sym);

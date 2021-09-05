@@ -4,6 +4,8 @@
 
 using namespace draw;
 
+void initialize_commands();
+
 static locationi* addloc(const char* id, point v) {
 	auto p = bsdata<locationi>::add();
 	p->id = id;
@@ -42,16 +44,8 @@ static void avatar_line() {
 	avatardr("northmen");
 }
 
-static void character_sheet() {
-	customwindow();
-	sheader(getnm("Attributes"));
-	stext("Some text must be written. This is *bold* version.");
-	//avatar_line();
-}
-
 void gamei::main_menu() {
 	draw::scene.resurl = "mutant_title";
-	draw::scene.window = character_sheet;
 	menui::choose("Main", "city", 0);
 }
 
@@ -59,6 +53,7 @@ int main() {
 	if(!initialize_translation("ru"))
 		return -1;
 	draw::initialize("Mutants: Zero point");
+	initialize_commands();
 	draw::setnext(game.main_menu);
 	draw::start();
 	return 0;

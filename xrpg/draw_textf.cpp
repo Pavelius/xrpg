@@ -3,6 +3,8 @@
 
 using namespace draw;
 
+int draw::tab_pixels = 0;
+
 static void(*draw_icon)(int& x, int& y, int x0, int x2, int* max_width, int& w, const char* name);
 
 void draw::set(void(*proc)(int& x, int& y, int x0, int x2, int* max_width, int& w, const char* id)) {
@@ -37,7 +39,11 @@ static const char* glink(const char* p, char* result, unsigned result_maximum) {
 	return p;
 }
 
-static const char* textspc(const char* p, int x0, int& x, int tab_width) {
+static int gettabwidth() {
+	return draw::tab_pixels ? draw::tab_pixels : draw::textw(' ') * 4;
+}
+
+static const char* textspc(const char* p, int x0, int& x) {
 	int tb;
 	while(true) {
 		switch(p[0]) {
@@ -47,10 +53,7 @@ static const char* textspc(const char* p, int x0, int& x, int tab_width) {
 			continue;
 		case '\t':
 			p++;
-			if(!tab_width)
-				tb = draw::textw(' ') * 4;
-			else
-				tb = tab_width;
+			tb = gettabwidth();
 			x = x0 + ((x - x0 + tb) / tb)*tb;
 			continue;
 		}
@@ -65,7 +68,7 @@ static const char* word(const char* text) {
 	return text;
 }
 
-static int textfln(int x0, int y0, int width, const char** string, color c1, int* max_width, int tab_width) {
+static int textfln(int x0, int y0, int width, const char** string, color c1, int* max_width) {
 	char temp[4096];
 	int y = y0;
 	int x = x0;
@@ -134,7 +137,7 @@ static int textfln(int x0, int y0, int width, const char** string, color c1, int
 			flags &= ~TextUscope;
 		}
 		// Обработаем пробелы и табуляцию
-		p = textspc(p, x0, x, tab_width);
+		p = textspc(p, x0, x);
 		int w;
 		if(p[0] == ':' && p[1] >= 'a' && p[1] <= 'z') {
 			p++;
@@ -159,7 +162,7 @@ static int textfln(int x0, int y0, int width, const char** string, color c1, int
 		}
 		int x4 = x;
 		x += w;
-		p = textspc(p, x0, x, tab_width);
+		p = textspc(p, x0, x);
 		if(temp[0] || (flags&TextUscope) != 0) {
 			int x3 = imin(x2, x);
 			int y2 = y + draw::texth();
@@ -191,7 +194,7 @@ static int textfln(int x0, int y0, int width, const char** string, color c1, int
 }
 
 int draw::textf(int x, int y, int width, const char* string, int* max_width,
-	int min_height, int* cashe_height, const char** cashe_string, int tab_width) {
+	int min_height, int* cashe_height, const char** cashe_string) {
 	auto push_fore = fore;
 	auto push_font = font;
 	color color_text = fore;
@@ -213,17 +216,17 @@ int draw::textf(int x, int y, int width, const char* string, int* max_width,
 		{
 			p = skipsp(p);
 			font = metrics::h3;
-			y += textfln(x, y, width, &p, colors::h3, &mw2, tab_width);
+			y += textfln(x, y, width, &p, colors::h3, &mw2);
 		} else if(match(&p, "##")) // Header 2
 		{
 			p = skipsp(p);
 			font = metrics::h2;
-			y += textfln(x, y, width, &p, colors::h2, &mw2, tab_width);
+			y += textfln(x, y, width, &p, colors::h2, &mw2);
 		} else if(match(&p, "#")) // Header 1
 		{
 			p = skipsp(p);
 			font = metrics::h1;
-			y += textfln(x, y, width, &p, colors::h1, &mw2, tab_width);
+			y += textfln(x, y, width, &p, colors::h1, &mw2);
 		} else if(match(&p, "...")) // Без форматирования
 		{
 			p = skipcr(p);
@@ -250,9 +253,9 @@ int draw::textf(int x, int y, int width, const char* string, int* max_width,
 			int rd = texth() / 6;
 			circlef(x + dx + 2, y + dx, rd, color_text);
 			circle(x + dx + 2, y + dx, rd, color_text);
-			y += textfln(x + texth(), y, width - texth(), &p, color_text, &mw2, tab_width);
+			y += textfln(x + texth(), y, width - texth(), &p, color_text, &mw2);
 		} else
-			y += textfln(x, y, width, &p, color_text, &mw2, tab_width);
+			y += textfln(x, y, width, &p, color_text, &mw2);
 		// Возвратим стандартные настройки блока
 		font = metrics::font;
 		fore = color_text;
@@ -266,10 +269,10 @@ int draw::textf(int x, int y, int width, const char* string, int* max_width,
 	return y - y0;
 }
 
-int draw::textf(rect& rc, const char* string, int tab_width) {
+int draw::textf(rect& rc, const char* string) {
 	auto push_clipping = clipping;
 	clipping.clear();
-	rc.y2 = rc.y1 + draw::textf(0, 0, rc.width(), string, &rc.x2, 0, 0, 0, tab_width);
+	rc.y2 = rc.y1 + draw::textf(0, 0, rc.width(), string, &rc.x2, 0, 0, 0);
 	rc.x2 += rc.x1;
 	clipping = push_clipping;
 	return rc.height();

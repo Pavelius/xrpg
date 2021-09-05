@@ -10,12 +10,14 @@ namespace draw {
 struct scenei {
 	int				grid = 32;
 	const char*		resurl = 0;
+	const command*	commands = 0;
 	fnevent			background = 0;
 	fnevent			window = 0;
 };
 extern point		camera;
 extern point		caret;
 extern scenei		scene;
+extern int			tab_pixels;
 extern int			width;
 void				answerbt(int index, long id, const char* title);
 void				avatar(const char* id, unsigned char alpha = 0xFF);
@@ -29,8 +31,10 @@ void				customwindow();
 bool				ishilite(int s, const void* object);
 void				fog(int n);
 void				grid();
+void				paintall();
 void				paintclear();
 void				paintimage();
+void				paintcommands();
 void				simpleui();
 void				set(int x, int y);
 void				setposition(int x, int y);
