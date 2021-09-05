@@ -395,5 +395,8 @@
     <ClCompile Include="draw_color.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
+    <ClCompile Include="io_plugin_data.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

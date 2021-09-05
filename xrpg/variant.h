@@ -40,6 +40,7 @@ union variant{
 	void				paint() const;
 	void				setvariant(variant_s t, unsigned short v) { type = t; value = v; }
 };
+typedef sliceu<variant> variants;
 template<> variant::variant(const char* v);
 template<> variant::variant(const void* v);
 	

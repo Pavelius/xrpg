@@ -1,0 +1,42 @@
+{
+  "Abilities": {
+    "Strenght": {},
+    "Dexterity": {},
+    "Constitution": {},
+    "Intellegence": {},
+    "Wisdow": {},
+    "Charisma": {},
+    "ArmorClass": {},
+    "Speed": {}
+  },
+  "Feats": {
+    "Darkvision": {},
+    "DwarvenResilience": {},
+    "DwarvenCombatTraining": {},
+    "NotReduceSpeedByArmor": {},
+    "Stonecunning": {}
+  },
+  "Races": {
+    "Dwarf": {
+      "feats": [
+        "Constitution",
+        "Constitution",
+        "NotReduceSpeedByArmor",
+        "Darkvision",
+        "DwarvenResilience",
+        "DwarvenCombatTraining"
+      ]
+    },
+    "DwarfHill": {
+      "base": "Dwarf",
+      "feats": [
+        "Constitution",
+        "Constitution",
+        "NotReduceSpeedByArmor",
+        "Darkvision",
+        "DwarvenResilience",
+        "DwarvenCombatTraining"
+      ]
+    }
+  }
+}

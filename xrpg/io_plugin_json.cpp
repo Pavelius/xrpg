@@ -43,9 +43,11 @@ static const char* read_object(const char* p, serializer::node& n, serializer::r
 static const char* read_array(const char* p, serializer::node& pn, serializer::reader& e) {
 	int index = 0;
 	while(*p) {
-		serializer::node n(pn);
-		n.name = "element";
+		auto n = pn;
+		n.name = pn.name;
 		n.index = index;
+		n.object = pn.object;
+		n.metadata = pn.metadata;
 		p = read_object(p, n, e);
 		if(*p == ',') {
 			p = skipspcr(p + 1);
@@ -272,3 +274,7 @@ static struct json_reader_parser : public io::plugin {
 		filter = "*.json";
 	}
 } reader_parser_instance;
+
+void initialize_json() {
+
+}
