@@ -30,6 +30,7 @@
     "Persuasion": {}
   },
   "Feats": {
+  	"Brave": {},
     "Darkvision": {},
     "DwarvenArmorTraining": {},
     "DwarvenCombatTraining": {},
@@ -38,10 +39,14 @@
     "ElfWeaponTraining": {},
     "FeyAncestry": {},
     "FleetOfFoot": {},
+    "HalflingNimbleness": {},
     "KeenSenses": {},
+    "Lucky": {},
+    "NaturallyStealthy": {},
     "NotReduceSpeedByArmor": {},
     "MaskOfTheWild": {},
     "Stonecunning": {},
+    "StoutResilience": {},
     "Trance": {}
   },
   "Races": {
@@ -81,18 +86,61 @@
       ]
     },
     "ElfHigh": {
+      "base": "Elf",
       "feats": [
         "Intellegence",
         "ElfWeaponTraining"
       ]
     },
     "ElfWood": {
+      "base": "Elf",
       "feats": [
         "Wisdow",
         "ElfWeaponTraining",
         "KeenSenses",
         "MaskOfTheWild"
       ]
+    },
+    "Halfling": {
+      "feats": [
+        "Dexterity",
+        "Dexterity",
+        "Minus",
+        "Speed",
+        "Lucky",
+        "Brave",
+        "HalflingNimbleness"
+      ]
+    },
+    "HalflingLightfoot": {
+      "base": "Halfling",
+      "feats": [
+        "Charisma",
+        "NaturallyStealthy"
+      ]
+    },
+    "HalflingStout": {
+      "base": "Halfling",
+      "feats": [
+        "Constitution",
+        "StoutResilience"
+      ]
+    },
+    "Human": {
+      "feats": [
+        "Strenght",
+        "Dexterity",
+        "Constitution",
+        "Intellegence",
+        "Wisdow",
+        "Charisma"
+      ]
     }
-  }
+  },
+  "Classes": {
+  	"Cleric": {},
+  	"Fighter": {},
+  	"Rogue": {},
+  	"Wizard": {},
+  },
 }

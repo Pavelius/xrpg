@@ -1,2 +1,0 @@
-﻿Error loading rules/dnd5/core.json
-Can't find variant "Widsow"
