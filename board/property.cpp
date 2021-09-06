@@ -6,24 +6,29 @@ NOBSDATA(variants)
 
 BSMETA(abilityi) = {
 	BSREQ(id),
+	BSREQ(priority),
 	{}};
 BSDATAC(abilityi, 128);
-
 BSMETA(creaturei) = {
 	BSREQ(id),
 	{}};
 BSDATAC(creaturei, 64);
-
 BSMETA(racei) = {
-	BSREQ(id), BSREQ(base), BSREQ(feats),
+	BSREQ(id),
+	BSREQ(base), BSREQ(feats),
 	{}};
 BSDATAC(racei, 32);
-
 BSMETA(feati) = {
 	BSREQ(id),
 	{}};
 BSDATAC(feati, 128);
-
+BSMETA(skilli) = {
+	BSREQ(id),
+	{}};
+BSDATAC(skilli, 32);
+BSMETA(modifieri) = {
+	BSREQ(id),
+	{}};
 BSMETA(variant) = {
 	{}};
 BSDATAD(variant)
@@ -36,6 +41,8 @@ BSDATA(varianti) = {
 	{"Abilities", VRSTD(abilityi)},
 	{"Creatures", VRSTD(creaturei)},
 	{"Feats", VRSTD(feati)},
+	{"Modifiers", VRSTD(modifieri)},
 	{"Races", VRSTD(racei)},
+	{"Skills", VRSTD(skilli)},
 };
-BSDATAF(varianti);
+assert_enum(varianti, Skills)

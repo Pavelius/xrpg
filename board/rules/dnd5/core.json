@@ -1,0 +1,98 @@
+{
+  "Abilities": {
+    "Strenght": {},
+    "Dexterity": {},
+    "Constitution": {},
+    "Intellegence": {},
+    "Wisdow": {},
+    "Charisma": {},
+    "ArmorClass": {},
+    "Speed": {}
+  },
+  "Skills": {
+    "Athletics": {},
+    "Acrobatics": {},
+    "SleightOfHand": {},
+    "Stealth": {},
+    "Arcana": {},
+    "History": {},
+    "Investigation": {},
+    "Nature": {},
+    "Religion": {},
+    "AnimalHandling": {},
+    "Insight": {},
+    "Medicine": {},
+    "Perception": {},
+    "Survival": {},
+    "Deception": {},
+    "Intimidation": {},
+    "Performance": {},
+    "Persuasion": {}
+  },
+  "Feats": {
+    "Darkvision": {},
+    "DwarvenArmorTraining": {},
+    "DwarvenCombatTraining": {},
+    "DwarvenResilience": {},
+    "DwarvenToughness": {},
+    "ElfWeaponTraining": {},
+    "FeyAncestry": {},
+    "FleetOfFoot": {},
+    "KeenSenses": {},
+    "NotReduceSpeedByArmor": {},
+    "MaskOfTheWild": {},
+    "Stonecunning": {},
+    "Trance": {}
+  },
+  "Races": {
+    "Dwarf": {
+      "feats": [
+        "Constitution",
+        "Constitution",
+        "Darkvision",
+        "DwarvenResilience",
+        "DwarvenToughness",
+        "NotReduceSpeedByArmor"
+      ]
+    },
+    "DwarfHill": {
+      "base": "Dwarf",
+      "feats": [
+        "Wisdow",
+        "DwarvenToughness"
+      ]
+    },
+    "DwarfMountain": {
+      "base": "Dwarf",
+      "feats": [
+        "Strenght",
+        "Strenght",
+        "DwarvenArmorTraining"
+      ]
+    },
+    "Elf": {
+      "feats": [
+        "Dexterity",
+        "Dexterity",
+        "Darkvision",
+        "KeenSenses",
+        "FeyAncestry",
+        "Trance"
+      ]
+    },
+    "ElfHigh": {
+      "feats": [
+        "Intellegence",
+        "ElfWeaponTraining"
+      ]
+    },
+    "ElfWood": {
+      "feats": [
+        "Wisdow",
+        "ElfWeaponTraining",
+        "KeenSenses",
+        "MaskOfTheWild"
+      ]
+    }
+  }
+}

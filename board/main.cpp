@@ -9,7 +9,7 @@ int main() {
 	initialize_json();
 	if(!initialize_translation("ru"))
 		return -1;
-	if(!readf("test.json"))
+	if(!readf("rules/dnd5/core.json"))
 		return -1;
 	draw::initialize("DnD5 simulator");
 	draw::setnext(draw::simpleui);

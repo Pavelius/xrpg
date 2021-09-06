@@ -5,9 +5,16 @@
 
 enum variant_s : unsigned char {
 	NoVariant,
-	Abilities, Creatures, Feats, Races
+	Abilities, Creatures, Feats, Modifiers, Races, Skills
 };
-
+enum modifier_s : unsigned char {
+	Need, Need13,
+};
+typedef flagable<4>		skilla;
+struct modifieri {
+	const char*			id;
+	int					value;
+};
 struct durationi {
 	const char*			id;
 };
@@ -16,6 +23,7 @@ struct sloti {
 };
 struct abilityi {
 	const char*			id;
+	int					priority;
 };
 struct dicei {
 	const char*			id;
@@ -25,13 +33,14 @@ struct dicei {
 struct statablei {
 	char				abilities[64];
 	flagable<16>		feats;
+	skilla				skills;
 	void				add(variant v);
 	int					get(variant v) const;
 };
-struct creaturei : statablei {
+struct creaturei {
 	const char*			id;
 	variant				race;
-	statablei			basic;
+	statablei			current, basic;
 	void				clear();
 };
 struct feati {
@@ -41,4 +50,7 @@ struct racei {
 	const char*			id;
 	variant				base;
 	variants			feats;
+};
+struct skilli {
+	const char*			id;
 };

@@ -1,2 +1,2 @@
-﻿Error loading test.json
-Can't find requisit "base" to load value Dwarf
+﻿Error loading rules/dnd5/core.json
+Can't find variant "Widsow"

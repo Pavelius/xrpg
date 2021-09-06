@@ -27,7 +27,7 @@ bool readf(const char* url) {
 			auto ri = ps->find(id, 0);
 			if(ri == -1) {
 				if(create) {
-					ri = ps->indexof(metadata->source->add());
+					ri = ps->indexof(ps->add());
 					if(ri == -1)
 						return 0;
 					auto p = ps->ptr(ri);
@@ -38,10 +38,16 @@ bool readf(const char* url) {
 			return ps->ptr(ri);
 		}
 		static const bsreq* getmeta(const serializer::node& e) {
-			return (bsreq*)e.metadata;
+			auto p = &e;
+			while(!p->metadata && p->parent)
+				p = p->parent;
+			return (bsreq*)p->metadata;
 		}
 		static void* getobject(const serializer::node& e) {
-			return e.object;
+			auto p = &e;
+			while(!p->object && p->parent)
+				p = p->parent;
+			return p->object;
 		}
 		void warning(const char* text, ...) {
 			if(error_url) {
@@ -70,16 +76,11 @@ bool readf(const char* url) {
 				e.object = findobject((varianti*)e.parent->object, e.name);
 				break;
 			default:
-				e.metadata = (void*)getmeta(*e.parent)->find(e.name);
-				if(e.metadata)
-					e.object = getmeta(e)->ptr(e.parent->object);
-				else
-					e.object = 0;
 				break;
 			}
 		}
 		void set(serializer::node& e, const char* value) override {
-			auto pm = getmeta(e);
+			auto pm = getmeta(e)->find(e.name);
 			if(!pm)
 				warning("Can't find requisit \"%1\" to load value %2", e.name, value);
 			else if(pm->type == bsmeta<variants>::meta) {
@@ -87,7 +88,7 @@ bool readf(const char* url) {
 				if(!v)
 					warning("Can't find variant \"%1\"", value);
 				else {
-					auto ps = (variants*)getobject(e);
+					auto ps = (variants*)pm->ptr(getobject(e), 0);
 					if(!ps->count) {
 						bsdata<variant>::source.reserve(bsdata<variant>::source.getcount() + 1);
 						ps->start = bsdata<variant>::source.getcount();
@@ -100,14 +101,14 @@ bool readf(const char* url) {
 				if(!v)
 					warning("Can't find variant \"%1\"", value);
 				else {
-					auto ps = (variant*)getobject(e);
+					auto ps = (variant*)pm->ptr(getobject(e), e.index);
 					*ps = v;
 				}
 			} else if(pm->type == bsmeta<int>::meta) {
-				auto ps = pm->ptr(getobject(*e.parent), e.index);
+				auto ps = pm->ptr(getobject(e), e.index);
 				pm->set(ps, stringbuilder::getnum(value));
 			} else if(pm->type == bsmeta<const char*>::meta) {
-				auto ps = pm->ptr(getobject(*e.parent), e.index);
+				auto ps = pm->ptr(getobject(e), e.index);
 				pm->set(ps, (int)szdup(value));
 			}
 		}

@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="creature.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="modifier.cpp" />
     <ClCompile Include="property.cpp" />
     <ClCompile Include="statable.cpp" />
   </ItemGroup>
@@ -154,10 +155,10 @@
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="test.json" />
+    <Text Include="errors.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="errors.txt" />
+    <None Include="rules\dnd5\core.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

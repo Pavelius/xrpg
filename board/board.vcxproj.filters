@@ -13,6 +13,9 @@
     <ClCompile Include="statable.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="modifier.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Logic">
@@ -28,13 +31,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="test.json">
-      <Filter>Data</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="errors.txt">
       <Filter>Data</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="rules\dnd5\core.json">
+      <Filter>Data</Filter>
+    </None>
   </ItemGroup>
 </Project>
