@@ -133,6 +133,7 @@ public:
 	bool							is(const void* e) const { return e >= data && e < (char*)data + count * size; }
 	bool							isgrowable() const { return (count_maximum & 0x80000000) == 0; }
 	void*							ptr(int index) const { return (char*)data + size * index; }
+	void*							ptrs(int index) const { return (((unsigned)index) < count) ? (char*)data + size * index : 0; }
 	template<class T> slice<T> records() const { return slice<T>((T*)data, count); }
 	void							remove(int index, int elements_count = 1);
 	void							shift(int i1, int i2, size_t c1, size_t c2);
@@ -217,7 +218,6 @@ int									isqrt(const int x); // Return aquare root of 'x'
 void*								loadb(const char* url, int* size = 0, int additional_bytes_alloated = 0); // Load binary file.
 char*								loadt(const char* url, int* size = 0); // Load text file and decode it to system codepage.
 bool								matchuc(const char* name, const char* filter);
-const char*							psstr(const char* p, char* value, char end_symbol = '\"'); // Parse string from string (like c format "Some\nstring")
 unsigned							rmoptimal(unsigned need_count);
 float								sqrt(const float x); // Return aquare root of 'x'
 inline const char*					skipsp(const char* p) { if(p) while(*p == ' ' || *p == '\t') p++; return p; }

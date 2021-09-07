@@ -33,7 +33,7 @@
     "Persuasion": {}
   },
   "Feats": {
-  	"Brave": {},
+    "Brave": {},
     "Darkvision": {},
     "DwarvenArmorTraining": {},
     "DwarvenCombatTraining": {},
@@ -141,36 +141,19 @@
     }
   },
   "Classes": {
-  	"Cleric": {
-  	  "hitdice" : 8,
-  	  "skills" : [
-  	    "History",
-  	    "Insight",
-  	    "Medicine",
-  	    "Persuasion",
-  	    "Religion"
-  	  ],
-  	  "spellprogress" : "ClericSpellProgression"
-  	},
-  	"Fighter": {},
-  	"Rogue": {},
-  	"Wizard": {},
-  },
-  "Progress" : {
-    "Cleric" : [
-      {
-    	"id": "ArmorProficiency",
-    	"feats": [
-    		"LightArmor",
-    		"MediumArmor",
-    		"HeavyArmor",
-    		"Shield",
-    	],
-      },
-      {
-    	"id": "WeaponProficiency",
-    	"feats": "SimpleWeapons",
-      },
-    ]
+    "Cleric": {
+      "hitdice": 8,
+      "skills": [
+        "History",
+        "Insight",
+        "Medicine",
+        "Persuasion",
+        "Religion"
+      ],
+      "spellprogress": "ClericSpellProgression"
+    },
+    "Fighter": {},
+    "Rogue": {},
+    "Wizard": {},
   }
 }

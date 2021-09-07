@@ -1,14 +1,29 @@
 #include "bsreq.h"
 #include "main.h"
+#include "tablecsv.h"
 #include "variant.h"
 
 NOBSDATA(variants)
+NOBSDATA(flagable<1>)
+NOBSDATA(flagable<2>)
+NOBSDATA(flagable<4>)
 
 BSMETA(abilityi) = {
 	BSREQ(id),
-	BSREQ(priority),
 	{}};
 BSDATAC(abilityi, 128);
+BSMETA(parameteri) = {
+	BSREQ(id),
+	{}};
+BSDATAC(parameteri, 128);
+BSMETA(classi) = {
+	BSREQ(id),
+	BSREQ(spellprogress),
+	BSREQ(feats),
+	BSREQ(skills),
+	BSREQ(hitdice),
+	{}};
+BSDATAC(classi, 32);
 BSMETA(creaturei) = {
 	BSREQ(id),
 	{}};
@@ -29,20 +44,24 @@ BSDATAC(skilli, 32);
 BSMETA(modifieri) = {
 	BSREQ(id),
 	{}};
-BSMETA(variant) = {
-	{}};
+BSMETA(variant) = {{}};
 BSDATAD(variant)
 
+BSMETA(tablecsvi) = {{}};
 BSMETA(variants) = {{}};
 
 #define VRSTD(T)  bsmeta<T>::meta, bsdata<T>::source_ptr
 BSDATA(varianti) = {
 	{"NoVariant"},
 	{"Abilities", VRSTD(abilityi)},
+	{"Classes", VRSTD(classi)},
 	{"Creatures", VRSTD(creaturei)},
 	{"Feats", VRSTD(feati)},
 	{"Modifiers", VRSTD(modifieri)},
+	{"Parameters", VRSTD(parameteri)},
+	{"Progress"},
 	{"Races", VRSTD(racei)},
 	{"Skills", VRSTD(skilli)},
+	{"Tables", VRSTD(tablecsvi)},
 };
-assert_enum(varianti, Skills)
+assert_enum(varianti, Tables)

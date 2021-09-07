@@ -27,9 +27,9 @@ static const char* psidn(const char* p, char* ps, const char* pe) {
 }
 
 static const char* read_name(const char* p, serializer::node& n) {
-	char temp[256];
+	char temp[256]; stringbuilder sb(temp);
 	if(*p == '\"' || *p == '\'')
-		p = psstr(p + 1, temp, *p);
+		p = sb.psstr(p + 1, *p);
 	else if(ischa(*p))
 		p = psidn(p, temp, temp + sizeof(temp) - 1);
 	else
@@ -89,8 +89,8 @@ static const char* read_dictionary(const char* p, serializer::node& pn, serializ
 }
 
 static const char* read_string(const char* p, char end_symbol, serializer::node& n, serializer::reader& e) {
-	static char temp[256 * 256];
-	p = psstr(p, temp, end_symbol);
+	static char temp[256 * 256]; stringbuilder sb(temp);
+	p = sb.psstr(p, end_symbol);
 	n.type = serializer::kind::Text;
 	if(!n.skip)
 		e.set(n, temp);

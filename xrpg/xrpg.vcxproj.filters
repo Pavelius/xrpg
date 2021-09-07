@@ -171,6 +171,9 @@
     <ClInclude Include="draw_color.h">
       <Filter>Interface</Filter>
     </ClInclude>
+    <ClInclude Include="tablecsv.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -396,6 +399,9 @@
       <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="io_plugin_data.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="tablecsv.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>

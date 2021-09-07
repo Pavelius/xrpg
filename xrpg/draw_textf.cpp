@@ -23,7 +23,8 @@ static const char* glink(const char* p, char* result, unsigned result_maximum) {
 	result[0] = 0;
 	if(*p == '\"') {
 		auto sym = *p++;
-		p = psstr(p, result, sym);
+		stringbuilder sb(result, result + result_maximum);
+		p = sb.psstr(p, sym);
 	} else if(*p == '(') {
 		auto ps = result;
 		auto pe = ps + result_maximum;

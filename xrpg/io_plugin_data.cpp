@@ -1,5 +1,6 @@
 #include "bsreq.h"
 #include "crt.h"
+#include "flagable.h"
 #include "io_plugin.h"
 #include "log.h"
 #include "variant.h"
@@ -7,6 +8,10 @@
 using namespace io;
 
 static const char* error_url;
+
+BSMETA(flagable<1>) = {{}};
+BSMETA(flagable<2>) = {{}};
+BSMETA(flagable<4>) = {{}};
 
 bool readf(const char* url) {
 	struct proxy : serializer::reader {
@@ -95,6 +100,16 @@ bool readf(const char* url) {
 					}
 					auto pv = ps->begin();
 					pv[ps->count++] = v;
+				}
+			} else if(pm->type == bsmeta<flagable<1>>::meta
+				|| pm->type == bsmeta<flagable<2>>::meta
+				|| pm->type == bsmeta<flagable<4>>::meta) {
+				variant v(value);
+				if(!v)
+					warning("Can't find variant \"%1\"", value);
+				else {
+					auto ps = (unsigned char*)pm->ptr(getobject(e), e.index);
+					ps[v.value / 8] |= (1 << (v.value % 8));
 				}
 			} else if(pm->type == bsmeta<variant>::meta) {
 				variant v(value);

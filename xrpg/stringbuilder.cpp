@@ -114,69 +114,69 @@ const char* skipcr(const char* p) {
 }
 
 // Parse string to string (from c/json format)
-const char* psstr(const char* p, char* r, char end_symbol) {
-	r[0] = 0;
-	if(!p)
-		return 0;
-	while(*p) {
-		if(*p == end_symbol) {
-			*r++ = 0;
-			return p + 1;
-		} else if(*p != '\\') {
-			*r++ = *p++;
-			continue;
-		}
-		p++;
-		long value;
-		switch(*p) {
-		case 'n':
-			*r++ = '\n';
-			p++;
-			break;
-		case 'r':
-			*r++ = '\r';
-			p++;
-			break;
-		case 't':
-			*r++ = '\t';
-			p++;
-			break;
-		case 'b':
-			*r++ = '\b';
-			p++;
-			break;
-		case 'f':
-			*r++ = '\f';
-			p++;
-			break;
-		case 'v':
-			*r++ = '\v';
-			p++;
-			break;
-			// Число в кодировке UNICODE
-		case '0': case '1': case '2': case '3': case '4':
-		case '5': case '6': case '7': case '8': case '9':
-			p = psnum10(p, value);
-			r = szput(r, value);
-			break;
-			// Число в кодировке UNICODE (16-ричная система)
-		case 'x': case 'u':
-			p = psnum16(p + 1, value);
-			r = szput(r, value);
-			break;
-		case '\n': case '\r':
-			// Перевод строки в конце
-			while(*p == '\n' || *p == '\r')
-				p = skipcr(p);
-			break;
-		default:
-			// Любой символ, который будет экранирован ( \', \", \\)
-			*r++ = *p++;
-			break;
-		}
-	}
-	return p;
-}
+//const char* psstr(const char* p, char* r, char end_symbol) {
+//	r[0] = 0;
+//	if(!p)
+//		return 0;
+//	while(*p) {
+//		if(*p == end_symbol) {
+//			*r++ = 0;
+//			return p + 1;
+//		} else if(*p != '\\') {
+//			*r++ = *p++;
+//			continue;
+//		}
+//		p++;
+//		long value;
+//		switch(*p) {
+//		case 'n':
+//			*r++ = '\n';
+//			p++;
+//			break;
+//		case 'r':
+//			*r++ = '\r';
+//			p++;
+//			break;
+//		case 't':
+//			*r++ = '\t';
+//			p++;
+//			break;
+//		case 'b':
+//			*r++ = '\b';
+//			p++;
+//			break;
+//		case 'f':
+//			*r++ = '\f';
+//			p++;
+//			break;
+//		case 'v':
+//			*r++ = '\v';
+//			p++;
+//			break;
+//			// Число в кодировке UNICODE
+//		case '0': case '1': case '2': case '3': case '4':
+//		case '5': case '6': case '7': case '8': case '9':
+//			p = psnum10(p, value);
+//			r = szput(r, value);
+//			break;
+//			// Число в кодировке UNICODE (16-ричная система)
+//		case 'x': case 'u':
+//			p = psnum16(p + 1, value);
+//			r = szput(r, value);
+//			break;
+//		case '\n': case '\r':
+//			// Перевод строки в конце
+//			while(*p == '\n' || *p == '\r')
+//				p = skipcr(p);
+//			break;
+//		default:
+//			// Любой символ, который будет экранирован ( \', \", \\)
+//			*r++ = *p++;
+//			break;
+//		}
+//	}
+//	return p;
+//}
 
 bool szstart(const char* text, const char* name) {
 	while(*name) {
@@ -373,7 +373,7 @@ const char* stringbuilder::readformat(const char* src, const char* vl) {
 		if(isnum(*src))
 			src = psnum10(src, pn);
 #ifdef __unix__
-    pn = pn + 3;
+		pn = pn + 3;
 #endif
 		if(src[0] == '.' && isnum(src[1]))
 			src = psnum10(src + 1, pnp);
@@ -568,6 +568,80 @@ int stringbuilder::getnum(const char* value) {
 	long int_value = 0;
 	read(value, int_value);
 	return int_value;
+}
+
+const char* stringbuilder::psstr(const char* pb, char end_symbol) {
+	p[0] = 0;
+	if(!pb)
+		return 0;
+	while(*pb) {
+		if(*pb == end_symbol) {
+			*p++ = 0;
+			return pb + 1;
+		} else if(*pb != '\\') {
+			if(p < pe)
+				*p++ = *pb;
+			pb++;
+			continue;
+		}
+		pb++;
+		long value;
+		switch(*pb) {
+		case 'n':
+			if(p < pe)
+				*p++ = '\n';
+			pb++;
+			break;
+		case 'r':
+			if(p < pe)
+				*p++ = '\r';
+			pb++;
+			break;
+		case 't':
+			if(p < pe)
+				*p++ = '\t';
+			pb++;
+			break;
+		case 'b':
+			if(p < pe)
+				*p++ = '\b';
+			pb++;
+			break;
+		case 'f':
+			if(p < pe)
+				*p++ = '\f';
+			pb++;
+			break;
+		case 'v':
+			if(p < pe)
+				*p++ = '\v';
+			pb++;
+			break;
+			// Число в кодировке UNICODE
+		case '0': case '1': case '2': case '3': case '4':
+		case '5': case '6': case '7': case '8': case '9':
+			pb = psnum10(pb, value);
+			p = szput(p, value);
+			break;
+			// Число в кодировке UNICODE (16-ричная система)
+		case 'x': case 'u':
+			pb = psnum16(pb + 1, value);
+			p = szput(p, value);
+			break;
+		case '\n': case '\r':
+			// Перевод строки в конце
+			while(*pb == '\n' || *p == '\r')
+				pb = skipcr(pb);
+			break;
+		default:
+			// Любой символ, который будет экранирован ( \', \", \\)
+			if(p < pe)
+				*p++ = *pb;
+			pb++;
+			break;
+		}
+	}
+	return pb;
 }
 
 void stringbuilder::addof(const char* s) {

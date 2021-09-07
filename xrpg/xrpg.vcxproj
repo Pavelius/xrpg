@@ -187,6 +187,7 @@
     <ClInclude Include="setting.h" />
     <ClInclude Include="string.h" />
     <ClInclude Include="stringbuilder.h" />
+    <ClInclude Include="tablecsv.h" />
     <ClInclude Include="variant.h" />
     <ClInclude Include="varianta.h" />
     <ClInclude Include="win.h" />
@@ -209,6 +210,7 @@
     <ClCompile Include="png.cpp" />
     <ClCompile Include="serializer.cpp" />
     <ClCompile Include="string.cpp" />
+    <ClCompile Include="tablecsv.cpp" />
     <ClCompile Include="widget_codetree.cpp" />
     <ClCompile Include="widget_codeview.cpp" />
     <ClCompile Include="color.cpp" />

@@ -3,5 +3,6 @@
 BSDATA(modifieri) = {
 	{"Need"},
 	{"Need13", 13},
+	{"Minus"},
 };
-assert_enum(modifieri, Need13)
+assert_enum(modifieri, Minus)

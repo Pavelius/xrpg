@@ -5,10 +5,10 @@
 
 enum variant_s : unsigned char {
 	NoVariant,
-	Abilities, Creatures, Feats, Modifiers, Races, Skills
+	Abilities, Class, Creatures, Feats, Modifiers, Parameters, Progress, Races, Skills, Tables,
 };
 enum modifier_s : unsigned char {
-	Need, Need13,
+	Need, Need13, Minus,
 };
 typedef flagable<4>		skilla;
 struct modifieri {
@@ -23,12 +23,25 @@ struct sloti {
 };
 struct abilityi {
 	const char*			id;
-	int					priority;
+};
+struct parameteri {
+	const char*			id;
+};
+struct progressi {
+	variant				id;
+	char				level;
 };
 struct dicei {
 	const char*			id;
 	char				min;
 	char				max;
+};
+struct classi {
+	const char*			id;
+	char				hitdice;
+	variant				spellprogress;
+	skilla				skills;
+	variants			feats;
 };
 struct statablei {
 	char				abilities[64];

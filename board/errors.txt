@@ -1,0 +1,8 @@
+﻿Error loading rules/dnd5/core.json
+Can't find requisit "id" to load value ArmorProficiency
+Can't find requisit "feats" to load value LightArmor
+Can't find requisit "feats" to load value MediumArmor
+Can't find requisit "feats" to load value HeavyArmor
+Can't find requisit "feats" to load value Shield
+Can't find requisit "id" to load value WeaponProficiency
+Can't find requisit "feats" to load value SimpleWeapons
