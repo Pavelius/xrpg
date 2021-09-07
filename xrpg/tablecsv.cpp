@@ -46,14 +46,17 @@ static const char* read_columns(const char* p, short unsigned& count) {
 			auto stop_symbol = *p++;
 			sb.clear();
 			p = sb.psstr(p, stop_symbol);
-		} else {
+		} else if(isnum(*p)) {
 			int v = 0;
 			p = sb.read(p, v);
+		} else if(ischa(*p)) {
+			sb.clear();
+			p = sb.psidf(p);
 		}
 		count++;
 		p = skipsp(p);
 		if(p[0] == ',') {
-			p = skipsp(p+1);
+			p = skipsp(p + 1);
 			continue;
 		} else if(*p == '\n' || *p == '\r')
 			p = skipcr(p);
@@ -75,12 +78,21 @@ bool tablecsvi::parse(const char* p) {
 			auto stop_symbol = *p++;
 			sb.clear();
 			p = sb.psstr(p, stop_symbol);
-			variant v(temp);
+			variant v((const char*)temp);
 			if(ps < pe)
 				*ps++ = v;
-		} else {
+		} else if(isnum(*p)) {
 			int v = 0;
 			p = sb.read(p, v);
+			if(ps < pe)
+				*ps++ = v;
+		} else if(*p == ',') {
+			if(ps < pe)
+				*ps++ = 0;
+		} else if(ischa(*p)) {
+			sb.clear();
+			p = sb.psidf(p);
+			variant v((const char*)temp);
 			if(ps < pe)
 				*ps++ = v;
 		}

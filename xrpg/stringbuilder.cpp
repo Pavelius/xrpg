@@ -287,30 +287,9 @@ void stringbuilder::addidentifier(const char* identifier) {
 	}
 }
 
-const char* stringbuilder::read(const char* p, char* ps, const char* pe) {
-	if(*p == '(') {
-		p++;
-		while(*p && *p != ')') {
-			if(ps < pe)
-				*ps++ = *p;
-		}
-		if(*p == ')')
-			p++;
-	} else {
-		while(*p && (ischa(*p) || isnum(*p) || *p == '_')) {
-			if(ps < pe)
-				*ps++ = *p++;
-			else
-				break;
-		}
-	}
-	*ps = 0;
-	return p;
-}
-
 const char* stringbuilder::readvariable(const char* p) {
-	char temp[260];
-	p = read(p, temp, temp + sizeof(temp) - 1);
+	char temp[260]; stringbuilder s1(temp);
+	p = s1.psidf(p);
 	addidentifier(temp);
 	return p;
 }
@@ -568,6 +547,28 @@ int stringbuilder::getnum(const char* value) {
 	long int_value = 0;
 	read(value, int_value);
 	return int_value;
+}
+
+const char* stringbuilder::psidf(const char* pb) {
+	if(*pb == '(') {
+		pb++;
+		while(*pb && *pb != ')') {
+			if(p < pe)
+				*p++ = *pb;
+			pb++;
+		}
+		if(*pb == ')')
+			pb++;
+	} else {
+		while(*pb && (ischa(*pb) || isnum(*pb) || *pb == '_')) {
+			if(p < pe)
+				*p++ = *pb++;
+			else
+				break;
+		}
+	}
+	*p = 0;
+	return pb;
 }
 
 const char* stringbuilder::psstr(const char* pb, char end_symbol) {

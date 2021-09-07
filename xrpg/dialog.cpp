@@ -36,18 +36,20 @@ static const char* read_string(const char* p, char* ps, const char* pe) {
 }
 
 static const char* read_identifier(const char* p, int& id, sliceu<variant>& commands) {
-	char name[32];
+	char name[32]; stringbuilder sb(name);
 	if(isnum(*p))
 		p = stringbuilder::read(p, id);
 	else {
-		p = stringbuilder::read(p, name, name + sizeof(name));
+		sb.clear();
+		p = sb.psidf(p);
 		id = (int)szdup(name);
 	}
 	p = skipsp(p);
 	adat<variant, 128> source;
 	while(p[0] == ',') {
+		sb.clear();
 		p = skipsp(p + 1);
-		p = stringbuilder::read(p, name, name + sizeof(name));
+		p = sb.psidf(p);
 		p = skipsp(p);
 		variant result = name;
 		source.add(result);

@@ -142,8 +142,8 @@ static int textfln(int x0, int y0, int width, const char** string, color c1, int
 		int w;
 		if(p[0] == ':' && p[1] >= 'a' && p[1] <= 'z') {
 			p++;
-			char temp[128];
-			p = stringbuilder::read(p, temp, temp + sizeof(temp) - 1);
+			char temp[128]; stringbuilder sb(temp);
+			p = sb.psidf(p);
 			if(*p == ':')
 				p++;
 			w = 0;
