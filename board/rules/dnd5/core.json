@@ -5,7 +5,10 @@
     "Constitution": {},
     "Intellegence": {},
     "Wisdow": {},
-    "Charisma": {},
+    "Charisma": {}
+  },
+  "Parameters": {
+    "Attack": {},
     "ArmorClass": {},
     "Speed": {}
   },
@@ -138,9 +141,36 @@
     }
   },
   "Classes": {
-  	"Cleric": {},
+  	"Cleric": {
+  	  "hitdice" : 8,
+  	  "skills" : [
+  	    "History",
+  	    "Insight",
+  	    "Medicine",
+  	    "Persuasion",
+  	    "Religion"
+  	  ],
+  	  "spellprogress" : "ClericSpellProgression"
+  	},
   	"Fighter": {},
   	"Rogue": {},
   	"Wizard": {},
   },
+  "Progress" : {
+    "Cleric" : [
+      {
+    	"id": "ArmorProficiency",
+    	"feats": [
+    		"LightArmor",
+    		"MediumArmor",
+    		"HeavyArmor",
+    		"Shield",
+    	],
+      },
+      {
+    	"id": "WeaponProficiency",
+    	"feats": "SimpleWeapons",
+      },
+    ]
+  }
 }
