@@ -8,9 +8,16 @@
     "Charisma": {}
   },
   "Parameters": {
+    "Level": {},
+    "ProficiencyBonus": { "content": [ "ProficiencyBonusTable", "Level" ] },
     "Attack": {},
-    "ArmorClass": {},
-    "Speed": {}
+    "MeleeAttack": { "content": [ "Attack", "AbilityBonus", "Strenght" ] },
+    "RangeAttack": { "content": [ "Attack", "AbilityBonus", "Dexterity" ] },
+    "ArmorClass": {
+      "base": 10,
+      "content": [ "AbilityBonus", "Dexterity" ]
+    },
+    "Speed": { "base": 6 }
   },
   "Skills": {
     "Athletics": {},
@@ -41,7 +48,7 @@
     "DwarvenToughness": {},
     "ElfWeaponTraining": {},
     "FeyAncestry": {},
-    "FleetOfFoot": {},
+    "FleetOfFoot": { "effect": [ "Speed" ] },
     "HalflingNimbleness": {},
     "KeenSenses": {},
     "Lucky": {},
@@ -51,6 +58,29 @@
     "Stonecunning": {},
     "StoutResilience": {},
     "Trance": {}
+  },
+  "Packages": {
+    "ClericSkills": {
+      "content": [
+        "History",
+        "Insight",
+        "Medicine",
+        "Persuasion",
+        "Religion"
+      ]
+    },
+    "FighterSkills": {
+      "content": [
+        "Acrobatics",
+        "AnimalHandling",
+        "Athletics",
+        "History",
+        "Insight",
+        "Intimidation",
+        "Perception",
+        "Survival"
+      ]
+    }
   },
   "Races": {
     "Dwarf": {
@@ -143,17 +173,11 @@
   "Classes": {
     "Cleric": {
       "hitdice": 8,
-      "skills": [
-        "History",
-        "Insight",
-        "Medicine",
-        "Persuasion",
-        "Religion"
-      ],
+      "skills": "ClericSkills",
       "spellprogress": "ClericSpellProgression"
     },
     "Fighter": {},
     "Rogue": {},
-    "Wizard": {},
+    "Wizard": {}
   }
 }

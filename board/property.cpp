@@ -14,8 +14,15 @@ BSMETA(abilityi) = {
 BSDATAC(abilityi, 128);
 BSMETA(parameteri) = {
 	BSREQ(id),
+	BSREQ(base),
+	BSREQ(content),
 	{}};
 BSDATAC(parameteri, 128);
+BSMETA(packagei) = {
+	BSREQ(id),
+	BSREQ(content),
+	{}};
+BSDATAC(packagei, 64);
 BSMETA(classi) = {
 	BSREQ(id),
 	BSREQ(spellprogress),
@@ -30,11 +37,13 @@ BSMETA(creaturei) = {
 BSDATAC(creaturei, 64);
 BSMETA(racei) = {
 	BSREQ(id),
-	BSREQ(base), BSREQ(feats),
+	BSREQ(base),
+	BSREQ(feats),
 	{}};
 BSDATAC(racei, 32);
 BSMETA(feati) = {
 	BSREQ(id),
+	BSREQ(effect),
 	{}};
 BSDATAC(feati, 128);
 BSMETA(skilli) = {
@@ -50,7 +59,7 @@ BSDATAD(variant)
 BSMETA(tablecsvi) = {{}};
 BSMETA(variants) = {{}};
 
-#define VRSTD(T)  bsmeta<T>::meta, bsdata<T>::source_ptr
+#define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr
 BSDATA(varianti) = {
 	{"NoVariant"},
 	{"Abilities", VRSTD(abilityi)},
@@ -58,6 +67,7 @@ BSDATA(varianti) = {
 	{"Creatures", VRSTD(creaturei)},
 	{"Feats", VRSTD(feati)},
 	{"Modifiers", VRSTD(modifieri)},
+	{"Packages", VRSTD(packagei)},
 	{"Parameters", VRSTD(parameteri)},
 	{"Progress"},
 	{"Races", VRSTD(racei)},

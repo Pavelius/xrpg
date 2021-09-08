@@ -14,6 +14,21 @@ const int* tablecsvi::end() const {
 	return (int*)source.ptr(start + count);
 }
 
+int tablecsvi::getrows() const {
+	if(!column_count)
+		return 0;
+	return count / column_count;
+}
+
+int	tablecsvi::get(int v) const {
+	if(!count)
+		return 0;
+	auto m = getrows();
+	if(v > m)
+		v = m;
+	return begin()[v];
+}
+
 static const char* getfileid(const char* url) {
 	char temp[512]; stringbuilder sb(temp); sb.add(url);
 	auto pf = szfname(temp);

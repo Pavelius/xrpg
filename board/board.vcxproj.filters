@@ -39,5 +39,11 @@
     <None Include="rules\dnd5\core.json">
       <Filter>Data</Filter>
     </None>
+    <None Include="rules\dnd5\ClericSpellProgression.csv">
+      <Filter>Data</Filter>
+    </None>
+    <None Include="rules\dnd5\ProficiencyBonusTable.csv">
+      <Filter>Data</Filter>
+    </None>
   </ItemGroup>
 </Project>

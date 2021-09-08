@@ -158,9 +158,16 @@
     <Text Include="errors.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="rules\dnd5\ClericSpellProgression.csv" />
     <None Include="rules\dnd5\core.json" />
+    <None Include="rules\dnd5\ProficiencyBonusTable.csv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties rules_4dnd5_4core_1json__JsonSchema="Получ" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

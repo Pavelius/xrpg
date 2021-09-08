@@ -1,3 +1,4 @@
+#include "tablecsv.h"
 #include "main.h"
 
 void statablei::add(variant v) {
@@ -25,4 +26,31 @@ int statablei::get(variant v) const {
 	case Feats: return feats.is(v.value) ? 1 : 0;
 	default: return 0;
 	}
+}
+
+int statablei::geteffect(variants source) const {
+	tablecsvi* maptable = 0;
+	auto result = 0;
+	auto modifier = NoModifier;
+	for(auto v : source) {
+		if(v.type == Modifiers) {
+			modifier = (modifier_s)v.value;
+			continue;
+		} else if(v.type == Tables) {
+			maptable = (tablecsvi*)bsdata<tablecsvi>::source.ptr(v.value);
+			continue;
+		}
+		auto i = get(v);
+		if(maptable) {
+			i = maptable->get(i);
+			maptable = 0;
+		}
+		switch(modifier) {
+		case AbilityBonus: i = i / 2 - 5; break;
+		case Minus: i = -i; break;
+		}
+		modifier = NoModifier;
+		result += i;
+	}
+	return result;
 }

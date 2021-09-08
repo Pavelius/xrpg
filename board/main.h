@@ -5,10 +5,11 @@
 
 enum variant_s : unsigned char {
 	NoVariant,
-	Abilities, Class, Creatures, Feats, Modifiers, Parameters, Progress, Races, Skills, Tables,
+	Abilities, Class, Creatures, Feats, Modifiers, Packages, Parameters, Progress, Races, Skills, Tables,
 };
 enum modifier_s : unsigned char {
-	Need, Need13, Minus,
+	NoModifier,
+	AbilityBonus, Need, Need13, Minus,
 };
 typedef flagable<4>		skilla;
 struct modifieri {
@@ -26,6 +27,12 @@ struct abilityi {
 };
 struct parameteri {
 	const char*			id;
+	int					base;
+	variants			content;
+};
+struct packagei {
+	const char*			id;
+	variants			content;
 };
 struct progressi {
 	variant				id;
@@ -49,6 +56,7 @@ struct statablei {
 	skilla				skills;
 	void				add(variant v);
 	int					get(variant v) const;
+	int					geteffect(variants source) const;
 };
 struct creaturei {
 	const char*			id;
@@ -58,6 +66,7 @@ struct creaturei {
 };
 struct feati {
 	const char*			id;
+	variants			effect;
 };
 struct racei {
 	const char*			id;
