@@ -1,4 +1,6 @@
+#include "answers.h"
 #include "flagable.h"
+#include "gender.h"
 #include "menu.h"
 #include "variant.h"
 
@@ -6,7 +8,7 @@
 
 enum variant_s : unsigned char {
 	NoVariant,
-	Abilities, Class, Creatures, Feats, Menu, Modifiers, Packages, Parameters, Progress, Races, Skills, Tables,
+	Abilities, Class, Creatures, Feats, Menu, Modifiers, Packages, Parameters, Progress, Races, Records, Skills, Tables,
 };
 enum modifier_s : unsigned char {
 	NoModifier,
@@ -19,6 +21,12 @@ enum modifier_s : unsigned char {
 //	Roll4d6, Roll5d6, Roll6d6, Roll7d6, Roll8d6,
 //};
 typedef flagable<4>		skilla;
+
+struct recordi {
+	const char*			id;
+	variant				parent;
+	int					param;
+};
 struct modifieri {
 	const char*			id;
 	int					value;

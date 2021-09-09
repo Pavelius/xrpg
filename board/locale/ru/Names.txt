@@ -10,6 +10,7 @@ BluntInstrument: Импровизированная дубика
 Boss: Босс
 BrassKnuckles: Кастет
 CharacterSheet: Лист пресонажа
+ChooseGender: Выберите пол вашего персонажа
 ChooseTalent: Выбирайте ваше достоинство
 Chronicler: Хронист
 Close: Закрыть

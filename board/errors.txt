@@ -1,3 +1,2 @@
 ﻿Errors occurs in locale/ru/Names.txt.txt
-Define translate for 'NewCharacter'
-Define translate for 'PickCharacter'
+Define translate for 'ChooseGender'

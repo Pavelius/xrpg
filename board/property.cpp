@@ -65,6 +65,12 @@ BSMETA(menui) = {
 	{}};
 BSDATAD(menui)
 
+BSMETA(recordi) = {
+	BSREQ(id),
+	BSREQ(parent), BSREQ(param),
+	{}};
+BSDATAD(recordi)
+
 #define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr
 BSDATA(varianti) = {
 	{"NoVariant"},
@@ -78,6 +84,7 @@ BSDATA(varianti) = {
 	{"Parameters", VRSTD(parameteri)},
 	{"Progress"},
 	{"Races", VRSTD(racei)},
+	{"Records", VRSTD(recordi)},
 	{"Skills", VRSTD(skilli)},
 	{"Tables", VRSTD(tablecsvi)},
 };

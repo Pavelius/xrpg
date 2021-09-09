@@ -17,7 +17,8 @@
       "base": 10,
       "content": [ "AbilityBonus", "Dexterity" ]
     },
-    "Speed": { "base": 6 }
+    "Speed": { "base": 6 },
+    "FightingStyle": {}
   },
   "Skills": {
     "Athletics": {},
@@ -186,5 +187,9 @@
     "Exit": { "parent": "Start" },
     "NewCharacter": { "parent": "NewGame" },
     "PickCharacter": { "parent": "NewGame" }
+  },
+  "Records": {
+    "Dualist": { "parent": "FightingStyle" },
+    "Archer": { "parent": "FightingStyle" }
   }
 }

@@ -7,8 +7,11 @@
 bool readf(const char* url);
 void initialize_json();
 void initialize_png();
+void create_character();
 
 fnevent getcommand(const char* id) {
+	if(equal("NewCharacter", id))
+		return create_character;
 	return 0;
 }
 
