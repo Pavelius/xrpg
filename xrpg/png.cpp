@@ -408,7 +408,6 @@ static struct png_bitmap_plugin : public draw::surface::plugin {
 	png_bitmap_plugin() : plugin("png", "PNG images\0*.png\0") {}
 
 	bool decode(unsigned char* output, int output_bpp, const unsigned char* input, unsigned input_size) override {
-		//return decode_test(output, input, size);
 		int image_width, image_height, input_bpp, image_size;
 		if(!output)
 			return false;
@@ -464,3 +463,6 @@ static struct png_bitmap_plugin : public draw::surface::plugin {
 	}
 
 } instance;
+
+void initialize_png() {
+}

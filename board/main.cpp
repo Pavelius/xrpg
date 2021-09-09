@@ -1,13 +1,24 @@
 #include "crt.h"
 #include "draw_input.h"
 #include "draw_simple.h"
+#include "menu.h"
 #include "tablecsv.h"
 
 bool readf(const char* url);
 void initialize_json();
+void initialize_png();
+
+fnevent getcommand(const char* id) {
+	return 0;
+}
+
+static void start_menu() {
+	menui::choose("Start", "meet", 0);
+}
 
 int main() {
 	initialize_json();
+	initialize_png();
 	if(!initialize_translation("ru"))
 		return -1;
 	if(!tablecsvi::read("rules/dnd5/ClericSpellProgression.csv"))
@@ -19,7 +30,7 @@ int main() {
 	if(!tablecsvi::read("rules/dnd5/Test.csv"))
 		return -1;
 	draw::initialize("DnD5 simulator");
-	draw::setnext(draw::simpleui);
+	draw::setnext(start_menu);
 	draw::start();
 	return 0;
 }

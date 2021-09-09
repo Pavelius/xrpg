@@ -219,7 +219,9 @@ void color::convert(void* output, int width, int height, int output_bpp, const v
 	auto abs_input_bpp = iabs(input_bpp);
 	if(abs_output_bpp > abs_input_bpp && input==output) {
 		input_static = input;
+		auto old_input = input;
 		input = new char[isc*height];
+		memcpy((void*)input, old_input, isc * height);
 	}
 	unsigned char* ip = (unsigned char*)input;
 	unsigned char* op = (unsigned char*)output;

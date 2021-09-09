@@ -59,6 +59,12 @@ BSDATAD(variant)
 BSMETA(tablecsvi) = {{}};
 BSMETA(variants) = {{}};
 
+BSMETA(menui) = {
+	BSREQ(id),
+	BSREQ(parent), BSREQ(resid), BSREQ(menuback),
+	{}};
+BSDATAD(menui)
+
 #define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr
 BSDATA(varianti) = {
 	{"NoVariant"},
@@ -66,6 +72,7 @@ BSDATA(varianti) = {
 	{"Classes", VRSTD(classi)},
 	{"Creatures", VRSTD(creaturei)},
 	{"Feats", VRSTD(feati)},
+	{"Menu", VRSTD(menui)},
 	{"Modifiers", VRSTD(modifieri)},
 	{"Packages", VRSTD(packagei)},
 	{"Parameters", VRSTD(parameteri)},

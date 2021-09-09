@@ -1,2 +1,3 @@
-﻿Error loading rules/dnd5/core.json
-Can't find variant "Persuation"
+﻿Errors occurs in locale/ru/Names.txt.txt
+Define translate for 'NewCharacter'
+Define translate for 'PickCharacter'

@@ -34,6 +34,9 @@
     <Text Include="errors.txt">
       <Filter>Data</Filter>
     </Text>
+    <Text Include="locale\ru\Names.txt">
+      <Filter>Data</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="rules\dnd5\core.json">

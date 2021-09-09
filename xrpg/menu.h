@@ -1,14 +1,11 @@
 #pragma once
 
-enum menu_flag_s : unsigned char {
-	MenuBack,
-};
+typedef void(*fnevent)();
 
 struct menui {
-	const char*			parent;
 	const char*			id;
-	fnevent				proc;
+	const char*			parent;
 	const char*			resid;
-	unsigned			flags;
+	bool				menuback;
 	static void			choose(const char* parent, const char* resid, const char* title);
 };

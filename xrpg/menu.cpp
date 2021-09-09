@@ -2,7 +2,7 @@
 #include "draw_input.h"
 #include "menu.h"
 
-static void choose_menu(answers& an, const char* parent, const char* resid, const char* title, unsigned flags) {
+static void choose_menu(answers& an, const char* parent, const char* resid, const char* title, bool allow_cancel) {
 	while(parent) {
 		an.clear();
 		for(auto& e : bsdata<menui>()) {
@@ -13,23 +13,25 @@ static void choose_menu(answers& an, const char* parent, const char* resid, cons
 		if(!an.getcount())
 			break;
 		const char* cancel = 0;
-		if((flags&(1<<MenuBack))!=0)
+		if(allow_cancel)
 			cancel = getnm("Back");
 		auto p = (menui*)an.choose(title, cancel, true, resid);
 		if(!p)
 			parent = 0;
-		else if((p->flags & (1 << MenuBack)) != 0) {
-			if(p->proc)
-				p->proc();
-			choose_menu(an, p->id, p->resid, getdescription(p->id), p->flags);
+		else if(allow_cancel) {
+			auto proc = getcommand(p->id);
+			if(proc)
+				proc();
+			choose_menu(an, p->id, p->resid, getdescription(p->id), p->menuback);
 		} else {
+			auto proc = getcommand(p->id);
 			parent = p->id;
-			if(p->proc)
-				draw::setnext(p->proc);
+			if(proc)
+				draw::setnext(proc);
 			title = getdescription(p->id);
 			if(p->resid)
 				resid = p->resid;
-			flags = p->flags;
+			allow_cancel = p->menuback;
 		}
 	}
 }

@@ -39,11 +39,13 @@ Male: Мужчина
 Manipulate: Влияние
 MeanStreak: Зловещий вид
 Move: Проворство
+NewCharacter: Создать персонажа
 NewGame: Новая игра
 Next: Далее
 NoGender: Безполый
 NoItem: Нет предмета
 Paste: Вставить
+PickCharacter: Выбрать персонажа
 Racketeer: Вымогатель
 Rules: Правила
 Scout: Наблюдательность

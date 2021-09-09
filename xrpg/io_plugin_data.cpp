@@ -32,7 +32,7 @@ bool readf(const char* url) {
 			auto ri = ps->find(id, 0);
 			if(ri == -1) {
 				if(create) {
-					ri = ps->indexof(ps->add());
+					ri = ps->indexof(ps->addz());
 					if(ri == -1)
 						return 0;
 					auto p = ps->ptr(ri);
