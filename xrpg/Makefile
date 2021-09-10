@@ -6,11 +6,11 @@ LST = answers.o anyreq.o archive.o bstream.o bsreq.o\
  draw_table.o draw_tabs.o draw_text.o draw_textf.o draw_toolbar.o draw_theme.o\
  draw_valuelist.o\
  gender.o io_stream.o io_plugin.o io_plugin_bsreq.o io_plugin_json.o\
- lexer.o log.o moveable.o markup.o menu.o\
- package.o parser.o point.o\
- resource_dynamic.o\
+ lexer.o log.o menu.o moveable.o markup.o\
+ png.o package.o parser.o point.o\
+ requisit.o resource_dynamic.o\
  screenshoot.o setting.o string.o stringbuilder.o surface_serial.o szdup.o\
- variant.o varianta.o
+ variant.o varianta.o zip.o
 PLATFORM_LST = nix_clipboard.o nix_draw.o nix_io_file.o nix_menu.o nix_draw_shell.o
 PLUGIN_LST = png.o zip.o
 WIDGET_LST = widget_application.o widget_codetree.o widget_codeview.o widget_logging.o widget_picture.o

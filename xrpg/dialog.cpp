@@ -42,7 +42,7 @@ static const char* read_identifier(const char* p, int& id, sliceu<variant>& comm
 	else {
 		sb.clear();
 		p = sb.psidf(p);
-		id = (int)szdup(name);
+		//id = (long)szdup(name);
 	}
 	p = skipsp(p);
 	adat<variant, 128> source;

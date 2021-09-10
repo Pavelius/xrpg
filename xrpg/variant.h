@@ -21,7 +21,7 @@ union variant{
 		variant_s		type;
 	};
 	constexpr variant() : u(0) {}
-	constexpr variant(variant_s t, unsigned short n) : type(t), value(n) {}
+	constexpr variant(variant_s t, unsigned short n) : value(n), type(t) {}
 	constexpr variant(int u) : u(u) {}
 	template<class T> static constexpr variant_s kind();
 	template<class T> variant(T* v) : variant((const void*)v) {}
@@ -43,4 +43,3 @@ union variant{
 typedef sliceu<variant> variants;
 template<> variant::variant(const char* v);
 template<> variant::variant(const void* v);
-	

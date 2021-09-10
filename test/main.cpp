@@ -33,7 +33,6 @@ static void test_table() {
 		rect rc = {0, 0, getwidth(), getheight()};
 		rectf(rc, colors::form);
 		int x = 10, y = 10;
-		auto y1 = 10;
 		buttonl(x, y, "OK", buttonok, KeyEnter);
 		buttonl(x, y, getnm("Cancel"), buttoncancel, KeyEscape);
 		domodal();
@@ -61,8 +60,8 @@ static bool test_pack() {
 	p1.addclass(p1.add("short"), 0);
 	p1.addclass(p1.add("char"), 0);
 	for(auto hs : p1.getsymbols()) {
-		auto name = p1.getname(hs);
-		auto flags = p1.getflags(hs);
+		p1.getname(hs);
+		p1.getflags(hs);
 	}
 	p1.write("test.ast");
 	return true;
@@ -124,15 +123,6 @@ static void test_simpleui() {
 	scene.window = push_proc;
 }
 
-static void test_variant() {
-	static variant s1[] = {"Earth", "Moon", "Commander"};
-	static variant s2[] = {"Moon", "Commander"};
-	static variant s3[] = {"Mercury", "Mars"};
-	sliceu<variant> v1(s1);
-	sliceu<variant> v2(s2);
-	sliceu<variant> v3(s3);
-}
-
 int main() {
 #ifdef _DEBUG
 	main_util();
@@ -145,7 +135,6 @@ int main() {
 		return -1;
 	if(!initialize_translation("ru"))
 		return -1;
-	test_variant();
 	//draw::setnext(test_table);
 	//draw::setnext(test_fields);
 	//test_answers();
