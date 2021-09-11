@@ -119,7 +119,7 @@ static void deinitialize() {
 	setfile(source_name, "Names", main_locale, true);
 }
 
-/*static bool check(array& source, const char* locale, const char* url) {
+static bool check(array& source, const char* locale, const char* url) {
 	for(auto& e : source.records<translate>()) {
 		if(e.name && e.name[0])
 			continue;
@@ -130,7 +130,7 @@ static void deinitialize() {
 		log::error("Define translate for '%1'", e.id);
 	}
 	return log::geterrors() == 0;
-}*/
+}
 
 bool initialize_translation(const char* locale) {
 	if(main_locale)
@@ -156,7 +156,7 @@ const char* getnm(const char* id) {
 	auto p = (translate*)bsearch(&key, source_name.data, source_name.getcount(), source_name.getsize(), compare);
 	if(!p) {
 #ifdef _DEBUG
-		// Only in denug mode collect new strings
+		// Only in debug mode collect new strings
 		p = (translate*)source_name.add();
 		memset(p, 0, sizeof(*p));
 		p->id = szdup(id);

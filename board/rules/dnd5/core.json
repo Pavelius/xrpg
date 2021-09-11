@@ -1,4 +1,42 @@
 {
+  "Dices": {
+    "Roll1d2": {
+      "min": 1,
+      "max": 2
+    },
+    "Roll1d3": {
+      "min": 1,
+      "max": 3
+    },
+    "Roll1d4": {
+      "min": 1,
+      "max": 4
+    },
+    "Roll1d6": {
+      "min": 1,
+      "max": 6
+    },
+    "Roll1d8": {
+      "min": 1,
+      "max": 6
+    },
+    "Roll1d10": {
+      "min": 1,
+      "max": 10
+    },
+    "Roll1d12": {
+      "min": 1,
+      "max": 12
+    },
+    "Roll1d20": {
+      "min": 1,
+      "max": 20
+    },
+    "Roll1d100": {
+      "min": 1,
+      "max": 100
+    }
+  },
   "Abilities": {
     "Strenght": {},
     "Dexterity": {},
@@ -13,6 +51,7 @@
     "Attack": {},
     "MeleeAttack": { "content": [ "Attack", "AbilityBonus", "Strenght" ] },
     "RangeAttack": { "content": [ "Attack", "AbilityBonus", "Dexterity" ] },
+    "Critical": {},
     "ArmorClass": {
       "base": 10,
       "content": [ "AbilityBonus", "Dexterity" ]
@@ -184,12 +223,18 @@
   "Menu": {
     "NewGame": { "parent": "Start" },
     "LoadGame": { "parent": "Start" },
-    "Exit": { "parent": "Start" },
     "NewCharacter": { "parent": "NewGame" },
-    "PickCharacter": { "parent": "NewGame" }
+    "PickCharacter": { "parent": "NewGame" },
+    "ChooseGender": { "parent": "NewCharacter" },
+    "ChooseAbility": { "parent": "NewCharacter" },
+    "ChooseBackground": { "parent": "NewCharacter" }
   },
   "Records": {
-    "Dualist": { "parent": "FightingStyle" },
-    "Archer": { "parent": "FightingStyle" }
+    "Archery": { "parent": "FightingStyle" },
+    "Defence": { "parent": "FightingStyle" },
+    "Dueling": { "parent": "FightingStyle" },
+    "GreatWeaponFighting": { "parent": "FightingStyle" },
+    "Protection": { "parent": "FightingStyle" },
+    "TwoWeaponFighting": { "parent": "FightingStyle" },
   }
 }

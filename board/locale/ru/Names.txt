@@ -10,6 +10,8 @@ BluntInstrument: Импровизированная дубика
 Boss: Босс
 BrassKnuckles: Кастет
 CharacterSheet: Лист пресонажа
+ChooseAbility: Выбирайте способности
+ChooseBackground: ВЫбирайте прошлое
 ChooseGender: Выберите пол вашего персонажа
 ChooseTalent: Выбирайте ваше достоинство
 Chronicler: Хронист

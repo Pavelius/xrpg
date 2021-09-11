@@ -3,7 +3,7 @@
 #include "menu.h"
 
 static void choose_menu(answers& an, const char* parent, const char* resid, const char* title, bool allow_cancel) {
-	while(parent) {
+	while(parent && !draw::isnext()) {
 		an.clear();
 		for(auto& e : bsdata<menui>()) {
 			if(strcmp(e.parent, parent) != 0)
@@ -25,9 +25,9 @@ static void choose_menu(answers& an, const char* parent, const char* resid, cons
 			choose_menu(an, p->id, p->resid, getdescription(p->id), p->menuback);
 		} else {
 			auto proc = getcommand(p->id);
-			parent = p->id;
 			if(proc)
-				draw::setnext(proc);
+				proc();
+			parent = p->id;
 			title = getdescription(p->id);
 			if(p->resid)
 				resid = p->resid;
@@ -38,5 +38,5 @@ static void choose_menu(answers& an, const char* parent, const char* resid, cons
 
 void menui::choose(const char* parent, const char* resid, const char* title) {
 	answers an;
-	choose_menu(an, parent, resid, title, {});
+	choose_menu(an, parent, resid, title, true);
 }

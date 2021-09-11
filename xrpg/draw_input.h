@@ -16,6 +16,7 @@ void						buttonok();
 void						cbsetint();
 void						cbsetptr();
 int							getresult();
+bool						isnext();
 void						initialize(const char* title);
 bool						ismodal();
 void						setneedupdate();

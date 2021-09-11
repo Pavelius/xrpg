@@ -10,7 +10,7 @@
           "ShowStatusBar":2,
           "ShowLeftPanel":2,
           "ShowRightPanel":2,
-          "ShowBottomPanel":0,
+          "ShowBottomPanel":2,
           "ShowPadding":0
         },
         "Tabs":{
@@ -75,7 +75,7 @@
       "Visible":1,
       "columns":{
         "Name":{
-          "width":237,
+          "width":213,
           "size":4,
           "total":0
         }
@@ -86,7 +86,7 @@
       "Visible":1,
       "columns":{
         "Name":{
-          "width":237,
+          "width":213,
           "size":4,
           "total":0
         }
@@ -98,21 +98,21 @@
     }
   },
   "window":{
-    "x":91,
-    "y":54,
-    "width":811,
-    "height":597,
-    "header_width":125,
+    "x":141,
+    "y":68,
+    "width":1021,
+    "height":629,
+    "header_width":150,
     "flags":48
   },
   "dockbar":{
     "DockLeft":{
       "current":0,
-      "size":237
+      "size":213
     },
     "DockLeftBottom":{
       "current":0,
-      "size":200
+      "size":173
     },
     "DockRight":{
       "current":0,

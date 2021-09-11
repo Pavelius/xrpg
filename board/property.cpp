@@ -71,12 +71,19 @@ BSMETA(recordi) = {
 	{}};
 BSDATAD(recordi)
 
+BSMETA(dicei) = {
+	BSREQ(id),
+	BSREQ(min), BSREQ(max),
+	{}};
+BSDATAC(dicei, 64);
+
 #define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr
 BSDATA(varianti) = {
 	{"NoVariant"},
 	{"Abilities", VRSTD(abilityi)},
 	{"Classes", VRSTD(classi)},
 	{"Creatures", VRSTD(creaturei)},
+	{"Dices", VRSTD(dicei)},
 	{"Feats", VRSTD(feati)},
 	{"Menu", VRSTD(menui)},
 	{"Modifiers", VRSTD(modifieri)},

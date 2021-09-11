@@ -182,6 +182,7 @@
     <ClInclude Include="pointl.h" />
     <ClInclude Include="posable.h" />
     <ClInclude Include="rect.h" />
+    <ClInclude Include="requisit.h" />
     <ClInclude Include="screenshoot.h" />
     <ClInclude Include="serializer.h" />
     <ClInclude Include="setting.h" />
@@ -208,6 +209,7 @@
     <ClCompile Include="draw_simple.cpp" />
     <ClCompile Include="draw_valuelist.cpp" />
     <ClCompile Include="png.cpp" />
+    <ClCompile Include="requisit.cpp" />
     <ClCompile Include="serializer.cpp" />
     <ClCompile Include="string.cpp" />
     <ClCompile Include="tablecsv.cpp" />

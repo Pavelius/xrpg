@@ -29,23 +29,23 @@
         
       },
       "Form":{
-        "TextColor":0,
-        "WindowColor":16777215,
-        "FormColor":15790320,
-        "BorderColor":11316396,
-        "ActiveColor":32940,
-        "ButtonColor":14671839,
-        "TipsBackColor":5263480,
+        "TextColor":16777215,
+        "WindowColor":2105376,
+        "FormColor":2960688,
+        "BorderColor":4144966,
+        "ActiveColor":11304960,
+        "ButtonColor":31436,
+        "TipsBackColor":6579320,
         "TipsTextColor":16777215
       },
       "Editor":{
-        "IdentifierColor":0,
+        "IdentifierColor":16777215,
         "KeywordColor":5676246,
         "TypeColor":5163440,
-        "CommentColor":32768,
+        "CommentColor":5744202,
         "StringColor":14059602,
         "NumberColor":12113827,
-        "OperatorColor":0
+        "OperatorColor":16777215
       }
     },
     "Project":{
@@ -75,7 +75,7 @@
       "Visible":1,
       "columns":{
         "Name":{
-          "width":193,
+          "width":213,
           "size":4,
           "total":0
         }
@@ -86,7 +86,7 @@
       "Visible":1,
       "columns":{
         "Name":{
-          "width":193,
+          "width":213,
           "size":4,
           "total":0
         }
@@ -98,17 +98,17 @@
     }
   },
   "window":{
-    "x":276,
-    "y":93,
-    "width":862,
-    "height":561,
+    "x":23,
+    "y":18,
+    "width":1021,
+    "height":629,
     "header_width":150,
     "flags":48
   },
   "dockbar":{
     "DockLeft":{
       "current":0,
-      "size":193
+      "size":213
     },
     "DockLeftBottom":{
       "current":0,

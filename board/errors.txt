@@ -1,2 +1,3 @@
 ﻿Errors occurs in locale/ru/Names.txt.txt
-Define translate for 'ChooseGender'
+Define translate for 'ChooseAbility'
+Define translate for 'ChooseBackground'

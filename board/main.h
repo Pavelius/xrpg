@@ -2,30 +2,33 @@
 #include "flagable.h"
 #include "gender.h"
 #include "menu.h"
+#include "requisit.h"
 #include "variant.h"
 
 #pragma once
 
 enum variant_s : unsigned char {
 	NoVariant,
-	Abilities, Class, Creatures, Feats, Menu, Modifiers, Packages, Parameters, Progress, Races, Records, Skills, Tables,
+	Abilities, Class, Creatures, Dice, Feats, Menu, Modifiers,
+	Packages, Parameters, Progress, Races, Records, Skills, Tables,
 };
 enum modifier_s : unsigned char {
 	NoModifier,
 	AbilityBonus, Need, Need13, Minus,
 };
-//enum dice_s : unsigned char {
-//	Roll1d3, Roll1d4, Roll1d6, Roll1d8, Roll1d10, Roll1d12, Roll1d20, Roll1d100,
-//	Roll2d3, Roll2d4, Roll2d6, Roll2d8, Roll2d10,
-//	Roll3d3, Roll3d4, Roll3d6, Roll3d8, Roll3d10,
-//	Roll4d6, Roll5d6, Roll6d6, Roll7d6, Roll8d6,
-//};
 typedef flagable<4>		skilla;
 
 struct recordi {
 	const char*			id;
 	variant				parent;
 	int					param;
+};
+struct action_typei {
+	const char*			id;
+};
+struct actioni {
+	const char*			id;
+	variant				type;
 };
 struct modifieri {
 	const char*			id;
@@ -67,6 +70,7 @@ struct classi {
 };
 struct statablei {
 	char				abilities[64];
+	char				actionused[8];
 	flagable<16>		feats;
 	skilla				skills;
 	void				add(variant v);

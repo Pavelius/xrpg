@@ -6,6 +6,13 @@ using namespace draw;
 
 void initialize_commands();
 
+fnevent getcommand(const char* id) {
+	if(equal("NewGame", id))
+		return character::create_new;
+	return 0;
+}
+
+
 static locationi* addloc(const char* id, point v) {
 	auto p = bsdata<locationi>::add();
 	p->id = id;

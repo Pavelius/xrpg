@@ -75,6 +75,10 @@ void draw::cbsetptr() {
 	*p = (void*)hot.param;
 }
 
+bool draw::isnext() {
+	return next_proc != 0;
+}
+
 void draw::setnext(fnevent v) {
 	next_proc = v;
 }
