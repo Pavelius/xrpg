@@ -9,12 +9,14 @@
 
 enum variant_s : unsigned char {
 	NoVariant,
-	Abilities, Class, Creatures, Dice, Feats, Menu, Modifiers,
-	Packages, Parameters, Progress, Races, Records, Skills, Tables,
+	Abilities, Class, Conditions, Creatures, Dice, Feats, Genders, Input, Menu, Modifiers,
+	Packages, Parameters, Progress, Races, Records, Skills, Tables, Types,
 };
 enum modifier_s : unsigned char {
-	NoModifier,
 	AbilityBonus, Need, Need13, Minus,
+};
+enum condition_s : unsigned char {
+	MatchParent, IgnoreFirst,
 };
 typedef flagable<4>		skilla;
 
@@ -33,6 +35,10 @@ struct actioni {
 struct modifieri {
 	const char*			id;
 	int					value;
+	modifier_s			base;
+};
+struct conditioni {
+	const char*			id;
 };
 struct durationi {
 	const char*			id;
@@ -47,6 +53,7 @@ struct parameteri {
 	const char*			id;
 	int					base;
 	variants			content;
+	bool				flags;
 };
 struct packagei {
 	const char*			id;
@@ -68,18 +75,24 @@ struct classi {
 	skilla				skills;
 	variants			feats;
 };
+struct nameable {
+	const char*			name;
+	gender_s			gender;
+};
 struct statablei {
-	char				abilities[64];
+	char				abilities[16];
+	char				parameters[64];
 	char				actionused[8];
 	flagable<16>		feats;
 	skilla				skills;
-	void				add(variant v);
+	void				add(variant v) { set(v, get(v) + 1); }
 	int					get(variant v) const;
+	void				set(variant i, int v);
 	int					geteffect(variants source) const;
 };
-struct creaturei {
+struct creaturei : public nameable {
 	const char*			id;
-	variant				race;
+	unsigned char		race;
 	statablei			current, basic;
 	void				clear();
 };
@@ -95,3 +108,12 @@ struct racei {
 struct skilli {
 	const char*			id;
 };
+struct inputi {
+	const char*			id;
+	const char*			requisit;
+	const char*			resid;
+	variant				source;
+};
+VKIND(condition_s, Conditions)
+VKIND(modifier_s, Modifiers)
+VKIND(variant_s, Types)

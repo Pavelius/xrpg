@@ -1,24 +1,6 @@
 #include "tablecsv.h"
 #include "main.h"
 
-void statablei::add(variant v) {
-	switch(v.type) {
-	case Abilities:
-		abilities[v.value]++;
-		break;
-	case Feats:
-		feats.set(v.value);
-		break;
-	case Skills:
-		skills.set(v.value);
-		break;
-	case Races:
-		for(auto e : bsdata<racei>::elements[v.value].feats)
-			add(e);
-		break;
-	}
-}
-
 int statablei::get(variant v) const {
 	switch(v.type) {
 	case Abilities: return abilities[v.value];
@@ -28,10 +10,27 @@ int statablei::get(variant v) const {
 	}
 }
 
+void statablei::set(variant i, int v) {
+	switch(i.type) {
+	case Abilities: abilities[i.value] = v; break;
+	case Feats: feats.set(i.value, v != 0); break;
+	case Skills: skills.set(i.value, v != 0); break;
+	case Records:
+		set(bsdata<recordi>::source.records<recordi>().begin()[i.value].parent, v);
+		break;
+	case Parameters:
+		if(bsdata<parameteri>::source.records<parameteri>().begin()[i.value].flags)
+			((flagable<1>*)(&parameters[i.value]))->set(v, 1);
+		else
+			parameters[i.value] = v;
+		break;
+	}
+}
+
 int statablei::geteffect(variants source) const {
 	tablecsvi* maptable = 0;
 	auto result = 0;
-	auto modifier = NoModifier;
+	variant modifier = NoVariant;
 	for(auto v : source) {
 		if(v.type == Modifiers) {
 			modifier = (modifier_s)v.value;
@@ -45,11 +44,15 @@ int statablei::geteffect(variants source) const {
 			i = maptable->get(i);
 			maptable = 0;
 		}
-		switch(modifier) {
-		case AbilityBonus: i = i / 2 - 5; break;
-		case Minus: i = -i; break;
+		if(modifier) {
+			auto& em = bsdata<modifieri>::elements[modifier.value];
+			switch(em.base) {
+			case AbilityBonus: i = i / 2 - 5; break;
+			case Minus: i = -i; break;
+			case Need: i = (get(i) >= em.value) ? 1 : 0; break;
+			}
+			modifier = NoVariant;
 		}
-		modifier = NoModifier;
 		result += i;
 	}
 	return result;

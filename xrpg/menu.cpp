@@ -2,7 +2,9 @@
 #include "draw_input.h"
 #include "menu.h"
 
-static void choose_menu(answers& an, const char* parent, const char* resid, const char* title, bool allow_cancel) {
+static const char* resid;
+
+static void choose_menu(answers& an, const char* parent, const char* title, bool allow_cancel) {
 	while(parent && !draw::isnext()) {
 		an.clear();
 		for(auto& e : bsdata<menui>()) {
@@ -17,26 +19,26 @@ static void choose_menu(answers& an, const char* parent, const char* resid, cons
 			cancel = getnm("Back");
 		auto p = (menui*)an.choose(title, cancel, true, resid);
 		if(!p)
-			parent = 0;
-		else if(allow_cancel) {
-			auto proc = getcommand(p->id);
-			if(proc)
-				proc();
-			choose_menu(an, p->id, p->resid, getdescription(p->id), p->menuback);
+			break;
+		if(p->resid)
+			resid = p->resid;
+		auto proc = getcommand(p->id);
+		if(proc)
+			proc();
+		if(allow_cancel) {
+			auto push_res = resid;
+			choose_menu(an, p->id, getdescription(p->id), p->menuback);
+			resid = push_res;
 		} else {
-			auto proc = getcommand(p->id);
-			if(proc)
-				proc();
-			parent = p->id;
 			title = getdescription(p->id);
-			if(p->resid)
-				resid = p->resid;
 			allow_cancel = p->menuback;
+			parent = p->id;
 		}
 	}
 }
 
-void menui::choose(const char* parent, const char* resid, const char* title) {
+void menui::choose(const char* parent, const char* current_resid, const char* title) {
 	answers an;
-	choose_menu(an, parent, resid, title, true);
+	::resid = current_resid;
+	choose_menu(an, parent, title, true);
 }

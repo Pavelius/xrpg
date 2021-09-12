@@ -1,47 +1,35 @@
 ﻿About: О программе
-Agility: Ловкость
 Attributes: Атрибуты
 Back: Назад
-BargeThrought: Живой таран
-BaseballBat: Бейсбольная бита
-BatWithSpikes: Шипованная бита
-BicycleChain: Мотоциклетная цепь
-BluntInstrument: Импровизированная дубика
-Boss: Босс
-BrassKnuckles: Кастет
 CharacterSheet: Лист пресонажа
 ChooseAbility: Выбирайте способности
-ChooseBackground: ВЫбирайте прошлое
+ChooseBackground: Выбирайте прошлое
+ChooseClass: Выбирайте класс
 ChooseGender: Выберите пол вашего персонажа
-ChooseTalent: Выбирайте ваше достоинство
-Chronicler: Хронист
+ChooseRace: Выбирайте вашу расу
+ChooseSubRace: У каждой расы есть определенные ответвления. Какую ветку представляете вы?
+Cleric: Клерик
 Close: Закрыть
-Commander: Командир
-Comprehend: Понимание
 Copy: Копировать
-Covcheg: Ковчег
 Cut: Вырезать
-DogHandler: Собачник
-Empathy: Эмпатия 
-Endure: Выносливость
-Enforcer: Громила
+Dwarf: Гном
+DwarfHill: Холмистый гном
+DwarfMountain: Горный гном
+Elf: Эльф
+ElfHigh: Высший эльф
+ElfWood: Лесной эльф
 Exit: Выход
 Female: Женщина
-Fight: Драка
-Fixer: Делец
-Force: Сила
-Gearhead: Железячник
-Gunslingers: Стрелки
+Fighter: Воин
+Halfling: Полурослик
+HalflingLightfoot: Легконогий полурослик
+HalflingStout: Коренастый полурослик
 Heal: Лечение
 HotKey: Горячая клавиша
+Human: Человек
 Intimidate: Запугивание
-KnowTheZone: Знание зоны
 LoadGame: Загрузить игру
-Machete: Мачете
 Male: Мужчина
-Manipulate: Влияние
-MeanStreak: Зловещий вид
-Move: Проворство
 NewCharacter: Создать персонажа
 NewGame: Новая игра
 Next: Далее
@@ -49,21 +37,11 @@ NoGender: Безполый
 NoItem: Нет предмета
 Paste: Вставить
 PickCharacter: Выбрать персонажа
-Racketeer: Вымогатель
+Rogue: Плут
 Rules: Правила
-Scout: Наблюдательность
-ScrapAxe: Самодельный топор
-ScrapKnife: Самодельный нож
-ScrapSpear: Самодельное копье
-SenceEmotion: Проницательность
 Settings: Настройки
-Shoot: Стрельба
 Skills: Навыки
-Slave: Раб
-Sneak: Скрытность
 Sound: Звук
-Stalker: Разведчик
-Strenght: Телостожение
-SuckerPunch: Железный кулак
+Strenght: Сила
 Video: Видео
-Wits: Смекалка
+Wizard: Волшебник

@@ -78,7 +78,10 @@ bool readf(const char* url) {
 				break;
 			case 2:
 				e.metadata = (void*)((varianti*)e.parent->object)->metadata;
-				e.object = findobject((varianti*)e.parent->object, e.name);
+				if(e.parent->type == serializer::kind::Array)
+					e.object = ((varianti*)e.parent->object)->source->addz();
+				else
+					e.object = findobject((varianti*)e.parent->object, e.name);
 				break;
 			default:
 				break;
@@ -86,6 +89,7 @@ bool readf(const char* url) {
 		}
 		void set(serializer::node& e, const char* value) override {
 			auto pm = getmeta(e)->find(e.name);
+			auto index = (e.parent->type == serializer::kind::Array) ? e.index : 0;
 			if(!pm)
 				warning("Can't find requisit \"%1\" to load value %2", e.name, value);
 			else if(pm->type == bsmeta<variants>::meta) {
@@ -116,15 +120,15 @@ bool readf(const char* url) {
 				if(!v)
 					warning("Can't find variant \"%1\"", value);
 				else {
-					auto ps = (variant*)pm->ptr(getobject(e), e.index);
+					auto ps = (variant*)pm->ptr(getobject(e), index);
 					*ps = v;
 				}
 			} else if(pm->type == bsmeta<int>::meta) {
-				auto ps = pm->ptr(getobject(e), e.index);
+				auto ps = pm->ptr(getobject(e), index);
 				pm->set(ps, stringbuilder::getnum(value));
 			} else if(pm->type == bsmeta<const char*>::meta) {
-				auto ps = pm->ptr(getobject(e), e.index);
-				pm->set(ps, (int)szdup(value));
+				auto ps = pm->ptr(getobject(e), index);
+				pm->set(ps, (long)szdup(value));
 			}
 		}
 		proxy() {

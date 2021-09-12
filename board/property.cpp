@@ -3,10 +3,14 @@
 #include "tablecsv.h"
 #include "variant.h"
 
+#define XKIND(T, V) template<> struct bsmeta<T> : bsmeta<V> {};\
+template<> struct bsdata<T> : bsdata<V> {};
+
 NOBSDATA(variants)
 NOBSDATA(flagable<1>)
 NOBSDATA(flagable<2>)
 NOBSDATA(flagable<4>)
+XKIND(gender_s, genderi)
 
 BSMETA(abilityi) = {
 	BSREQ(id),
@@ -16,6 +20,7 @@ BSMETA(parameteri) = {
 	BSREQ(id),
 	BSREQ(base),
 	BSREQ(content),
+	BSREQ(flags),
 	{}};
 BSDATAC(parameteri, 128);
 BSMETA(packagei) = {
@@ -33,6 +38,9 @@ BSMETA(classi) = {
 BSDATAC(classi, 32);
 BSMETA(creaturei) = {
 	BSREQ(id),
+	BSREQ(name),
+	BSREQ(race),
+	BSREQ(gender),
 	{}};
 BSDATAC(creaturei, 64);
 BSMETA(racei) = {
@@ -77,14 +85,35 @@ BSMETA(dicei) = {
 	{}};
 BSDATAC(dicei, 64);
 
+BSMETA(inputi) = {
+	BSREQ(id),
+	BSREQ(requisit),
+	BSREQ(resid),
+	BSREQ(source),
+	{}};
+BSDATAC(inputi, 64);
+
+BSMETA(conditioni) = {
+	BSREQ(id),
+	{}};
+BSMETA(genderi) = {
+	BSREQ(id),
+	{}};
+
+BSMETA(varianti) = {
+	BSREQ(id),
+	{}};
 #define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr
 BSDATA(varianti) = {
 	{"NoVariant"},
 	{"Abilities", VRSTD(abilityi)},
 	{"Classes", VRSTD(classi)},
+	{"Conditions", VRSTD(conditioni)},
 	{"Creatures", VRSTD(creaturei)},
 	{"Dices", VRSTD(dicei)},
 	{"Feats", VRSTD(feati)},
+	{"Genders", VRSTD(genderi)},
+	{"Input", VRSTD(inputi)},
 	{"Menu", VRSTD(menui)},
 	{"Modifiers", VRSTD(modifieri)},
 	{"Packages", VRSTD(packagei)},
@@ -94,5 +123,6 @@ BSDATA(varianti) = {
 	{"Records", VRSTD(recordi)},
 	{"Skills", VRSTD(skilli)},
 	{"Tables", VRSTD(tablecsvi)},
+	{"Types", VRSTD(varianti)},
 };
-assert_enum(varianti, Tables)
+assert_enum(varianti, Types)

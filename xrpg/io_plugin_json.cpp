@@ -119,6 +119,19 @@ static const char* read_number(const char* p, serializer::node& n, serializer::r
 	return p;
 }
 
+static bool match(const char*& p, const char* value) {
+	auto i = 0;
+	while(value[i]) {
+		if(p[i] != value[i])
+			return false;
+		i++;
+	}
+	if(ischa(p[i]) || isnum(p[i]))
+		return false;
+	p += i;
+	return true;
+}
+
 static const char* read_object(const char* p, serializer::node& n, serializer::reader& e) {
 	if(!p)
 		return 0;
@@ -126,13 +139,11 @@ static const char* read_object(const char* p, serializer::node& n, serializer::r
 		p = read_string(p + 1, *p, n, e);
 	else if(*p == '-' || isnum(*p))
 		p = read_number(p, n, e);
-	else if(equal(p, "false")) {
-		p += 5;
+	else if(match(p, "false")) {
 		n.type = serializer::kind::Number;
 		if(!n.skip)
 			e.set(n, "false");
-	} else if(equal(p, "true")) {
-		p += 4;
+	} else if(match(p, "true")) {
 		n.type = serializer::kind::Number;
 		if(!n.skip)
 			e.set(n, "true");

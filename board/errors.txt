@@ -1,3 +1,2 @@
 ﻿Errors occurs in locale/ru/Names.txt.txt
-Define translate for 'ChooseAbility'
-Define translate for 'ChooseBackground'
+Define translate for 'ChooseSubRace'

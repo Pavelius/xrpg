@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="condition.cpp" />
     <ClCompile Include="creature.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="modifier.cpp" />

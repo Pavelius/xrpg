@@ -33,6 +33,7 @@ union variant{
 	template<class T> operator T*() const { return (T*)((kind<T>() == type) ? getpointer() : 0); }
 	void				clear() { u = 0; }
 	const char*			getdescription() const;
+	const char*			getid() const;
 	int					getindex(int t) const { return (type == t) ? value : 0; }
 	void				getinfo(stringbuilder& sb) const;
 	void*				getpointer() const { return bsdata<varianti>::elements[type].source->ptr(value); }

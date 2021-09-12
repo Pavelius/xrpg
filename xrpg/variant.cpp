@@ -39,3 +39,10 @@ const char* variant::getname() const {
 		return "No name";
 	return getnm(*((char**)getpointer()));
 }
+
+const char* variant::getid() const {
+	auto& e = bsdata<varianti>::elements[type];
+	if(!e.source)
+		return "NoVariant";
+	return *((char**)getpointer());
+}

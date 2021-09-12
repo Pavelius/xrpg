@@ -46,6 +46,7 @@
     "Charisma": {}
   },
   "Parameters": {
+    "Race": {},
     "Level": {},
     "ProficiencyBonus": { "content": [ "ProficiencyBonusTable", "Level" ] },
     "Attack": {},
@@ -57,7 +58,7 @@
       "content": [ "AbilityBonus", "Dexterity" ]
     },
     "Speed": { "base": 6 },
-    "FightingStyle": {}
+    "FightingStyle": { "flags": true }
   },
   "Skills": {
     "Athletics": {},
@@ -224,10 +225,7 @@
     "NewGame": { "parent": "Start" },
     "LoadGame": { "parent": "Start" },
     "NewCharacter": { "parent": "NewGame" },
-    "PickCharacter": { "parent": "NewGame" },
-    "ChooseGender": { "parent": "NewCharacter" },
-    "ChooseAbility": { "parent": "NewCharacter" },
-    "ChooseBackground": { "parent": "NewCharacter" }
+    "PickCharacter": { "parent": "NewGame" }
   },
   "Records": {
     "Archery": { "parent": "FightingStyle" },
@@ -235,6 +233,23 @@
     "Dueling": { "parent": "FightingStyle" },
     "GreatWeaponFighting": { "parent": "FightingStyle" },
     "Protection": { "parent": "FightingStyle" },
-    "TwoWeaponFighting": { "parent": "FightingStyle" },
+    "TwoWeaponFighting": { "parent": "FightingStyle" }
+  },
+  "Input": {
+    "ChooseGender": {
+      "requisit": "gender",
+      "source": "Genders",
+      "resid": "generate"
+    },
+    "ChooseRace": {
+      "requisit": "race",
+      "source": "Races",
+      "resid": "generate"
+    },
+    "ChooseSubRace": {
+      "requisit": "race",
+      "source": "Races",
+      "resid": "generate"
+    }
   }
 }

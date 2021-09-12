@@ -1,10 +1,9 @@
 #include "main.h"
 
 BSDATA(modifieri) = {
-	{"NoModifier"},
-	{"AbilityBonus"},
-	{"Need"},
-	{"Need13", 13},
-	{"Minus"},
+	{"AbilityBonus", 0, AbilityBonus},
+	{"Need", 0, Need},
+	{"Need13", 13, Need},
+	{"Minus", 0, Minus},
 };
 assert_enum(modifieri, Minus)
