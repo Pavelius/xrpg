@@ -1,6 +1,6 @@
 #include "main.h"
 
-static creaturei*		current;
+static creaturei* current;
 typedef bool(fnchooseallow)(const void* p);
 
 void creaturei::clear() {
@@ -55,9 +55,23 @@ static void fill_source(answers& an, variant source, fnchooseallow pallow) {
 
 static variant param1, param2, result;
 
+static void apply_result(bool interactive, const char* id, const char* requisit, variant result) {
+	if(!current)
+		return;
+	if(equal(requisit, "gender"))
+		current->gender = (gender_s)result.value;
+	else if(equal(requisit, "race"))
+		current->race = (unsigned char)result.value;
+	else {
+		variant v = requisit;
+	}
+}
+
 static void choose_source(bool interactive, const char* title, const char* resid, variant source, fnchooseallow pallow = 0) {
 	answers an;
 	fill_source(an, source, pallow);
+	if(!an)
+		return;
 	result = (void*)an.choose(getnm(title), 0, interactive, resid);
 }
 
@@ -91,5 +105,6 @@ void create_character() {
 		if(!e.id || !e.source)
 			break;
 		choose_source(interactive, e.id, e.resid, e.source, getallow(e.id));
+		apply_result(interactive, e.id, e.requisit, result);
 	}
 }

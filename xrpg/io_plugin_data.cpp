@@ -87,6 +87,8 @@ bool readf(const char* url) {
 				break;
 			}
 		}
+		void close(serializer::node& e) override {
+		}
 		void set(serializer::node& e, const char* value) override {
 			auto pm = getmeta(e)->find(e.name);
 			auto index = (e.parent->type == serializer::kind::Array) ? e.index : 0;

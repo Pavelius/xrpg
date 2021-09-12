@@ -217,8 +217,15 @@
       "skills": "ClericSkills",
       "spellprogress": "ClericSpellProgression"
     },
-    "Fighter": {},
-    "Rogue": {},
+    "Fighter": {
+      "hitdice": 10,
+      "skills": "FighterSkills"
+    },
+    "Rogue": {
+      "hitdice": 6,
+      "skills": "ClericSkills",
+      "spellprogress": "ClericSpellProgression"
+    },
     "Wizard": {}
   },
   "Menu": {
@@ -250,6 +257,11 @@
       "requisit": "race",
       "source": "Races",
       "resid": "generate"
+    },
+    "ChooseClass": {
+      "requisit": "class",
+      "source": "Classes",
+      "resid": "classes"
     }
   }
 }
