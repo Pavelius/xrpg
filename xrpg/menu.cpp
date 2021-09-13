@@ -2,7 +2,7 @@
 #include "draw_input.h"
 #include "menu.h"
 
-static const char* resid;
+static const char* current_resid;
 
 static void choose_menu(answers& an, const char* parent, const char* title, bool allow_cancel) {
 	while(parent && !draw::isnext()) {
@@ -17,18 +17,18 @@ static void choose_menu(answers& an, const char* parent, const char* title, bool
 		const char* cancel = 0;
 		if(allow_cancel)
 			cancel = getnm("Back");
-		auto p = (menui*)an.choose(title, cancel, true, resid);
+		auto p = (menui*)an.choose(title, cancel, true, current_resid);
 		if(!p)
 			break;
 		if(p->resid)
-			resid = p->resid;
+			current_resid = p->resid;
 		auto proc = getcommand(p->id);
 		if(proc)
 			proc();
 		if(allow_cancel) {
-			auto push_res = resid;
+			auto push_res = current_resid;
 			choose_menu(an, p->id, getdescription(p->id), p->menuback);
-			resid = push_res;
+			current_resid = push_res;
 		} else {
 			title = getdescription(p->id);
 			allow_cancel = p->menuback;
@@ -37,8 +37,8 @@ static void choose_menu(answers& an, const char* parent, const char* title, bool
 	}
 }
 
-void menui::choose(const char* parent, const char* current_resid, const char* title) {
+void menui::choose(const char* parent, const char* resid, const char* title) {
 	answers an;
-	::resid = current_resid;
+	current_resid = resid;
 	choose_menu(an, parent, title, true);
 }
