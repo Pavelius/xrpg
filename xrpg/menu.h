@@ -8,5 +8,6 @@ struct menui {
 	const char*			parent;
 	const char*			resid;
 	bool				menuback;
+	const char*			type;
 	static void			choose(const char* parent, const char* resid, const char* title);
 };
