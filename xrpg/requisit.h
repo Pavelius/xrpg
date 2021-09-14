@@ -13,6 +13,6 @@ struct valuei {
 struct requisiti {
 	const char*			id;
 	variant				parent;
-	int					index;
 	variant				type;
+	int					index;
 };

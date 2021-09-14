@@ -1,6 +1,7 @@
 #pragma once
 
 typedef void(*fnevent)();
+typedef bool(fnmenuallow)(const void* p);
 
 struct menui {
 	const char*			id;
