@@ -3,7 +3,8 @@
 #include "requisit.h"
 #include "menu.h"
 
-static const char*	current_resid;
+bool menu_break;
+const char*	menu_resid;
 
 static void fill_array(answers& an, array* source, fnmenuallow pallow) {
 	const char* pe = source->end();
@@ -47,15 +48,15 @@ static void choose_source(answers& an, const char* title, const char* resid, var
 	fill_source(an, source, pallow);
 	if(!an)
 		return;
-	auto push_resid = current_resid;
+	auto push_resid = menu_resid;
 	if(resid)
-		current_resid = resid;
-	auto result = (void*)an.choose(getnm(title), 0, true, current_resid);
-	current_resid = push_resid;
+		menu_resid = resid;
+	auto result = (void*)an.choose(getnm(title), 0, true, menu_resid);
+	menu_resid = push_resid;
 }
 
 static void choose_menu_new(answers& an, const char* parent, const char* title, const char* type) {
-	auto push_res = current_resid;
+	auto push_res = menu_resid;
 	while(parent && !draw::isnext()) {
 		an.clear();
 		for(auto& e : bsdata<menui>()) {
@@ -66,17 +67,17 @@ static void choose_menu_new(answers& an, const char* parent, const char* title, 
 		if(!an.getcount())
 			break;
 		const char* cancel = 0;
-		if(equal(type, "Back"))
+		if(equal(type, "Submenu"))
 			cancel = getnm("Back");
-		auto p = (menui*)an.choose(title, cancel, true, current_resid);
+		auto p = (menui*)an.choose(title, cancel, true, menu_resid);
 		if(!p)
 			break;
 		if(p->resid)
-			current_resid = p->resid;
+			menu_resid = p->resid;
 		auto proc = getcommand(p->id);
 		if(proc)
 			proc();
-		if(equal(type, "Back"))
+		if(equal(type, "Submenu") || equal(type, "SubmenuNoBack"))
 			choose_menu_new(an, p->id, getdescription(p->id), p->type);
 		else if(equal(type, "StepByStep")) {
 			for(auto& e : bsdata<menui>()) {
@@ -90,7 +91,7 @@ static void choose_menu_new(answers& an, const char* parent, const char* title, 
 			parent = p->id;
 		}
 	}
-	current_resid = push_res;
+	menu_resid = push_res;
 }
 
 static void choose_menu(answers& an, const char* parent, const char* title, bool allow_cancel) {
@@ -106,18 +107,18 @@ static void choose_menu(answers& an, const char* parent, const char* title, bool
 		const char* cancel = 0;
 		if(allow_cancel)
 			cancel = getnm("Back");
-		auto p = (menui*)an.choose(title, cancel, true, current_resid);
+		auto p = (menui*)an.choose(title, cancel, true, menu_resid);
 		if(!p)
 			break;
 		if(p->resid)
-			current_resid = p->resid;
+			menu_resid = p->resid;
 		auto proc = getcommand(p->id);
 		if(proc)
 			proc();
 		if(allow_cancel) {
-			auto push_res = current_resid;
+			auto push_res = menu_resid;
 			choose_menu(an, p->id, getdescription(p->id), p->menuback);
-			current_resid = push_res;
+			menu_resid = push_res;
 		} else {
 			title = getdescription(p->id);
 			allow_cancel = p->menuback;
@@ -128,6 +129,7 @@ static void choose_menu(answers& an, const char* parent, const char* title, bool
 
 void menui::choose(const char* parent, const char* resid, const char* title) {
 	answers an;
-	current_resid = resid;
+	menu_resid = resid;
+	menu_break = false;
 	choose_menu(an, parent, title, true);
 }
