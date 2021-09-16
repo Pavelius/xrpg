@@ -3,8 +3,11 @@
 #include "requisit.h"
 #include "menu.h"
 
-bool menu_break;
-const char*	menu_resid;
+variant			menu_result;
+bool			menu_break;
+const char*		menu_resid;
+fnmenuallow		menu_allow;
+fnmenuevent		menu_apply, menu_prepare;
 
 static void fill_array(answers& an, array* source, fnmenuallow pallow) {
 	const char* pe = source->end();
@@ -40,58 +43,78 @@ static void fill_source(answers& an, variant source, fnmenuallow pallow) {
 		fill_records(an, source, pallow);
 }
 
-static void apply_result(const char* id, const char* requisit, variant result) {
-}
-
-static void choose_menu_new(answers& an, const char* parent, const char* title, const char* type) {
+static void choose_element(answers& an, const char* title, const char* parent, const char* type) {
 	auto push_res = menu_resid;
-	while(parent && !draw::isnext()) {
+	auto push_allow = menu_allow;
+	variant source = type;
+	if(source) {
+		if(menu_prepare)
+			menu_prepare(parent, type);
+		auto proc = getcommand(parent);
+		if(proc)
+			proc();
 		an.clear();
-		variant source = type;
-		if(source)
-			fill_source(an, source, 0);
-		else {
+		fill_source(an, source, menu_allow);
+		menu_result.clear();
+		if(an) {
+			menu_result = (void*)an.choose(title, 0, true, menu_resid);
+			if(menu_apply)
+				menu_apply(parent, type);
+		}
+	} else if(equal(type, "StepByStep")) {
+		auto proc = getcommand(parent);
+		if(proc)
+			proc();
+		for(auto& e : bsdata<menui>()) {
+			if(strcmp(e.parent, parent) != 0)
+				continue;
+			if(e.resid)
+				menu_resid = e.resid;
+			choose_element(an, getdescription(e.id), e.id, e.type);
+		}
+	} else {
+		while(parent && !draw::isnext()) {
+			auto proc = getcommand(parent);
+			if(proc)
+				proc();
+			an.clear();
 			for(auto& e : bsdata<menui>()) {
 				if(strcmp(e.parent, parent) != 0)
 					continue;
 				an.add((long)&e, getnm(e.id));
 			}
-		}
-		if(!an)
-			break;
-		const char* cancel = 0;
-		if(equal(type, "Submenu"))
-			cancel = getnm("Back");
-		auto p = (menui*)an.choose(title, cancel, true, menu_resid);
-		if(!p)
-			break;
-		if(p->resid)
-			menu_resid = p->resid;
-		auto proc = getcommand(p->id);
-		if(proc)
-			proc();
-		if(equal(type, "Submenu") || equal(type, "SubmenuNoBack"))
-			choose_menu_new(an, p->id, getdescription(p->id), p->type);
-		else if(equal(type, "StepByStep")) {
-			for(auto& e : bsdata<menui>()) {
-				if(strcmp(e.parent, parent) != 0)
-					continue;
-				if(p->resid)
-					menu_resid = p->resid;
-				choose_menu_new(an, e.parent, getdescription(p->id), p->type);
+			if(!an)
+				break;
+			const char* cancel = 0;
+			if(equal(type, "Submenu"))
+				cancel = getnm("Back");
+			auto p = (menui*)an.choose(title, cancel, true, menu_resid);
+			if(!p)
+				break;
+			if(p->resid)
+				menu_resid = p->resid;
+			if(equal(p->type, "StepByStep")) {
+				choose_element(an, getdescription(p->id), p->id, p->type);
+				break;
+			} else {
+				if(equal(type, "Submenu"))
+					choose_element(an, getdescription(p->id), p->id, p->type);
+				else {
+					title = getdescription(p->id);
+					parent = p->id;
+					type = p->type;
+				}
 			}
-		} else {
-			title = getdescription(p->id);
-			type = p->type;
-			parent = p->id;
 		}
 	}
+	menu_allow = push_allow;
 	menu_resid = push_res;
 }
 
 void menui::choose(const char* parent, const char* resid, const char* title) {
 	answers an;
+	menu_result.clear();
 	menu_resid = resid;
 	menu_break = false;
-	choose_menu_new(an, parent, title, 0);
+	choose_element(an, title, parent, 0);
 }

@@ -1,78 +1,12 @@
 #include "main.h"
+#include "menu.h"
 
-static creaturei* current;
-typedef bool(fnchooseallow)(const void* p);
+static creaturei*	current;
+static variant		param1;
+extern variant		menu_result;
 
 void creaturei::clear() {
 	memset(this, 0, sizeof(*this));
-}
-
-static bool allow(const char* type, const char* id) {
-	if(equal(type, "Genders")) {
-		if(equal(id, "NoGender"))
-			return false;
-	}
-	return true;
-}
-
-static void fill_array(answers& an, array* source, fnchooseallow pallow) {
-	const char* pe = source->end();
-	for(auto pb = source->begin(); pb < pe; pb += source->size) {
-		if(pallow) {
-			if(!pallow(pb))
-				continue;
-		}
-		auto id = *((const char**)pb);
-		an.add((long)pb, getnm(id));
-	}
-}
-
-static void fill_records(answers& an, variant source, fnchooseallow pallow) {
-	for(auto& e : bsdata<recordi>()) {
-		if(e.parent != source)
-			continue;
-		if(pallow) {
-			if(!pallow(&e))
-				continue;
-		}
-		an.add((long)&e, getnm(e.id));
-	}
-}
-
-static void fill_source(answers& an, variant source, fnchooseallow pallow) {
-	switch(source.type) {
-	case Types:
-		fill_array(an, bsdata<varianti>::elements[source.value].source, pallow);
-		break;
-	case Records:
-		fill_records(an, ((recordi*)bsdata<recordi>::source.ptr(source.value))->parent, pallow);
-		break;
-	default:
-		fill_records(an, source, pallow);
-		break;
-	}
-}
-
-static variant param1, param2, result;
-
-static void apply_result(bool interactive, const char* id, const char* requisit, variant result) {
-	if(!current)
-		return;
-	if(equal(requisit, "gender"))
-		current->gender = (gender_s)result.value;
-	else if(equal(requisit, "race"))
-		current->race = (unsigned char)result.value;
-	else {
-		variant v = requisit;
-	}
-}
-
-static void choose_source(bool interactive, const char* title, const char* resid, variant source, fnchooseallow pallow = 0) {
-	answers an;
-	fill_source(an, source, pallow);
-	if(!an)
-		return;
-	result = (void*)an.choose(getnm(title), 0, interactive, resid);
 }
 
 static bool allow_gender(const void* p) {
@@ -87,11 +21,11 @@ static bool allow_subrace(const void* p) {
 	return ((racei*)p)->base == param1;
 }
 
-static fnchooseallow* getallow(const char* id) {
+static fnmenuallow getallow(const char* id) {
 	if(equal("ChooseRace", id))
 		return allow_base_race;
 	if(equal("ChooseSubRace", id)) {
-		param1 = result;
+		param1 = menu_result;
 		return allow_subrace;
 	}
 	if(equal("ChooseGender", id))
@@ -99,5 +33,14 @@ static fnchooseallow* getallow(const char* id) {
 	return 0;
 }
 
+static void creature_prepare(const char* parent, const char* type) {
+	menu_allow = getallow(parent);
+}
+
+static void creature_apply(const char* parent, const char* type) {
+}
+
 void create_character() {
+	menu_prepare = creature_prepare;
+	menu_apply = creature_apply;
 }
