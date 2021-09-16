@@ -69,7 +69,7 @@ BSMETA(variants) = {{}};
 
 BSMETA(menui) = {
 	BSREQ(id),
-	BSREQ(parent), BSREQ(resid), BSREQ(menuback),
+	BSREQ(parent), BSREQ(resid), BSREQ(type),
 	{}};
 BSDATAD(menui)
 
@@ -84,14 +84,6 @@ BSMETA(dicei) = {
 	BSREQ(min), BSREQ(max),
 	{}};
 BSDATAC(dicei, 64);
-
-BSMETA(inputi) = {
-	BSREQ(id),
-	BSREQ(requisit),
-	BSREQ(resid),
-	BSREQ(source),
-	{}};
-BSDATAC(inputi, 64);
 
 BSMETA(conditioni) = {
 	BSREQ(id),
@@ -113,7 +105,6 @@ BSDATA(varianti) = {
 	{"Dices", VRSTD(dicei)},
 	{"Feats", VRSTD(feati)},
 	{"Genders", VRSTD(genderi)},
-	{"Input", VRSTD(inputi)},
 	{"Menu", VRSTD(menui)},
 	{"Modifiers", VRSTD(modifieri)},
 	{"Packages", VRSTD(packagei)},

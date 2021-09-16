@@ -100,11 +100,4 @@ static fnchooseallow* getallow(const char* id) {
 }
 
 void create_character() {
-	auto interactive = true;
-	for(auto& e : bsdata<inputi>()) {
-		if(!e.id || !e.source)
-			break;
-		choose_source(interactive, e.id, e.resid, e.source, getallow(e.id));
-		apply_result(interactive, e.id, e.requisit, result);
-	}
 }

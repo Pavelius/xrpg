@@ -1,2 +1,2 @@
-﻿Errors occurs in locale/ru/Names.txt.txt
-Define translate for 'ChooseSubRace'
+﻿Error loading rules/dnd5/core.json
+Not found data type 'Input'

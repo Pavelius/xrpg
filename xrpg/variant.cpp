@@ -14,14 +14,16 @@ template<> variant::variant(const void* v) : u(0) {
 }
 
 template<> variant::variant(const char* v) : u(0) {
-	for(auto& e : bsdata<varianti>()) {
-		if(!e.source)
-			continue;
-		auto i = e.source->find(v, 0);
-		if(i != -1) {
-			value = i;
-			type = (variant_s)(&e - bsdata<varianti>::elements);
-			break;
+	if(v) {
+		for(auto& e : bsdata<varianti>()) {
+			if(!e.source)
+				continue;
+			auto i = e.source->find(v, 0);
+			if(i != -1) {
+				value = i;
+				type = (variant_s)(&e - bsdata<varianti>::elements);
+				break;
+			}
 		}
 	}
 }

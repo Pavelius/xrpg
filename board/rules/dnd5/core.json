@@ -231,8 +231,28 @@
   "Menu": {
     "NewGame": { "parent": "Start" },
     "LoadGame": { "parent": "Start" },
-    "NewCharacter": { "parent": "NewGame" },
-    "PickCharacter": { "parent": "NewGame" }
+    "NewCharacter": { "parent": "NewGame", "type": "StepByStep" },
+    "PickCharacter": { "parent": "NewGame" },
+    "ChooseGender": {
+      "parent": "NewCharacter",
+      "type": "Genders",
+      "resid": "generate"
+    },
+    "ChooseRace": {
+      "parent": "NewCharacter",
+      "type": "Races",
+      "resid": "generate"
+    },
+    "ChooseSubRace": {
+      "parent": "NewCharacter",
+      "type": "Races",
+      "resid": "generate"
+    },
+    "ChooseClass": {
+      "parent": "NewCharacter",
+      "type": "Classes",
+      "resid": "classes"
+    }
   },
   "Records": {
     "Archery": { "parent": "FightingStyle" },
@@ -242,26 +262,4 @@
     "Protection": { "parent": "FightingStyle" },
     "TwoWeaponFighting": { "parent": "FightingStyle" }
   },
-  "Input": {
-    "ChooseGender": {
-      "requisit": "gender",
-      "source": "Genders",
-      "resid": "generate"
-    },
-    "ChooseRace": {
-      "requisit": "race",
-      "source": "Races",
-      "resid": "generate"
-    },
-    "ChooseSubRace": {
-      "requisit": "race",
-      "source": "Races",
-      "resid": "generate"
-    },
-    "ChooseClass": {
-      "requisit": "class",
-      "source": "Classes",
-      "resid": "classes"
-    }
-  }
 }

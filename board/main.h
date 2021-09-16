@@ -9,7 +9,7 @@
 
 enum variant_s : unsigned char {
 	NoVariant,
-	Abilities, Class, Conditions, Creatures, Dice, Feats, Genders, Input, Menu, Modifiers,
+	Abilities, Class, Conditions, Creatures, Dice, Feats, Genders, Menu, Modifiers,
 	Packages, Parameters, Progress, Races, Records, Skills, Tables, Types,
 };
 enum modifier_s : unsigned char {
@@ -107,12 +107,6 @@ struct racei {
 };
 struct skilli {
 	const char*			id;
-};
-struct inputi {
-	const char*			id;
-	const char*			requisit;
-	const char*			resid;
-	variant				source;
 };
 VKIND(condition_s, Conditions)
 VKIND(modifier_s, Modifiers)

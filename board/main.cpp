@@ -31,8 +31,6 @@ int main() {
 		return -1;
 	if(!readf("rules/dnd5/core.json"))
 		return -1;
-	if(!tablecsvi::read("rules/dnd5/Test.csv"))
-		return -1;
 	draw::initialize("DnD5 simulator");
 	draw::scene.resurl = "main";
 	draw::setnext(start_menu);

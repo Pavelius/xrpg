@@ -1,6 +1,7 @@
 #include "requisit.h"
 
 BSDATAD(valuei)
+BSDATAD(requisiti)
 
 valuei* valuei::find(variant object, variant requisit) {
 	valuei f = {object, requisit};
