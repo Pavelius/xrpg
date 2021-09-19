@@ -32,7 +32,7 @@ int main() {
 	if(!readf("rules/dnd5/core.json"))
 		return -1;
 	draw::initialize("DnD5 simulator");
-	draw::scene.resurl = "main";
+	draw::scene.resurl = "cave_crystal";
 	draw::setnext(start_menu);
 	draw::start();
 	return 0;

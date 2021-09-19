@@ -7,6 +7,7 @@ namespace {
 struct resei {
 	const char*		name;
 	const char*		folder;
+	unsigned		flags;
 	sprite*			data;
 	bool			notfound;
 };
@@ -19,6 +20,18 @@ static resei* find(const char* name, const char* folder) {
 			return &e;
 	}
 	return 0;
+}
+
+static unsigned char* rotate(unsigned char* src, int width, int height) {
+	auto dst = new unsigned char[width * height * 3];
+	for(auto x = 0; x < width; x++) {
+		for(auto y = 0; y < height; y++) {
+			auto p1 = dst + (x * height + y) * 3;
+			auto p2 = src + (y * width + x) * 3;
+			memcpy(p1, p2, 3);
+		}
+	}
+	return dst;
 }
 
 const sprite* draw::gres(const char* name, const char* folder, point maxsize) {
@@ -34,11 +47,20 @@ const sprite* draw::gres(const char* name, const char* folder, point maxsize) {
 		return 0;
 	if(!p->data) {
 		char temp[260];
-		p->data = (sprite*)loadb(szurl(temp, p->folder, p->name, "pma"));
+		bool need_rotate = false;
+		while(*name) {
+			if(*name == '-') {
+				name++;
+				need_rotate = true;
+				continue;
+			}
+			break;
+		}
+		p->data = (sprite*)loadb(szurl(temp, p->folder, name, "pma"));
 		if(!p->data) {
 			draw::surface dc;
 			for(auto pg = surface::plugin::first; pg; pg = pg->next) {
-				szurl(temp, p->folder, p->name, pg->name);
+				szurl(temp, p->folder, name, pg->name);
 				if(dc.read(temp, 0, 32)) {
 					rect rc = {0, 0, dc.width, dc.height};
 					if(maxsize.x && rc.width() > maxsize.x) {
@@ -60,7 +82,8 @@ const sprite* draw::gres(const char* name, const char* folder, point maxsize) {
 					p->data->frames[0].offset = sizeof(sprite);
 					p->data->count = 1;
 					// Дешевый и простой алгоритм сжатия без прозрачности
-					auto pd = (unsigned char*)p->data->ptr(p->data->frames[0].offset);
+					auto pb = (unsigned char*)p->data->ptr(p->data->frames[0].offset);
+					auto pd = pb;
 					for(auto y = rc.y1; y < rc.y2; y++) {
 						for(auto x = rc.x1; x < rc.x2; x++) {
 							auto input = dc.ptr(x, y);
@@ -69,6 +92,13 @@ const sprite* draw::gres(const char* name, const char* folder, point maxsize) {
 							pd[2] = input[2];
 							pd += 3;
 						}
+					}
+					if(need_rotate) {
+						auto pn = rotate(pb, rc.width(), rc.height());
+						memcpy(pb, pn, rc.width() * rc.height() * 3);
+						iswap(p->data->width, p->data->height);
+						iswap(p->data->frames[0].sx, p->data->frames[0].sy);
+						delete pn;
 					}
 					break;
 				}
