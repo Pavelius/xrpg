@@ -32,6 +32,10 @@ struct actioni {
 	const char*			id;
 	variant				type;
 };
+struct backgroundi {
+	const char*			id;
+	variants			bonuses;
+};
 struct modifieri {
 	const char*			id;
 	int					value;

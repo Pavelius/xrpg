@@ -1,0 +1,118 @@
+﻿About: О программе
+ActiveColor: Цвет выделения
+Add: Добавить
+AddCopy: Скопировать
+Admirer: Администратор
+Agitator: Агитатор 
+AllFiles: Все файлы
+Archeologist: Археолого
+Autocomplete: Автоматическое завершение
+Back: Назад
+BadOmens: Плохие символы
+BargeThrought: Баргаш
+BloodHound: Чуйка крови
+Bodyguard: Телохранитель
+BoneSaw: Костоправ
+BorderColor: Цвет границы
+Butcher: Мясник
+ButtonColor: Цвет кнопки
+Cancel: Отмена
+Change: Изменить
+Close: Закрыть
+CodeTreeMembers: Члены
+CodeTreeTypes: Типы
+Colors: Цвета 
+Column: Колонка
+CombatVeteran: Солдат
+Commander: Коммандер
+CommentColor: Цвет комментариев
+CoolHead: Крутая голова
+Copy: Копировать
+Counselor: Советник
+Coward: Трус
+Create: Создать новый
+Cut: Вырезать
+Cynic: Цинник
+DataFormURL: Данные из %1
+Date: Дата
+Decrease: Уменьшить
+DockBottom: Присоединено снизу
+DockLeft: Присоединено слева
+DockLeftBottom: Присоединено слева снизу
+DockRight: Присоединено справа
+DockRightBottom: Присоединено справа снизу
+DockWorkspace: На рабочем столе
+Docking: Расположение
+Editor: Редактор
+ExecuteCommand: Выполнить команду
+Exit: Выход
+FastDraw: Быстрое выхватывание
+FightDog: Бойцовский пес
+Form: Форма
+FormColor: Цвет формы
+Formating: Форматирование
+General: Общие
+Gunslingers: Стрелки
+HotKey: Горячая клавиша
+IdentifierColor: Цвет идентификаторов
+Increase: Увеличить
+Inventor: Изобретатель
+KeywordColor: Цвет ключевых слов
+Library: Библиотека
+Log: Логирование
+Main: Главный
+MeanStreak: Торговая хватка
+Message: Сообщение
+MessageList: Сообщения
+Metrics: Метрика
+Name: Наименование
+Next: Далее
+NoUrlLabelExtension: Не выводить в имя закладки расширение.
+NotFoundOpenDocuments: Не найдено ни одного открытого документа.
+NumberColor: Цвет чисел
+Open: Открыть
+OpenFile: Открыть файл
+OperatorColor: Цвет операторов
+Padding: Отступ
+ParseAll: Разобрать все
+Paste: Вставить
+Perfomer: Артист
+Plugins: Окна
+Project: Проект
+Projects: Проекты
+Racketeer: Рекитер
+Ready: Готово
+Rebel: Бунтарь
+Remove: Удалить
+Row: Строка
+Save: Сохранить
+SaveMessageFile: Сохранять файл сообщений после закрытия программы.
+ScrollWidth: Ширина полос прокрутки
+SelectAll: Выбрать все
+SetDarkTheme: Установить темную тему
+SetLightTheme: Установить светлую тему
+Settings: Настройки
+ShowBottomPanel: Показать нижнюю панель
+ShowLeftPanel: Показать левую боковую панель
+ShowPadding: Отступы на главном экране
+ShowRightPanel: Показать правую боковую панель
+ShowStatusBar: Показать панель статуса
+ShowTabsAlways: Показывать закладки всегда, даже если осталась одна.
+Size: Размер
+StringColor: Цвет строк
+Tabs: Закладки
+Tabulation: Табуляция
+Test: Тестирование
+TextColor: Цвет текста
+TipsBackColor: Цвет фона подсказки
+TipsTextColor: Цвет текста подсказки
+TypeColor: Цвет типов
+URLs: Пути
+UppercaseLabel: Первую букву имени закладки выводить в верхнем регистре.
+UseShortNameLabel: В имени закладки отображать только имя файла (без полного пути).
+View: Вид
+WeaponSpecialist: Специалист по оружию
+Weight: Вес
+WindowColor: Цвет окна
+Workhorse: Рабочая лошадка
+Workspace: Рабочий стол
