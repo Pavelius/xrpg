@@ -1699,6 +1699,41 @@ int draw::hittest(rect rc, const char* string, unsigned state, point pt) {
 	return -1;
 }
 
+static void raw32r(int x1, int x2, int y, unsigned char* src) {
+	if(y < clipping.y1 || y > clipping.y2 || x1<clipping.x2 || x1 > clipping.x1 || x2 < clipping.x1)
+		return;
+	if(x1 < clipping.x1)
+		x1 = clipping.x1;
+	auto w = x2 - x1;
+	auto dst = (color*)canvas->ptr(x1, y);
+	while(w--) {
+		dst->r = src[0];
+		dst->g = src[1];
+		dst->b = src[2];
+		src += 3;
+		dst++;
+	}
+}
+
+static void image_round(int xm, int ym, int r, unsigned char* source) {
+	if(xm - r >= clipping.x2 || xm + r < clipping.x1 || ym - r >= clipping.y2 || ym + r < clipping.y1)
+		return;
+	int x = -r, y = 0, err = 2 - 2 * r, y2 = -1000;
+	do {
+		if(y2 != y) {
+			y2 = y;
+			raw32r(xm + x, ym + y, xm - x, source);
+			if(y != 0)
+				raw32r(xm + x, ym - y, xm - x, source);
+		}
+		r = err;
+		if(r <= y)
+			err += ++y * 2 + 1;
+		if(r > x || err > y)
+			err += ++x * 2 + 1;
+	} while(x < 0);
+}
+
 void draw::image(int x, int y, const sprite* e, int id, int flags, unsigned char alpha) {
 	int x2, y2;
 	color* pal;
