@@ -351,9 +351,6 @@ const char* stringbuilder::readformat(const char* src, const char* vl) {
 		long pn = 0, pnp = 0;
 		if(isnum(*src))
 			src = psnum10(src, pn);
-#ifdef __unix__
-		pn = pn + 3;
-#endif
 		if(src[0] == '.' && isnum(src[1]))
 			src = psnum10(src + 1, pnp);
 		if(*src == 'i') {

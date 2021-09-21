@@ -104,16 +104,19 @@ static void widget_cleanup() {
 }
 
 void draw::create(int x, int y, int width, int height, unsigned flags, int bpp) {
-    XSetWindowAttributes    attr;
-    attr.background_pixmap  = None;
-    attr.backing_store      = NotUseful;
+    XSetWindowAttributes attr;
+    attr.background_pixmap = None;
+    attr.backing_store = NotUseful;
     if(!dpy) {
-        dpy     = XOpenDisplay(0);
-        scr		= DefaultScreen(dpy);
+        dpy = XOpenDisplay(0);
+        scr	= DefaultScreen(dpy);
         rootwin = RootWindow(dpy,scr);
         atexit(widget_cleanup);
     }
     Visual* myVisual = DefaultVisual(dpy, scr);
+    if(canvas)
+        canvas->resize(width, height, bpp, true);
+    setclip();
     hwnd = XCreateWindow(dpy,rootwin, x, y, width, height, 0, 24, InputOutput, myVisual, CWBackPixmap|CWBackingStore, &attr);
     gc = XCreateGC(dpy, hwnd, 0, NULL);
     XSelectInput(dpy, hwnd,

@@ -431,7 +431,7 @@
 	"crt.h"
 	"io_stream.h"
 
-1631081130 /home/ws-1113/projects/xrpg/xrpg/crt.h
+1632220321 /home/ws-1113/projects/xrpg/xrpg/crt.h
 
 1629874022 /home/ws-1113/projects/xrpg/xrpg/io_stream.h
 
@@ -893,7 +893,7 @@
 	"lexer.h"
 	"package.h"
 
-1631081079 /home/ws-1113/projects/xrpg/xrpg/variant.h
+1631620266 /home/ws-1113/projects/xrpg/xrpg/variant.h
 	"crt.h"
 	"stringbuilder.h"
 
@@ -912,7 +912,7 @@
 	"stringbuilder.h"
 	"string.h"
 
-1630304752 /home/ws-1113/projects/xrpg/xrpg/answers.h
+1631620266 /home/ws-1113/projects/xrpg/xrpg/answers.h
 	"crt.h"
 	"stringbuilder.h"
 
@@ -923,7 +923,7 @@
 
 1630476358 /home/ws-1113/projects/xrpg/xrpg/flagable.h
 
-1629967113 /home/ws-1113/projects/xrpg/xrpg/draw_input.h
+1631620266 /home/ws-1113/projects/xrpg/xrpg/draw_input.h
 
 1630910008 /home/ws-1113/projects/xrpg/xrpg/draw_simple.h
 	"command.h"

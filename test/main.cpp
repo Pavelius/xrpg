@@ -12,6 +12,7 @@
 #include "main.h"
 #include "package.h"
 #include "string.h"
+#include "variant.h"
 
 using namespace draw;
 
