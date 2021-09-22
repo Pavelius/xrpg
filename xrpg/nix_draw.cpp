@@ -187,9 +187,9 @@ static bool handle(XEvent& e) {
         break;
     case ConfigureNotify:
         if(e.xconfigure.width!=getwidth() || e.xconfigure.height!=getheight()) {
-            while(XCheckTypedWindowEvent(dpy, e.xmotion.window, e.type, &e1));
-            //dc.resize(e.xconfigure.width, e.xconfigure.height);
+            while(XCheckTypedWindowEvent(dpy, e.xconfigure.window, e.type, &e1));
             canvas->resize(e.xconfigure.width, e.xconfigure.height, 32, true);
+            setclip();
             hot.key = InputUpdate;
         } else
             return false;

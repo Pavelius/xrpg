@@ -20,4 +20,4 @@ clean:
 libxface.a: $(LST) $(PLATFORM_LST) $(PLUGIN_LST) $(WIDGET_LST)
 	ar cr libxface.a $^
 %.o: %.cpp
-	gcc -c $< -g
+	gcc -c $< -g -std=c++17
