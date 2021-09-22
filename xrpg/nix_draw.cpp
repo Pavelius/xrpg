@@ -1,6 +1,7 @@
+#include<X11/keysym.h>
 #include<X11/Xlib.h>
 #include<X11/Xutil.h>
-#include<X11/keysym.h>
+#include<X11/XKBlib.h>
 #include "crt.h"
 #include "draw.h"
 
@@ -13,8 +14,7 @@ static int          scr;
 static Window       rootwin;
 
 static int tokey(int vk) {
-    switch(vk)
-    {
+    switch(vk) {
     case XK_Control_L:
     case XK_Control_R:
         return Ctrl;
@@ -104,15 +104,15 @@ static void widget_cleanup() {
 }
 
 void draw::create(int x, int y, int width, int height, unsigned flags, int bpp) {
-    XSetWindowAttributes attr;
+    if(hwnd)
+        return;
+    XSetWindowAttributes attr = {};
     attr.background_pixmap = None;
     attr.backing_store = NotUseful;
-    if(!dpy) {
-        dpy = XOpenDisplay(0);
-        scr	= DefaultScreen(dpy);
-        rootwin = RootWindow(dpy,scr);
-        atexit(widget_cleanup);
-    }
+    dpy = XOpenDisplay(0);
+    scr	= DefaultScreen(dpy);
+    rootwin = RootWindow(dpy,scr);
+    atexit(widget_cleanup);
     Visual* myVisual = DefaultVisual(dpy, scr);
     if(canvas)
         canvas->resize(width, height, bpp, true);
@@ -157,24 +157,40 @@ static int mousekey(int k, bool dbl = false) {
     }
 }
 
+static int read_keyboard(char* result, unsigned maximum) {
+    //Xutf8LookupString(ic, &e.xkey, temp, sizeof(temp)-1, 0, 0);
+}
+
+static void apply_keyboard_mask(unsigned mask) {
+    if((mask&ShiftMask)!=0)
+        hot.key |= Shift;
+    if((mask&ControlMask)!=0)
+        hot.key |= Ctrl;
+    if((mask&LockMask)!=0)
+        hot.key |= Alt;
+}
+
 static bool handle(XEvent& e) {
     XEvent e1;
     static unsigned long last_mouse_press;
     switch(e.type) {
     case Expose:
+        hot.key = InputUpdate;
         break;
     case ButtonPress:
         hot.key = mousekey(e.xbutton.button, (e.xbutton.time-last_mouse_press) < 300);
+        apply_keyboard_mask(e.xbutton.state);
         hot.pressed = true;
         last_mouse_press = e.xbutton.time;
         break;
     case ButtonRelease:
         hot.key = mousekey(e.xbutton.button);
+        apply_keyboard_mask(e.xbutton.state);
         hot.pressed = false;
         break;
     case KeyPress:
-        hot.key = tokey(XKeycodeToKeysym(dpy, e.xkey.keycode, 0));
-        //Xutf8LookupString(ic, &e.xkey, temp, sizeof(temp)-1, 0, 0);
+        hot.key = tokey(XkbKeycodeToKeysym(dpy, e.xkey.keycode, 0, e.xkey.state & ShiftMask ? 1 : 0));
+        apply_keyboard_mask(e.xkey.state);
         break;
     case MotionNotify:
         while(XCheckTypedWindowEvent(dpy, e.xmotion.window, e.type, &e1));
