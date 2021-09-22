@@ -1699,6 +1699,8 @@ int draw::hittest(rect rc, const char* string, unsigned state, point pt) {
 	return -1;
 }
 
+typedef void (*fndrawrow)(int x1, int x2, int y, unsigned char* src);
+
 static void raw32r(int x1, int x2, int y, unsigned char* src) {
 	if(y < clipping.y1 || y > clipping.y2 || x1<clipping.x2 || x1 > clipping.x1 || x2 < clipping.x1)
 		return;
@@ -1714,17 +1716,29 @@ static void raw32r(int x1, int x2, int y, unsigned char* src) {
 		dst++;
 	}
 }
+static void raw8r(int x1, int x2, int y, unsigned char* src) {
+	if(y < clipping.y1 || y > clipping.y2 || x1<clipping.x2 || x1 > clipping.x1 || x2 < clipping.x1)
+		return;
+	if(x1 < clipping.x1)
+		x1 = clipping.x1;
+	auto w = x2 - x1;
+	auto dst = (color*)canvas->ptr(x1, y);
+	while(w--) {
+		*dst = palt[*src++];
+		dst++;
+	}
+}
 
-static void image_round(int xm, int ym, int r, unsigned char* source) {
+static void image_round(int xm, int ym, int r, unsigned char* source, int scan_line, fndrawrow proc) {
 	if(xm - r >= clipping.x2 || xm + r < clipping.x1 || ym - r >= clipping.y2 || ym + r < clipping.y1)
 		return;
 	int x = -r, y = 0, err = 2 - 2 * r, y2 = -1000;
 	do {
 		if(y2 != y) {
 			y2 = y;
-			raw32r(xm + x, ym + y, xm - x, source);
+			proc(xm + x, ym + y, xm - x, source);
 			if(y != 0)
-				raw32r(xm + x, ym - y, xm - x, source);
+				proc(xm + x, ym - y, xm - x, source);
 		}
 		r = err;
 		if(r <= y)

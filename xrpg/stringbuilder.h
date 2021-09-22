@@ -1,6 +1,6 @@
 #pragma once
 
-#define xva_start(v) (((const char*)&v) + sizeof(v)*2)
+#define xva_start(v) (((const char*)&v) + sizeof(v))
 
 class stringbuilder {
 	struct grammar;
