@@ -1708,39 +1708,47 @@ static void raw32r(int x1, int x2, int y, unsigned char* src, int width) {
 		x1 = clipping.x1;
 	auto w = x2 - x1;
 	auto dst = (color*)canvas->ptr(x1, y);
-	while(w--) {
-		dst->r = src[0];
-		dst->g = src[1];
-		dst->b = src[2];
-		src += 3;
-		dst++;
-	}
 }
-static void raw8r(int x1, int x2, int y, unsigned char* src, int width) {
+static void raw_line(int x0, int y0, int x1, int x2, int y, unsigned char* src, int dy, int dx, int bpp) {
 	if(y < clipping.y1 || y > clipping.y2 || x1<clipping.x2 || x1 > clipping.x1 || x2 < clipping.x1)
 		return;
 	if(x1 < clipping.x1)
 		x1 = clipping.x1;
 	auto w = x2 - x1;
 	auto dst = (color*)canvas->ptr(x1, y);
-	while(w--) {
-		*dst = palt[*src++];
-		dst++;
+	unsigned char* p = src + bpp * dy + dx * (x1 - x0);
+	switch(bpp) {
+	case 1:
+		while(w--) {
+			*dst = palt[*p];
+			dst++;
+			p += dx;
+		}
+		break;
+	case 3:
+		while(w--) {
+			dst->r = p[0];
+			dst->g = p[1];
+			dst->b = p[2];
+			p += dx;
+			dst++;
+		}
+		break;
 	}
 }
 
-static void image_round(int xm, int ym, int r, unsigned char* source, int scan_line, fndrawrow proc) {
+static void image_round(int xm, int ym, int r, unsigned char* source, int dy, int dx, int sx, int sy, int bpp) {
 	if(xm - r >= clipping.x2 || xm + r < clipping.x1 || ym - r >= clipping.y2 || ym + r < clipping.y1)
 		return;
-	int bpp = 3;
+	auto x0 = sx - r, y0 = sy - r;
 	int w = r * 2 * bpp;
 	int x = -r, y = 0, err = 2 - 2 * r, y2 = -1000;
 	do {
 		if(y2 != y) {
 			y2 = y;
-			proc(xm + x, ym + y, xm - x, source, w);
+			raw_line(x0, y0, xm + x, xm - x, ym + y, source, dy, dx, bpp);
 			if(y != 0)
-				proc(xm + x, ym - y, xm - x, source, w);
+				raw_line(x0, y0, xm + x, xm - x, ym - y, source, dy, dx, bpp);
 		}
 		r = err;
 		if(r <= y)
