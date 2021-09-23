@@ -8,14 +8,20 @@ typedef decltype(sizeof(0)) size_t;
 #define assert(e)
 #endif
 
+#ifdef _MSC_VER
+#define	BSDATATMPL
+#else
+#define	BSDATATMPL template<>
+#endif
+
 #define maptbl(t, id) (t[imax((unsigned)0, imin((unsigned)id, (sizeof(t)/sizeof(t[0])-1)))])
 #define maprnd(t) t[rand()%(sizeof(t)/sizeof(t[0]))]
 #define	FO(T,R) ((size_t)&((T*)0)->R)
-#define BSDATA(e) template<> e bsdata<e>::elements[]
-#define BSDATAD(e) template<> array bsdata<e>::source(sizeof(e));
-#define BSDATAE(e) template<> array bsdata<e>::source(bsdata<e>::elements, sizeof(bsdata<e>::elements[0]), 0, sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]));
-#define BSDATAF(e) template<> array bsdata<e>::source(bsdata<e>::elements, sizeof(bsdata<e>::elements[0]), sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]), sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]));
-#define BSDATAC(e, c) template<> e bsdata<e>::elements[c]; BSDATAE(e)
+#define BSDATA(e) BSDATATMPL e bsdata<e>::elements[]
+#define BSDATAD(e) BSDATATMPL array bsdata<e>::source(sizeof(e));
+#define BSDATAE(e) BSDATATMPL array bsdata<e>::source(bsdata<e>::elements, sizeof(bsdata<e>::elements[0]), 0, sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]));
+#define BSDATAF(e) BSDATATMPL array bsdata<e>::source(bsdata<e>::elements, sizeof(bsdata<e>::elements[0]), sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]), sizeof(bsdata<e>::elements)/sizeof(bsdata<e>::elements[0]));
+#define BSDATAC(e, c) BSDATATMPL e bsdata<e>::elements[c]; BSDATAE(e)
 #define NOBSDATA(e) template<> struct bsdata<e> : bsdata<int> {};
 #define assert_enum(e, last) static_assert(sizeof(bsdata<e>::elements) / sizeof(bsdata<e>::elements[0]) == static_cast<int>(last) + 1, "Invalid count of " #e " elements"); BSDATAF(e)
 
