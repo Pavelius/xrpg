@@ -45,7 +45,7 @@ typedef tokeni			tokena[16];
 struct rulei {
 	const char*			name;
 	tokena				tokens;
-	fnevent				special;
+	fnevent				special, before;
 	void				parse() const;
 };
 typedef slice<rulei>	rulea;

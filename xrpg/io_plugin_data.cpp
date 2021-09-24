@@ -89,16 +89,22 @@ bool readf(const char* url) {
 		}
 		void close(serializer::node& e) override {
 		}
+		bool read(variant& v, const char* value) {
+			v = value;
+			if(!v) {
+				warning("Can't find variant \"%1\"", value);
+				return false;
+			}
+			return true;
+		}
 		void set(serializer::node& e, const char* value) override {
 			auto pm = getmeta(e)->find(e.name);
 			auto index = (e.parent->type == serializer::kind::Array) ? e.index : 0;
 			if(!pm)
 				warning("Can't find requisit \"%1\" to load value %2", e.name, value);
 			else if(pm->type == bsmeta<variants>::meta) {
-				variant v(value);
-				if(!v)
-					warning("Can't find variant \"%1\"", value);
-				else {
+				variant v;
+				if(read(v, value)) {
 					auto ps = (variants*)pm->ptr(getobject(e), 0);
 					if(!ps->count) {
 						bsdata<variant>::source.reserve(bsdata<variant>::source.getcount() + 1);
@@ -110,18 +116,14 @@ bool readf(const char* url) {
 			} else if(pm->type == bsmeta<flagable<1>>::meta
 				|| pm->type == bsmeta<flagable<2>>::meta
 				|| pm->type == bsmeta<flagable<4>>::meta) {
-				variant v(value);
-				if(!v)
-					warning("Can't find variant \"%1\"", value);
-				else {
+				variant v;
+				if(read(v, value)) {
 					auto ps = (unsigned char*)pm->ptr(getobject(e), e.index);
 					ps[v.value / 8] |= (1 << (v.value % 8));
 				}
 			} else if(pm->type == bsmeta<variant>::meta) {
-				variant v(value);
-				if(!v)
-					warning("Can't find variant \"%1\"", value);
-				else {
+				variant v;
+				if(read(v, value)) {
 					auto ps = (variant*)pm->ptr(getobject(e), index);
 					*ps = v;
 				}

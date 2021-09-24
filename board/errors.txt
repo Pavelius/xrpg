@@ -1,2 +1,2 @@
 ﻿Error loading rules/dnd5/core.json
-Not found data type 'Input'
+Can't find variant "Strenght1"

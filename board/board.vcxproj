@@ -170,7 +170,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties />
+      <UserProperties rules_4dnd5_4core_1json__JsonSchema="https://ffizer.github.io/ffizer/ffizer.schema.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

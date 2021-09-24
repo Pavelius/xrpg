@@ -3,6 +3,20 @@
 
 using namespace code;
 
+static unsigned member_flags;
+
+static void clear_flags() {
+	member_flags = 0;
+}
+
+static void apply_static() {
+	member_flags |= 1 << ((int)symf::Static);
+}
+
+static void apply_public() {
+	member_flags |= 1 << ((int)symf::Public);
+}
+
 static void add_type() {
 	auto url = this_pack->add(core.type);
 	auto id = this_pack->add(core.id);
@@ -22,12 +36,6 @@ static void set_url() {
 
 static void set_member() {
 	core.member = core.id;
-}
-
-static void apply_static() {
-}
-
-static void apply_public() {
 }
 
 static void add_function() {
@@ -66,8 +74,8 @@ static rulei c2_grammar[] = {
 	{"public", {"public"}, apply_public},
 	{"member", {"%type", "%id"}, set_member},
 	{"parameter", {"%type", "%id"}},
-	{"declare_function", {"?%static", "?%public", "%member", "(", "?%parameter", ", .?%parameter", ")"}, add_function},
-	{"declare_variable", {"?%static", "?%public", "%member", "?%array_scope"}, add_variable},
+	{"declare_function", {"?%static", "?%public", "%member", "(", "?%parameter", ", .?%parameter", ")"}, add_function, clear_flags},
+	{"declare_variable", {"?%static", "?%public", "%member", "?%array_scope"}, add_variable, clear_flags},
 	{"member_function", {"%declare_function", "%block_statements"}},
 	{"member_variable", {"%declare_variable", "?%initialization", ";"}},
 	{"local_variable", {"?%static", "%member", "?%array_scope", "?%initialization"}},

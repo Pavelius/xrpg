@@ -70,6 +70,8 @@ void code::skipws() {
 
 void rulei::parse() const {
 	auto pb = p;
+	if(before)
+		before();
 	for(auto& e : tokens) {
 		if(!e)
 			break;
