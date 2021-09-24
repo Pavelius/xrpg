@@ -50,7 +50,6 @@ struct rulei {
 };
 typedef slice<rulei>	rulea;
 struct corei {
-	typedef void (*fnevent)(string st, const rulei& rule, const tokeni& token);
 	string				type, id, member, rule, url, comment;
 	long long           number = 0;
 	const char*			expected;

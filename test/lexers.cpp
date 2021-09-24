@@ -8,13 +8,14 @@ static unsigned member_flags;
 static void clear_flags() {
 	member_flags = 0;
 }
-
-static void apply_static() {
-	member_flags |= 1 << ((int)symf::Static);
+static void add(symf v) {
+	member_flags |= 1 << ((int)v);
 }
-
+static void apply_static() {
+	add(symf::Static);
+}
 static void apply_public() {
-	member_flags |= 1 << ((int)symf::Public);
+	add(symf::Public);
 }
 
 static void add_type() {
@@ -41,7 +42,8 @@ static void set_member() {
 static void add_function() {
 	auto id = this_pack->add(core.member);
 	auto type = this_pack->add("void");
-	this_pack->addsym(id, This, type, 0, 1 << static_cast<int>(symf::Method));
+	add(symf::Method);
+	this_pack->addsym(id, This, type, 0, member_flags);
 }
 
 static void add_variable() {
@@ -49,12 +51,6 @@ static void add_variable() {
 	auto type = this_pack->add("void");
 	this_pack->addsym(id, This, type, 0, 0);
 }
-
-static string c2_classes[] = {
-	"void", "bool",
-	"int", "short", "char",
-	"uint", "ushort", "uchar",
-};
 
 static rulei c2_grammar[] = {
 	{"id", {}, identifier},
@@ -110,7 +106,11 @@ static rulei c2_grammar[] = {
 	{"if", {"if", "(", "%expression", ")", "%single_statement"}},
 	{"switch", {"switch", "(", "%expression", ")", "{", "}"}},
 };
-
+static string c2_classes[] = {
+	"void", "bool",
+	"int", "short", "char",
+	"uint", "ushort", "uchar",
+};
 BSDATA(lexer) = {
 	{"C2", "*.c2", c2_grammar, c2_classes},
 	{"Rust", "*.rs"}
