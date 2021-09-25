@@ -673,6 +673,15 @@ class widget_codeview : public control, vector<char> {
 				break;
 		}
 	}
+	bool matchl(const char* v) const {
+		if(!v)
+			return false;
+		auto n = zlen(v);
+		auto pc = getcurrent() - n;
+		if(begin() > pc)
+			return false;
+		return szmatch(pc, v);
+	}
 	void ensurevisible(int y) {
 		if(y < origin.y)
 			origin.y = y;
@@ -718,6 +727,12 @@ public:
 		paste(p);
 		delete p;
 	}
+	void parsecurrent(package* p) {
+		this_pack = p;
+		core.clear();
+		core.context = getcurrent();
+		parse(getbegin());
+	}
 	void readpackage() {
 		url_module = package::getmodule(url);
 		if(!url_module || !source_lexer)
@@ -725,8 +740,7 @@ public:
 		source_lexer->setgrammar();
 		auto p = package::addmodule(url_module);
 		p->addclasses(source_lexer->standart_classes);
-		this_pack = p;
-		parse(getbegin());
+		parsecurrent(p);
 	}
 	bool execute(const char* id, bool run) override {
 		if(equal(id, "Edit")) {
@@ -780,8 +794,7 @@ public:
 				return false;
 			if(run) {
 				source_lexer->setgrammar();
-				this_pack = package;
-				parse(begin());
+				parsecurrent(package);
 				update_codetree();
 			}
 		} else if(equal(id, "SelectAll")) {

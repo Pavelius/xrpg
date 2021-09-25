@@ -3,7 +3,7 @@
 BSDATA(menui) = {
 	{"NewGame", "Main"},
 	{"LoadGame", "Main"},
-	{"Settings", "Main", "machine", true},
+	{"Settings", "Main", "machine", "Submenu"},
 	{"About", "Main"},
 	{"Video", "Settings"},
 	{"Sound", "Settings"},

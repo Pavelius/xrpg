@@ -15,5 +15,6 @@ public:
 	static constexpr const char* end(const char* p) { if(!p) return 0; while(*p) p++; return p; }
 	bool				equal(const string& v) const;
 	const char*			get() const;
+	bool				has(const char* p) const { return p >= begin() && p <= end(); }
 	void				set(const char* p, unsigned v) { this->p = p; this->size = v; }
 };

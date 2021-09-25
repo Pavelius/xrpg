@@ -49,10 +49,16 @@ struct rulei {
 	void				parse() const;
 };
 typedef slice<rulei>	rulea;
+struct memberlisti {
+	virtual void		add(int type, string name) = 0;
+};
 struct corei {
 	string				type, id, member, rule, url, comment;
-	long long           number = 0;
+	const char*			context;
+	long long           number;
 	const char*			expected;
+	memberlisti*		memberlist;
+	void				clear();
 };
 struct errori {
 	const char*			p;

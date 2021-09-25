@@ -75,7 +75,7 @@
       "Visible":1,
       "columns":{
         "Name":{
-          "width":213,
+          "width":157,
           "size":4,
           "total":0
         }
@@ -86,7 +86,7 @@
       "Visible":1,
       "columns":{
         "Name":{
-          "width":213,
+          "width":157,
           "size":4,
           "total":0
         }
@@ -98,17 +98,17 @@
     }
   },
   "window":{
-    "x":23,
-    "y":18,
-    "width":1021,
-    "height":629,
+    "x":259,
+    "y":44,
+    "width":893,
+    "height":703,
     "header_width":150,
     "flags":48
   },
   "dockbar":{
     "DockLeft":{
       "current":0,
-      "size":213
+      "size":157
     },
     "DockLeftBottom":{
       "current":0,

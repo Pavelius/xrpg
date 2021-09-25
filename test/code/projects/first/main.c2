@@ -10,6 +10,7 @@ static int x;
 static int y;
 
 void print(int x, int y, char* format) {
+    str.print(format, 1, 10);
 }
 
 int main() {

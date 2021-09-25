@@ -3,6 +3,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="reference.cpp" />
+    <ClCompile Include="widget_database.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h" />

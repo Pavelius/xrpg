@@ -1,2 +1,2 @@
-﻿Error loading rules/dnd5/core.json
-Can't find variant "Strenght1"
+﻿Errors occurs in locale/ru/Names.txt.txt
+Define translate for 'Charsheet'

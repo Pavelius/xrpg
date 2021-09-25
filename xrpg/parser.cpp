@@ -10,6 +10,10 @@ errori				code::error;
 static const char*	potent_p;
 static const char*	potent_expected;
 
+void corei::clear() {
+	memset(this, 0, sizeof(*this));
+}
+
 void errori::clear() {
 	memset(this, 0, sizeof(*this));
 }

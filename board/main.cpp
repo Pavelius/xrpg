@@ -20,6 +20,16 @@ static void start_menu() {
 	menui::choose("Start", "meet", 0);
 }
 
+static void charsheet() {
+	char temp[512]; stringbuilder sb(temp);
+	draw::customwindow();
+}
+
+static command commands[] = {
+	{"CharacterSheet", charsheet},
+	{}
+};
+
 int main() {
 	initialize_json();
 	initialize_png();
@@ -33,6 +43,7 @@ int main() {
 		return -1;
 	draw::initialize("DnD5 simulator");
 	draw::scene.resurl = "cave_crystal";
+	draw::scene.commands = commands;
 	draw::setnext(start_menu);
 	draw::start();
 	return 0;
