@@ -156,12 +156,14 @@
     <ClCompile Include="feat.cpp" />
     <ClCompile Include="information.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="property.cpp" />
     <ClCompile Include="statable.cpp" />
     <ClCompile Include="state.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="rules\core.json" />
+    <None Include="rules\monsters.json" />
     <None Include="rules\players.json" />
   </ItemGroup>
   <ItemGroup>

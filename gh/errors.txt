@@ -1,2 +1,1 @@
-﻿Errors occurs in locale/ru/Names.txt.txt
-Define translate for 'TrapPoisonDamage2'
+﻿

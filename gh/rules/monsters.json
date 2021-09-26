@@ -1,0 +1,97 @@
+{
+  "Monster": {
+    "BanditGuard": {
+      "normal": [
+        {
+          "hits": 5,
+          "move": 2,
+          "attack": 2
+        },
+        {
+          "hits": 6,
+          "move": 3,
+          "attack": 2
+        },
+        {
+          "hits": 6,
+          "move": 3,
+          "attack": 3
+        },
+        {
+          "hits": 9,
+          "move": 3,
+          "attack": 3
+        },
+        {
+          "hits": 10,
+          "move": 4,
+          "attack": 3
+        },
+        {
+          "hits": 11,
+          "move": 4,
+          "attack": 4
+        },
+        {
+          "hits": 14,
+          "move": 4,
+          "attack": 4
+        },
+        {
+          "hits": 16,
+          "move": 5,
+          "attack": 4
+        }
+      ],
+      "elite": [
+        {
+          "hits": 9,
+          "move": 2,
+          "attack": 3,
+        },
+        {
+          "hits": 9,
+          "move": 2,
+          "attack": 3,
+          "feats": [ "Shield1" ]
+        },
+        {
+          "hits": 10,
+          "move": 2,
+          "attack": 4,
+          "feats": [ "Shield1" ]
+        },
+        {
+          "hits": 10,
+          "move": 3,
+          "attack": 4,
+          "feats": [ "Shield2" ]
+        },
+        {
+          "hits": 11,
+          "move": 3,
+          "attack": 4,
+          "feats": [ "Muddle", "Shield2" ]
+        },
+        {
+          "hits": 12,
+          "move": 3,
+          "attack": 5,
+          "feats": [ "Muddle", "Shield2" ]
+        },
+        {
+          "hits": 14,
+          "move": 3,
+          "attack": 4,
+          "feats": [ "Muddle", "Shield2" ]
+        },
+        {
+          "hits": 14,
+          "move": 3,
+          "attack": 5,
+          "feats": [ "Muddle", "Shield3" ]
+        }
+      ]
+    },
+  },
+}

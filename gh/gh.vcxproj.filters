@@ -34,6 +34,9 @@
     <ClCompile Include="information.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Logic">
@@ -53,6 +56,9 @@
       <Filter>Data</Filter>
     </None>
     <None Include="rules\players.json">
+      <Filter>Data</Filter>
+    </None>
+    <None Include="rules\monsters.json">
       <Filter>Data</Filter>
     </None>
   </ItemGroup>

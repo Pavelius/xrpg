@@ -45,11 +45,12 @@ enum fraction_s : unsigned char {
 };
 enum variant_s : unsigned char {
 	NoVariant,
-	Action, ActionBonus, Area, Card, CardType, Duration, Element, Feat, Menu, Player, State,
-	SummonedCreature, Trap, Type
+	Action, ActionBonus, Area, Card, CardType, CombatCard, Duration, Element, Feat,
+	Menu, Monster, Player, State, SummonedCreature, Trap, Type
 };
 typedef flagable<2> statef;
 typedef flagable<1> elementf;
+typedef varianta combatdeck;
 struct actioni {
 	const char*			id;
 	int					type;
@@ -71,6 +72,12 @@ struct cardi {
 	variants			upper, lower;
 	void				getinfo(stringbuilder& sb) const;
 };
+struct combatcardi {
+	const char*			id;
+	variant				owner;
+	char				count, bonus;
+	variants			feats;
+};
 struct cardtypei {
 	const char*			id;
 };
@@ -86,7 +93,9 @@ struct feati {
 struct playeri {
 	const char*			id;
 	short				health[10];
+	combatdeck			combat;
 	adat<variant, 32>	actions;
+	void				buildcombatdeck();
 };
 struct statei {
 	const char*			id;
@@ -107,6 +116,15 @@ struct summoni {
 	const char*			id;
 	char				hits, move, attack, range;
 	variants			feats;
+};
+struct abilityi {
+	char				hits, move, attack, range;
+	variants			feats;
+};
+struct monsteri {
+	const char*			id;
+	const char*			combat;
+	abilityi			normal[8], elite[8];
 };
 class creature : public posable, public statable {
 	statable			basic;

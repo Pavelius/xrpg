@@ -6,6 +6,7 @@
 #define XKIND(T, V) template<> struct bsmeta<T> : bsmeta<V> {};\
 template<> struct bsdata<T> : bsdata<V> {};
 
+NOBSDATA(abilityi)
 NOBSDATA(variants)
 NOBSDATA(flagable<1>)
 NOBSDATA(flagable<2>)
@@ -44,6 +45,11 @@ BSDATAD(cardi)
 BSMETA(cardtypei) = {
 	BSREQ(id),
 	{}};
+BSMETA(combatcardi) = {
+	BSREQ(id),
+	BSREQ(bonus), BSREQ(count), BSREQ(owner), BSREQ(feats),
+	{}};
+BSDATAD(combatcardi)
 BSMETA(durationi) = {
 	BSREQ(id),
 	{}};
@@ -73,6 +79,15 @@ BSMETA(trapi) = {
 	BSREQ(feats),
 	{}};
 BSDATAD(trapi)
+BSMETA(abilityi) = {
+	BSREQ(hits), BSREQ(move), BSREQ(attack), BSREQ(range),
+	BSREQ(feats),
+	{}};
+BSMETA(monsteri) = {
+	BSREQ(id),
+	BSREQ(normal), BSREQ(elite),
+	{}};
+BSDATAD(monsteri)
 BSMETA(statei) = {
 	BSREQ(id),
 	{}};
@@ -87,10 +102,12 @@ BSDATA(varianti) = {
 	{"Area", VRSTD(areai)},
 	{"Card", VRSTD(cardi)},
 	{"CardType", VRSTD(cardtypei)},
+	{"CombatCard", VRSTD(combatcardi)},
 	{"Duration", VRSTD(durationi)},
 	{"Element", VRSTD(elementi)},
 	{"Feat", VRSTD(feati)},
 	{"Menu", VRSTD(menui)},
+	{"Monster", VRSTD(monsteri)},
 	{"Player", VRSTD(playeri)},
 	{"State", VRSTD(statei)},
 	{"SummonedCreature", VRSTD(summoni)},

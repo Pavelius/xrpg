@@ -1,3 +1,4 @@
+#include "bsreq.h"
 #include "main.h"
 #include "draw_input.h"
 #include "draw_simple.h"
@@ -30,6 +31,7 @@ void start_menu() {
 
 static bool test_players() {
 	auto p = (playeri*)bsdata<playeri>::source.ptr(0);
+	p->buildcombatdeck();
 	return p->health[0] != 0;
 }
 
@@ -42,6 +44,8 @@ int main() {
 		return -1;
 	if(!readf("rules/players.json"))
 		return -1;
+	//if(!readf("rules/monsters.json"))
+	//	return -1;
 	if(!test_players())
 		return - 1;
 	draw::initialize("GH simulator");

@@ -305,6 +305,33 @@
       "bonus": 6
     }
   },
+  "CombatCard": {
+    "NoCombatModifier": { "count": 6 },
+    "CombatModifierB1": {
+      "bonus": 1,
+      "count": 5
+    },
+    "CombatModifierP1": {
+      "bonus": -1,
+      "count": 5
+    },
+    "CombatModifierB2": {
+      "bonus": 2,
+      "count": 1
+    },
+    "CombatModifierP2": {
+      "bonus": -2,
+      "count": 1
+    },
+    "CombatMiss": {
+      "bonus": -100,
+      "count": 1
+    },
+    "CombatCriticalHit": {
+      "bonus": 100,
+      "count": 1
+    }
+  },
   "Menu": {
     "NewGame": { "parent": "Start" },
     "LoadGame": { "parent": "Start" }
