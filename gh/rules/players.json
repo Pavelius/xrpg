@@ -1,0 +1,116 @@
+{
+  "Player": {
+    "Brute": {
+      "health": [ 10, 12, 14, 16, 18, 20, 22, 24, 26 ]
+    },
+    "Thinkerer": {
+      "health": [ 8, 9, 11, 12, 14, 15, 17, 18, 20 ]
+    }
+  },
+  "Card": {
+    "WardingStrenght": {
+      "level": 1,
+      "owner": "Brute",
+      "upper": [ "Attack3", "Push2" ],
+      "lower": [ "PerUse", "Shield1", "Use6", "Discard" ]
+    },
+    "EyeForAnEye": {
+      "level": 1,
+      "owner": "Brute",
+      "initiative": 18,
+      "upper": [ "Retaliate2", "GainExpForRetaliate", "Round" ],
+      "lower": [ "Heal2", "Range1", "Earth" ]
+    },
+    "ProvokingRoar": {
+      "level": 1,
+      "owner": "Brute",
+      "initiative": 10,
+      "upper": [ "Attack2", "Disarm" ],
+      "lower": [ "EnemyAttackYouInsteadNearestAlly", "Round" ]
+    },
+    "GrabAndGo": {
+      "level": 1,
+      "owner": "Brute",
+      "initiative": 87,
+      "upper": [ "Loot1" ],
+      "lower": [ "Move4" ]
+    },
+    "Trample": {
+      "level": 1,
+      "owner": "Brute",
+      "initiative": 72,
+      "upper": [ "Attack3", "Pierce2" ],
+      "lower": [ "Move4", "Jump", "Attack2", "TargetEnemyMoveThrought", "Exp2" ]
+    },
+    "ShieldBash": {
+      "level": 1,
+      "owner": "Brute",
+      "initiative": 15,
+      "upper": [ "Attack4", "Stun", "Exp2", "Discard" ],
+      "lower": [ "Shield1", "Round" ]
+    },
+    "SweepingBlow": {
+      "level": 1,
+      "owner": "Brute",
+      "initiative": 64,
+      "upper": [ "Attack2", "Slash3" ],
+      "lower": [ "Move3", "Push1", "TargetAllAdjancedEnemies" ]
+    },
+    "LeapingCleave": {
+      "level": 1,
+      "owner": "Brute",
+      "initiative": 54,
+      "upper": [ "Attack3", "Slash2", "Exp1" ],
+      "lower": [ "Move3", "Jump", "Air" ]
+    },
+    "OverwhelmingAssault": {
+      "level": 1,
+      "owner": "Brute",
+      "initiative": 61,
+      "upper": [ "Attack6", "Exp2", "Discard" ],
+      "lower": [ "Move3", "Push2" ]
+    },
+    "SpareDagger": {
+      "level": 1,
+      "owner": "Brute",
+      "initiative": 27,
+      "upper": [ "Attack3", "Range3", "Exp1" ],
+      "lower": [ "Attack2" ]
+    },
+    "Skewer": {
+      "level": 0,
+      "owner": "Brute",
+      "initiative": 35,
+      "upper": [ "Attack3", "UseAir", "Attack1", "Pierce1", "Ray2", "Exp1" ],
+      "lower": [ "Move6", "Exp1", "Discard" ]
+    },
+    "BalancedMeasure": {
+      "level": 0,
+      "owner": "Brute",
+      "initiative": 77,
+      "upper": [ "AttackXMoved", "Exp1" ],
+      "lower": [ "MoveXDamaged" ]
+    },
+    "WallOfDoom": {
+      "level": 0,
+      "owner": "Brute",
+      "initiative": 20,
+      "upper": [ "Retaliate2", "Shield2", "Exp2", "Round", "Discard" ],
+      "lower": [ "Attack1", "Round" ]
+    },
+    "StunShoot": {
+      "level": 1,
+      "owner": "Thinkerer",
+      "initiative": 20,
+      "upper": [ "Attack1", "Range3", "Wound", "Stun" ],
+      "lower": [ "Move4" ]
+    },
+    "ToxicBolt": {
+      "level": 1,
+      "owner": "Thinkerer",
+      "initiative": 18,
+      "upper": [ "Attack2", "Range3", "Poison", "Earth" ],
+      "lower": [ "Attack5", "Range2", "Exp2", "Discard" ]
+    }
+  }
+}

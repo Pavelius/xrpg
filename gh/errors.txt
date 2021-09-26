@@ -1,0 +1,2 @@
+﻿Error loading rules/players.json
+Can't find variant "Use6"

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="statable.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="property.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="action.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="state.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="feat.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="duration.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="element.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="cardtype.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="area.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Logic">
+      <UniqueIdentifier>{641b47d6-08ab-4146-9c99-1421272ba944}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{c3b29c5e-1aa7-4cf2-aefb-cee4eb601b5c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="rules\core.json">
+      <Filter>Data</Filter>
+    </None>
+    <None Include="rules\players.json">
+      <Filter>Data</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="errors.txt">
+      <Filter>Data</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
