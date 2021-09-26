@@ -31,6 +31,9 @@
     <ClCompile Include="area.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="information.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Logic">
@@ -55,6 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="errors.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="locale\ru\Names.txt">
       <Filter>Data</Filter>
     </Text>
   </ItemGroup>

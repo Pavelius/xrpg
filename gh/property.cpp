@@ -81,5 +81,6 @@ BSDATA(varianti) = {
 	{"Menu", VRSTD(menui)},
 	{"Player", VRSTD(playeri)},
 	{"State", VRSTD(statei)},
+	{"Type", VRSTD(varianti)},
 };
-assert_enum(varianti, State)
+assert_enum(varianti, Type)

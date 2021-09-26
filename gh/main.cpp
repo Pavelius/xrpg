@@ -11,8 +11,21 @@ fnevent getcommand(const char* id) {
 	return 0;
 }
 
+static variant choose_cards(variant player, int level) {
+	varianta collection;
+	for(auto& e : bsdata<cardi>()) {
+		if(e.owner != player)
+			continue;
+		if(e.level != level)
+			continue;
+		collection.add(&e);
+	}
+	return collection.choose("Test", "Cancel", true, 0);
+}
+
 void start_menu() {
-	menui::choose("Start", 0, 0);
+	choose_cards("Brute", 1);
+	//menui::choose("Start", 0, 0);
 }
 
 static bool test_players() {

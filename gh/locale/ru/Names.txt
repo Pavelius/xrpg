@@ -1,47 +1,48 @@
 ﻿About: О программе
-Attributes: Атрибуты
+Attack: Атака
 Back: Назад
+BalancedMeasure: Взвешенный подход
+Brute: Дикарь
 CharacterSheet: Лист пресонажа
 ChooseAbility: Выбирайте способности
 ChooseBackground: Выбирайте прошлое
 ChooseClass: Выбирайте класс
 ChooseGender: Выберите пол вашего персонажа
-ChooseRace: Выбирайте вашу расу
-ChooseSubRace: У каждой расы есть определенные ответвления. Какую ветку представляете вы?
-Cleric: Клерик
 Close: Закрыть
-Copy: Копировать
-Cut: Вырезать
-Dwarf: Гном
-DwarfHill: Холмистый гном
-DwarfMountain: Горный гном
-Elf: Эльф
-ElfHigh: Высший эльф
-ElfWood: Лесной эльф
 Exit: Выход
+Experience: Опыт
+EyeForAnEye: Око за око
 Female: Женщина
-Fighter: Воин
-Halfling: Полурослик
-HalflingLightfoot: Легконогий полурослик
-HalflingStout: Коренастый полурослик
+GrabAndGo: Бери и беги
 Heal: Лечение
 HotKey: Горячая клавиша
 Human: Человек
-Intimidate: Запугивание
+Initiative: Инициатива
+LeapingCleave: Рассечение
+Level: Уровень
 LoadGame: Загрузить игру
 Male: Мужчина
+Move: Движение
 NewCharacter: Создать персонажа
 NewGame: Новая игра
 Next: Далее
 NoGender: Безполый
 NoItem: Нет предмета
-Paste: Вставить
+OverwhelmingAssault: Подавление
 PickCharacter: Выбрать персонажа
-Rogue: Плут
+Pierce: Пробой
+ProvokingRoar: Угрожающий рык
+Range: Дистанция
 Rules: Правила
 Settings: Настройки
+ShieldBash: Удар щитом
+Skewer: Вертел
 Skills: Навыки
 Sound: Звук
+SpareDagger: Припасенный кинжал
 Strenght: Сила
+SweepingBlow: Сметающий удар
+Trample: Топот
 Video: Видео
-Wizard: Волшебник
+WallOfDoom: Стена рока
+WardingStrenght: Мастерство отражения

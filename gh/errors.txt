@@ -1,2 +1,3 @@
-﻿Error loading rules/players.json
-Can't find variant "Use6"
+﻿Errors occurs in locale/ru/Names.txt.txt
+Define translate for 'Experience'
+Define translate for 'Range'

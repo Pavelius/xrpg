@@ -213,23 +213,28 @@ int draw::textf(int x, int y, int width, const char* string, int* max_width,
 			*cashe_string = p;
 			*cashe_height = y - y0;
 		}
-		if(match(&p, "###")) // Header 3
-		{
+		if(match(&p, "#--")) { // Header 3
+			p = skipsp(p);
+			font = metrics::small;
+			y += textfln(x, y, width, &p, colors::h3, &mw2);
+		} else if(match(&p, "###")) { // Header 3
 			p = skipsp(p);
 			font = metrics::h3;
 			y += textfln(x, y, width, &p, colors::h3, &mw2);
-		} else if(match(&p, "##")) // Header 2
-		{
+		} else if(match(&p, "##")) {// Header 2
 			p = skipsp(p);
 			font = metrics::h2;
 			y += textfln(x, y, width, &p, colors::h2, &mw2);
-		} else if(match(&p, "#")) // Header 1
-		{
+		} else if(match(&p, "#")) { // Header 1
 			p = skipsp(p);
 			font = metrics::h1;
 			y += textfln(x, y, width, &p, colors::h1, &mw2);
-		} else if(match(&p, "...")) // Без форматирования
-		{
+		} else if(match(&p, "---")) { // Line
+			p = skipspcr(p);
+			y += 2;
+			line(x, y, x + width, y, fore);
+			y += 2;
+		} else if(match(&p, "...")) { // Без форматирования
 			p = skipcr(p);
 			font = metrics::font;
 			color c1 = colors::window.mix(colors::border, 256 - 32);

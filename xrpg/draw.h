@@ -103,6 +103,7 @@ extern color			text;
 }
 namespace metrics {
 extern sprite*			font;
+extern sprite*			small;
 extern sprite*			h1;
 extern sprite*			h2;
 extern sprite*			h3;

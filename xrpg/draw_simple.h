@@ -11,6 +11,7 @@ struct scenei {
 	int				grid = 32;
 	const char*		resurl = 0;
 	const command*	commands = 0;
+	variant			hilite;
 	fnevent			background = 0;
 	fnevent			window = 0;
 };
@@ -22,11 +23,11 @@ extern int			width;
 void				answerbt(int index, long id, const char* title);
 void				avatar(const char* id, unsigned char alpha = 0xFF);
 void				bar(int value, int maximum);
-bool				button(const char* title, unsigned key, bool(*p)(const char*), const char* description);
+bool				button(const char* title, unsigned key, bool(*p)(const char*), const char* description, bool* is_hilited);
 bool				buttonfd(const char* title);
-inline bool			buttonfd(const char* title, unsigned key, const char* description) { return button(title, key, buttonfd, description); }
+inline bool			buttonfd(const char* title, unsigned key, const char* description) { return button(title, key, buttonfd, description, 0); }
 bool				buttonrd(const char* title);
-inline bool			buttonrd(const char* title, unsigned key, const char* description) { return button(title, key, buttonrd, description); }
+inline bool			buttonrd(const char* title, unsigned key, const char* description) { return button(title, key, buttonrd, description, 0); }
 void				customwindow();
 bool				ishilite(int s, const void* object);
 void				fog(int n);

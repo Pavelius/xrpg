@@ -4,6 +4,7 @@
 #include "menu.h"
 #include "posable.h"
 #include "variant.h"
+#include "varianta.h"
 
 enum duration_s : unsigned char {
 	Instant, Round, PerUse, Infinite,
@@ -28,7 +29,7 @@ enum statistic_s : unsigned char {
 	MonstersKilled, ItemsUsed,
 };
 enum action_s : unsigned char {
-	Shield, Retaliate, Guard, Evasion,
+	Shield, Retaliate, Evasion,
 	Move, Attack, Push, Pull, Heal, DisarmTrap, SetTrap, Summon, Loot,
 	Range, Target, Pierce,
 	Bless, Curse,
@@ -49,11 +50,14 @@ enum fraction_s : unsigned char {
 enum variant_s : unsigned char {
 	NoVariant,
 	Action, ActionBonus, Area, Card, CardType, Duration, Element, Feat, Menu, Player, State,
+	Type
 };
 typedef flagable<2> statef;
 typedef flagable<1> elementf;
 struct actioni {
 	const char*			id;
+	int					type;
+	bool				ismain() const;
 };
 struct areai {
 	const char*			id;
@@ -69,6 +73,7 @@ struct cardi {
 	variant				owner;
 	int					initiative;
 	variants			upper, lower;
+	void				getinfo(stringbuilder& sb) const;
 };
 struct cardtypei {
 	const char*			id;
@@ -85,6 +90,7 @@ struct feati {
 struct playeri {
 	const char*			id;
 	short				health[10];
+	adat<variant, 32>	actions;
 };
 struct statei {
 	const char*			id;

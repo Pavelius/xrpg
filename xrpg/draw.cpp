@@ -51,6 +51,7 @@ sprite*				metrics::font = (sprite*)loadb("art/fonts/font.pma");
 sprite*				metrics::h1 = (sprite*)loadb("art/fonts/h1.pma");
 sprite*				metrics::h2 = (sprite*)loadb("art/fonts/h2.pma");
 sprite*				metrics::h3 = (sprite*)loadb("art/fonts/h3.pma");
+sprite*				metrics::small = (sprite*)loadb("art/fonts/small.pma");
 
 long distance(point p1, point p2) {
 	auto dx = p1.x - p2.x;

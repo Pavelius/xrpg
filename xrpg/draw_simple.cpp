@@ -139,20 +139,34 @@ bool draw::buttonrd(const char* title) {
 	return result;
 }
 
-bool draw::button(const char* title, unsigned key, bool(*p)(const char*), const char* description) {
+bool draw::button(const char* title, unsigned key, bool(*p)(const char*), const char* description, bool* is_hilited) {
 	auto hilite = p(title);
-	if(hilite && description)
-		tooltips(description);
+	if(hilite) {
+		if(description)
+			tooltips(description);
+	}
+	if(is_hilited)
+		*is_hilited = hilite;
 	return (key && hot.key == key)
 		|| (hot.key == MouseLeft && hilite && !hot.pressed);
 }
+
+extern stringbuilder tooltips_sb;
 
 void draw::answerbt(int i, long id, const char* title) {
 	static char answer_hotkeys[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'};
 	if(i >= sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]))
 		i = sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]) - 1;
-	if(buttonfd(title, answer_hotkeys[i], 0))
+	bool is_hilited = false;
+	if(button(title, answer_hotkeys[i], buttonfd, 0, &is_hilited))
 		execute(breakparam, id);
+	if(is_hilited) {
+		variant value = (void*)id;
+		if(value) {
+			tooltips_sb.clear();
+			value.getinfo(tooltips_sb);
+		}
+	}
 }
 
 void draw::customwindow() {
@@ -163,6 +177,7 @@ void draw::customwindow() {
 }
 
 void draw::paintclear() {
+	scene.hilite.clear();
 	rectf({0, 0, getwidth(), getheight()}, colors::window);
 	tooltips(metrics::padding * 3, metrics::padding * 3, 320);
 }

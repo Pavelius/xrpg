@@ -1,24 +1,31 @@
 #include "main.h"
 
+enum action_kind_s {
+	SupportAction, MainAction,
+};
+
+bool actioni::ismain() const {
+	return type == MainAction;
+}
+
 BSDATA(actioni) = {
-	{"Shield"},
-	{"Retaliate"},
-	{"Guard"},
+	{"Shield", MainAction},
+	{"Retaliate", MainAction},
 	{"Evasion"},
-	{"Move"},
-	{"Attack"},
-	{"Push"},
-	{"Pull"},
-	{"Heal"},
-	{"DisarmTrap"},
-	{"SetTrap"},
+	{"Move", MainAction},
+	{"Attack", MainAction},
+	{"Push", MainAction},
+	{"Pull", MainAction},
+	{"Heal", MainAction},
+	{"DisarmTrap", MainAction},
+	{"SetTrap", MainAction},
 	{"Summon"},
-	{"Loot"},
+	{"Loot", MainAction},
 	{"Range"},
 	{"Target"},
 	{"Pierce"},
-	{"Bless"},
-	{"Curse"},
+	{"Bless", MainAction},
+	{"Curse", MainAction},
 	{"Experience"},
 	{"Level"},
 	{"Use"},

@@ -8,10 +8,10 @@ static char				tooltips_text[4096];
 static int				px, py, pw;
 bool					tooltips_use_idle = true;
 fnevent					tooltips_custom;
-static stringbuilder	sb(tooltips_text);
+stringbuilder			tooltips_sb(tooltips_text);
 
 HANDLER(before_modal) {
-	sb.clear();
+	tooltips_sb.clear();
 	px = py = -1000;
 	pw = 0;
 }
@@ -64,7 +64,7 @@ HANDLER(before_input) {
 }
 
 void draw::tooltips(const char* format, ...) {
-	sb.addv(format, xva_start(format));
+	tooltips_sb.addv(format, xva_start(format));
 }
 
 void draw::tooltips(int x, int y, int width) {

@@ -176,6 +176,7 @@ template<typename T> struct bsdata {
 	static constexpr array*			source_ptr = &source;
 	static T*						add() { return (T*)source.add(); }
 	static T*						addz() { for(auto& e : bsdata<T>()) if(!e) return &e; return add(); }
+	static T&						get(int i) { return begin()[i]; }
 	static constexpr T*				begin() { return (T*)source.data; }
 	static constexpr T*				end() { return (T*)source.data + source.getcount(); }
 };
