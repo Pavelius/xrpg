@@ -4,29 +4,60 @@ static void addh(stringbuilder& sb, const char* title) {
 	sb.addn("##%1", title);
 }
 
-static void addline(stringbuilder& sb) {
-	sb.addn("---");
+static bool ismainaction(variant v) {
+	switch(v.type) {
+	case Action:
+		return bsdata<actioni>::get(v.value).ismain();
+	case ActionBonus:
+		return ismainaction(bsdata<actionbonusi>::get(v.value).action);
+	case Feat:
+		switch(v.value) {
+		case EnemyAttackYouInsteadNearestAlly: return true;
+		default: return false;
+		}
+	case SummonedCreature: case Trap: return true;
+	default: return false;
+	}
 }
 
-static bool ismainaction(variant v) {
-	if(v.type == ActionBonus) {
-		auto& ab = bsdata<actionbonusi>::get(v.value);
-		if(ab.action.type == Action)
-			return bsdata<actioni>::get(ab.action.value).ismain();
+static int getbonus(variant v) {
+	switch(v.type) {
+	case ActionBonus: return bsdata<actionbonusi>::get(v.value).bonus;
+	default: return 0;
 	}
-	return false;
+}
+
+static variant getaction(variant v) {
+	switch(v.type) {
+	case ActionBonus: return bsdata<actionbonusi>::get(v.value).action;
+	default: return v;
+	}
 }
 
 static void addpart(stringbuilder& sb, const variants& source) {
+	auto auto_new_line = true;
+	auto ability_count = 0;
 	for(auto v : source) {
-		if(v.type == ActionBonus) {
-			auto& ab = bsdata<actionbonusi>::get(v.value);
-			if(ismainaction(v)) {
-				sb.addn("%1 %2i", ab.action.getname(), ab.bonus);
-			} else {
-				sb.add(", %1 %2i", ab.action.getname(), ab.bonus);
-			}
-		}
+		auto action = getaction(v);
+		auto bonus = getbonus(v);
+		if(action.type==Duration) {
+			sb.addn("* ");
+			sb.add(action.getname(), bonus);
+			sb.add(": ");
+			auto_new_line = false;
+			continue;
+		} else if(ismainaction(action)) {
+			if(auto_new_line)
+				sb.addn("* ");
+		} else
+			sb.add(", ");
+		if(bonus)
+			sb.add("%1 %2i", action.getname(), bonus);
+		else if(action.type==SummonedCreature)
+			sb.add("%Summon %1", action.getname());
+		else
+			sb.add(action.getname());
+		auto_new_line = true;
 	}
 }
 
@@ -34,8 +65,9 @@ void cardi::getinfo(stringbuilder& sb) const {
 	sb.clear();
 	addh(sb, getnm(id));
 	sb.addn("%1, %Level %2i, %Initiative %3i", owner.getname(), level, initiative);
+	sb.addn("[Верхняя]");
 	addpart(sb, upper);
-	addline(sb);
+	sb.addn("[Нижняя]");
 	addpart(sb, lower);
 }
 

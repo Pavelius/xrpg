@@ -106,12 +106,11 @@ bool readf(const char* url) {
 				variant v;
 				if(read(v, value)) {
 					auto ps = (variants*)pm->ptr(getobject(e), 0);
-					if(!ps->count) {
-						bsdata<variant>::source.reserve(bsdata<variant>::source.getcount() + 1);
-						ps->start = bsdata<variant>::source.getcount();
-					}
-					auto pv = ps->begin();
-					pv[ps->count++] = v;
+					auto pv = bsdata<variant>::add();
+					if(!ps->count)
+						ps->start = bsdata<variant>::source.indexof(pv);
+					*pv = v;
+					ps->count++;
 				}
 			} else if(pm->type == bsmeta<flagable<1>>::meta
 				|| pm->type == bsmeta<flagable<2>>::meta

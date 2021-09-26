@@ -1,4 +1,5 @@
 ﻿About: О программе
+Air: Воздух
 Attack: Атака
 Back: Назад
 BalancedMeasure: Взвешенный подход
@@ -9,18 +10,33 @@ ChooseBackground: Выбирайте прошлое
 ChooseClass: Выбирайте класс
 ChooseGender: Выберите пол вашего персонажа
 Close: Закрыть
+Dark: Тьма
+Decoy: Приманка
+Disarm: Обезоружить
+Discard: Сбросить
+Earth: Земля
+EnchancementField: Силовое поле
+EnemyAttackYouInsteadNearestAlly: Враг атакует вас вместо союзника, если вы находитесь рядом с союзником
 Exit: Выход
 Experience: Опыт
 EyeForAnEye: Око за око
 Female: Женщина
+GainExpForRetaliate: Опыт 1 за каждое отражение
+GainExpForTarget: Опыт 1 за каждую цель
 GrabAndGo: Бери и беги
+HarmlessContraption: Безобидное приспособление
 Heal: Лечение
+HookGun: Крюкомет
 HotKey: Горячая клавиша
 Human: Человек
+Ice: Холод
 Initiative: Инициатива
+InkBomb: Чернильная бомба
+Jump: Прыжек
 LeapingCleave: Рассечение
 Level: Уровень
 LoadGame: Загрузить игру
+Loot: Добыча
 Male: Мужчина
 Move: Движение
 NewCharacter: Создать персонажа
@@ -29,20 +45,47 @@ Next: Далее
 NoGender: Безполый
 NoItem: Нет предмета
 OverwhelmingAssault: Подавление
+PerUse: На %1i раз
 PickCharacter: Выбрать персонажа
 Pierce: Пробой
+Poison: Яд
+PotentPotables: Крепкие снадобья
 ProvokingRoar: Угрожающий рык
+ProximityMine: Безконтактная мина
+Pull: Притянуть
+Push: Оттолкнуть
 Range: Дистанция
+RecoverDiscarded: Восстановить из сброса
+ReinvigoratingElexir: Оживляющий элексир
+RestorativeMist: Бодрящая пыль
+Retaliate: Ответный удар
+RevivingShock: Импульсная стимуляция
+Round: На раунд
 Rules: Правила
 Settings: Настройки
+Shield: Щит
 ShieldBash: Удар щитом
 Skewer: Вертел
 Skills: Навыки
+Slash: Полукруг
 Sound: Звук
 SpareDagger: Припасенный кинжал
+Splash: Взрыв
 Strenght: Сила
+Stun: Оглушение
+StunShoot: Шокер
+Summon: Призвать
 SweepingBlow: Сметающий удар
+Target: Цели
+TargetAllAdjancedEnemies: Цель все враги вокруг
+TargetEnemyMoveThrought: Цель каждый враг на пути движения
+Thinkerer: Изобретатель
+ToxicBolt: Отравленная стрела
 Trample: Топот
+TrapDamage6: Повреждающая ловушка (урон 6)
+TrapPoisonDamage2: Ядовитая ловушка (урон 2)
+Use: Использований
 Video: Видео
+VolatileConcoction: Летучая смесь
 WallOfDoom: Стена рока
 WardingStrenght: Мастерство отражения

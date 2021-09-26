@@ -18,16 +18,14 @@ BSDATA(actioni) = {
 	{"Pull", MainAction},
 	{"Heal", MainAction},
 	{"DisarmTrap", MainAction},
-	{"SetTrap", MainAction},
-	{"Summon"},
 	{"Loot", MainAction},
 	{"Range"},
 	{"Target"},
 	{"Pierce"},
 	{"Bless", MainAction},
 	{"Curse", MainAction},
+	{"RecoverDiscarded", MainAction},
 	{"Experience"},
 	{"Level"},
-	{"Use"},
 };
-assert_enum(actioni, Use)
+assert_enum(actioni, Level)

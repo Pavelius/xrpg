@@ -259,7 +259,11 @@ int draw::textf(int x, int y, int width, const char* string, int* max_width,
 			int rd = texth() / 6;
 			circlef(x + dx + 2, y + dx, rd, color_text);
 			circle(x + dx + 2, y + dx, rd, color_text);
-			y += textfln(x + texth(), y, width - texth(), &p, color_text, &mw2);
+			int mw3 = 0;
+			y += textfln(x + texth(), y, width - texth(), &p, color_text, &mw3);
+			mw3 += texth();
+			if(mw2 < mw3)
+				mw2 = mw3;
 		} else
 			y += textfln(x, y, width, &p, color_text, &mw2);
 		// Возвратим стандартные настройки блока

@@ -2,9 +2,8 @@
 
 BSDATA(feati) = {
 	{"EnemyAttackYouInsteadNearestAlly"},
-	{"GainExpForRetaliate"},
-	{"TargetAllAdjancedEnemies"},
-	{"TargetEnemyMoveThrought"},
+	{"GainExpForRetaliate"}, {"GainExpForTarget"},
+	{"TargetAllAlly"}, {"TargetAllAdjancedEnemies"}, {"TargetEnemyMoveThrought"},
 	{"Jump"},
 	{"Fly"},
 };

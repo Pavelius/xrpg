@@ -200,6 +200,22 @@
       "action": "Ray",
       "bonus": 4
     },
+    "RecoverDiscarded1": {
+      "action": "RecoverDiscarded",
+      "bonus": 1
+    },
+    "RecoverDiscarded2": {
+      "action": "RecoverDiscarded",
+      "bonus": 1
+    },
+    "RecoverDiscarded3": {
+      "action": "RecoverDiscarded",
+      "bonus": 1
+    },
+    "RecoverDiscardedAll": {
+      "action": "RecoverDiscarded",
+      "bonus": 100
+    },
     "Retaliate1": {
       "action": "Retaliate",
       "bonus": 1
@@ -224,6 +240,10 @@
       "action": "Shield",
       "bonus": 3
     },
+    "Splash3": {
+      "action": "Splash",
+      "bonus": 3
+    },
     "Slash2": {
       "action": "Slash",
       "bonus": 2
@@ -235,6 +255,10 @@
     "Slash4": {
       "action": "Slash",
       "bonus": 4
+    },
+    "Target2": {
+      "action": "Target",
+      "bonus": 2
     },
     "UseAir": {
       "action": "Air",
@@ -260,24 +284,24 @@
       "action": "Dark",
       "bonus": -1
     },
-    "Use2": {
-      "action": "Use",
+    "Per2Use": {
+      "action": "PerUse",
       "bonus": 2
     },
-    "Use3": {
-      "action": "Use",
+    "Per3Use": {
+      "action": "PerUse",
       "bonus": 3
     },
-    "Use4": {
-      "action": "Use",
+    "Per4Use": {
+      "action": "PerUse",
       "bonus": 4
     },
-    "Use5": {
-      "action": "Use",
+    "Per5Use": {
+      "action": "PerUse",
       "bonus": 5
     },
-    "Use6": {
-      "action": "Use",
+    "Per6Use": {
+      "action": "PerUse",
       "bonus": 6
     }
   },

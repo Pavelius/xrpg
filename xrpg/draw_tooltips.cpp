@@ -8,9 +8,11 @@ static char				tooltips_text[4096];
 static int				px, py, pw;
 bool					tooltips_use_idle = true;
 fnevent					tooltips_custom;
+fnevent					tooltips_overlap;
 stringbuilder			tooltips_sb(tooltips_text);
 
 HANDLER(before_modal) {
+	tooltips_overlap = 0;
 	tooltips_sb.clear();
 	px = py = -1000;
 	pw = 0;

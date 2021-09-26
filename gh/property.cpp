@@ -61,6 +61,18 @@ BSMETA(playeri) = {
 	BSREQ(health),
 	{}};
 BSDATAD(playeri)
+BSMETA(summoni) = {
+	BSREQ(id),
+	BSREQ(hits), BSREQ(move), BSREQ(attack), BSREQ(range),
+	BSREQ(feats),
+	{}};
+BSDATAD(summoni)
+BSMETA(trapi) = {
+	BSREQ(id),
+	BSREQ(damage),
+	BSREQ(feats),
+	{}};
+BSDATAD(trapi)
 BSMETA(statei) = {
 	BSREQ(id),
 	{}};
@@ -81,6 +93,8 @@ BSDATA(varianti) = {
 	{"Menu", VRSTD(menui)},
 	{"Player", VRSTD(playeri)},
 	{"State", VRSTD(statei)},
+	{"SummonedCreature", VRSTD(summoni)},
+	{"Trap", VRSTD(trapi)},
 	{"Type", VRSTD(varianti)},
 };
 assert_enum(varianti, Type)

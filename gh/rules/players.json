@@ -7,18 +7,35 @@
       "health": [ 8, 9, 11, 12, 14, 15, 17, 18, 20 ]
     }
   },
+  "SummonedCreature": {
+    "Decoy": {
+      "hits": 6,
+      "move": 2
+    }
+  },
+  "Trap": {
+    "TrapPoisonDamage2": {
+      "damage": 2,
+      "feats": [ "Poison" ]
+    },
+    "TrapDamage6": {
+      "damage": 6,
+      "feats": [ "Exp2" ]
+    }
+  },
   "Card": {
     "WardingStrenght": {
       "level": 1,
       "owner": "Brute",
+      "initiative": 32,
       "upper": [ "Attack3", "Push2" ],
-      "lower": [ "PerUse", "Shield1", "Use6", "Discard" ]
+      "lower": [ "Per6Use", "Shield1", "Discard" ]
     },
     "EyeForAnEye": {
       "level": 1,
       "owner": "Brute",
       "initiative": 18,
-      "upper": [ "Retaliate2", "GainExpForRetaliate", "Round" ],
+      "upper": [ "Round", "Retaliate2", "GainExpForRetaliate" ],
       "lower": [ "Heal2", "Range1", "Earth" ]
     },
     "ProvokingRoar": {
@@ -26,7 +43,7 @@
       "owner": "Brute",
       "initiative": 10,
       "upper": [ "Attack2", "Disarm" ],
-      "lower": [ "EnemyAttackYouInsteadNearestAlly", "Round" ]
+      "lower": [ "Round", "EnemyAttackYouInsteadNearestAlly" ]
     },
     "GrabAndGo": {
       "level": 1,
@@ -47,7 +64,7 @@
       "owner": "Brute",
       "initiative": 15,
       "upper": [ "Attack4", "Stun", "Exp2", "Discard" ],
-      "lower": [ "Shield1", "Round" ]
+      "lower": [ "Round", "Shield1" ]
     },
     "SweepingBlow": {
       "level": 1,
@@ -95,14 +112,14 @@
       "level": 0,
       "owner": "Brute",
       "initiative": 20,
-      "upper": [ "Retaliate2", "Shield2", "Exp2", "Round", "Discard" ],
-      "lower": [ "Attack1", "Round" ]
+      "upper": [ "Round", "Retaliate2", "Shield2", "Exp2", "Discard" ],
+      "lower": [ "Round", "Attack1" ]
     },
     "StunShoot": {
       "level": 1,
       "owner": "Thinkerer",
       "initiative": 20,
-      "upper": [ "Attack1", "Range3", "Wound", "Stun" ],
+      "upper": [ "Attack1", "Range3", "Stun" ],
       "lower": [ "Move4" ]
     },
     "ToxicBolt": {
@@ -111,6 +128,76 @@
       "initiative": 18,
       "upper": [ "Attack2", "Range3", "Poison", "Earth" ],
       "lower": [ "Attack5", "Range2", "Exp2", "Discard" ]
+    },
+    "PotentPotables": {
+      "level": 0,
+      "owner": "Thinkerer",
+      "initiative": 46,
+      "upper": [ "Per4Use", "Heal2", "Discard" ],
+      "lower": [ "Move3" ]
+    },
+    "ReinvigoratingElexir": {
+      "level": 1,
+      "owner": "Thinkerer",
+      "initiative": 37,
+      "upper": [ "Heal3", "Range3" ],
+      "lower": [ "RecoverDiscardedAll", "Range1", "Exp2", "Discard" ]
+    },
+    "HarmlessContraption": {
+      "level": 1,
+      "owner": "Thinkerer",
+      "initiative": 74,
+      "upper": [ "Decoy", "Exp2", "Discard" ],
+      "lower": [ "Heal2", "Range3" ]
+    },
+    "VolatileConcoction": {
+      "level": 1,
+      "owner": "Thinkerer",
+      "initiative": 76,
+      "upper": [ "TrapPoisonDamage2", "Range1" ],
+      "lower": [ "RecoverDiscarded1", "Range2", "UseIce", "RecoverDiscarded1" ]
+    },
+    "RevivingShock": {
+      "level": 1,
+      "owner": "Thinkerer",
+      "initiative": 34,
+      "upper": [ "Attack2", "Range3", "Target2" ],
+      "lower": [ "Heal5", "Range2", "Exp2", "Discard" ]
+    },
+    "ProximityMine": {
+      "level": 1,
+      "owner": "Thinkerer",
+      "initiative": 62,
+      "upper": [ "TrapDamage6", "Discard" ],
+      "lower": [ "Move4" ]
+    },
+    "HookGun": {
+      "level": 1,
+      "owner": "Thinkerer",
+      "initiative": 72,
+      "upper": [ "Attack2", "Range3", "Pull2" ],
+      "lower": [ "Loot2", "Exp1", "Discard" ]
+    },
+    "InkBomb": {
+      "level": 1,
+      "owner": "Thinkerer",
+      "initiative": 75,
+      "upper": [ "Attack4", "Range3", "Splash3", "GainExpForTarget", "Dark", "Discard" ],
+      "lower": [ "Move4" ]
+    },
+    "EnchancementField": {
+      "level": 1,
+      "owner": "Thinkerer",
+      "initiative": 75,
+      "upper": [ "Attack3", "Range3" ],
+      "lower": [ "Round", "Attack1", "Range1" ]
+    },
+    "RestorativeMist": {
+      "level": 1,
+      "owner": "Thinkerer",
+      "initiative": 75,
+      "upper": [ "Heal3", "Range3" ],
+      "lower": [ "Round", "Attack1", "Range1" ]
     }
   }
 }

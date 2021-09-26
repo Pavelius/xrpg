@@ -9,10 +9,6 @@
 enum duration_s : unsigned char {
 	Instant, Round, PerUse, Infinite,
 };
-enum condition_s : unsigned char {
-	AllyNearTarget, NoAllyNearTarget, EnemyNearTarget,
-	YouIsInvisible,
-};
 enum card_s : unsigned char {
 	StandartCard, Discard, Exhause,
 };
@@ -20,8 +16,8 @@ enum area_s : unsigned char {
 	NoArea, Slash, Circle, Ray, Splash, Spray,
 };
 enum feat_s : unsigned char {
-	EnemyAttackYouInsteadNearestAlly, GainExpForRetaliate,
-	TargetAllAdjancedEnemies, TargetEnemyMoveThrought,
+	EnemyAttackYouInsteadNearestAlly, GainExpForRetaliate, GainExpForTarget,
+	TargetAllAlly, TargetAllAdjancedEnemies, TargetEnemyMoveThrought,
 	Jump, Fly,
 };
 enum statistic_s : unsigned char {
@@ -30,10 +26,10 @@ enum statistic_s : unsigned char {
 };
 enum action_s : unsigned char {
 	Shield, Retaliate, Evasion,
-	Move, Attack, Push, Pull, Heal, DisarmTrap, SetTrap, Summon, Loot,
+	Move, Attack, Push, Pull, Heal, DisarmTrap, Loot,
 	Range, Target, Pierce,
-	Bless, Curse,
-	Experience, Level, Use,
+	Bless, Curse, RecovedDiscarded,
+	Experience, Level
 };
 enum action_bonus_s : char {
 	InfiniteCount = 100, MovedCount, AttackedCount, ShieldCount,
@@ -50,7 +46,7 @@ enum fraction_s : unsigned char {
 enum variant_s : unsigned char {
 	NoVariant,
 	Action, ActionBonus, Area, Card, CardType, Duration, Element, Feat, Menu, Player, State,
-	Type
+	SummonedCreature, Trap, Type
 };
 typedef flagable<2> statef;
 typedef flagable<1> elementf;
@@ -97,10 +93,20 @@ struct statei {
 };
 class statable {
 	statef				states;
-	char				actions[Use + 1];
+	char				actions[Level + 1];
 public:
 	int					get(variant v) const;
 	void				set(variant i, int v);
+};
+struct trapi {
+	const char*			id;
+	char				damage;
+	variants			feats;
+};
+struct summoni {
+	const char*			id;
+	char				hits, move, attack, range;
+	variants			feats;
 };
 class creature : public posable, public statable {
 	statable			basic;
