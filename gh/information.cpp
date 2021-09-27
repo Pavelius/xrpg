@@ -4,24 +4,17 @@ static void addh(stringbuilder& sb, const char* title) {
 	sb.addn("##%1", title);
 }
 
-static bool ismainaction(variant v) {
-	switch(v.type) {
-	case Action:
-		return bsdata<actioni>::get(v.value).ismain();
-	case ActionBonus:
-		return ismainaction(bsdata<actionbonusi>::get(v.value).action);
-	case Feat:
-		switch(v.value) {
-		case EnemyAttackYouInsteadNearestAlly: return true;
-		default: return false;
-		}
-	case SummonedCreature: case Trap: return true;
-	default: return false;
+static variant getduration(const variants& source) {
+	for(auto v : source) {
+		auto a = statable::getaction(v);
+		if(a.type == Duration)
+			return v;
 	}
+	return variant();
 }
 
 static void addpart(stringbuilder& sb, const variants& source) {
-	auto auto_new_line = true;
+	int count = 0;
 	for(auto v : source) {
 		auto action = statable::getaction(v);
 		auto bonus = statable::getbonus(v);
@@ -29,12 +22,13 @@ static void addpart(stringbuilder& sb, const variants& source) {
 			sb.addn("* ");
 			sb.add(action.getname(), bonus);
 			sb.add(": ");
-			auto_new_line = false;
+			count = -1;
 			continue;
-		} else if(ismainaction(action)) {
-			if(auto_new_line)
-				sb.addn("* ");
-		} else
+		} else if(count < 0)
+			count = 0;
+		else if(!count)
+			sb.addn("* ");
+		else
 			sb.add(", ");
 		if(bonus)
 			sb.add("%1 %2i", action.getname(), bonus);
@@ -42,7 +36,7 @@ static void addpart(stringbuilder& sb, const variants& source) {
 			sb.add("%Summon %1", action.getname());
 		else
 			sb.add(action.getname());
-		auto_new_line = true;
+		count++;
 	}
 }
 

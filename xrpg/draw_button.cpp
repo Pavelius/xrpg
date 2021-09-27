@@ -7,8 +7,6 @@
 
 using namespace draw;
 
-int metrics::padding = 4;
-
 long draw::getsource(void* source, int size) {
 	if(size == sizeof(char))
 		return *((char*)source);

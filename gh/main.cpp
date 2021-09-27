@@ -21,11 +21,11 @@ static variant choose_cards(variant player, int level) {
 			continue;
 		collection.add(&e);
 	}
-	return collection.choose("Test", "Cancel", true, 0);
+	return collection.choose(player.getname(), "Cancel", true, 0);
 }
 
 void start_menu() {
-	choose_cards("Thinkerer", 1);
+	choose_cards("Brute", 1);
 	//menui::choose("Start", 0, 0);
 }
 

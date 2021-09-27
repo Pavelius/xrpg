@@ -18,7 +18,7 @@ enum area_s : unsigned char {
 enum feat_s : unsigned char {
 	EnemyAttackYouInsteadNearestAlly, GainExpForRetaliate, GainExpForTarget,
 	TargetAllAlly, TargetAllAdjancedEnemies, TargetEnemyMoveThrought,
-	Jump, Fly,
+	Jump, Fly, NextAction,
 };
 enum statistic_s : unsigned char {
 	Moved, Attacked, Coins,
@@ -51,10 +51,8 @@ enum variant_s : unsigned char {
 enum game_propery_s : unsigned char {
 	Reputation, Prosperty, Donate,
 };
-enum modifier_s : unsigned char {
-    MainAction, Modifier, ModifierOrMainAction
-};
 typedef flagable<2> statef;
+typedef flagable<1 + NextAction / 8> featf;
 typedef flagable<1> elementf;
 typedef flagable<4>	playerf;
 struct deck : varianta {
@@ -63,8 +61,6 @@ struct deck : varianta {
 };
 struct actioni {
 	const char*			id;
-	modifier_s			type;
-	bool				ismain() const;
 };
 struct areai {
 	const char*			id;
@@ -115,10 +111,13 @@ struct statei {
 };
 class statable {
 	statef				states;
+	featf				feats;
 	char				actions[Level + 1];
 public:
+	void				apply(const variants& source);
 	void				damage(int value);
 	int					get(variant v) const;
+	statef				getstates() const { return states; }
 	static variant		getaction(variant v);
 	static int			getbonus(variant v);
 	const variant*      parse(const variant* p, const variant* pe);
@@ -145,6 +144,12 @@ struct monsteri {
 };
 class creature : public statable {
 	variant				kind;
+	void				apply(variant v, int bonus);
+	void				attack(int damage, int range, int pierce, statef states);
+	void				heal(int v);
+	void				move(int v);
+	void				pull(int range);
+	void				push(int range);
 	deck&				getcombatdeck() const;
 };
 struct gamei {
@@ -161,3 +166,5 @@ struct gamei {
 	void				set(variant i, int v);
 };
 extern gamei			game;
+VKIND(action_s, Action)
+VKIND(feat_s, Feat)
