@@ -46,11 +46,18 @@ enum fraction_s : unsigned char {
 enum variant_s : unsigned char {
 	NoVariant,
 	Action, ActionBonus, Area, Card, CardType, CombatCard, Duration, Element, Feat,
-	Menu, Monster, Player, State, SummonedCreature, Trap, Type
+	GameProperty, Menu, Monster, Player, State, SummonedCreature, Trap, Type
+};
+enum game_propery_s : unsigned char {
+	Reputation, Prosperty, Donate,
 };
 typedef flagable<2> statef;
 typedef flagable<1> elementf;
-typedef varianta combatdeck;
+typedef flagable<4>	playerf;
+struct deck : varianta {
+	void				addcombat(variant owner);
+	void				shuffle();
+};
 struct actioni {
 	const char*			id;
 	int					type;
@@ -87,24 +94,31 @@ struct durationi {
 struct elementi {
 	const char*			id;
 };
+struct gamepropertyi {
+	const char*			id;
+};
 struct feati {
 	const char*			id;
 };
 struct playeri {
 	const char*			id;
 	short				health[10];
-	combatdeck			combat;
-	adat<variant, 32>	actions;
+	deck				combat, hand, active, discard, lost;
 	void				buildcombatdeck();
 };
 struct statei {
 	const char*			id;
+	bool				hostile;
 };
 class statable {
 	statef				states;
 	char				actions[Level + 1];
 public:
+	void				apply(variant v);
+	void				damage(int value);
 	int					get(variant v) const;
+	static variant		getaction(variant v);
+	static int			getbonus(variant v);
 	void				set(variant i, int v);
 };
 struct trapi {
@@ -126,8 +140,21 @@ struct monsteri {
 	const char*			combat;
 	abilityi			normal[8], elite[8];
 };
-class creature : public posable, public statable {
-	statable			basic;
+class creature : public statable {
 	variant				kind;
-	variant				owner;
+	deck&				getcombatdeck() const;
 };
+struct gamei {
+	short				ability[Donate + 1];
+	adat<variant, 4>	players;
+	playerf				allowed_players;
+	deck				market;
+	deck				road, city;
+	deck				enemy_combat;
+	void				add(variant i, int v = 1);
+	void				buildcombatdeck();
+	bool				isallow(variant v) const;
+	int					get(variant i) const;
+	void				set(variant i, int v);
+};
+extern gamei			game;

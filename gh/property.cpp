@@ -83,6 +83,9 @@ BSMETA(abilityi) = {
 	BSREQ(hits), BSREQ(move), BSREQ(attack), BSREQ(range),
 	BSREQ(feats),
 	{}};
+BSMETA(gamepropertyi) = {
+	BSREQ(id),
+	{}};
 BSMETA(monsteri) = {
 	BSREQ(id),
 	BSREQ(normal), BSREQ(elite),
@@ -106,6 +109,7 @@ BSDATA(varianti) = {
 	{"Duration", VRSTD(durationi)},
 	{"Element", VRSTD(elementi)},
 	{"Feat", VRSTD(feati)},
+	{"GameProperty", VRSTD(gamepropertyi)},
 	{"Menu", VRSTD(menui)},
 	{"Monster", VRSTD(monsteri)},
 	{"Player", VRSTD(playeri)},

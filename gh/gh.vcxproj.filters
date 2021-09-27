@@ -37,6 +37,18 @@
     <ClCompile Include="player.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="gameproperty.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="creature.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="deck.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Logic">

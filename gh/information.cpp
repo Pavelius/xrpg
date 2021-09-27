@@ -20,26 +20,12 @@ static bool ismainaction(variant v) {
 	}
 }
 
-static int getbonus(variant v) {
-	switch(v.type) {
-	case ActionBonus: return bsdata<actionbonusi>::get(v.value).bonus;
-	default: return 0;
-	}
-}
-
-static variant getaction(variant v) {
-	switch(v.type) {
-	case ActionBonus: return bsdata<actionbonusi>::get(v.value).action;
-	default: return v;
-	}
-}
-
 static void addpart(stringbuilder& sb, const variants& source) {
 	auto auto_new_line = true;
 	auto ability_count = 0;
 	for(auto v : source) {
-		auto action = getaction(v);
-		auto bonus = getbonus(v);
+		auto action = statable::getaction(v);
+		auto bonus = statable::getbonus(v);
 		if(action.type==Duration) {
 			sb.addn("* ");
 			sb.add(action.getname(), bonus);

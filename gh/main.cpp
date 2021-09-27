@@ -32,6 +32,7 @@ void start_menu() {
 static bool test_players() {
 	auto p = (playeri*)bsdata<playeri>::source.ptr(0);
 	p->buildcombatdeck();
+	game.buildcombatdeck();
 	return p->health[0] != 0;
 }
 

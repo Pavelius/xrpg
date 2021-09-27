@@ -151,9 +151,13 @@
     <ClCompile Include="action.cpp" />
     <ClCompile Include="area.cpp" />
     <ClCompile Include="cardtype.cpp" />
+    <ClCompile Include="creature.cpp" />
+    <ClCompile Include="deck.cpp" />
     <ClCompile Include="duration.cpp" />
     <ClCompile Include="element.cpp" />
     <ClCompile Include="feat.cpp" />
+    <ClCompile Include="game.cpp" />
+    <ClCompile Include="gameproperty.cpp" />
     <ClCompile Include="information.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player.cpp" />
