@@ -30,15 +30,32 @@ void statable::set(variant i, int v) {
 	}
 }
 
-void statable::apply(variant v) {
-	auto a = getaction(v);
-	auto b = getbonus(v);
-	switch(v.type) {
-	case State:
-		if(!b)
-			b = 1;
-		break;
-    default: break;
-	}
-	set(a, get(a) + b);
+static modifier_s getmodifier(variant v) {
+    switch(v.type) {
+    case Action: return bsdata<actioni>::get(v.value).type;
+    case Area: return Modifier;
+    case Duration: return Modifier;
+    default: return MainAction;
+    }
+}
+
+const variant* statable::parse(const variant* p, const variant* pe) {
+    variant main_action, area, duration;
+    for(;p < pe; p++) {
+        auto a = getaction(*p);
+        switch(a.type) {
+        case Duration:
+            duration = *p;
+            continue;
+        case Area:
+            area = *p;
+            continue;
+        default:
+            break;
+        }
+        if(main_action)
+            break;
+        auto b = getbonus(*p);
+    }
+    return p;
 }

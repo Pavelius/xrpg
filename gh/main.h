@@ -51,6 +51,9 @@ enum variant_s : unsigned char {
 enum game_propery_s : unsigned char {
 	Reputation, Prosperty, Donate,
 };
+enum modifier_s : unsigned char {
+    MainAction, Modifier, ModifierOrMainAction
+};
 typedef flagable<2> statef;
 typedef flagable<1> elementf;
 typedef flagable<4>	playerf;
@@ -60,7 +63,7 @@ struct deck : varianta {
 };
 struct actioni {
 	const char*			id;
-	int					type;
+	modifier_s			type;
 	bool				ismain() const;
 };
 struct areai {
@@ -114,11 +117,11 @@ class statable {
 	statef				states;
 	char				actions[Level + 1];
 public:
-	void				apply(variant v);
 	void				damage(int value);
 	int					get(variant v) const;
 	static variant		getaction(variant v);
 	static int			getbonus(variant v);
+	const variant*      parse(const variant* p, const variant* pe);
 	void				set(variant i, int v);
 };
 struct trapi {

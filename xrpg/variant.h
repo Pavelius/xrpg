@@ -3,7 +3,7 @@
 
 #pragma once
 
-#define VKIND(T, V) template<> static constexpr variant_s variant::kind<T>() { return V; }
+#define VKIND(T, V) template<> constexpr variant_s variant::kind<T>() { return V; }
 
 enum variant_s : unsigned char;
 struct bsreq;

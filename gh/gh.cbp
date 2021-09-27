@@ -119,6 +119,9 @@
 		<Unit filename="main.h" />
 		<Unit filename="player.cpp" />
 		<Unit filename="property.cpp" />
+		<Unit filename="rules/core.json" />
+		<Unit filename="rules/monsters.json" />
+		<Unit filename="rules/players.json" />
 		<Unit filename="statable.cpp" />
 		<Unit filename="state.cpp" />
 		<Extensions>

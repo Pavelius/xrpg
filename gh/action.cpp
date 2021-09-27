@@ -1,9 +1,5 @@
 #include "main.h"
 
-enum action_kind_s {
-	SupportAction, MainAction,
-};
-
 bool actioni::ismain() const {
 	return type == MainAction;
 }
@@ -11,7 +7,7 @@ bool actioni::ismain() const {
 BSDATA(actioni) = {
 	{"Shield", MainAction},
 	{"Retaliate", MainAction},
-	{"Evasion"},
+	{"Evasion", MainAction},
 	{"Move", MainAction},
 	{"Attack", MainAction},
 	{"Push", MainAction},
@@ -19,13 +15,13 @@ BSDATA(actioni) = {
 	{"Heal", MainAction},
 	{"DisarmTrap", MainAction},
 	{"Loot", MainAction},
-	{"Range"},
-	{"Target"},
-	{"Pierce"},
+	{"Range", Modifier},
+	{"Target", Modifier},
+	{"Pierce", Modifier},
 	{"Bless", MainAction},
 	{"Curse", MainAction},
 	{"RecoverDiscarded", MainAction},
-	{"Experience"},
-	{"Level"},
+	{"Experience", Modifier},
+	{"Level", Modifier},
 };
 assert_enum(actioni, Level)
