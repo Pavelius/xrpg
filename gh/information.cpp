@@ -22,7 +22,6 @@ static bool ismainaction(variant v) {
 
 static void addpart(stringbuilder& sb, const variants& source) {
 	auto auto_new_line = true;
-	auto ability_count = 0;
 	for(auto v : source) {
 		auto action = statable::getaction(v);
 		auto bonus = statable::getbonus(v);
@@ -60,5 +59,6 @@ void cardi::getinfo(stringbuilder& sb) const {
 void variant::getinfo(stringbuilder& sb) const {
 	switch(type) {
 	case Card: bsdata<cardi>::get(value).getinfo(sb); break;
+	default: break;
 	}
 }

@@ -149,7 +149,7 @@ static void update_ui_window() {
 
 static int mousekey(int k, bool dbl = false) {
     switch(k) {
-    case Button1: return dbl?MouseLeftDBL:MouseLeft;
+    case Button1: return dbl ? MouseLeftDBL : MouseLeft;
     case Button3: return MouseRight;
     case Button4: return MouseWheelUp;
     case Button5: return MouseWheelDown;
@@ -251,4 +251,6 @@ void draw::settimer(unsigned milleseconds) {
 }
 
 void draw::getwindowpos(point& pos, point& size, unsigned* flags){
+    if(flags)
+        *flags = WFResize;
 }

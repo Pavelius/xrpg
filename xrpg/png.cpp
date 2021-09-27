@@ -408,7 +408,7 @@ static struct png_bitmap_plugin : public draw::surface::plugin {
 	png_bitmap_plugin() : plugin("png", "PNG images\0*.png\0") {}
 
 	bool decode(unsigned char* output, int output_bpp, const unsigned char* input, unsigned input_size) override {
-		int image_width, image_height, input_bpp, image_size;
+		int image_width, image_height, input_bpp;
 		if(!output)
 			return false;
 		if(!inspect(image_width, image_height, input_bpp, input, input_size))
@@ -426,7 +426,7 @@ static struct png_bitmap_plugin : public draw::surface::plugin {
 			return false;
 		// decompress image data
 		// try to optimize input if only one 'idat' section
-		image_size = image_width * image_height*(bpp / 8);
+		//image_size = image_width * image_height*(bpp / 8);
 		if(single_input) {
 			if(!decode_zip(output, single_input, size_compressed))
 				return false;

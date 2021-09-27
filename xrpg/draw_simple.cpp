@@ -14,6 +14,7 @@ static rect				board;
 static const void*		current_hilite;
 
 namespace metrics {
+int                     padding = 4;
 int						border = 4;
 unsigned char			opacity = 186;
 unsigned char			opacity_hilighted = 210;

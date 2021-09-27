@@ -9,7 +9,9 @@ void gamei::add(variant i, int v) {
 int gamei::get(variant i) const {
 	switch(i.type) {
 	case GameProperty:
-		return maptbl(ability, i.value);
+        if(i.value<sizeof(ability)/sizeof(ability[0]))
+            return ability[i.value];
+        return 0;
 	default:
 		return 0;
 	}
@@ -30,6 +32,8 @@ void gamei::set(variant i, int v) {
 		if(i.value<sizeof(ability)/ sizeof(ability[0]))
 			ability[i.value] = v;
 		break;
+    default:
+        break;
 	}
 }
 

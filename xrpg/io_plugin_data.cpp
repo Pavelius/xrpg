@@ -84,6 +84,7 @@ bool readf(const char* url) {
 					e.object = findobject((varianti*)e.parent->object, e.name);
 				break;
 			default:
+				//e.metadata = getmeta(e)->find(e.name);
 				break;
 			}
 		}

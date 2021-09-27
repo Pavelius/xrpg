@@ -26,6 +26,7 @@ void statable::set(variant i, int v) {
 	switch(i.type) {
 	case Action: actions[i.value] = v; break;
 	case State: states.set(i.value); break;
+	default: break;
 	}
 }
 
@@ -37,6 +38,7 @@ void statable::apply(variant v) {
 		if(!b)
 			b = 1;
 		break;
+    default: break;
 	}
 	set(a, get(a) + b);
 }
