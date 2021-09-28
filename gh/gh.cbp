@@ -8,7 +8,7 @@
 		<Build>
 			<Target title="Debug">
 				<Option platforms="Unix;" />
-				<Option output="bin/debug/gh" prefix_auto="1" extension_auto="1" />
+				<Option output="gh_debug" prefix_auto="1" extension_auto="1" />
 				<Option object_output="../../objects/debug/gh" />
 				<Option type="0" />
 				<Option compiler="gcc" />
