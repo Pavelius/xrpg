@@ -25,11 +25,8 @@ static variant choose_cards(variant player, int level) {
 }
 
 void start_menu() {
-    creature test = {};
-    test.setkind("Brute");
-    test.act("%name has got [%1i] damage.", 1, 2, 3);
 	choose_cards("Brute", 1);
-	//menui::choose("Start", 0, 0);
+	menui::choose("Start", 0, 0);
 }
 
 static bool test_players() {
@@ -56,7 +53,7 @@ int main() {
 		return - 1;
 	//util_main();
 	draw::initialize("GH simulator");
-    draw::pausetime = 2000;
+    draw::pausetime = 1000;
 	draw::scene.resurl = "gloomhaven";
 	draw::setnext(start_menu);
 	draw::start();

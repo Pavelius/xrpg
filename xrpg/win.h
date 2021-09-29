@@ -848,6 +848,13 @@ struct TEXTMETRICA
 	BYTE tmPitchAndFamily;
 	BYTE tmCharSet;
 };
+union LARGE_INTEGER {
+	struct {
+		DWORD	LowPart;
+		LONG	HighPart;
+	} u;
+	long long	QuadPart;
+};
 
 DLL int WINAPI				AdjustWindowRectEx(RECT*, unsigned, int, unsigned);
 DLL int WINAPI				AppendMenuA(void*, UINT, unsigned, const char*);
@@ -859,6 +866,7 @@ DLL int WINAPI				CloseHandle(void* hObject);
 WINGDIAPI void* WINAPI		CreateCompatibleDC(void*);
 DLL int WINAPI				CreateDirectoryA(const char* lpPathName, void* lpSecurityAttributes);
 DLL void* WINAPI			CreateFileA(const char* lpFileName, unsigned dwDesiredAccess, unsigned dwShareMode, void* lpSecurityAttributes, unsigned dwCreationDisposition, unsigned dwFlagsAndAttributes, void* hTemplateFile);
+DLL void* WINAPI			CreateWaitableTimerW(void* lpTimerAttributes, int bManualReset, const wchar_t* lpTimerName);
 DLL int WINAPI				GetFullPathNameA(const char* lpFileName, unsigned nBufferLength, char* lpBuffer, char** lpFilePart);
 WINGDIAPI void*	WINAPI		CreateFontA(int, int, int, int, int, DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, const char*);
 WINGDIAPI void*	WINAPI		CreateFontW(int, int, int, int, int, DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, const wchar_t*);
@@ -964,6 +972,7 @@ DLL void* WINAPI			SetFocus(void*);
 DLL int WINAPI				SetForegroundWindow(void*);
 DLL int WINAPI				SetPixelFormat(void*, int, const PIXELFORMATDESCRIPTOR*);
 DLL UINT WINAPI				SetTimer(HWND, UINT, UINT, TIMERPROC);
+DLL int WINAPI				SetWaitableTimer(void* hTimer, const LARGE_INTEGER *lpDueTime, LONG lPeriod, void* pfnCompletionRoutine, void* lpArgToCompletionRoutine, int fResume);
 DLL int WINAPI				SetWindowTextA(HWND, const char*);
 DLL LRESULT WINAPI			SendMessageA(void*, UINT, int, int);
 DLL void WINAPI				Sleep(unsigned dwMilliseconds);

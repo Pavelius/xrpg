@@ -1,4 +1,6 @@
 ﻿About: О программе
+ActDamage: %name получил%а %1i урона.
+ActKilled: %name убит%а.
 Air: Воздух
 Attack: Атака
 Back: Назад

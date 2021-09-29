@@ -101,6 +101,7 @@ struct feati {
 };
 struct playeri {
 	const char*			id;
+	gender_s			gender;
 	short				health[10];
 	deck				combat, hand, active, discard, lost;
 	void				buildcombatdeck();
@@ -109,15 +110,17 @@ struct statei {
 	const char*			id;
 	bool				hostile;
 };
-struct statable {
+struct summary {
 	char				actions[Level + 1];
 	statef				states;
+	elementf			elements;
 	featf				feats;
 	duration_s          duration;
 	char                duration_bonus;
 	area_s              area;
 	char                area_bonus;
 	void				apply(variant v);
+	void				apply(const variants& source);
 	int					get(variant v) const;
 	static variant		getaction(variant v);
 	static int			getbonus(variant v);
@@ -142,21 +145,26 @@ struct monsteri {
 	const char*			combat;
 	abilityi			normal[8], elite[8];
 };
-class creature : public posable {
+struct nameable {
 	variant				kind;
+	void                act(const char* format, ...) const;
+	gender_s			getgender() const;
+	const char*         getname() const { return kind.getname(); }
+};
+class object : public posable, public nameable {
 	short               hits;
 	statef              states;
 public:
     constexpr operator bool() const { return hits!=0; }
-	void                act(const char* format, ...) const;
+	void				addmodifier(summary& modifiers) const;
 	void				apply(variant v, int bonus);
 	void				attack(int damage, int range, int pierce, statef additional);
-	void                attack(creature& enemy, int damage, int pierce, statef additional);
+	void                attack(object& enemy, const summary& modifiers);
 	void                clear();
+	void				create(variant v);
     void				damage(int value);
 	int                 get(variant v) const;
-	int                 getmaximumhits() const { return 0; }
-	const char*         getname() const { return kind.getname(); }
+	int                 getmaximumhits() const;
 	void				heal(int v);
 	bool                is(state_s v) const { return states.is(v); }
 	bool                isinteractive() const { return true; }
@@ -169,6 +177,12 @@ public:
 	void                set(variant i, int v);
 	void                setkind(variant v) { kind = v; }
 	deck&				getcombatdeck() const;
+};
+struct activity {
+	variant				owner;
+	variant				source;
+	variants			effect;
+	duration_s			duration;
 };
 struct gamei {
 	short				ability[Donate + 1];

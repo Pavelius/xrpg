@@ -251,8 +251,8 @@ void list::paint() const {
 			break;
 		case InputSymbol:
 			if(hot.key >= 0x20) {
-				auto time_clock = clock();
-				if(!search_time || (time_clock - search_time) > 1500)
+				auto time_clock = getcputime();
+				if(!search_time || (time_clock - search_time) > 150)
 					search_sb.clear();
 				search_time = time_clock;
 				search_sb.addsym(hot.param);

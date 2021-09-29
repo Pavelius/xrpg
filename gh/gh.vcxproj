@@ -150,9 +150,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="action.cpp" />
+    <ClCompile Include="activity.cpp" />
     <ClCompile Include="area.cpp" />
     <ClCompile Include="cardtype.cpp" />
-    <ClCompile Include="creature.cpp" />
+    <ClCompile Include="nameable.cpp" />
+    <ClCompile Include="object.cpp" />
     <ClCompile Include="deck.cpp" />
     <ClCompile Include="duration.cpp" />
     <ClCompile Include="element.cpp" />
@@ -165,7 +167,7 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="property.cpp" />
     <ClCompile Include="sprite_util.cpp" />
-    <ClCompile Include="statable.cpp" />
+    <ClCompile Include="summary.cpp" />
     <ClCompile Include="state.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -1,20 +1,20 @@
 #include "main.h"
 
-int statable::getbonus(variant v) {
+int summary::getbonus(variant v) {
 	switch(v.type) {
 	case ActionBonus: return bsdata<actionbonusi>::get(v.value).bonus;
 	default: return 0;
 	}
 }
 
-variant statable::getaction(variant v) {
+variant summary::getaction(variant v) {
 	switch(v.type) {
 	case ActionBonus: return bsdata<actionbonusi>::get(v.value).action;
 	default: return v;
 	}
 }
 
-int statable::get(variant i) const {
+int summary::get(variant i) const {
 	switch(i.type) {
 	case Action: return actions[i.value];
 	case State: return states.is(i.value) ? 1 : 0;
@@ -23,7 +23,7 @@ int statable::get(variant i) const {
 	}
 }
 
-void statable::set(variant i, int v) {
+void summary::set(variant i, int v) {
 	switch(i.type) {
 	case Action: actions[i.value] = v; break;
 	case Feat: feats.set(i.value, v != 0); break;
@@ -32,7 +32,7 @@ void statable::set(variant i, int v) {
 	}
 }
 
-void statable::apply(variant v) {
+void summary::apply(variant v) {
 	auto a = getaction(v);
 	auto b = getbonus(v);
 	switch(a.type) {
@@ -44,10 +44,18 @@ void statable::apply(variant v) {
 		area = (area_s)a.value;
 		area_bonus = b;
 		break;
+	case Feat:
+		break;
 	default:
         if(!b)
             b = 1;
         set(v, get(v) + b);
 		break;
     }
+}
+
+void summary::apply(const variants& source) {
+	for(auto v : source) {
+
+	}
 }

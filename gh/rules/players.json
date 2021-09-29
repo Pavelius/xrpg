@@ -1,9 +1,11 @@
 {
   "Player": {
     "Brute": {
+      "gender" : "Male",
       "health": [ 10, 12, 14, 16, 18, 20, 22, 24, 26 ]
     },
     "Thinkerer": {
+      "gender": "Male",
       "health": [ 8, 9, 11, 12, 14, 15, 17, 18, 20 ]
     }
   },

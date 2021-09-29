@@ -187,6 +187,7 @@
     <ClInclude Include="serializer.h" />
     <ClInclude Include="setting.h" />
     <ClInclude Include="string.h" />
+    <ClInclude Include="stringact.h" />
     <ClInclude Include="stringbuilder.h" />
     <ClInclude Include="tablecsv.h" />
     <ClInclude Include="variant.h" />
@@ -212,6 +213,7 @@
     <ClCompile Include="requisit.cpp" />
     <ClCompile Include="serializer.cpp" />
     <ClCompile Include="string.cpp" />
+    <ClCompile Include="stringact.cpp" />
     <ClCompile Include="tablecsv.cpp" />
     <ClCompile Include="widget_codetree.cpp" />
     <ClCompile Include="widget_codeview.cpp" />

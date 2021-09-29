@@ -64,6 +64,7 @@ BSMETA(genderi) = {
 	{}};
 BSMETA(playeri) = {
 	BSREQ(id),
+	BSREQ(gender),
 	BSREQ(health),
 	{}};
 BSDATAD(playeri)

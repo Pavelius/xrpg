@@ -6,7 +6,7 @@ static void addh(stringbuilder& sb, const char* title) {
 
 static variant getduration(const variants& source) {
 	for(auto v : source) {
-		auto a = statable::getaction(v);
+		auto a = summary::getaction(v);
 		if(a.type == Duration)
 			return v;
 	}
@@ -16,8 +16,8 @@ static variant getduration(const variants& source) {
 static void addpart(stringbuilder& sb, const variants& source) {
 	int count = 0;
 	for(auto v : source) {
-		auto action = statable::getaction(v);
-		auto bonus = statable::getbonus(v);
+		auto action = summary::getaction(v);
+		auto bonus = summary::getbonus(v);
 		if(action.type==Duration) {
 			sb.addn("* ");
 			sb.add(action.getname(), bonus);

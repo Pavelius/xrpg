@@ -27,7 +27,6 @@ typedef decltype(sizeof(0)) size_t;
 
 extern "C" int						atexit(void(*func)(void));
 extern "C" void*					bsearch(const void* key, const void* base, unsigned num, size_t size, int(*compar)(const void*, const void*));
-extern "C" unsigned			        clock(); // Returns the processor time consumed by the program.
 extern "C" void						exit(int exit_code);
 extern "C" int						memcmp(const void* p1, const void* p2, size_t size) noexcept(true);
 extern "C" void*					memmove(void* destination, const void* source, size_t size) noexcept(true);
@@ -39,6 +38,9 @@ extern "C" int						rand(void); // Get next random value
 extern "C" void						srand(unsigned seed); // Set random seed
 extern "C" int						strcmp(const char* s1, const char* s2) noexcept(true); // Compare two strings
 extern "C" long long				time(long long* seconds);
+
+unsigned long						getcputime();
+void								waitcputime(unsigned v);
 
 enum class codepages { No, W1251, UTF8, U16BE, U16LE };
 namespace metrics {
@@ -96,7 +98,7 @@ class slice {
 public:
 	constexpr slice() : data(0), count(0) {}
 	template<size_t N> constexpr slice(T(&v)[N]) : data(v), count(N) {}
-	template<int N> constexpr slice(adat<T,N>& v) : data(v), count(v.count) {}
+	template<int N> constexpr slice(adat<T, N>& v) : data(v), count(v.count) {}
 	constexpr slice(T* data, unsigned count) : data(data), count(count) {}
 	constexpr T*					begin() const { return data; }
 	constexpr T*					end() const { return data + count; }
@@ -176,7 +178,7 @@ template<typename T> struct bsdata {
 	static constexpr array*			source_ptr = &source;
 	static T*						add() { return (T*)source.add(); }
 	static T*						addz() { for(auto& e : bsdata<T>()) if(!e) return &e; return add(); }
-	static T&						get(int i) { return begin()[i]; }
+	static constexpr T&				get(int i) { return begin()[i]; }
 	static constexpr T*				begin() { return (T*)source.data; }
 	static constexpr T*				end() { return (T*)source.data + source.getcount(); }
 };

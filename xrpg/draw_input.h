@@ -15,6 +15,7 @@ void						buttoncancel();
 void						buttonok();
 void						cbsetint();
 void						cbsetptr();
+void						doredraw();
 int							getresult();
 bool						isnext();
 void						initialize(const char* title);

@@ -177,6 +177,9 @@
     <ClInclude Include="requisit.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="stringact.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -408,6 +411,9 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="requisit.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="stringact.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>

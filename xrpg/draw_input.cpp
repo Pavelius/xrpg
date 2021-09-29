@@ -25,6 +25,13 @@ static void standart_domodal() {
 	after_input->execute();
 }
 
+void draw::doredraw() {
+	before_input->execute();
+	draw::sysredraw();
+	after_input->execute();
+}
+
+
 bool draw::ismodal() {
 	hot.cursor = cursor::Arrow;
 	hot.hilite.clear();

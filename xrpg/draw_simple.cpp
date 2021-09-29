@@ -261,19 +261,20 @@ void draw::simpleui() {
 	}
 }
 
-static unsigned long getmillisecond(unsigned long start_time) {
-    return (clock() - start_time) / 250;
+static int getpassedtime(unsigned long start) {
+	return getcputime() - start;
 }
 
 void draw::status(const char* format, ...) {
-    if(!pausetime)
-        return;
-    auto start_time = clock();
-	while(ismodal() && getmillisecond(start_time) < pausetime) {
+	if(!pausetime)
+		return;
+	auto start_time = getcputime();
+	while(ismodal() && getpassedtime(start_time) < pausetime) {
 		if(scene.background)
 			scene.background();
-        tooltips_sb.addv(format, xva_start(format));
-		domodal();
+		tooltips_sb.addv(format, xva_start(format));
+		doredraw();
+		waitcputime(1);
 	}
 }
 
@@ -397,16 +398,23 @@ void set_dark_theme();
 extern fnevent tooltips_custom;
 extern bool tooltips_use_idle;
 
-static void custom_window() {
-	rect rc = hot.hilite;
-	rc = rc + metrics::padding;
-	swindow(hot.hilite, false, 0);
+void tooltips_getrect(rect& rc, int border);
+
+static void tooltips_render() {
+	// Show background
+	rect rc; tooltips_getrect(rc, metrics::padding);
+	swindow(rc, false, 0);
+	// Show text
+	auto push_fore = draw::fore;
+	draw::fore = colors::tips::text;
+	draw::textf(rc.x1, rc.y1, rc.width(), tooltips_sb.begin());
+	draw::fore = push_fore;
 }
 
 HANDLER(before_initialize) {
 	set_dark_theme();
 	if(!scene.background)
 		scene.background = paintall;
-	tooltips_custom = custom_window;
+	tooltips_custom = tooltips_render;
 	tooltips_use_idle = false;
 }

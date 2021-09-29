@@ -4,7 +4,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="statable.cpp">
+    <ClCompile Include="summary.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="property.cpp">
@@ -43,7 +43,7 @@
     <ClCompile Include="gameproperty.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="creature.cpp">
+    <ClCompile Include="object.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="deck.cpp">
@@ -54,6 +54,12 @@
     </ClCompile>
     <ClCompile Include="sprite_util.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="nameable.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="activity.cpp">
+      <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
