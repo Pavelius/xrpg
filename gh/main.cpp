@@ -1,8 +1,8 @@
 #include "bsreq.h"
 #include "main.h"
+#include "draw.h"
 #include "draw_input.h"
 #include "draw_simple.h"
-#include "tablecsv.h"
 
 bool readf(const char* url);
 void initialize_json();
@@ -25,6 +25,9 @@ static variant choose_cards(variant player, int level) {
 }
 
 void start_menu() {
+    creature test = {};
+    test.setkind("Brute");
+    test.act("%name has got [%1i] damage.", 1, 2, 3);
 	choose_cards("Brute", 1);
 	//menui::choose("Start", 0, 0);
 }
@@ -51,8 +54,9 @@ int main() {
 	//	return -1;
 	if(!test_players())
 		return - 1;
-	util_main();
+	//util_main();
 	draw::initialize("GH simulator");
+    draw::pausetime = 2000;
 	draw::scene.resurl = "gloomhaven";
 	draw::setnext(start_menu);
 	draw::start();

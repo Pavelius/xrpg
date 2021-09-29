@@ -14,10 +14,12 @@ struct scenei {
 	variant			hilite;
 	fnevent			background = 0;
 	fnevent			window = 0;
+	const char*     status = 0;
 };
 extern point		camera;
 extern point		caret;
 extern scenei		scene;
+extern int          pausetime;
 extern int			tab_pixels;
 extern int			width;
 void				answerbt(int index, long id, const char* title);
@@ -44,6 +46,7 @@ void				setpositionlu();
 void				setpositionld();
 void				sheader(const char* string);
 void				stext(const char* string);
+void                status(const char* format, ...);
 bool				window(bool hilite, const char* string, const char* resid);
 void				windows(const command* source);
 }

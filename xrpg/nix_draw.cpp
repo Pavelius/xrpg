@@ -2,6 +2,7 @@
 #include<X11/Xlib.h>
 #include<X11/Xutil.h>
 #include<X11/XKBlib.h>
+//#include<time.h>
 #include "crt.h"
 #include "draw.h"
 
@@ -12,6 +13,9 @@ static Display*     dpy;
 static GC           gc;
 static int          scr;
 static Window       rootwin;
+static unsigned long last_time;
+static unsigned     timer_interval;
+//static timespec   last_time;
 
 static int tokey(int vk) {
     switch(vk) {
@@ -101,6 +105,10 @@ const char* key2str(int key) {
 
 static void widget_cleanup() {
     XCloseDisplay(dpy);
+}
+
+void draw::settimer(unsigned v) {
+    timer_interval = v;
 }
 
 void draw::create(int x, int y, int width, int height, unsigned flags, int bpp) {
@@ -227,10 +235,24 @@ static bool handle(XEvent& e) {
 void draw::sysredraw() {
 }
 
+static unsigned get_time_delta() {
+    if(!timer_interval)
+        return 0;
+    if(!last_time)
+        last_time = clock();
+    auto cur = clock();
+    last_time = clock();
+    return (cur - last_time);
+}
+
 int draw::rawinput() {
     if(!hwnd)
         return 0;
     update_ui_window();
+    if(timer_interval && timer_interval>=get_time_delta()) {
+        hot.key = InputTimer;
+        return hot.key;
+    }
     while(true) {
         XEvent e;
         XNextEvent(dpy,&e);
@@ -245,9 +267,6 @@ int draw::rawinput() {
 
 void draw::setcaption(const char* format) {
     Xutf8SetWMProperties(dpy, hwnd, format, 0, 0, 0, 0, 0, 0);
-}
-
-void draw::settimer(unsigned milleseconds) {
 }
 
 void draw::getwindowpos(point& pos, point& size, unsigned* flags){

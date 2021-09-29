@@ -9,6 +9,7 @@ using namespace draw;
 
 scenei					draw::scene;
 point					draw::camera;
+int                     draw::pausetime;
 static point			camera_drag;
 static rect				board;
 static const void*		current_hilite;
@@ -256,6 +257,22 @@ void draw::simpleui() {
 		if(scene.window)
 			scene.window();
 		inputall();
+		domodal();
+	}
+}
+
+static unsigned long getmillisecond(unsigned long start_time) {
+    return (clock() - start_time) / 250;
+}
+
+void draw::status(const char* format, ...) {
+    if(!pausetime)
+        return;
+    auto start_time = clock();
+	while(ismodal() && getmillisecond(start_time) < pausetime) {
+		if(scene.background)
+			scene.background();
+        tooltips_sb.addv(format, xva_start(format));
 		domodal();
 	}
 }

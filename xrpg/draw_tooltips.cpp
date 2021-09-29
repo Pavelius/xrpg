@@ -8,23 +8,9 @@ static char				tooltips_text[4096];
 static int				px, py, pw;
 bool					tooltips_use_idle = true;
 fnevent					tooltips_custom;
-fnevent					tooltips_overlap;
 stringbuilder			tooltips_sb(tooltips_text);
 
-HANDLER(before_modal) {
-	tooltips_overlap = 0;
-	tooltips_sb.clear();
-	px = py = -1000;
-	pw = 0;
-}
-
-HANDLER(before_input) {
-	if(!tooltips_text[0])
-		return;
-	if(!draw::font)
-		return;
-	if(tooltips_use_idle && draw::hot.key != InputIdle)
-		return;
+void tooltips_getrect(rect& rc) {
 	// Calculate rect
 	auto x = px, y = py;
 	if(x == -1000 && y == -1000) {
@@ -39,7 +25,7 @@ HANDLER(before_input) {
 	auto w = pw;
 	if(!w)
 		w = 300;
-	rect rc = {x, y, x + w, y};
+	rc = {x, y, x + w, y};
 	draw::textf(rc, tooltips_text);
 	rc = rc - metrics::padding;
 	// Correct border
@@ -49,20 +35,40 @@ HANDLER(before_input) {
 		rc.move(0, height - 2 - rc.y2);
 	if(rc.x2 >= width)
 		rc.move(width - 2 - rc.x2, 0);
+}
+
+static void tooltips_render() {
 	// Show background
-	if(tooltips_custom) {
-		draw::hot.hilite = rc;
+	if(tooltips_custom)
 		tooltips_custom();
-	} else {
-		draw::rectf(rc, colors::tips::back);
-		draw::rectb(rc, colors::border);
+	else {
+		draw::rectf(draw::hot.hilite, colors::tips::back);
+		draw::rectb(draw::hot.hilite, colors::border);
 	}
-	rc = rc + metrics::padding;
+	draw::hot.hilite = draw::hot.hilite + metrics::padding;
 	// Show text
 	auto push_fore = draw::fore;
 	draw::fore = colors::tips::text;
-	draw::textf(rc.x1, rc.y1, rc.width(), tooltips_text);
+	draw::textf(draw::hot.hilite.x1, draw::hot.hilite.y1, draw::hot.hilite.width(),
+        tooltips_text);
 	draw::fore = push_fore;
+}
+
+HANDLER(before_modal) {
+	tooltips_sb.clear();
+	px = py = -1000;
+	pw = 0;
+}
+
+HANDLER(before_input) {
+	if(!tooltips_text[0])
+		return;
+	if(!draw::font)
+		return;
+	if(tooltips_use_idle && draw::hot.key != InputIdle)
+		return;
+    tooltips_getrect(draw::hot.hilite);
+    tooltips_render();
 }
 
 void draw::tooltips(const char* format, ...) {

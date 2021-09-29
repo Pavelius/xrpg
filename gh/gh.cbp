@@ -115,6 +115,7 @@
 		<Unit filename="game.cpp" />
 		<Unit filename="gameproperty.cpp" />
 		<Unit filename="information.cpp" />
+		<Unit filename="interface.cpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="main.h" />
 		<Unit filename="player.cpp" />

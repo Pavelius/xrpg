@@ -142,14 +142,25 @@ struct monsteri {
 	const char*			combat;
 	abilityi			normal[8], elite[8];
 };
-class creature : public statable, public posable {
+class creature : public posable {
 	variant				kind;
+	char                hits;
+	statef              states;
+public:
+	void                act(const char* format, ...) const;
 	void				apply(variant v, int bonus);
-	void				attack(int damage, int range, int pierce, statef states);
+	void				attack(int damage, int range, int pierce, statef additional);
+	void                attack(creature& enemy, int damage, int pierce, statef additional);
+	int                 getmaximumhits() const { return 0; }
+	const char*         getname() const { return kind.getname(); }
 	void				heal(int v);
+	bool                isinteractive() const { return true; }
+	bool                is(state_s v) const { return states.is(v); }
 	void				move(int v);
-	void				pull(int range);
-	void				push(int range);
+	void				pull(int range, int targets);
+	void				push(int range, int targets);
+	void                remove(state_s v) { states.remove(v); }
+	void                setkind(variant v) { kind = v; }
 	deck&				getcombatdeck() const;
 };
 struct gamei {
@@ -166,5 +177,8 @@ struct gamei {
 	void				set(variant i, int v);
 };
 extern gamei			game;
+namespace draw {
+    void                status(const char* format, ...);
+}
 VKIND(action_s, Action)
 VKIND(feat_s, Feat)
