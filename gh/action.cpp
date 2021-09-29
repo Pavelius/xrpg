@@ -3,7 +3,6 @@
 BSDATA(actioni) = {
 	{"Shield"},
 	{"Retaliate"},
-	{"Evasion"},
 	{"Move"},
 	{"Attack"},
 	{"Push"},

@@ -13,6 +13,10 @@ struct creature_stringbuilder : public stringbuilder {
 	}
 };
 
+void creature::clear() {
+    memset(this, 0, sizeof(*this));
+}
+
 // Fix object properties
 void creature::act(const char* format, ...) const {
     char temp[4096]; creature_stringbuilder sb(temp, this);
@@ -28,8 +32,8 @@ void creature::heal(int v) {
     if(hits==-1)
         return; // This object have infinite hit points
     if(is(Poison)) {
-        act(getnm("ActRemovePoison"));
         remove(Poison);
+        act(getnm("ActRemovePoison"));
     } else if(v>0) {
         auto m = getmaximumhits();
         auto n = hits + v;
@@ -37,8 +41,8 @@ void creature::heal(int v) {
             n = m;
         v = n - hits;
         if(v>0) {
-            act(getnm("ActHeal"), v);
             hits = n;
+            act(getnm("ActHeal"), v);
         }
     }
 }
@@ -49,10 +53,31 @@ void creature::move(int v) {
     }
 }
 
-void creature::attack(creature& enemy, int damage, int pierce, statef additional) {
-    if(isinteractive()) {
+void creature::kill() {
+    clear();
+}
+
+void creature::damage(int value) {
+    auto shield = get(Shield);
+    value -= shield;
+    if(value <= 0)
+        return;
+    if(value >= hits) {
+        // TODO: player have chance to avoid death
+        if(isplayer()) {
+        }
+        kill();
+        act(getnm("ActDamage"), value);
     } else {
+        hits -= value;
+        act(getnm("ActDamage"), value);
     }
+}
+
+void creature::attack(creature& enemy, int damage, int pierce, statef additional) {
+    // TODO: attack modifier
+    // TODO: fix attack
+    enemy.damage(damage);
 }
 
 void creature::attack(int damage, int range, int pierce, statef additional) {
@@ -73,12 +98,26 @@ void creature::push(int range, int targets) {
     }
 }
 
-/*void creature::apply(variant v, int bonus) {
+int creature::get(variant v) const {
+    switch(v.type) {
+    case Action:
+        return 0;
+    case State:
+        return states.is(v.value) ? 1 : 0;
+    default:
+        return 0;
+    }
+}
+
+void creature::set(variant i, int v) {
+}
+
+void creature::apply(variant v, int bonus) {
 	switch(v.type) {
 	case Action:
 		switch(v.value) {
 		case Attack:
-			attack(bonus, get(Range), get(Pierce), getstates());
+			attack(bonus, get(Range), get(Pierce), {});
 			break;
 		case Move:
 			move(bonus);
@@ -87,10 +126,10 @@ void creature::push(int range, int targets) {
 			heal(bonus);
 			break;
 		case Push:
-			push(bonus);
+			push(get(Target), bonus);
 			break;
 		case Pull:
-			pull(bonus);
+			pull(get(Target), bonus);
 			break;
 		default:
 			if(!bonus)
@@ -100,4 +139,4 @@ void creature::push(int range, int targets) {
 		}
 		break;
 	}
-}*/
+}

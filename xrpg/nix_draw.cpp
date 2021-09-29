@@ -233,30 +233,23 @@ static bool handle(XEvent& e) {
 }
 
 void draw::sysredraw() {
-}
-
-static unsigned get_time_delta() {
-    if(!timer_interval)
-        return 0;
-    if(!last_time)
-        last_time = clock();
-    auto cur = clock();
-    last_time = clock();
-    return (cur - last_time);
+    if(!hwnd)
+        return;
+    update_ui_window();
+    XEvent e;
+    XNextEvent(dpy,&e);
+    if(!XFilterEvent(&e, hwnd))
+        handle(e);
 }
 
 int draw::rawinput() {
     if(!hwnd)
         return 0;
     update_ui_window();
-    if(timer_interval && timer_interval>=get_time_delta()) {
-        hot.key = InputTimer;
-        return hot.key;
-    }
     while(true) {
         XEvent e;
         XNextEvent(dpy,&e);
-        if(XFilterEvent(&e, (Window)hwnd))
+        if(XFilterEvent(&e, hwnd))
             continue;
         if(!handle(e))
             continue;

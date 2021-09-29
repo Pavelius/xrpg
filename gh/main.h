@@ -25,7 +25,7 @@ enum statistic_s : unsigned char {
 	MonstersKilled, ItemsUsed,
 };
 enum action_s : unsigned char {
-	Shield, Retaliate, Evasion,
+	Shield, Retaliate,
 	Move, Attack, Push, Pull, Heal, DisarmTrap, Loot,
 	Range, Target, Pierce,
 	Bless, Curse, RecovedDiscarded,
@@ -109,18 +109,18 @@ struct statei {
 	const char*			id;
 	bool				hostile;
 };
-class statable {
+struct statable {
+	char				actions[Level + 1];
 	statef				states;
 	featf				feats;
-	char				actions[Level + 1];
-public:
+	duration_s          duration;
+	char                duration_bonus;
+	area_s              area;
+	char                area_bonus;
 	void				apply(const variants& source);
-	void				damage(int value);
 	int					get(variant v) const;
-	statef				getstates() const { return states; }
 	static variant		getaction(variant v);
 	static int			getbonus(variant v);
-	const variant*      parse(const variant* p, const variant* pe);
 	void				set(variant i, int v);
 };
 struct trapi {
@@ -144,22 +144,29 @@ struct monsteri {
 };
 class creature : public posable {
 	variant				kind;
-	char                hits;
+	short               hits;
 	statef              states;
 public:
+    constexpr operator bool() const { return hits!=0; }
 	void                act(const char* format, ...) const;
 	void				apply(variant v, int bonus);
 	void				attack(int damage, int range, int pierce, statef additional);
 	void                attack(creature& enemy, int damage, int pierce, statef additional);
+	void                clear();
+    void				damage(int value);
+	int                 get(variant v) const;
 	int                 getmaximumhits() const { return 0; }
 	const char*         getname() const { return kind.getname(); }
 	void				heal(int v);
-	bool                isinteractive() const { return true; }
 	bool                is(state_s v) const { return states.is(v); }
+	bool                isinteractive() const { return true; }
+	bool                isplayer() const { return false; }
+	void                kill();
 	void				move(int v);
 	void				pull(int range, int targets);
 	void				push(int range, int targets);
 	void                remove(state_s v) { states.remove(v); }
+	void                set(variant i, int v);
 	void                setkind(variant v) { kind = v; }
 	deck&				getcombatdeck() const;
 };
@@ -181,4 +188,6 @@ namespace draw {
     void                status(const char* format, ...);
 }
 VKIND(action_s, Action)
+VKIND(area_s, Area)
+VKIND(duration_s, Duration)
 VKIND(feat_s, Feat)

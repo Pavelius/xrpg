@@ -32,54 +32,24 @@ void statable::set(variant i, int v) {
 	}
 }
 
-static const variant* read_one_action(statable* ps, const variant* p, const variant* pe) {
-	variant duration, area, main_action;
-	for(; p < pe; p++) {
-		auto v = *p;
-		auto a = ps->getaction(v);
-		if(v == variant(NextAction)) {
-			p++;
-			break;
-		}
-		switch(a.type) {
-		case Duration:
-			duration = v;
-			continue;
-		case Area:
-			area = v;
-			continue;
-		default:
-			break;
-		}
-		auto b = ps->getbonus(v);
-		if(!b)
-			b = 1;
-		if(!main_action)
-			main_action = v;
-		ps->set(v, ps->get(v) + b);
-	}
-	return p;
-}
-
 void statable::apply(const variants& source) {
-	variant duration, area, main_action;
 	for(auto v : source) {
 		auto a = getaction(v);
+		auto b = getbonus(v);
 		switch(a.type) {
 		case Duration:
-			duration = v;
-			continue;
+			duration = (duration_s)a.value;
+			duration_bonus = b;
+			break;
 		case Area:
-			area = v;
-			continue;
+			area = (area_s)a.value;
+			area_bonus = b;
+			break;
 		default:
+            if(!b)
+                b = 1;
+            set(v, get(v) + b);
 			break;
 		}
-		auto b = getbonus(v);
-		if(!b)
-			b = 1;
-		if(!main_action)
-			main_action = v;
-		set(v, get(v) + b);
 	}
 }
