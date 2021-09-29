@@ -49,6 +49,12 @@
     <ClCompile Include="deck.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="main_util.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite_util.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Logic">
@@ -57,10 +63,16 @@
     <Filter Include="Data">
       <UniqueIdentifier>{c3b29c5e-1aa7-4cf2-aefb-cee4eb601b5c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{16ec3487-2393-4495-8cb5-9cb1945fdc74}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
       <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite_util.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

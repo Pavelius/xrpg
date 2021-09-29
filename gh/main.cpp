@@ -36,6 +36,8 @@ static bool test_players() {
 	return p->health[0] != 0;
 }
 
+void util_main();
+
 int main() {
 	initialize_json();
 	initialize_png();
@@ -49,6 +51,7 @@ int main() {
 	//	return -1;
 	if(!test_players())
 		return - 1;
+	util_main();
 	draw::initialize("GH simulator");
 	draw::scene.resurl = "gloomhaven";
 	draw::setnext(start_menu);

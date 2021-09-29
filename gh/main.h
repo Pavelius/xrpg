@@ -142,7 +142,7 @@ struct monsteri {
 	const char*			combat;
 	abilityi			normal[8], elite[8];
 };
-class creature : public statable {
+class creature : public statable, public posable {
 	variant				kind;
 	void				apply(variant v, int bonus);
 	void				attack(int damage, int range, int pierce, statef states);

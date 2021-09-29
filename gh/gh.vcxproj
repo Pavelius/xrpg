@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h" />
+    <ClInclude Include="sprite_util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="action.cpp" />
@@ -160,8 +161,10 @@
     <ClCompile Include="gameproperty.cpp" />
     <ClCompile Include="information.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="main_util.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="property.cpp" />
+    <ClCompile Include="sprite_util.cpp" />
     <ClCompile Include="statable.cpp" />
     <ClCompile Include="state.cpp" />
   </ItemGroup>
