@@ -32,24 +32,22 @@ void statable::set(variant i, int v) {
 	}
 }
 
-void statable::apply(const variants& source) {
-	for(auto v : source) {
-		auto a = getaction(v);
-		auto b = getbonus(v);
-		switch(a.type) {
-		case Duration:
-			duration = (duration_s)a.value;
-			duration_bonus = b;
-			break;
-		case Area:
-			area = (area_s)a.value;
-			area_bonus = b;
-			break;
-		default:
-            if(!b)
-                b = 1;
-            set(v, get(v) + b);
-			break;
-		}
-	}
+void statable::apply(variant v) {
+	auto a = getaction(v);
+	auto b = getbonus(v);
+	switch(a.type) {
+	case Duration:
+		duration = (duration_s)a.value;
+		duration_bonus = b;
+		break;
+	case Area:
+		area = (area_s)a.value;
+		area_bonus = b;
+		break;
+	default:
+        if(!b)
+            b = 1;
+        set(v, get(v) + b);
+		break;
+    }
 }

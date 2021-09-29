@@ -138,5 +138,7 @@ void creature::apply(variant v, int bonus) {
 			break;
 		}
 		break;
+    default:
+        break;
 	}
 }

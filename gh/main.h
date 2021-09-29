@@ -117,7 +117,7 @@ struct statable {
 	char                duration_bonus;
 	area_s              area;
 	char                area_bonus;
-	void				apply(const variants& source);
+	void				apply(variant v);
 	int					get(variant v) const;
 	static variant		getaction(variant v);
 	static int			getbonus(variant v);
