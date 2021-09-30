@@ -1,9 +1,10 @@
 #include "main.h"
 
-BSDATAC(object, 64)
+BSDATAD(object)
 
 void object::addattack(scripti& e) const {
-    char temp[512]; stringbuilder sb(temp);
+    char temp[512]; temp[0] = 0;
+    stringbuilder sb(temp);
     auto& cards = getcombatdeck();
     auto v = cards.get();
     if(v.type == CombatCard) {
@@ -13,6 +14,8 @@ void object::addattack(scripti& e) const {
         if(ei.feats)
             e.apply(ei.feats);
     }
+    if(temp[0])
+        act(temp);
 }
 
 void object::clear() {
@@ -79,7 +82,19 @@ void object::attack(object& enemy, const scripti& modifiers) {
     enemy.damage(current.bonus);
 }
 
-void object::attack(int damage, int range, int pierce, statef additional) {
+void object::attack(int damage, int range, int pierce, int targets, statef additional) {
+    collection source;
+    source.select(bsdata<object>::source);
+    source.match(Enemy, true);
+    for(auto v : source) {
+    }
+}
+
+bool object::match(variant v) const {
+    switch(v.type) {
+    case Fraction: return fraction==v.value;
+    default: return false;
+    }
 }
 
 void object::pull(int range, int targets) {
@@ -107,7 +122,7 @@ void object::apply(variant v, int bonus) {
 	case Action:
 		switch(v.value) {
 		case Attack:
-			attack(bonus, get(Range), get(Pierce), {});
+			attack(bonus, get(Range), get(Pierce), get(Target), {});
 			break;
 		case Move:
 			move(bonus);
@@ -133,8 +148,17 @@ void object::apply(variant v, int bonus) {
 	}
 }
 
-void object::create(variant v) {
-    kind = v;
-    hits = getmaximumhits();
+fraction_s object::getfraction() const {
+    switch(kind.type) {
+    case Player: return Ally;
+    case Monster: return Enemy;
+    default: return Neutral;
+    }
+}
+
+void object::create(variant v, fraction_s fraction) {
+    this->kind = v;
+    this->hits = getmaximumhits();
+    this->fraction = fraction;
     states.clear();
 }

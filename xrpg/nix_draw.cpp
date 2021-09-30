@@ -2,12 +2,19 @@
 #include<X11/Xlib.h>
 #include<X11/Xutil.h>
 #include<X11/XKBlib.h>
-//#include<time.h>
 #include "crt.h"
 #include "draw.h"
 
 using namespace draw;
 
+const unsigned nix_event_mask = ExposureMask
+    |ButtonPressMask
+    |ButtonReleaseMask
+    |PointerMotionMask
+    |KeyPressMask
+    |StructureNotifyMask
+    |VisibilityChangeMask
+    |LeaveWindowMask;
 static Window       hwnd;
 static Display*     dpy;
 static GC           gc;
@@ -127,15 +134,7 @@ void draw::create(int x, int y, int width, int height, unsigned flags, int bpp) 
     setclip();
     hwnd = XCreateWindow(dpy,rootwin, x, y, width, height, 0, 24, InputOutput, myVisual, CWBackPixmap|CWBackingStore, &attr);
     gc = XCreateGC(dpy, hwnd, 0, NULL);
-    XSelectInput(dpy, hwnd,
-                 ExposureMask
-                 |ButtonPressMask
-                 |ButtonReleaseMask
-                 |PointerMotionMask
-                 |KeyPressMask
-                 |StructureNotifyMask
-                 |VisibilityChangeMask
-                 |LeaveWindowMask);
+    XSelectInput(dpy, hwnd, nix_event_mask);
     XMapWindow(dpy, hwnd);
 }
 
@@ -237,8 +236,7 @@ void draw::sysredraw() {
         return;
     update_ui_window();
     XEvent e;
-    XNextEvent(dpy,&e);
-    if(!XFilterEvent(&e, hwnd))
+    while(XCheckWindowEvent(dpy, hwnd, nix_event_mask, &e))
         handle(e);
 }
 

@@ -31,6 +31,8 @@ static const variant* next_part(const variant* p, const variant* pe) {
 			if(a.value == NextAction)
 				return p;
 			break;
+        default:
+            break;
 		}
 	}
 	return p;

@@ -84,6 +84,9 @@ BSMETA(abilityi) = {
 	BSREQ(hits), BSREQ(move), BSREQ(attack), BSREQ(range),
 	BSREQ(feats),
 	{}};
+BSMETA(fractioni) = {
+	BSREQ(id),
+	{}};
 BSMETA(gamepropertyi) = {
 	BSREQ(id),
 	{}};
@@ -99,6 +102,7 @@ BSMETA(varianti) = {
 	BSREQ(id),
 	{}};
 #define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr
+#define VRNOM(T) 0, bsdata<T>::source_ptr
 BSDATA(varianti) = {
 	{"NoVariant"},
 	{"Action", VRSTD(actioni)},
@@ -110,9 +114,11 @@ BSDATA(varianti) = {
 	{"Duration", VRSTD(durationi)},
 	{"Element", VRSTD(elementi)},
 	{"Feat", VRSTD(feati)},
+	{"Fraction", VRSTD(fractioni)},
 	{"GameProperty", VRSTD(gamepropertyi)},
 	{"Menu", VRSTD(menui)},
 	{"Monster", VRSTD(monsteri)},
+    {"Object", VRNOM(object)},
 	{"Player", VRSTD(playeri)},
 	{"State", VRSTD(statei)},
 	{"SummonedCreature", VRSTD(summoni)},

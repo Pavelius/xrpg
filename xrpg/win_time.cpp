@@ -12,5 +12,5 @@ void waitcputime(unsigned v) {
 }
 
 unsigned long getcputime() {
-	return GetTickCount();
+    return clock()/25;
 }

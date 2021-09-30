@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1632924893 source:/home/ws-1113/projects/xrpg/gh/main.cpp
+1633007394 source:/home/ws-1113/projects/xrpg/gh/main.cpp
 	"bsreq.h"
 	"main.h"
 	"draw.h"
@@ -10,11 +10,11 @@
 	"crt.h"
 	"serializer.h"
 
-1632905967 /home/ws-1113/projects/xrpg/xrpg/crt.h
+1632992237 /home/ws-1113/projects/xrpg/xrpg/crt.h
 
 1630910008 /home/ws-1113/projects/xrpg/xrpg/serializer.h
 
-1632925949 /home/ws-1113/projects/xrpg/gh/main.h
+1633009408 /home/ws-1113/projects/xrpg/gh/main.h
 	"crt.h"
 	"flagable.h"
 	"gender.h"
@@ -43,11 +43,11 @@
 
 1632740417 /home/ws-1113/projects/xrpg/xrpg/stringbuilder.h
 
-1627282035 /home/ws-1113/projects/xrpg/xrpg/varianta.h
+1632998004 /home/ws-1113/projects/xrpg/xrpg/varianta.h
 	"crt.h"
 	"variant.h"
 
-1631620266 /home/ws-1113/projects/xrpg/xrpg/draw_input.h
+1632983027 /home/ws-1113/projects/xrpg/xrpg/draw_input.h
 
 1632912070 /home/ws-1113/projects/xrpg/xrpg/draw_simple.h
 	"command.h"
@@ -67,10 +67,10 @@
 1632724552 source:/home/ws-1113/projects/xrpg/gh/cardtype.cpp
 	"main.h"
 
-1632921430 source:/home/ws-1113/projects/xrpg/gh/creature.cpp
+1632925969 source:/home/ws-1113/projects/xrpg/gh/creature.cpp
 	"main.h"
 
-1632724552 source:/home/ws-1113/projects/xrpg/gh/deck.cpp
+1632983027 source:/home/ws-1113/projects/xrpg/gh/deck.cpp
 	"main.h"
 
 1632724552 source:/home/ws-1113/projects/xrpg/gh/duration.cpp
@@ -85,13 +85,13 @@
 1632724552 source:/home/ws-1113/projects/xrpg/gh/gameproperty.cpp
 	"main.h"
 
-1632814850 source:/home/ws-1113/projects/xrpg/gh/information.cpp
+1632983027 source:/home/ws-1113/projects/xrpg/gh/information.cpp
 	"main.h"
 
 1632724552 source:/home/ws-1113/projects/xrpg/gh/player.cpp
 	"main.h"
 
-1632724552 source:/home/ws-1113/projects/xrpg/gh/property.cpp
+1633001660 source:/home/ws-1113/projects/xrpg/gh/property.cpp
 	"bsreq.h"
 	"main.h"
 	"tablecsv.h"
@@ -103,7 +103,7 @@
 1632724552 source:/home/ws-1113/projects/xrpg/gh/state.cpp
 	"main.h"
 
-1632733244 source:/home/ws-1113/projects/xrpg/gh/game.cpp
+1633007386 source:/home/ws-1113/projects/xrpg/gh/game.cpp
 	"main.h"
 
 1630910008 source:/home/ws-1113/projects/xrpg/xrpg/crt.cpp
@@ -112,7 +112,7 @@
 
 1629874022 /home/ws-1113/projects/xrpg/xrpg/io_stream.h
 
-1631774283 source:/home/ws-1113/projects/xrpg/xrpg/variant.cpp
+1632998772 source:/home/ws-1113/projects/xrpg/xrpg/variant.cpp
 	"variant.h"
 
 1628677516 source:/home/ws-1113/projects/xrpg/xrpg/varianta.cpp
@@ -149,7 +149,7 @@
 
 1629181108 /home/ws-1113/projects/xrpg/xrpg/color.h
 
-1631620266 source:/home/ws-1113/projects/xrpg/xrpg/crt_translate.cpp
+1632927465 source:/home/ws-1113/projects/xrpg/xrpg/crt_translate.cpp
 	"crt.h"
 	"io_stream.h"
 	"log.h"
@@ -157,7 +157,7 @@
 
 1627282035 /home/ws-1113/projects/xrpg/xrpg/log.h
 
-1632739092 source:/home/ws-1113/projects/xrpg/xrpg/draw.cpp
+1632983938 source:/home/ws-1113/projects/xrpg/xrpg/draw.cpp
 	"color.h"
 	"crt.h"
 	"draw.h"
@@ -179,7 +179,7 @@
 
 1628677516 /home/ws-1113/projects/xrpg/xrpg/handler.h
 
-1631620266 source:/home/ws-1113/projects/xrpg/xrpg/draw_input.cpp
+1632983027 source:/home/ws-1113/projects/xrpg/xrpg/draw_input.cpp
 	"crt.h"
 	"draw.h"
 	"draw_input.h"
@@ -192,7 +192,7 @@
 	"serializer.h"
 	"stringbuilder.h"
 
-1632911999 source:/home/ws-1113/projects/xrpg/xrpg/draw_simple.cpp
+1632983027 source:/home/ws-1113/projects/xrpg/xrpg/draw_simple.cpp
 	"answers.h"
 	"draw.h"
 	"draw_button.h"
@@ -215,7 +215,7 @@
 	"draw_button.h"
 	"handler.h"
 
-1632904140 source:/home/ws-1113/projects/xrpg/xrpg/draw_tooltips.cpp
+1632983027 source:/home/ws-1113/projects/xrpg/xrpg/draw_tooltips.cpp
 	"draw.h"
 	"draw_button.h"
 	"draw_input.h"
@@ -303,7 +303,7 @@
 1630304752 source:/home/ws-1113/projects/xrpg/xrpg/zip.cpp
 	"crt.h"
 
-1632921125 source:/home/ws-1113/projects/xrpg/xrpg/nix_draw.cpp
+1632984693 source:/home/ws-1113/projects/xrpg/xrpg/nix_draw.cpp
 	<X11/keysym.h>
 	<X11/Xlib.h>
 	<X11/Xutil.h>
@@ -336,4 +336,31 @@
 	"draw.h"
 	"draw_simple.h"
 	"draw_input.h"
+
+1632992211 source:/home/ws-1113/projects/xrpg/xrpg/nix_time.cpp
+	"time.h"
+
+1633009396 source:/home/ws-1113/projects/xrpg/gh/object.cpp
+	"main.h"
+
+1632983831 source:/home/ws-1113/projects/xrpg/gh/script.cpp
+	"main.h"
+
+1632983027 source:/home/ws-1113/projects/xrpg/gh/nameable.cpp
+	"stringact.h"
+	"main.h"
+
+1632983027 /home/ws-1113/projects/xrpg/xrpg/stringact.h
+	"gender.h"
+	"stringbuilder.h"
+
+1632983027 source:/home/ws-1113/projects/xrpg/xrpg/stringact.cpp
+	"crt.h"
+	"stringact.h"
+
+1633001476 source:/home/ws-1113/projects/xrpg/gh/collection.cpp
+	"main.h"
+
+1633001646 source:/home/ws-1113/projects/xrpg/gh/fraction.cpp
+	"main.h"
 

@@ -37,9 +37,9 @@ extern "C" void						qsort(void* base, unsigned num, long unsigned size, int(*co
 extern "C" int						rand(void); // Get next random value
 extern "C" void						srand(unsigned seed); // Set random seed
 extern "C" int						strcmp(const char* s1, const char* s2) noexcept(true); // Compare two strings
-extern "C" long long				time(long long* seconds);
 
 unsigned long						getcputime();
+unsigned                            randomseed();
 void								waitcputime(unsigned v);
 
 enum class codepages { No, W1251, UTF8, U16BE, U16LE };

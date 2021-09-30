@@ -993,7 +993,7 @@ void draw::bezier(int x0, int y0, int x1, int y1, int x2, int y2) {
 
 void draw::spline(point* original_points, int n) {
 	point points[256];
-	if(n > sizeof(points) / sizeof(points[0]))
+	if(n > (int)(sizeof(points) / sizeof(points[0])))
 		n = sizeof(points) / sizeof(points[0]);
 	n = n - 1;
 	memcpy(points, original_points, sizeof(points[0]) * (n + 1));
@@ -1707,8 +1707,8 @@ static void raw32r(int x1, int x2, int y, unsigned char* src, int width) {
 		return;
 	if(x1 < clipping.x1)
 		x1 = clipping.x1;
-	auto w = x2 - x1;
-	auto dst = (color*)canvas->ptr(x1, y);
+	//auto w = x2 - x1;
+	//auto dst = (color*)canvas->ptr(x1, y);
 }
 static void raw_line(int x0, int y0, int x1, int x2, int y, unsigned char* src, int dy, int dx, int bpp) {
 	if(y < clipping.y1 || y > clipping.y2 || x1<clipping.x2 || x1 > clipping.x1 || x2 < clipping.x1)
@@ -1742,7 +1742,7 @@ static void image_round(int xm, int ym, int r, unsigned char* source, int dy, in
 	if(xm - r >= clipping.x2 || xm + r < clipping.x1 || ym - r >= clipping.y2 || ym + r < clipping.y1)
 		return;
 	auto x0 = sx - r, y0 = sy - r;
-	int w = r * 2 * bpp;
+	//int w = r * 2 * bpp;
 	int x = -r, y = 0, err = 2 - 2 * r, y2 = -1000;
 	do {
 		if(y2 != y) {
