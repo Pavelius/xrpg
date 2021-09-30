@@ -57,6 +57,9 @@ typedef flagable<1> elementf;
 typedef flagable<4>	playerf;
 struct deck : varianta {
 	void				addcombat(variant owner);
+	void				drop(variant v) { add(v); }
+	variant				get();
+	variant				look(int n = 0);
 	void				shuffle();
 };
 struct actioni {
@@ -120,27 +123,13 @@ struct scripti {
 	elementf			elements_use, elements;
 	statef				states;
 	featf				feats;
-	const variant*		apply(const variant* p, const variant* pe);
+	//void				apply(variant v) { apply(&v, &v + 1); }
+	void				apply(const variants& source) { apply(source.begin(), source.end()); }
+	const variant*		apply(const variant * p, const variant * pe);
 	static variant		getaction(variant v);
 	static int			getbonus(variant v);
 	void				clear();
 };
-//struct summary {
-//	char				actions[Level + 1];
-//	statef				states;
-//	elementf			elements;
-//	featf				feats;
-//	duration_s          duration;
-//	char                duration_bonus;
-//	area_s              area;
-//	char                area_bonus;
-//	void				apply(variant v);
-//	void				apply(const variants& source);
-//	int					get(variant v) const;
-//	static variant		getaction(variant v);
-//	static int			getbonus(variant v);
-//	void				set(variant i, int v);
-//};
 struct trapi {
 	const char*			id;
 	char				damage;
@@ -170,14 +159,14 @@ class object : public posable, public nameable {
 	short               hits;
 	statef              states;
 public:
-    constexpr operator bool() const { return hits!=0; }
-	void				addmodifier(scripti& parameters) const;
+	constexpr operator bool() const { return hits != 0; }
+	void				addattack(scripti& parameters) const;
 	void				apply(variant v, int bonus);
 	void				attack(int damage, int range, int pierce, statef additional);
 	void                attack(object& enemy, const scripti& parameters);
 	void                clear();
 	void				create(variant v);
-    void				damage(int value);
+	void				damage(int value);
 	int                 get(variant v) const;
 	deck&				getcombatdeck() const;
 	int                 getmaximumhits() const;
@@ -210,13 +199,14 @@ struct gamei {
 	char				elements[AnyElement];
 	void				add(variant i, int v = 1);
 	void				buildcombatdeck();
+	object*				create(variant v);
 	bool				isallow(variant v) const;
 	int					get(variant i) const;
 	void				set(variant i, int v);
 };
 extern gamei			game;
 namespace draw {
-    void                status(const char* format, ...);
+void                status(const char* format, ...);
 }
 VKIND(action_s, Action)
 VKIND(area_s, Area)

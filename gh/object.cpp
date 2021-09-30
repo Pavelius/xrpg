@@ -1,6 +1,18 @@
 #include "main.h"
 
-void object::addmodifier(scripti& e) const {
+BSDATAC(object, 64)
+
+void object::addattack(scripti& e) const {
+    char temp[512]; stringbuilder sb(temp);
+    auto& cards = getcombatdeck();
+    auto v = cards.get();
+    if(v.type == CombatCard) {
+        auto& ei = bsdata<combatcardi>::get(v.value);
+        e.bonus += ei.bonus;
+        sb.addn("%Bonus%+1i", ei.bonus);
+        if(ei.feats)
+            e.apply(ei.feats);
+    }
 }
 
 void object::clear() {
@@ -63,7 +75,7 @@ void object::damage(int value) {
 
 void object::attack(object& enemy, const scripti& modifiers) {
     auto current = modifiers;
-    addmodifier(current);
+    addattack(current);
     enemy.damage(current.bonus);
 }
 

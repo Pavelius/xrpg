@@ -5,6 +5,7 @@ Air: Воздух
 Attack: Атака
 Back: Назад
 BalancedMeasure: Взвешенный подход
+Bonus: Бонус
 Brute: Дикарь
 CharacterSheet: Лист пресонажа
 ChooseAbility: Выбирайте способности

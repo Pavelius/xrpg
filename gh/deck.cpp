@@ -12,3 +12,17 @@ void deck::addcombat(variant owner) {
 void deck::shuffle() {
 	zshuffle(data, count);
 }
+
+variant deck::get() {
+	if(!count)
+		return variant();
+	auto r = data[0];
+	remove(0);
+	return r;
+}
+
+variant deck::look(int n) {
+	if(n >= (int)count)
+		return variant();
+	return data[n];
+}

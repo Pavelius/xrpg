@@ -30,6 +30,22 @@ bool gamei::isallow(variant v) const {
 	}
 }
 
+static object* find_emphty() {
+	for(auto& e : bsdata<object>()) {
+		if(!e)
+			return &e;
+	}
+	return 0;
+}
+
+object* gamei::create(variant v) {
+	auto p = find_emphty();
+	if(!p)
+		p = bsdata<object>::addz();
+	p->create(v);
+	return p;
+}
+
 void gamei::set(variant i, int v) {
 	switch(i.type) {
 	case GameProperty:

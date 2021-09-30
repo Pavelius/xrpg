@@ -30,10 +30,16 @@ void start_menu() {
 }
 
 static bool test_players() {
-	auto p = (playeri*)bsdata<playeri>::source.ptr(0);
-	p->buildcombatdeck();
+	auto pp1 = (playeri*)bsdata<playeri>::source.ptr(0);
+	auto pp2 = (playeri*)bsdata<playeri>::source.ptr(1);
+	pp1->buildcombatdeck();
+	pp2->buildcombatdeck();
 	game.buildcombatdeck();
-	return p->health[0] != 0;
+	auto p1 = game.create("Brute");
+	auto p2 = game.create("Thinkerer");
+	scripti sc = {};
+	p1->attack(*p2, sc);
+	return pp1->health[0] != 0;
 }
 
 void util_main();
