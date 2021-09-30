@@ -32,8 +32,9 @@ void start_menu() {
 	game.buildcombatdeck();
 	auto p1 = game.create("Brute", Ally);
 	auto p2 = game.create("Thinkerer", Enemy);
-	scripti sc = {};
-	p1->attack(1, 0, 0, 0, {});
+	//scripti sc = {};
+	//p1->attack(1, 0, 0, 0, {});
+	//p1->act("Test string %1i and %2i", 10, 12);
 	choose_cards("Brute", 0);
 	menui::choose("Start", 0, 0);
 }

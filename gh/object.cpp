@@ -86,14 +86,27 @@ void object::attack(int damage, int range, int pierce, int targets, statef addit
     collection source;
     source.select(bsdata<object>::source);
     source.match(Enemy, true);
+    if(!targets)
+        targets = 1;
     for(auto v : source) {
+        if((targets--)<=0)
+            break;
+        auto& enemy = bsdata<object>::get(v.value);
+        scripti params = {};
+        params.action = Attack;
+        params.bonus = damage;
+        params.range = range;
+        params.pierce = pierce;
+        params.targets = targets;
+        params.states = additional;
+        attack(enemy, params);
     }
 }
 
 bool object::match(variant v) const {
     switch(v.type) {
     case Fraction: return fraction==v.value;
-    default: return false;
+    default: return get(v)>0;
     }
 }
 
