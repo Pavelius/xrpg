@@ -57,6 +57,7 @@ ProximityMine: Безконтактная мина
 Pull: Притянуть
 Push: Оттолкнуть
 Range: Дистанция
+Ray: Луч
 RecoverDiscarded: Восстановить из сброса
 ReinvigoratingElexir: Оживляющий элексир
 RestorativeMist: Бодрящая пыль
@@ -80,6 +81,7 @@ Summon: Призвать
 SweepingBlow: Сметающий удар
 Target: Цели
 TargetAllAdjancedEnemies: Цель все враги вокруг
+TargetAllAlly: Цель все союзники вокруг
 TargetEnemyMoveThrought: Цель каждый враг на пути движения
 Thinkerer: Изобретатель
 ToxicBolt: Отравленная стрела

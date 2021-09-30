@@ -25,7 +25,7 @@ static variant choose_cards(variant player, int level) {
 }
 
 void start_menu() {
-	choose_cards("Brute", 1);
+	choose_cards("Brute", 0);
 	menui::choose("Start", 0, 0);
 }
 

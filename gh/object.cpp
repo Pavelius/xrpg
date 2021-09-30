@@ -1,6 +1,6 @@
 #include "main.h"
 
-void object::addmodifier(summary& modifiers) const {
+void object::addmodifier(scripti& e) const {
 }
 
 void object::clear() {
@@ -61,10 +61,10 @@ void object::damage(int value) {
     }
 }
 
-void object::attack(object& enemy, const summary& modifiers) {
+void object::attack(object& enemy, const scripti& modifiers) {
     auto current = modifiers;
     addmodifier(current);
-    enemy.damage(current.get(Attack));
+    enemy.damage(current.bonus);
 }
 
 void object::attack(int damage, int range, int pierce, statef additional) {

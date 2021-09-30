@@ -110,22 +110,37 @@ struct statei {
 	const char*			id;
 	bool				hostile;
 };
-struct summary {
-	char				actions[Level + 1];
+struct scripti {
+	variant				action;
+	char				bonus, pierce, range, targets, experience;
+	area_s				area;
+	char				area_size;
+	duration_s			duration;
+	char				duration_lenght;
+	elementf			elements_use, elements;
 	statef				states;
-	elementf			elements;
 	featf				feats;
-	duration_s          duration;
-	char                duration_bonus;
-	area_s              area;
-	char                area_bonus;
-	void				apply(variant v);
-	void				apply(const variants& source);
-	int					get(variant v) const;
+	const variant*		apply(const variant* p, const variant* pe);
 	static variant		getaction(variant v);
 	static int			getbonus(variant v);
-	void				set(variant i, int v);
+	void				clear();
 };
+//struct summary {
+//	char				actions[Level + 1];
+//	statef				states;
+//	elementf			elements;
+//	featf				feats;
+//	duration_s          duration;
+//	char                duration_bonus;
+//	area_s              area;
+//	char                area_bonus;
+//	void				apply(variant v);
+//	void				apply(const variants& source);
+//	int					get(variant v) const;
+//	static variant		getaction(variant v);
+//	static int			getbonus(variant v);
+//	void				set(variant i, int v);
+//};
 struct trapi {
 	const char*			id;
 	char				damage;
@@ -156,14 +171,15 @@ class object : public posable, public nameable {
 	statef              states;
 public:
     constexpr operator bool() const { return hits!=0; }
-	void				addmodifier(summary& modifiers) const;
+	void				addmodifier(scripti& parameters) const;
 	void				apply(variant v, int bonus);
 	void				attack(int damage, int range, int pierce, statef additional);
-	void                attack(object& enemy, const summary& modifiers);
+	void                attack(object& enemy, const scripti& parameters);
 	void                clear();
 	void				create(variant v);
     void				damage(int value);
 	int                 get(variant v) const;
+	deck&				getcombatdeck() const;
 	int                 getmaximumhits() const;
 	void				heal(int v);
 	bool                is(state_s v) const { return states.is(v); }
@@ -175,14 +191,14 @@ public:
 	void				push(int range, int targets);
 	void                remove(state_s v) { states.remove(v); }
 	void                set(variant i, int v);
-	void                setkind(variant v) { kind = v; }
-	deck&				getcombatdeck() const;
+	void				use(action_s v);
 };
 struct activity {
 	variant				owner;
 	variant				source;
 	variants			effect;
 	duration_s			duration;
+	char				count;
 };
 struct gamei {
 	short				ability[Donate + 1];
@@ -191,6 +207,7 @@ struct gamei {
 	deck				market;
 	deck				road, city;
 	deck				enemy_combat;
+	char				elements[AnyElement];
 	void				add(variant i, int v = 1);
 	void				buildcombatdeck();
 	bool				isallow(variant v) const;

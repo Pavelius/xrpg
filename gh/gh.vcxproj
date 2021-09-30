@@ -166,8 +166,11 @@
     <ClCompile Include="main_util.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="property.cpp" />
+    <ClCompile Include="script.cpp" />
     <ClCompile Include="sprite_util.cpp" />
-    <ClCompile Include="summary.cpp" />
+    <ClCompile Include="summary.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="state.cpp" />
   </ItemGroup>
   <ItemGroup>
