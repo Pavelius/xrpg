@@ -180,6 +180,9 @@
     <ClInclude Include="stringact.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="draw_hexagon.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -415,6 +418,9 @@
     </ClCompile>
     <ClCompile Include="stringact.cpp">
       <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_hexagon.cpp">
+      <Filter>Interface</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

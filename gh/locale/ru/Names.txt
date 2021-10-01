@@ -7,6 +7,7 @@ Back: Назад
 BalancedMeasure: Взвешенный подход
 Bonus: Бонус
 Brute: Дикарь
+Cancel: Отмена
 CharacterSheet: Лист пресонажа
 ChooseAbility: Выбирайте способности
 ChooseBackground: Выбирайте прошлое

@@ -1,4 +1,5 @@
 #include "crt.h"
+#include "draw_hexagon.h"
 #include "flagable.h"
 #include "gender.h"
 #include "menu.h"
@@ -219,9 +220,9 @@ struct collection : varianta {
 };
 extern gamei			game;
 namespace draw {
+void					initializex();
 void					status(const char* format, ...);
 void					tooltips(const char* format, ...);
-void					initializex();
 }
 VKIND(action_s, Action)
 VKIND(area_s, Area)

@@ -132,7 +132,10 @@ void object::set(variant i, int v) {
 	case State:
 		states.set(i.value, v > 0);
 		break;
-    default:
+	case Fraction:
+		this->fraction = (fraction_s)i.value;
+		break;
+	default:
         break;
 	}
 }

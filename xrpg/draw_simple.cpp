@@ -193,10 +193,14 @@ void draw::paintimage() {
 	auto& fr = p->get(0);
 	board.x1 = -camera.x;
 	board.y1 = -camera.y;
-	if(fr.sx < getwidth())
+	if(fr.sx < getwidth()) {
 		board.x1 = (getwidth() - fr.sx) / 2;
-	if(fr.sy < getheight())
+		camera.x = -board.x1;
+	}
+	if(fr.sy < getheight()) {
 		board.y1 = (getheight() - fr.sy) / 2;
+		camera.y = -board.y1;
+	}
 	board.x2 = board.x1 + fr.sx;
 	board.y2 = board.y1 + fr.sy;
 	ishilite(board);
