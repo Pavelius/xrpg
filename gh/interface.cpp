@@ -214,16 +214,26 @@ static bool ishilitehex(int x, int y) {
 	return ishilite(rc);
 }
 
+static point mouse_difference;
+
 void paintfigures() {
 	for(auto& e : bsdata<object>()) {
-        caret = e.getposition() - camera;
-		if(ishilitehex(caret.x, caret.y)) {
-            scene.hilite = &e;
-            draw::tooltips(e.kind.getname());
-		}
+        if(dragactive(&e))
+            caret = hot.mouse - mouse_difference;
+        else {
+            caret = e.getposition() - camera;
+            if(ishilitehex(caret.x, caret.y)) {
+                if(hot.key==MouseLeft && hot.pressed) {
+                    dragbegin(&e);
+                    mouse_difference = hot.mouse - caret;
+                }
+                scene.hilite = &e;
+                draw::tooltips(e.kind.getname());
+            }
+        }
 		e.paint();
-		if(scene.hilite==variant(&e))
-            hexagonf(caret.x, caret.y, size, 64);
+//		if(scene.hilite==variant(&e))
+//            hexagonf(caret.x, caret.y, size, 64);
 	}
 }
 
