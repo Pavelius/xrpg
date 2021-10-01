@@ -165,6 +165,7 @@ class object : public posable, public nameable {
 	statef              states;
 public:
 	constexpr operator bool() const { return hits != 0; }
+	void				activate(duration_s duration, int count, variant source, variants variants);
 	void				addattack(scripti& parameters) const;
 	void				apply(variant v, int bonus);
 	void				attack(int damage, int range, int pierce, int targets, statef additional);
@@ -184,6 +185,7 @@ public:
 	void                kill();
 	bool                match(variant v) const;
 	void				move(int v);
+	void				paint() const;
 	void				pull(int range, int targets);
 	void				push(int range, int targets);
 	void                remove(state_s v) { states.remove(v); }
@@ -191,11 +193,11 @@ public:
 	void				use(action_s v);
 };
 struct activity {
-	variant				owner;
-	variant				source;
+	variant				owner, source;
 	variants			effect;
 	duration_s			duration;
 	char				count;
+	constexpr operator bool() const { return owner; }
 };
 struct gamei {
 	short				ability[Donate + 1];
@@ -217,10 +219,12 @@ struct collection : varianta {
 };
 extern gamei			game;
 namespace draw {
-void                status(const char* format, ...);
+void					status(const char* format, ...);
+void					initializex();
 }
 VKIND(action_s, Action)
 VKIND(area_s, Area)
 VKIND(duration_s, Duration)
 VKIND(feat_s, Feat)
 VKIND(fraction_s, Fraction)
+VKIND(state_s, State)

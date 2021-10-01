@@ -4,9 +4,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="summary.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="property.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -62,6 +59,15 @@
       <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="script.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="collection.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="fraction.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="interface.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>

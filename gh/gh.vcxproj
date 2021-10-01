@@ -153,6 +153,9 @@
     <ClCompile Include="activity.cpp" />
     <ClCompile Include="area.cpp" />
     <ClCompile Include="cardtype.cpp" />
+    <ClCompile Include="collection.cpp" />
+    <ClCompile Include="fraction.cpp" />
+    <ClCompile Include="interface.cpp" />
     <ClCompile Include="nameable.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="deck.cpp" />
@@ -168,9 +171,6 @@
     <ClCompile Include="property.cpp" />
     <ClCompile Include="script.cpp" />
     <ClCompile Include="sprite_util.cpp" />
-    <ClCompile Include="summary.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="state.cpp" />
   </ItemGroup>
   <ItemGroup>

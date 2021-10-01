@@ -12,5 +12,11 @@ void waitcputime(unsigned v) {
 }
 
 unsigned long getcputime() {
-    return clock()/25;
+    return GetTickCount();
+}
+
+extern "C" int time(void* p);
+
+unsigned int randomseed() {
+	return time(0);
 }
