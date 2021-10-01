@@ -101,6 +101,7 @@ BSMETA(statei) = {
 BSMETA(varianti) = {
 	BSREQ(id),
 	{}};
+BSDATAD(activity)
 #define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr
 #define VRNOM(T) 0, bsdata<T>::source_ptr
 BSDATA(varianti) = {

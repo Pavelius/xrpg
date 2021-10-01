@@ -22,7 +22,7 @@ int main() {
 		return -1;
 	//if(!readf("rules/monsters.json"))
 	//	return -1;
-	util_main();
+	//util_main();
 	draw::initializex();
 	return 0;
 }

@@ -9,39 +9,11 @@ struct cube {
 	double x, y, z;
 };
 
-const int size = 50;
-static const point states_pos[] = {{-16, 16}, {-16, -16}, {16, 16}, {16, -16}};
 const double sqrt_3 = 1.732050807568877;
 const double cos_30 = 0.86602540378;
-const int size2 = size - 2;
-static const point hexagon_offset2[6] = {{(short)(size2 * cos_30), -(short)(size2 / 2)},
-	{(short)(size2 * cos_30), (short)(size2 / 2)},
-	{0, size2},
-	{-(short)(size2 * cos_30), (short)(size2 / 2)},
-	{-(short)(size2 * cos_30), -(short)(size2 / 2)},
-	{0, -size2},
-};
-const int size3 = size - 4;
-static const point hexagon_offset3[6] = {{(short)(size3 * cos_30), -(short)(size3 / 2)},
-	{(short)(size3 * cos_30), (short)(size3 / 2)},
-	{0, size3},
-	{-(short)(size3 * cos_30), (short)(size3 / 2)},
-	{-(short)(size3 * cos_30), -(short)(size3 / 2)},
-	{0, -size3},
-};
-static const point hexagon_offset[6] = {{(short)(size * cos_30), -(short)(size / 2)},
-	{(short)(size * cos_30), (short)(size / 2)},
-	{0, size},
-	{-(short)(size * cos_30), (short)(size / 2)},
-	{-(short)(size * cos_30), -(short)(size / 2)},
-	{0, -size},
-};
-
-//point map::h2p(point hex) {
-//	short x = short(size * sqrt_3) * hex.x + (short(size * sqrt_3) / 2) * hex.y;
-//	short y = size * 3 / 2 * hex.y;
-//	return {x, y};
-//}
+const int size = 50;
+extern bool line_antialiasing;
+static const point states_pos[] = {{-16, 16}, {-16, -16}, {16, 16}, {16, -16}};
 
 static cube cube_round(cube c) {
 	double rx = int(c.x);
@@ -85,47 +57,12 @@ static point cube_to_axial(cube c) {
 	return {(short)c.x, (short)c.z};
 }
 
-//int map::getdistance(point h1, point h2) {
-//	auto a = axial_to_cube(h1);
-//	auto b = axial_to_cube(h2);
-//	return int(iabs(a.x - b.x) + iabs(a.y - b.y) + iabs(a.z - b.z)) / 2;
-//}
-//
-//point map::p2h(point pt) {
-//	auto q = ((sqrt_3 / 3.0) * (double)pt.x - (1.0 / 3.0) * (double)pt.y) / (double)size;
-//	auto r = ((2.0 / 3.0) * (double)pt.y) / (double)size;
-//	return cube_to_oddr(cube_round(axial_to_cube({(short)q, (short)r})));
-//}
-
-static void hexagon(point pt, const point* points, color c1) {
-	for(auto i = 0; i < 5; i++)
-		line(pt + points[i], pt + points[i + 1], c1);
-	line(pt + points[5], pt + points[0], c1);
-}
-
-static void hexagon(point pt, const point* points, color c1, float lw) {
-	auto push_linw = linw;
-	auto push_fore = fore;
-	linw = lw;
-	fore = c1;
-	for(auto i = 0; i < 5; i++) {
-		auto p1 = pt + points[i];
-		auto p2 = pt + points[i + 1];
-		line(p1.x, p1.y, p2.x, p2.y);
-	}
-	auto p1 = pt + points[5];
-	auto p2 = pt + points[0];
-	line(p1.x, p1.y, p2.x, p2.y);
-	linw = push_linw;
-	fore = push_fore;
-}
-
-void triangle(point v1, point v2) {
+static void triangle(point v1, point v2) {
 	float invslope1 = (float)(v2.x - v1.x) / (float)(v2.y - v1.y);
 	float curx1 = v1.x;
 	float curx2 = float(v1.x + (v2.x - v1.x) * 2);
-	//auto push = line_antialiasing;
-	//line_antialiasing = false;
+	auto push_line = line_antialiasing;
+	line_antialiasing = false;
 	if(v1.y < v2.y) {
 		for(auto scanlineY = v1.y; scanlineY <= v2.y; scanlineY++) {
 			line((int)curx1, scanlineY, (int)curx2, scanlineY);
@@ -139,15 +76,54 @@ void triangle(point v1, point v2) {
 			curx2 += invslope1;
 		}
 	}
-	//line_antialiasing = push;
+	line_antialiasing = push_line;
 }
 
-static void hexagonf(short x, short y) {
-	auto p1 = hexagon_offset[4];
-	auto p2 = hexagon_offset[1];
-	rectf({x + p1.x, y + p1.y + 1, x + p2.x + 1, y + p2.y});
-	triangle({x + p2.x, y + p2.y}, {x, y + size});
-	triangle({x + p2.x, y + p1.y}, {x, y - size});
+static void hexagon(int x, int y, int size) {
+    point points[6] = {{(short)(x + size * cos_30), (short)(y - size / 2)},
+        {(short)(x + size * cos_30), (short)(y + size / 2)},
+        {(short)x, (short)(y + size)},
+        {(short)(x - size * cos_30), (short)(y + size / 2)},
+        {(short)(x - size * cos_30), (short)(y - size / 2)},
+        {(short)x, (short)(y - size)},
+    };
+	for(auto i = 0; i < 5; i++) {
+		auto p1 = points[i];
+		auto p2 = points[i + 1];
+		line(p1.x, p1.y, p2.x, p2.y);
+	}
+	auto p1 = points[5];
+	auto p2 = points[0];
+	line(p1.x, p1.y, p2.x, p2.y);
+}
+
+static void hexagonf(short x, short y, int size, unsigned char alpha = 255) {
+	auto p1 = point{(short)(x - size * cos_30), (short)(y - size / 2)}; //points[4];
+	auto p2 = point{(short)(x + size * cos_30), (short)(y + size / 2)}; //points[1];
+	auto push_fore = fore;
+	fore.a = alpha;
+	rectf({p1.x, p1.y + 1, p2.x + 1, p2.y}, fore, alpha);
+	triangle({p2.x, p2.y}, {x, y + size});
+	triangle({p2.x, p1.y}, {x, y - size});
+	fore = push_fore;
+}
+
+static point h2p(point hex) {
+	short x = short(size * sqrt_3) * hex.x + (short(size * sqrt_3) / 2) * hex.y;
+	short y = size * 3 / 2 * hex.y;
+	return {x, y};
+}
+
+static point p2h(point pt) {
+	auto q = ((sqrt_3 / 3.0) * (double)pt.x - (1.0 / 3.0) * (double)pt.y) / (double)size;
+	auto r = ((2.0 / 3.0) * (double)pt.y) / (double)size;
+	return cube_to_oddr(cube_round(axial_to_cube({(short)q, (short)r})));
+}
+
+static int getdistance(point h1, point h2) {
+	auto a = axial_to_cube(h1);
+	auto b = axial_to_cube(h2);
+	return int(iabs(a.x - b.x) + iabs(a.y - b.y) + iabs(a.z - b.z)) / 2;
 }
 
 //static void hexagon(short unsigned i, bool use_hilite, bool show_movement) {
@@ -183,7 +159,6 @@ static void hexagonf(short x, short y) {
 //		}
 //	}
 //}
-
 
 static void paint_number(int x, int y, int value) {
 	char temp[16]; stringbuilder sb(temp);
@@ -221,19 +196,34 @@ void object::paint() const {
 			spi++;
 		}
 	}
-	auto c1 = colors::blue;
+	auto push_fore = fore;
+	fore = colors::blue;
 	switch(kind.type) {
-	case Player: c1 = colors::red; break;
-	case Monster: c1 = colors::white; break;
+	case Player: fore = colors::red; break;
+	case Monster: fore = colors::white; break;
+    default: break;
 	}
-	hexagon({x, y}, hexagon_offset, c1);
+	hexagon(x, y, size);
+	fore = push_fore;
 	paint_number(x, y + 30, hits);
+}
+
+static bool ishilitehex(int x, int y) {
+    auto r = size*2/3;
+    rect rc = {x-r, y-r, x+r, y+r};
+	return ishilite(rc);
 }
 
 void paintfigures() {
 	for(auto& e : bsdata<object>()) {
-		caret = e.getposition() - camera;
+        caret = e.getposition() - camera;
+		if(ishilitehex(caret.x, caret.y)) {
+            scene.hilite = &e;
+            draw::tooltips(e.kind.getname());
+		}
 		e.paint();
+		if(scene.hilite==variant(&e))
+            hexagonf(caret.x, caret.y, size, 64);
 	}
 }
 
@@ -253,7 +243,7 @@ static variant choose_cards(variant player, int level) {
 			continue;
 		collection.add(&e);
 	}
-	return collection.choose(player.getname(), "Cancel", true, 0);
+	return collection.choose(player.getname(), getnm("Cancel"), true, 0);
 }
 
 void start_menu() {
@@ -270,7 +260,7 @@ void start_menu() {
 	//scripti sc = {};
 	//p1->attack(1, 0, 0, 0, {});
 	//p1->act("Test string %1i and %2i", 10, 12);
-	choose_cards("Brute", 0);
+	choose_cards("Brute", 1);
 	menui::choose("Start", 0, 0);
 }
 

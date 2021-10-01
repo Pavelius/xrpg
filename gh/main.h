@@ -220,6 +220,7 @@ struct collection : varianta {
 extern gamei			game;
 namespace draw {
 void					status(const char* format, ...);
+void					tooltips(const char* format, ...);
 void					initializex();
 }
 VKIND(action_s, Action)

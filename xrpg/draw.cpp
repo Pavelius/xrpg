@@ -42,7 +42,7 @@ rect				sys_static_area;
 static draw::surface default_surface;
 draw::surface*		draw::canvas = &default_surface;
 point				draw::caret;
-static bool			line_antialiasing = true;
+bool			    line_antialiasing = true;
 // Drag
 static const void*	drag_object;
 point				draw::dragmouse;
@@ -117,7 +117,7 @@ static void set32a(color* p, unsigned count) {
 	}
 }
 
-static void set32(unsigned char* d, int d_scan, int width, int height, void(*proc)(color*, unsigned)) {
+static void set32x(unsigned char* d, int d_scan, int width, int height, void(*proc)(color*, unsigned)) {
 	while(height-- > 0) {
 		proc((color*)d, width);
 		d += d_scan;
@@ -875,11 +875,11 @@ void draw::line(int x0, int y0, int x1, int y1) {
 	else if(y0 == y1) {
 		if(!correct(x0, y0, x1, y1, clipping, false))
 			return;
-		set32(canvas->ptr(x0, y0), canvas->scanline, x1 - x0 + 1, 1, set32);
+        set32x(canvas->ptr(x0, y0), canvas->scanline, x1 - x0 + 1, 1, (fore.a==0 || fore.a==255) ? set32 : set32a);
 	} else if(x0 == x1) {
 		if(!correct(x0, y0, x1, y1, clipping, false))
 			return;
-		set32(canvas->ptr(x0, y0), canvas->scanline, 1, y1 - y0 + 1, set32);
+		set32x(canvas->ptr(x0, y0), canvas->scanline, 1, y1 - y0 + 1, (fore.a==0 || fore.a==255) ? set32 : set32a);
 	} else if(line_antialiasing) {
 		int dx = iabs(x1 - x0), sx = x0 < x1 ? 1 : -1;
 		int dy = iabs(y1 - y0), sy = y0 < y1 ? 1 : -1;
@@ -1153,7 +1153,7 @@ void draw::rectf(rect rc) {
 		return;
 	if(rc.x1 == rc.x2)
 		return;
-	set32(ptr(rc.x1, rc.y1), canvas->scanline, rc.x2 - rc.x1, rc.y2 - rc.y1, set32);
+	set32x(ptr(rc.x1, rc.y1), canvas->scanline, rc.x2 - rc.x1, rc.y2 - rc.y1, set32);
 }
 
 static void rectfpt(int xc1, int yc1, int xc2, int yc2, int r, const color c1, unsigned char alpha) {
@@ -1204,8 +1204,9 @@ void draw::rectf(rect rc, color c1, unsigned char alpha) {
 		return;
 	auto pf = fore;
 	fore = c1;
-	fore.a = alpha;
-	set32(ptr(rc.x1, rc.y1), canvas->scanline, rc.x2 - rc.x1, rc.y2 - rc.y1, set32a);
+	if(alpha!=255)
+        fore.a = alpha;
+	set32x(ptr(rc.x1, rc.y1), canvas->scanline, rc.x2 - rc.x1, rc.y2 - rc.y1, (alpha==255) ? set32 : set32a);
 	fore = pf;
 }
 
@@ -1239,7 +1240,7 @@ void draw::gradv(rect rc, const color c1, const color c2, int skip) {
 		fore.r = (unsigned char)(c1.r * k1 + c2.r * k2);
 		fore.g = (unsigned char)(c1.g * k1 + c2.g * k2);
 		fore.b = (unsigned char)(c1.b * k1 + c2.b * k2);
-		set32(canvas->ptr(rc.x1, y), canvas->scanline, w1, 1, set32);
+		set32x(canvas->ptr(rc.x1, y), canvas->scanline, w1, 1, set32);
 
 	}
 	fore = pf;
@@ -1263,7 +1264,7 @@ void draw::gradh(rect rc, const color c1, const color c2, int skip) {
 		fore.r = (unsigned char)(c1.r * k1 + c2.r * k2);
 		fore.g = (unsigned char)(c1.g * k1 + c2.g * k2);
 		fore.b = (unsigned char)(c1.b * k1 + c2.b * k2);
-		set32(canvas->ptr(x, rc.y1), canvas->scanline, 1, h1, set32);
+		set32x(canvas->ptr(x, rc.y1), canvas->scanline, 1, h1, set32);
 	}
 	fore = pf;
 }

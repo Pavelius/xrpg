@@ -132,6 +132,8 @@ void object::set(variant i, int v) {
 	case State:
 		states.set(i.value, v > 0);
 		break;
+    default:
+        break;
 	}
 }
 
