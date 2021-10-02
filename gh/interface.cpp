@@ -68,8 +68,11 @@ static bool ishilitehex(int x, int y) {
 
 static void painthexgrid() {
 	current_index = Blocked;
-	for(short y = 0; y < 7; y++) {
-		for(short x = 0; x < 5; x++) {
+	for(short y = 0; y < hms; y++) {
+		for(short x = 0; x < hms; x++) {
+			auto ix = h2i({x, y});
+			if(game.iswall(ix))
+				continue;
 			auto pt = h2p({x, y}, size) - camera;
 			if(show_hex_grid)
 				hexagon(pt.x, pt.y, size);
@@ -79,7 +82,7 @@ static void painthexgrid() {
 				text(pt.x - textw(temp) / 2, pt.y, temp);
 			}
 			if(ishilitehex(pt.x, pt.y))
-				current_index = h2i({x, y});
+				current_index = ix;
 		}
 	}
 	if(hot.key == (Ctrl + 'G'))
@@ -126,11 +129,17 @@ static void paintcurrentindex() {
 }
 
 static void paintmap() {
-	auto& e = bsdata<tilei>::get(0);
-	auto ps = gres(e.id, "art/tiles");
-	if(!ps)
-		return;
-	image(-camera.x, -camera.y, ps, 0, 0);
+	auto& se = bsdata<scenarioi>::get(0);
+	for(auto& e : se.tiles) {
+		if(!e)
+			break;
+		auto& et = bsdata<tilei>::get(e.tile.value);
+		auto ps = gres(et.id, "art/tiles");
+		if(!ps)
+			continue;
+		auto pt = h2p(e.position, size) - camera;
+		image(pt.x, pt.y, ps, 0, 0);
+	}
 	painthexgrid();
 }
 
@@ -154,18 +163,43 @@ static variant choose_cards(variant player, int level) {
 	return collection.choose(player.getname(), getnm("Cancel"), true, 0);
 }
 
-static bool test_tiles() {
-	auto& e = bsdata<tilei>::get(0);
-	if(!e.size)
-		return false;
-	if(!e.blocks)
+static void apply_rect(point position, point size) {
+	auto x2 = position.x + size.x;
+	auto y2 = position.y + size.y;
+	for(short x = position.x; x < x2; x++) {
+		for(short y = position.y; y < y2; y++)
+			game.setpass(h2i({x, y}));
+	}
+}
+
+static void apply_tiles() {
+	for(auto i = 0; i < hms * hms; i++)
+		game.setwall(i);
+	for(auto& e : bsdata<scenarioi>()) {
+		for(auto& et : e.tiles) {
+			if(!et)
+				break;
+			auto& ti = bsdata<tilei>::get(et.tile.value);
+			apply_rect(et.position, ti.size);
+			for(auto pt : ti.blocks) {
+				auto i = h2i(pt + et.position);
+				game.setwall(i);
+			}
+		}
+	}
+}
+
+static bool test_monsters() {
+	auto& e = bsdata<monsteri>::get(0);
+	if(!e.normal[0].hits)
 		return false;
 	return true;
 }
 
 void start_menu() {
-	if(!test_tiles())
+	if(!test_monsters())
 		return;
+	apply_tiles();
 	auto pp1 = (playeri*)bsdata<playeri>::source.ptr(0);
 	auto pp2 = (playeri*)bsdata<playeri>::source.ptr(1);
 	pp1->buildcombatdeck();
@@ -173,9 +207,9 @@ void start_menu() {
 	game.buildcombatdeck();
 	auto p1 = game.create("Brute", Ally);
 	auto p2 = game.create("Thinkerer", Enemy);
-	p1->setposition(h2p({5, 3}, size));
+	p1->setposition(h2p({2, 6}, size));
 	p1->set(Poison, 1);
-	p2->setposition(h2p({4, 6}, size));
+	p2->setposition(h2p({2, 8}, size));
 	//scripti sc = {};
 	//p1->attack(1, 0, 0, 0, {});
 	//p1->act("Test string %1i and %2i", 10, 12);

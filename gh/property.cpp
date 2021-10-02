@@ -7,10 +7,11 @@
 template<> struct bsdata<T> : bsdata<V> {};
 
 NOBSDATA(abilityi)
-NOBSDATA(variants)
 NOBSDATA(flagable<1>)
 NOBSDATA(flagable<2>)
 NOBSDATA(flagable<4>)
+NOBSDATA(scenariotiles)
+NOBSDATA(variants)
 XKIND(gender_s, genderi)
 
 BSMETA(variant) = {{}};
@@ -110,6 +111,14 @@ BSMETA(tilei) = {
 	BSREQ(size), BSREQ(offset), BSREQ(blocks),
 	{}};
 BSDATAD(tilei)
+BSMETA(scenariotiles) = {
+	BSREQ(tile), BSREQ(position),
+	{}};
+BSMETA(scenarioi) = {
+	BSREQ(id),
+	BSREQ(tiles),
+	{}};
+BSDATAD(scenarioi)
 BSDATAD(activity)
 #define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr
 #define VRNOM(T) 0, bsdata<T>::source_ptr
@@ -130,6 +139,7 @@ BSDATA(varianti) = {
 	{"Monster", VRSTD(monsteri)},
     {"Object", VRNOM(object)},
 	{"Player", VRSTD(playeri)},
+	{"Scenario", VRSTD(scenarioi)},
 	{"State", VRSTD(statei)},
 	{"SummonedCreature", VRSTD(summoni)},
 	{"Tile", VRSTD(tilei)},

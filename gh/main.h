@@ -48,7 +48,7 @@ enum variant_s : unsigned char {
 	NoVariant,
 	Action, ActionBonus, Area, Card, CardType, CombatCard, Duration, Element,
 	Feat, Fraction, GameProperty, Menu, Monster, Object, Player,
-	State, SummonedCreature, Tile, Trap, Type
+	Scenario, State, SummonedCreature, Tile, Trap, Type
 };
 enum game_propery_s : unsigned char {
 	Reputation, Prosperty, Donate,
@@ -201,7 +201,26 @@ struct activity {
 	char				count;
 	constexpr operator bool() const { return owner; }
 };
-struct gamei {
+const int				hms = 64;
+inline point			i2h(indext i) { return {(short)(i % hms), (short)(i / hms)}; }
+inline indext			h2i(point v) { return v.y * hms + v.x; }
+class mapi {
+	flagable<hms*hms>	walls;
+public:
+	bool				iswall(indext i) const { return walls.is(i); }
+	void				setpass(indext i) { walls.remove(i); }
+	void				setwall(indext i) { walls.set(i); }
+};
+struct scenariotiles {
+	variant				tile;
+	point				position;
+	constexpr operator bool() const { return tile.operator bool(); }
+};
+struct scenarioi {
+	const char*			id;
+	scenariotiles		tiles[8];
+};
+struct gamei : public mapi {
 	short				ability[Donate + 1];
 	adat<variant, 4>	players;
 	playerf				allowed_players;
@@ -225,9 +244,6 @@ struct tilei {
 	point				offset; // offset to upper left tile
 	sliceu<point>		blocks; // blocked squares
 };
-const int				hms = 64;
-inline point			i2h(indext i) { return {(short)(i % hms), (short)(i / hms)}; }
-inline indext			h2i(point v) { return v.y * hms + v.x; }
 extern gamei			game;
 namespace draw {
 void					initializex();

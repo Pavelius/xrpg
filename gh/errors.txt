@@ -1,3 +1,3 @@
-﻿Error loading rules/players.json
-Unknown type to load value Male
-Unknown type to load value Male
+﻿Error loading rules/scenarios.json
+Can't find requisit ""
+Can't find requisit ""

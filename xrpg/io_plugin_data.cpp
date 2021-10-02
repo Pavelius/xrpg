@@ -140,6 +140,17 @@ bool readf(const char* url) {
 				break;
 			}
 		}
+		void close(serializer::node& e) override {
+			auto req = (const bsreq*)e.requisit;
+			if(!req)
+				return;
+			if(req->is(KindSlice)) {
+				auto ps = (sliceu<int>*)e.object;
+				if(ps->count) {
+					// TODO: make unique values
+				}
+			}
+		}
 		bool read(variant& v, const char* value) {
 			v = value;
 			if(!v) {

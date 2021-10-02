@@ -156,6 +156,7 @@
     <ClCompile Include="collection.cpp" />
     <ClCompile Include="fraction.cpp" />
     <ClCompile Include="interface.cpp" />
+    <ClCompile Include="map.cpp" />
     <ClCompile Include="nameable.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="deck.cpp" />
@@ -177,6 +178,7 @@
     <None Include="rules\core.json" />
     <None Include="rules\monsters.json" />
     <None Include="rules\players.json" />
+    <None Include="rules\scenarios.json" />
     <None Include="rules\tiles.json" />
   </ItemGroup>
   <ItemGroup>
