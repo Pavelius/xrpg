@@ -19,6 +19,10 @@ BSDATAD(variant)
 BSMETA(tablecsvi) = {{}};
 BSMETA(variants) = {{}};
 
+BSMETA(point) = {
+	BSREQ(x), BSREQ(y),
+	{}};
+BSDATAD(point)
 BSMETA(menui) = {
 	BSREQ(id),
 	BSREQ(parent), BSREQ(resid), BSREQ(type),
@@ -101,6 +105,11 @@ BSMETA(statei) = {
 BSMETA(varianti) = {
 	BSREQ(id),
 	{}};
+BSMETA(tilei) = {
+	BSREQ(id),
+	BSREQ(size), BSREQ(offset), BSREQ(blocks),
+	{}};
+BSDATAD(tilei)
 BSDATAD(activity)
 #define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr
 #define VRNOM(T) 0, bsdata<T>::source_ptr
@@ -123,6 +132,7 @@ BSDATA(varianti) = {
 	{"Player", VRSTD(playeri)},
 	{"State", VRSTD(statei)},
 	{"SummonedCreature", VRSTD(summoni)},
+	{"Tile", VRSTD(tilei)},
 	{"Trap", VRSTD(trapi)},
 	{"Type", VRSTD(varianti)},
 };

@@ -177,6 +177,7 @@
     <None Include="rules\core.json" />
     <None Include="rules\monsters.json" />
     <None Include="rules\players.json" />
+    <None Include="rules\tiles.json" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="errors.txt" />

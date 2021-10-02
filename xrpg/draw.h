@@ -147,6 +147,7 @@ struct surface {
 	unsigned char*		ptr(int x, int y);
 	bool				read(const char* url, color* pallette = 0, int need_bpp = 0);
 	void				resize(int width, int height, int bpp, bool alloc_memory);
+	void				rotate();
 	void				write(const char* url, color* pallette);
 };
 extern surface*			canvas;

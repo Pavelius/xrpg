@@ -48,15 +48,17 @@ enum variant_s : unsigned char {
 	NoVariant,
 	Action, ActionBonus, Area, Card, CardType, CombatCard, Duration, Element,
 	Feat, Fraction, GameProperty, Menu, Monster, Object, Player,
-	State, SummonedCreature, Trap, Type
+	State, SummonedCreature, Tile, Trap, Type
 };
 enum game_propery_s : unsigned char {
 	Reputation, Prosperty, Donate,
 };
+typedef short unsigned indext;
 typedef flagable<2> statef;
 typedef flagable<1 + NextAction / 8> featf;
 typedef flagable<1> elementf;
 typedef flagable<4>	playerf;
+const indext Blocked = 0xFFFF;
 struct deck : varianta {
 	void				addcombat(variant owner);
 	void				drop(variant v) { add(v); }
@@ -128,7 +130,6 @@ struct scripti {
 	elementf			elements_use, elements;
 	statef				states;
 	featf				feats;
-	//void				apply(variant v) { apply(&v, &v + 1); }
 	void				apply(const variants& source) { apply(source.begin(), source.end()); }
 	const variant*		apply(const variant * p, const variant * pe);
 	static variant		getaction(variant v);
@@ -216,8 +217,17 @@ struct gamei {
 	void				set(variant i, int v);
 };
 struct collection : varianta {
-    void                match(variant v, bool keep);
+	void                match(variant v, bool keep);
 };
+struct tilei {
+	const char*			id;
+	point				size; // size of field in tiles
+	point				offset; // offset to upper left tile
+	sliceu<point>		blocks; // blocked squares
+};
+const int				hms = 64;
+inline point			i2h(indext i) { return {(short)(i % hms), (short)(i / hms)}; }
+inline indext			h2i(point v) { return v.y * hms + v.x; }
 extern gamei			game;
 namespace draw {
 void					initializex();

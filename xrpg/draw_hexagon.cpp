@@ -52,23 +52,17 @@ static cube cube_round(cube c) {
 	return {rx, ry, rz};
 }
 
+static point cube_to_evenq(cube c) {
+	auto col = c.x;
+	auto row = c.z + (c.x + ((int)c.x & 1)) / 2;
+	return {(short)col, (short)row};
+}
+
 static point cube_to_oddr(cube c) {
 	auto col = c.x + (c.z - (((int)c.z) & 1)) / 2;
 	auto row = c.z;
 	return {(short)col, (short)row};
 }
-
-//static point flat_hex_to_pixel(point hex) {
-//	auto x = (short)((size * 3.0 * hex.x) / 2);
-//	auto y = (short)(size * sqrt_3 * hex.x + 0.5 * (hex.y & 1));
-//	return {x, y};
-//}
-//
-//static point pixel_to_flat_hex(point pixel) {
-//	auto q = (short)(((2.0 / 3.0) * pixel.x) / size);
-//	auto r = (short)(((-1.0 / 3.0) * pixel.x + sqrt_3 / 3 * pixel.y) / size);
-//	return {q, r};
-//}
 
 static cube axial_to_cube(point pt) {
 	return {(double)pt.x, (double)(-pt.x - pt.y), (double)pt.y};
@@ -81,8 +75,6 @@ static point cube_to_axial(cube c) {
 point draw::h2p(point hex, int size) {
 	auto x = (short)(size * sqrt_3 * (hex.x - 0.5 * (hex.y & 1)));
 	auto y = (short)(size * 3 / 2 * hex.y);
-	//short x = short(size * sqrt_3) * hex.x + (short(size * sqrt_3) / 2) * hex.y;
-	//short y = size * 3 / 2 * hex.y;
 	return {x, y};
 }
 

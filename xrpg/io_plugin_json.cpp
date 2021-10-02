@@ -44,10 +44,10 @@ static const char* read_array(const char* p, serializer::node& pn, serializer::r
 	int index = 0;
 	while(*p) {
 		auto n = pn;
-		n.name = pn.name;
+		n.name = "$element";
 		n.index = index;
-		n.object = pn.object;
-		n.metadata = pn.metadata;
+		n.object = 0;
+		n.metadata = 0;
 		p = read_object(p, n, e);
 		if(*p == ',') {
 			p = skipspcr(p + 1);

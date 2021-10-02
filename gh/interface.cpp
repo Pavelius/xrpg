@@ -8,40 +8,9 @@ using namespace draw;
 const int size = 50;
 static const point states_pos[] = {{-16, 16}, {-16, -16}, {16, 16}, {16, -16}};
 static int show_hex_coor = 0;
-
-//static void hexagon(short unsigned i, bool use_hilite, bool show_movement) {
-//	auto pt = map::h2p(i) - camera;
-//	const rect rc = {0 - 100, 0 - 100, draw::getwidth() + 100, draw::getheight() + 100};
-//	if(!pt.in(rc))
-//		return;
-//	hexagon(pt, hexagon_offset, colors::black);
-//	if(map::is(i, HasBlock))
-//		hexagon(pt, hexagon_offset2, colors::green);
-//	auto m = getmovecost(i);
-//	if(m == Blocked)
-//		use_hilite = false;
-//	if(show_movement && use_hilite && m) {
-//		auto pf = fore;
-//		fore = colors::black;
-//		fore.a = 128;
-//		hexagonf(pt.x, pt.y);
-//		fore = pf;
-//	} else if(show_map_index) {
-//		if(m != Blocked) {
-//			char temp[32]; stringbuilder sb(temp);
-//			sb.add("%1i", i);
-//			text(pt.x - textw(temp) / 2, pt.y - texth() / 2, temp);
-//		}
-//	}
-//	if(use_hilite) {
-//		auto m = getmovecost(i);
-//		if(m != Blocked) {
-//			const rect rch = {pt.x - size / 2, pt.y - size / 2, pt.x + size / 2, pt.y + size / 2};
-//			if(areb(rch))
-//				hilite_index = i;
-//		}
-//	}
-//}
+static int show_hex_grid = 0;
+static indext current_index;
+static point mouse_difference;
 
 static void paint_number(int x, int y, int value) {
 	char temp[16]; stringbuilder sb(temp);
@@ -97,24 +66,37 @@ static bool ishilitehex(int x, int y) {
 	return ishilite(rc);
 }
 
-static point mouse_difference;
-
-static point coor_values;
-
 static void painthexgrid() {
-	for(short y = 0; y < 6; y++) {
-		for(short x = 0; x < 6; x++) {
+	current_index = Blocked;
+	for(short y = 0; y < 7; y++) {
+		for(short x = 0; x < 5; x++) {
 			auto pt = h2p({x, y}, size) - camera;
-			hexagon(pt.x, pt.y, size);
+			if(show_hex_grid)
+				hexagon(pt.x, pt.y, size);
 			if(show_hex_coor) {
 				char temp[64]; stringbuilder sb(temp);
 				sb.add("%1i, %2i", x, y);
 				text(pt.x - textw(temp) / 2, pt.y, temp);
 			}
+			if(ishilitehex(pt.x, pt.y))
+				current_index = h2i({x, y});
 		}
 	}
-	if(hot.key == 'G')
+	if(hot.key == (Ctrl + 'G'))
+		execute(cbsetint, show_hex_grid ? 0 : 1, 0, &show_hex_grid);
+	else if(hot.key == 'G')
 		execute(cbsetint, show_hex_coor ? 0 : 1, 0, &show_hex_coor);
+}
+
+static void painthilitehex() {
+	if(current_index == Blocked)
+		return;
+	auto pt = h2p(i2h(current_index), size) - camera;
+	auto push_fore = fore;
+	fore = colors::white;
+	fore.a = 64;
+	hexagonf(pt.x, pt.y, size);
+	fore = push_fore;
 }
 
 void paintfigures() {
@@ -136,11 +118,27 @@ void paintfigures() {
 	}
 }
 
+static void paintcurrentindex() {
+	if(current_index == Blocked)
+		return;
+	auto mp = i2h(current_index);
+	tooltips("Index %1i, %2i", mp.x, mp.y);
+}
+
+static void paintmap() {
+	auto& e = bsdata<tilei>::get(0);
+	auto ps = gres(e.id, "art/tiles");
+	if(!ps)
+		return;
+	image(-camera.x, -camera.y, ps, 0, 0);
+	painthexgrid();
+}
+
 static void paintgame() {
 	paintclear();
-	paintimage();
-	painthexgrid();
+	paintmap();
 	paintfigures();
+	painthilitehex();
 	paintcommands();
 }
 
@@ -156,7 +154,17 @@ static variant choose_cards(variant player, int level) {
 	return collection.choose(player.getname(), getnm("Cancel"), true, 0);
 }
 
+static bool test_tiles() {
+	auto& e = bsdata<tilei>::get(0);
+	if(!e.size)
+		return false;
+	if(!e.blocks)
+		return false;
+	return true;
+}
+
 void start_menu() {
+	test_tiles();
 	auto pp1 = (playeri*)bsdata<playeri>::source.ptr(0);
 	auto pp2 = (playeri*)bsdata<playeri>::source.ptr(1);
 	pp1->buildcombatdeck();
@@ -177,7 +185,7 @@ void start_menu() {
 void draw::initializex() {
 	initialize("GH simulator");
 	pausetime = 1000;
-	scene.resurl = "gloomhaven";
+	scene.resurl = "L1a";
 	scene.background = paintgame;
 	setnext(start_menu);
 	start();

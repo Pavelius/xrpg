@@ -2193,6 +2193,29 @@ void surface::convert(int new_bpp, color* pallette) {
 	bpp = iabs(new_bpp);
 }
 
+static unsigned char* rotate32(unsigned char* src, int width, int height) {
+	auto m = sizeof(color);
+	auto dst = (unsigned char*)malloc(height * width * m);
+	for(auto x = 0; x < width; x++) {
+		for(auto y = 0; y < height; y++) {
+			auto p1 = dst + (x * height + y) * m;
+			auto p2 = src + (y * width + x) * m;
+			*((color*)p1) = *((color*)p2);
+		}
+	}
+	return dst;
+}
+
+void surface::rotate() {
+	if(iabs(bpp) != 32)
+		return;
+	auto pn = rotate32(bits, width, height);
+	free(bits);
+	bits = pn;
+	iswap(width, height);
+	scanline = color::scanline(width, bpp);
+}
+
 void draw::key2str(stringbuilder& sb, int key) {
 	if(key & Ctrl)
 		sb.add("Ctrl+");

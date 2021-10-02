@@ -16,12 +16,12 @@ int main() {
 	initialize_png();
 	if(!initialize_translation("ru"))
 		return -1;
+	if(!readf("rules/tiles.json"))
+		return -1;
 	if(!readf("rules/core.json"))
 		return -1;
 	if(!readf("rules/players.json"))
 		return -1;
-	//if(!readf("rules/monsters.json"))
-	//	return -1;
 	util_main();
 	draw::initializex();
 	return 0;

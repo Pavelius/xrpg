@@ -100,6 +100,9 @@
     <None Include="rules\monsters.json">
       <Filter>Data</Filter>
     </None>
+    <None Include="rules\tiles.json">
+      <Filter>Data</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="errors.txt">

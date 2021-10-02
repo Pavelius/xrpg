@@ -17,7 +17,7 @@ bsdata<meta_decoy<decltype(data_type::fn)>::value>::source_ptr}
 enum bstype_s : unsigned char {
 	KindNoType,
 	KindNumber, KindText, KindScalar, KindEnum, KindReference,
-	KindADat, KindList, KindARem, KindCFlags
+	KindADat, KindSlice, KindList, KindARem, KindCFlags
 };
 // Metadata field descriptor
 struct bsreq {
@@ -98,6 +98,7 @@ template<class T> struct meta_size<T*> { typedef T* value; };
 template<class T> struct meta_size<const T*> { typedef T* value; };
 template<class T, unsigned N> struct meta_size<T[N]> : meta_size<T> {};
 template<class T> struct meta_size<T[]> : meta_size<T> {};
+template<class T> struct meta_size<sliceu<T>> : meta_size<T> {};
 // Get kind
 template<class T> struct meta_kind : static_value<bstype_s, __is_enum(T) ? KindEnum : KindScalar> {};
 template<> struct meta_kind<const char*> : static_value<bstype_s, KindText> {};
@@ -112,6 +113,7 @@ template<class T> struct meta_kind<T*> : static_value<bstype_s, KindReference> {
 template<class T> struct meta_kind<T**> {}; // Not allowed complex pointer
 template<class T> struct meta_kind<const T*> : static_value<bstype_s, KindReference> {};
 template<class T> struct meta_kind<const T> : static_value<bstype_s, meta_kind<T>::value> {};
+template<class T> struct meta_kind<sliceu<T>> : static_value<bstype_s, KindSlice> {};
 template<class T, unsigned N> struct meta_kind<T[N]> : static_value<bstype_s, meta_kind<T>::value> {};
 template<class T, unsigned N> struct meta_kind<adat<T, N>> : static_value<bstype_s, KindADat> {};
 //template<class T> struct meta_kind<std::initializer_list<T>> : static_value<bstype_s, KindList> {};

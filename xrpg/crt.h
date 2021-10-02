@@ -263,4 +263,5 @@ template<class T, unsigned N> struct meta_decoy<T[N]> : meta_decoy<T> {};
 template<class T> struct meta_decoy<T[]> : meta_decoy<T> {};
 template<class T> struct meta_decoy<const T> : meta_decoy<T> {};
 template<class T> struct meta_decoy<vector<T>> : meta_decoy<T> {};
+template<class T> struct meta_decoy<sliceu<T>> : meta_decoy<T> {};
 template<class T, unsigned N> struct meta_decoy<adat<T, N>> : meta_decoy<T> {};

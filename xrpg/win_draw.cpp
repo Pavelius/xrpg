@@ -327,7 +327,7 @@ void draw::create(int x, int y, int width, int height, unsigned flags, int bpp) 
 	hot.mouse.y = (short)pt.y;
 }
 
-static void handle_event(unsigned m) {
+static unsigned handle_event(unsigned m) {
 	if(m < InputSymbol || m > InputNoUpdate) {
 		if(GetKeyState(VK_SHIFT) < 0)
 			m |= Shift;
@@ -342,6 +342,7 @@ static void handle_event(unsigned m) {
 			setclip();
 		}
 	}
+	return m;
 }
 
 void draw::sysredraw() {
@@ -368,7 +369,7 @@ int draw::rawinput() {
 		if(m == InputNoUpdate)
 			continue;
 		if(m) {
-			handle_event(m);
+			m = handle_event(m);
 			return m;
 		}
 	}
