@@ -164,7 +164,8 @@ static bool test_tiles() {
 }
 
 void start_menu() {
-	test_tiles();
+	if(!test_tiles())
+		return;
 	auto pp1 = (playeri*)bsdata<playeri>::source.ptr(0);
 	auto pp2 = (playeri*)bsdata<playeri>::source.ptr(1);
 	pp1->buildcombatdeck();
