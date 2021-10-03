@@ -10,11 +10,16 @@ const int size = 50;
 static const point states_pos[] = {{-16, 16}, {-16, -16}, {16, 16}, {16, -16}};
 static int show_hex_coor = 0;
 static int show_hex_grid = 0;
+static int show_movement_cost = 1;
 static indext current_index;
 static point mouse_difference;
 
 point h2p(point v) {
 	return draw::h2p(v, size);
+}
+
+point p2h(point v) {
+	return draw::p2h(v, size);
 }
 
 static void paint_number(int x, int y, int value) {
@@ -71,7 +76,18 @@ void object::paint_tile() const {
 	if(!ps)
 		return;
 	auto flags = 0;
-	if(is(Muddle))
+	if(is(Mirrored))
+		flags = ImageMirrorH | ImageMirrorV;
+	image(caret.x, caret.y, ps, 0, flags);
+}
+
+void object::paint_default() const {
+	auto id = kind.getid();
+	auto ps = gres(id, "art/tiles");
+	if(!ps)
+		return;
+	auto flags = 0;
+	if(is(Mirrored))
 		flags = ImageMirrorH | ImageMirrorV;
 	image(caret.x, caret.y, ps, 0, flags);
 }
@@ -86,6 +102,9 @@ void object::paint() const {
 	case Tile:
 		paint_tile();
 		break;
+	default:
+		paint_default();
+		break;
 	}
 }
 
@@ -95,29 +114,43 @@ static bool ishilitehex(int x, int y) {
 	return ishilite(rc);
 }
 
+static void paint_tips(point pt, point v) {
+	char temp[64]; stringbuilder sb(temp);
+	sb.add("%1i, %2i", v.x, v.y);
+	text(pt.x - textw(temp) / 2, pt.y, temp);
+}
+
+static void paint_tips(point pt, int v) {
+	char temp[64]; stringbuilder sb(temp);
+	sb.add("%1i", v);
+	text(pt.x - textw(temp) / 2, pt.y, temp);
+}
+
 static void painthexgrid() {
 	current_index = Blocked;
-	for(short y = 0; y < hms; y++) {
-		for(short x = 0; x < hms; x++) {
-			auto ix = h2i({x, y});
-			if(game.iswall(ix))
-				continue;
-			auto pt = h2p({x, y}, size) - camera;
-			if(show_hex_grid)
-				hexagon(pt.x, pt.y, size);
-			if(show_hex_coor) {
-				char temp[64]; stringbuilder sb(temp);
-				sb.add("%1i, %2i", x, y);
-				text(pt.x - textw(temp) / 2, pt.y, temp);
-			}
-			if(ishilitehex(pt.x, pt.y))
-				current_index = ix;
+	for(short ix = 0; ix < hms*hms; ix++) {
+		auto hex = i2h(ix);
+		if(game.iswall(ix))
+			continue;
+		auto pt = h2p(hex, size) - camera;
+		if(show_hex_grid)
+			hexagon(pt.x, pt.y, size);
+		if(show_hex_coor)
+			paint_tips(pt, hex);
+		else if(show_movement_cost) {
+			auto n = game.getmove(ix);
+			if(n != Blocked && n)
+				paint_tips(pt, n);
 		}
+		if(ishilitehex(pt.x, pt.y))
+			current_index = ix;
 	}
 	if(hot.key == (Ctrl + 'G'))
 		execute(cbsetint, show_hex_grid ? 0 : 1, 0, &show_hex_grid);
 	else if(hot.key == 'G')
 		execute(cbsetint, show_hex_coor ? 0 : 1, 0, &show_hex_coor);
+	else if(hot.key == 'M')
+		execute(cbsetint, show_movement_cost ? 0 : 1, 0, &show_movement_cost);
 }
 
 static void painthilitehex() {
@@ -129,6 +162,8 @@ static void painthilitehex() {
 	fore.a = 64;
 	hexagonf(pt.x, pt.y, size);
 	fore = push_fore;
+	//auto hex = p2h(hot.mouse + camera, size);
+	//tooltips("Hex %1i, %2i", hex.x, hex.y);
 }
 
 void paintfigures() {
@@ -187,11 +222,18 @@ static variant choose_cards(variant player, int level) {
 static void test_scenario() {
 	auto& sc = bsdata<scenarioi>::get(0);
 	sc.prepare(0);
-	auto p1 = game.create("Brute", Ally);
-	auto p2 = game.create("Thinkerer", Enemy);
+	auto p1 = game.create("Brute", false);
+	auto p2 = game.create("Thinkerer", false);
+	p1->set(Level, 1);
 	p1->setposition(h2p(sc.getstart(0), size));
 	p1->set(Poison, 1);
 	p2->setposition(h2p(sc.getstart(1), size));
+	p2->set(Level, 1);
+	auto index = h2i(sc.getstart(1));
+	game.clearpath();
+	game.blockwalls();
+	game.setmove(index, Blocked);
+	game.makewave(index);
 }
 
 void start_menu() {

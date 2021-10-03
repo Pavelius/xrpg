@@ -1,3 +1,2 @@
 ﻿Error loading rules/scenarios.json
-Can't find requisit ""
-Can't find requisit ""
+Can't find variant "SToneDoorH"

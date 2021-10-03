@@ -5,3 +5,12 @@ void playeri::buildcombatdeck() {
 	combat.addcombat({});
 	combat.shuffle();
 }
+
+int playeri::get(action_s v) const {
+	switch(v) {
+	case Coins: return coins;
+	case Level: return level;
+	case Experience: return exp;
+	default: return 0;
+	}
+}

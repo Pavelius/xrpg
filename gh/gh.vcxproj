@@ -154,8 +154,9 @@
     <ClCompile Include="area.cpp" />
     <ClCompile Include="cardtype.cpp" />
     <ClCompile Include="collection.cpp" />
-    <ClCompile Include="fraction.cpp" />
+    <ClCompile Include="event_reader.cpp" />
     <ClCompile Include="interface.cpp" />
+    <ClCompile Include="map.cpp" />
     <ClCompile Include="nameable.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="deck.cpp" />
@@ -184,6 +185,8 @@
   <ItemGroup>
     <Text Include="errors.txt" />
     <Text Include="locale\ru\Names.txt" />
+    <Text Include="rules\core.txt" />
+    <Text Include="rules\events.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

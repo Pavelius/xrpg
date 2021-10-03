@@ -23,6 +23,9 @@
     "TrapDamage6": {
       "damage": 6,
       "feats": [ "Exp2" ]
+    },
+    "SpikedTrap": {
+      "damage": 4
     }
   },
   "Card": {

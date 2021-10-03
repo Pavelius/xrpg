@@ -9,5 +9,7 @@ BSDATA(statei) = {
 	{"Invisibility"},
 	{"Stun", true},
 	{"Strenght"},
+	{"Mirrored"},
+	{"Hostile"},
 };
-assert_enum(statei, Strenght)
+assert_enum(statei, Hostile)

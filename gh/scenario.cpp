@@ -6,6 +6,6 @@ void scenarioi::prepare(int stage) {
 	for(auto& e : tiles) {
 		if(!e)
 			continue;
-		bsdata<tilei>::get(e.tile.value).create(e.position, e.inverse);
+		game.create(e.position, e.tile, e.inverse);
 	}
 }

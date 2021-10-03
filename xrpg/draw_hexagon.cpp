@@ -58,6 +58,12 @@ static point cube_to_evenq(cube c) {
 	return {(short)col, (short)row};
 }
 
+static point cube_to_evenr(cube c) {
+	auto col = c.x + (c.z + ((int)c.z & 1)) / 2;
+	auto row = c.z;
+	return {(short)col, (short)row};
+}
+
 static point cube_to_oddr(cube c) {
 	auto col = c.x + (c.z - (((int)c.z) & 1)) / 2;
 	auto row = c.z;
@@ -81,7 +87,7 @@ point draw::h2p(point hex, int size) {
 point draw::p2h(point pt, int size) {
 	auto q = ((sqrt_3 / 3.0) * (double)pt.x - (1.0 / 3.0) * (double)pt.y) / (double)size;
 	auto r = ((2.0 / 3.0) * (double)pt.y) / (double)size;
-	return cube_to_oddr(cube_round(axial_to_cube({(short)q, (short)r})));
+	return cube_to_evenr(cube_round({q, -q - r, r}));
 }
 
 int draw::getdistance(point h1, point h2) {

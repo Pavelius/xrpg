@@ -139,7 +139,7 @@ struct surface {
 	surface(int width, int height, int bpp);
 	surface(const char* url, color* pallette = 0);
 	~surface();
-	operator bool() const { return bits != 0; }
+	constexpr explicit operator bool() const { return bits != 0; }
 	static unsigned char* allocator(unsigned char* bits, unsigned size);
 	void				clear() { resize(0, 0, 0, true); }
 	void				convert(int bpp, color* pallette);

@@ -64,10 +64,45 @@ static object* find_emphty() {
 	return 0;
 }
 
-object* gamei::create(variant v, fraction_s fraction) {
+object* gamei::create(variant v, bool inverse) {
 	auto p = find_emphty();
 	if(!p)
 		p = bsdata<object>::addz();
-	p->create(v, fraction);
+	p->create(v);
+	if(inverse)
+		p->set(Mirrored, 1);
 	return p;
+}
+
+object* gamei::create(point position, variant v, bool inverse) {
+	auto p = create(v, inverse);
+	auto pt = h2p(position);
+	if(v.type == Tile)
+		pt = pt - bsdata<tilei>::get(v.value).offset;
+	p->setposition(pt);
+	switch(v.type) {
+	case Tile:
+		bsdata<tilei>::get(v.value).creating(position, inverse);
+		break;
+	case Monster:
+		p->set(Level, getlevel() / 2);
+		break;
+	default:
+		game.setpass(h2i(position));
+		break;
+	}
+	return p;
+}
+
+int gamei::getlevel() const {
+	auto c = players.getcount();
+	if(!c)
+		return 0;
+	auto r = c - 1;
+	for(auto& e : players) {
+		if(!e)
+			continue;
+		r += bsdata<playeri>::get(e.value).get(Level);
+	}
+	return r / c;
 }

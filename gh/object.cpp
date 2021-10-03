@@ -85,7 +85,7 @@ void object::attack(object& enemy, const scripti& modifiers) {
 void object::attack(int damage, int range, int pierce, int targets, statef additional) {
 	collection source;
 	source.select(bsdata<object>::source);
-	source.match(Enemy, true);
+	source.matchhostile(!is(Hostile));
 	if(!targets)
 		targets = 1;
 	for(auto v : source) {
@@ -103,13 +103,6 @@ void object::attack(int damage, int range, int pierce, int targets, statef addit
 	}
 }
 
-bool object::match(variant v) const {
-	switch(v.type) {
-	case Fraction: return fraction == v.value;
-	default: return get(v) > 0;
-	}
-}
-
 void object::pull(int range, int targets) {
 }
 
@@ -119,7 +112,10 @@ void object::push(int range, int targets) {
 int object::get(variant v) const {
 	switch(v.type) {
 	case Action:
-		return 0;
+		switch(v.value) {
+		case Level: return level;
+		default: return 0;
+		}
 	case State:
 		return states.is(v.value) ? 1 : 0;
 	default:
@@ -132,8 +128,11 @@ void object::set(variant i, int v) {
 	case State:
 		states.set(i.value, v > 0);
 		break;
-	case Fraction:
-		this->fraction = (fraction_s)i.value;
+	case Action:
+		switch(i.value) {
+		case Level: level = v; break;
+		default: break;
+		}
 		break;
 	default:
         break;
@@ -171,18 +170,9 @@ void object::apply(variant v, int bonus) {
 	}
 }
 
-fraction_s object::getfraction() const {
-	switch(kind.type) {
-	case Player: return Ally;
-	case Monster: return Enemy;
-	default: return Neutral;
-	}
-}
-
-void object::create(variant v, fraction_s fraction) {
+void object::create(variant v) {
 	this->kind = v;
 	this->hits = getmaximumhits();
-	this->fraction = fraction;
 	states.clear();
 }
 

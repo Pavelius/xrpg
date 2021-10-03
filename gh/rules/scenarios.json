@@ -57,10 +57,31 @@
           "inverse": true
         },
         {
-          "tile": "Corridor",
+          "tile": "StoneDoorV",
           "position": {
             "x": 7,
             "y": 11
+          }
+        },
+        {
+          "tile": "StoneDoorH",
+          "position": {
+            "x": 11,
+            "y": 9
+          }
+        },
+        {
+          "tile": "SpikedTrap",
+          "position": {
+            "x": 10,
+            "y": 10
+          }
+        },
+        {
+          "tile": "SpikedTrap",
+          "position": {
+            "x": 11,
+            "y": 10
           }
         }
       ]

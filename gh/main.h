@@ -37,17 +37,15 @@ enum action_bonus_s : char {
 };
 enum state_s : unsigned char {
 	Disarmed, Immobilize, Wound, Muddle, Poison, Invisibility, Stun, Strenght,
+	Mirrored, Hostile,
 };
 enum element_s : unsigned char {
 	Fire, Ice, Air, Earth, Light, Dark, AnyElement,
 };
-enum fraction_s : unsigned char {
-	Neutral, Ally, Enemy,
-};
 enum variant_s : unsigned char {
 	NoVariant,
 	Action, ActionBonus, Area, Card, CardType, CombatCard, Duration, Element,
-	Feat, Fraction, GameProperty, Menu, Monster, Object, Player,
+	Feat, GameProperty, Menu, Monster, Object, Player,
 	Scenario, State, SummonedCreature, Tile, Trap, Type
 };
 enum game_propery_s : unsigned char {
@@ -100,9 +98,6 @@ struct durationi {
 struct elementi {
 	const char*			id;
 };
-struct fractioni {
-	const char*			id;
-};
 struct gamepropertyi {
 	const char*			id;
 };
@@ -112,8 +107,10 @@ struct feati {
 struct playeri {
 	const char*			id;
 	gender_s			gender;
+	char				level, exp, coins;
 	short				health[10];
 	deck				combat, hand, active, discard, lost;
+	int					get(action_s v) const;
 	void				buildcombatdeck();
 };
 struct statei {
@@ -140,6 +137,7 @@ struct trapi {
 	const char*			id;
 	char				damage;
 	variants			feats;
+	const char*			avatar;
 };
 struct summoni {
 	const char*			id;
@@ -162,10 +160,11 @@ struct nameable {
 	const char*         getname() const { return kind.getname(); }
 };
 class object : public posable, public nameable {
-	fraction_s          fraction;
 	short               hits;
+	char				level;
 	statef              states;
 	void				paint_creature() const;
+	void				paint_default() const;
 	void				paint_tile() const;
 public:
 	constexpr operator bool() const { return hits != 0; }
@@ -175,19 +174,17 @@ public:
 	void				attack(int damage, int range, int pierce, int targets, statef additional);
 	void                attack(object& enemy, const scripti& parameters);
 	void                clear();
-	void				create(variant v, fraction_s fraction);
+	void				create(variant v);
 	void				damage(int value);
 	int                 get(variant v) const;
 	deck&				getcombatdeck() const;
-	fraction_s          getfraction() const;
 	int                 getmaximumhits() const;
 	void				heal(int v);
 	bool                is(state_s v) const { return states.is(v); }
+	bool                isenemy(const object& e) const { return is(Hostile) != e.is(Hostile); }
 	bool                isinteractive() const { return true; }
-	bool                ishostile() const;
 	bool                isplayer() const { return false; }
 	void                kill();
-	bool                match(variant v) const;
 	void				move(int v);
 	void				paint() const;
 	void				pull(int range, int targets);
@@ -207,9 +204,16 @@ const int				hms = 64;
 class mapi {
 	flagable<hms*hms>	walls;
 public:
+	void				clearpath();
+	void				block(const variants& variant);
+	void				blockwalls();
+	short unsigned		getmove(indext i) const;
 	bool				iswall(indext i) const { return walls.is(i); }
+	void				makewave(indext start_index);
+	void				setmove(indext i, short unsigned v);
 	void				setpass(indext i) { walls.remove(i); }
 	void				setwall(indext i) { walls.set(i); }
+	indext				to(indext i, int d) const;
 };
 struct scenariotiles {
 	variant				tile;
@@ -226,6 +230,7 @@ struct scenarioi {
 };
 struct gamei : public mapi {
 	short				ability[Donate + 1];
+	int					difficult;
 	adat<variant, 4>	players;
 	playerf				allowed_players;
 	deck				market;
@@ -234,25 +239,29 @@ struct gamei : public mapi {
 	char				elements[AnyElement];
 	void				add(variant i, int v = 1);
 	void				buildcombatdeck();
-	object*				create(variant v, fraction_s fraction);
+	object*				create(variant v, bool inverse);
+	object*				create(point position, variant v, bool inverse);
 	bool				isallow(variant v) const;
 	int					get(variant i) const;
+	int					getlevel() const;
 	void				set(variant i, int v);
 };
 struct collection : varianta {
 	void                match(variant v, bool keep);
+	void				matchhostile(bool keep);
 };
 struct tilei {
 	const char*			id;
 	point				size; // size of field in tiles
 	point				offset; // offset to upper left tile
 	slice<point>		blocks; // blocked squares
-	object*				create(point position, bool inverse) const;
+	void				creating(point position, bool inverse) const;
 };
 extern gamei			game;
 inline point			i2h(indext i) { return {(short)(i % hms), (short)(i / hms)}; }
 inline indext			h2i(point v) { return v.y * hms + v.x; }
 point					h2p(point v);
+point					p2h(point v);
 namespace draw {
 void					initializex();
 void					status(const char* format, ...);
@@ -262,5 +271,5 @@ VKIND(action_s, Action)
 VKIND(area_s, Area)
 VKIND(duration_s, Duration)
 VKIND(feat_s, Feat)
-VKIND(fraction_s, Fraction)
+VKIND(object, Object)
 VKIND(state_s, State)

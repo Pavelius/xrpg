@@ -2148,13 +2148,15 @@ surface::~surface() {
 
 unsigned char* surface::allocator(unsigned char* bits, unsigned size) {
 	if(!size) {
-		free(bits);
+		if(bits)
+			free(bits);
 		bits = 0;
+	} else {
+		if(!bits)
+			bits = (unsigned char*)malloc(size);
+		else
+			bits = (unsigned char*)realloc(bits, size);
 	}
-	if(!bits)
-		bits = (unsigned char*)malloc(size);
-	else
-		bits = (unsigned char*)realloc(bits, size);
 	return bits;
 }
 
@@ -2166,7 +2168,7 @@ void surface::resize(int width, int height, int bpp, bool alloc_memory) {
 	this->height = height;
 	this->scanline = color::scanline(width, bpp);
 	if(alloc_memory)
-		bits = allocator(bits, (height + 1) * scanline);
+		bits = allocator(bits, height ? (height + 1) * scanline : 0);
 }
 
 void surface::flipv() {

@@ -94,7 +94,6 @@ BSDATAD(activity)
 BSMETA(actioni) = {BSREQ(id), {}};
 BSMETA(areai) = {BSREQ(id), {}};
 BSMETA(elementi) = {BSREQ(id), {}};
-BSMETA(fractioni) = {BSREQ(id), {}};
 BSMETA(gamepropertyi) = {BSREQ(id), {}};
 BSMETA(genderi) = {BSREQ(id), {}};
 BSMETA(statei) = {BSREQ(id), {}};
@@ -113,7 +112,6 @@ BSDATA(varianti) = {
 	{"Duration", VRSTD(durationi)},
 	{"Element", VRSTD(elementi)},
 	{"Feat", VRSTD(feati)},
-	{"Fraction", VRSTD(fractioni)},
 	{"GameProperty", VRSTD(gamepropertyi)},
 	{"Menu", VRSTD(menui)},
 	{"Monster", VRSTD(monsteri)},
