@@ -1,19 +1,66 @@
 {
+  "$schema": null,
   "Scenario": {
     "BlackBarrows": {
+      "starts": [
+        {
+          "x": 3,
+          "y": 11
+        },
+        {
+          "x": 2,
+          "y": 10
+        },
+        {
+          "x": 2,
+          "y": 12
+        },
+        {
+          "x": 3,
+          "y": 10
+        },
+        {
+          "x": 3,
+          "y": 12
+        },
+        {
+          "x": 3,
+          "y": 9
+        },
+        {
+          "x": 3,
+          "y": 13
+        }
+      ],
       "tiles": [
         {
           "tile": "L1a",
           "position": {
             "x": 2,
-            "y": 4
-          }
+            "y": 8
+          },
+          "inverse": true
         },
         {
           "tile": "G1b",
           "position": {
+            "x": 7,
+            "y": 10
+          }
+        },
+        {
+          "tile": "I1b",
+          "position": {
             "x": 8,
             "y": 4
+          },
+          "inverse": true
+        },
+        {
+          "tile": "Corridor",
+          "position": {
+            "x": 7,
+            "y": 11
           }
         }
       ]

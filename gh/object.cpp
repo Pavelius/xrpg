@@ -29,7 +29,7 @@ deck& object::getcombatdeck() const {
 int object::getmaximumhits() const {
 	switch(kind.type) {
 	case Player: return bsdata<playeri>::get(kind.value).health[1];
-	default: return 0;
+	default: return 1000;
 	}
 }
 

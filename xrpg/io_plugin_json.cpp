@@ -44,7 +44,7 @@ static const char* read_array(const char* p, serializer::node& pn, serializer::r
 	int index = 0;
 	while(*p) {
 		auto n = pn;
-		n.name = "$element";
+		n.name = "element";
 		n.index = index;
 		n.object = 0;
 		n.metadata = 0;
@@ -139,7 +139,11 @@ static const char* read_object(const char* p, serializer::node& n, serializer::r
 		p = read_string(p + 1, *p, n, e);
 	else if(*p == '-' || isnum(*p))
 		p = read_number(p, n, e);
-	else if(match(p, "false")) {
+	else if(match(p, "null")) {
+		n.type = serializer::kind::Text;
+		if(!n.skip)
+			e.set(n, 0);
+	} else if(match(p, "false")) {
 		n.type = serializer::kind::Number;
 		if(!n.skip)
 			e.set(n, "false");

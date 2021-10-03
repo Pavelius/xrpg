@@ -47,7 +47,7 @@
         {
           "hits": 9,
           "move": 2,
-          "attack": 3,
+          "attack": 3
         },
         {
           "hits": 9,
@@ -92,6 +92,6 @@
           "feats": [ "Muddle", "Shield3" ]
         }
       ]
-    },
-  },
+    }
+  }
 }

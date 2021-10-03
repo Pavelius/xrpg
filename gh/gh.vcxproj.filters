@@ -70,7 +70,10 @@
     <ClCompile Include="interface.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="map.cpp">
+    <ClCompile Include="scenario.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="tile.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,9 +104,6 @@
       <Filter>Data</Filter>
     </None>
     <None Include="rules\monsters.json">
-      <Filter>Data</Filter>
-    </None>
-    <None Include="rules\tiles.json">
       <Filter>Data</Filter>
     </None>
     <None Include="rules\scenarios.json">

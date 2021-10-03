@@ -156,7 +156,6 @@
     <ClCompile Include="collection.cpp" />
     <ClCompile Include="fraction.cpp" />
     <ClCompile Include="interface.cpp" />
-    <ClCompile Include="map.cpp" />
     <ClCompile Include="nameable.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="deck.cpp" />
@@ -170,16 +169,17 @@
     <ClCompile Include="main_util.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="property.cpp" />
+    <ClCompile Include="scenario.cpp" />
     <ClCompile Include="script.cpp" />
     <ClCompile Include="sprite_util.cpp" />
     <ClCompile Include="state.cpp" />
+    <ClCompile Include="tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="rules\core.json" />
     <None Include="rules\monsters.json" />
     <None Include="rules\players.json" />
     <None Include="rules\scenarios.json" />
-    <None Include="rules\tiles.json" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="errors.txt" />
@@ -190,7 +190,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties rules_4players_1json__JsonSchema="" />
+      <UserProperties rules_4core_1json__JsonSchema="" rules_4players_1json__JsonSchema="" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

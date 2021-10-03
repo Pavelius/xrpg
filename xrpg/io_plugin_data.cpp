@@ -77,26 +77,17 @@ bool readf(const char* url) {
 				ps->count++;
 			}
 		}
-		const bsreq* getrequisit(serializer::node& e) {
+		void applyvalues(serializer::node& e) {
 			const bsreq* req = 0;
-			switch(e.parent->type) {
-			case serializer::kind::Struct:
+			if(e.parent->type == serializer::kind::Struct)
 				req = ((bsreq*)e.parent->metadata)->find(e.name);
-				break;
-			default:
+			else
 				req = (bsreq*)e.parent->requisit;
-				break;
-			}
 			if(!req) {
 				e.skip = true;
 				warning("Can't find requisit \"%1\"", e.name);
-			}
-			return req;
-		}
-		void applyvalues(serializer::node& e) {
-			auto req = getrequisit(e);
-			if(!req)
 				return;
+			}
 			e.requisit = (void*)req;
 			e.metadata = (void*)req->type;
 			if(e.parent->type == serializer::kind::Struct)
@@ -160,6 +151,8 @@ bool readf(const char* url) {
 			return true;
 		}
 		void set(serializer::node& e, const char* value) override {
+			if(e.name[0] == '$')
+				return;
 			applyvalues(e);
 			auto req = (const bsreq*)e.requisit;
 			if(!req)

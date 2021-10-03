@@ -165,6 +165,8 @@ class object : public posable, public nameable {
 	fraction_s          fraction;
 	short               hits;
 	statef              states;
+	void				paint_creature() const;
+	void				paint_tile() const;
 public:
 	constexpr operator bool() const { return hits != 0; }
 	void				activate(duration_s duration, int count, variant source, variants variants);
@@ -202,8 +204,6 @@ struct activity {
 	constexpr operator bool() const { return owner; }
 };
 const int				hms = 64;
-inline point			i2h(indext i) { return {(short)(i % hms), (short)(i / hms)}; }
-inline indext			h2i(point v) { return v.y * hms + v.x; }
 class mapi {
 	flagable<hms*hms>	walls;
 public:
@@ -214,11 +214,15 @@ public:
 struct scenariotiles {
 	variant				tile;
 	point				position;
+	bool				inverse;
 	constexpr operator bool() const { return tile.operator bool(); }
 };
 struct scenarioi {
 	const char*			id;
+	point				starts[8];
 	scenariotiles		tiles[8];
+	point				getstart(int index) const { return starts[index]; }
+	void				prepare(int stage);
 };
 struct gamei : public mapi {
 	short				ability[Donate + 1];
@@ -242,9 +246,13 @@ struct tilei {
 	const char*			id;
 	point				size; // size of field in tiles
 	point				offset; // offset to upper left tile
-	sliceu<point>		blocks; // blocked squares
+	slice<point>		blocks; // blocked squares
+	object*				create(point position, bool inverse) const;
 };
 extern gamei			game;
+inline point			i2h(indext i) { return {(short)(i % hms), (short)(i / hms)}; }
+inline indext			h2i(point v) { return v.y * hms + v.x; }
+point					h2p(point v);
 namespace draw {
 void					initializex();
 void					status(const char* format, ...);

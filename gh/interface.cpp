@@ -1,5 +1,6 @@
 #include "main.h"
 #include "draw.h"
+#include "draw_hexagon.h"
 #include "draw_simple.h"
 #include "draw_input.h"
 
@@ -11,6 +12,10 @@ static int show_hex_coor = 0;
 static int show_hex_grid = 0;
 static indext current_index;
 static point mouse_difference;
+
+point h2p(point v) {
+	return draw::h2p(v, size);
+}
 
 static void paint_number(int x, int y, int value) {
 	char temp[16]; stringbuilder sb(temp);
@@ -24,7 +29,7 @@ static void paint_number(int x, int y, int value) {
 	font = push_font;
 }
 
-void object::paint() const {
+void object::paint_creature() const {
 	auto x = caret.x, y = caret.y;
 	auto ps = gres(kind.getid(), "art/creatures");
 	if(!ps)
@@ -58,6 +63,30 @@ void object::paint() const {
 	hexagon(x, y, size);
 	fore = push_fore;
 	paint_number(x, y + 30, hits);
+}
+
+void object::paint_tile() const {
+	auto& et = bsdata<tilei>::get(kind.value);
+	auto ps = gres(et.id, "art/tiles");
+	if(!ps)
+		return;
+	auto flags = 0;
+	if(is(Muddle))
+		flags = ImageMirrorH | ImageMirrorV;
+	image(caret.x, caret.y, ps, 0, flags);
+}
+
+void object::paint() const {
+	switch(kind.type) {
+	case Player:
+	case SummonedCreature:
+	case Monster:
+		paint_creature();
+		break;
+	case Tile:
+		paint_tile();
+		break;
+	}
 }
 
 static bool ishilitehex(int x, int y) {
@@ -108,12 +137,18 @@ void paintfigures() {
 			e.setposition(hot.mouse - mouse_difference + camera);
 		caret = e.getposition() - camera;
 		if(ishilitehex(caret.x, caret.y)) {
-			if(hot.key == MouseLeft && hot.pressed) {
-				dragbegin(&e);
-				mouse_difference = hot.mouse - caret;
+			switch(e.kind.type) {
+			case Player:
+			case SummonedCreature:
+			case Monster:
+				if(hot.key == MouseLeft && hot.pressed) {
+					dragbegin(&e);
+					mouse_difference = hot.mouse - caret;
+				}
+				scene.hilite = &e;
+				draw::tooltips(e.kind.getname());
+				break;
 			}
-			scene.hilite = &e;
-			draw::tooltips(e.kind.getname());
 		}
 		e.paint();
 		// if(scene.hilite==variant(&e))
@@ -128,25 +163,11 @@ static void paintcurrentindex() {
 	tooltips("Index %1i, %2i", mp.x, mp.y);
 }
 
-static void paintmap() {
-	auto& se = bsdata<scenarioi>::get(0);
-	for(auto& e : se.tiles) {
-		if(!e)
-			break;
-		auto& et = bsdata<tilei>::get(e.tile.value);
-		auto ps = gres(et.id, "art/tiles");
-		if(!ps)
-			continue;
-		auto pt = h2p(e.position, size) - camera;
-		image(pt.x, pt.y, ps, 0, 0);
-	}
-	painthexgrid();
-}
-
 static void paintgame() {
 	paintclear();
-	paintmap();
+	//rectf({0, 0, getwidth(), getheight()}, colors::white);
 	paintfigures();
+	painthexgrid();
 	painthilitehex();
 	paintcommands();
 }
@@ -163,53 +184,23 @@ static variant choose_cards(variant player, int level) {
 	return collection.choose(player.getname(), getnm("Cancel"), true, 0);
 }
 
-static void apply_rect(point position, point size) {
-	auto x2 = position.x + size.x;
-	auto y2 = position.y + size.y;
-	for(short x = position.x; x < x2; x++) {
-		for(short y = position.y; y < y2; y++)
-			game.setpass(h2i({x, y}));
-	}
-}
-
-static void apply_tiles() {
-	for(auto i = 0; i < hms * hms; i++)
-		game.setwall(i);
-	for(auto& e : bsdata<scenarioi>()) {
-		for(auto& et : e.tiles) {
-			if(!et)
-				break;
-			auto& ti = bsdata<tilei>::get(et.tile.value);
-			apply_rect(et.position, ti.size);
-			for(auto pt : ti.blocks) {
-				auto i = h2i(pt + et.position);
-				game.setwall(i);
-			}
-		}
-	}
-}
-
-static bool test_monsters() {
-	auto& e = bsdata<monsteri>::get(0);
-	if(!e.normal[0].hits)
-		return false;
-	return true;
+static void test_scenario() {
+	auto& sc = bsdata<scenarioi>::get(0);
+	sc.prepare(0);
+	auto p1 = game.create("Brute", Ally);
+	auto p2 = game.create("Thinkerer", Enemy);
+	p1->setposition(h2p(sc.getstart(0), size));
+	p1->set(Poison, 1);
+	p2->setposition(h2p(sc.getstart(1), size));
 }
 
 void start_menu() {
-	if(!test_monsters())
-		return;
-	apply_tiles();
 	auto pp1 = (playeri*)bsdata<playeri>::source.ptr(0);
 	auto pp2 = (playeri*)bsdata<playeri>::source.ptr(1);
 	pp1->buildcombatdeck();
 	pp2->buildcombatdeck();
 	game.buildcombatdeck();
-	auto p1 = game.create("Brute", Ally);
-	auto p2 = game.create("Thinkerer", Enemy);
-	p1->setposition(h2p({2, 6}, size));
-	p1->set(Poison, 1);
-	p2->setposition(h2p({2, 8}, size));
+	test_scenario();
 	//scripti sc = {};
 	//p1->attack(1, 0, 0, 0, {});
 	//p1->act("Test string %1i and %2i", 10, 12);

@@ -29,17 +29,11 @@ BSMETA(menui) = {
 	BSREQ(parent), BSREQ(resid), BSREQ(type),
 	{}};
 BSDATAD(menui)
-BSMETA(actioni) = {
-	BSREQ(id),
-	{}};
 BSMETA(actionbonusi) = {
 	BSREQ(id),
 	BSREQ(action), BSREQ(bonus),
 	{}};
 BSDATAD(actionbonusi)
-BSMETA(areai) = {
-	BSREQ(id),
-	{}};
 BSMETA(cardi) = {
 	BSREQ(id),
 	BSREQ(level), BSREQ(owner),
@@ -58,13 +52,7 @@ BSDATAD(combatcardi)
 BSMETA(durationi) = {
 	BSREQ(id),
 	{}};
-BSMETA(elementi) = {
-	BSREQ(id),
-	{}};
 BSMETA(feati) = {
-	BSREQ(id),
-	{}};
-BSMETA(genderi) = {
 	BSREQ(id),
 	{}};
 BSMETA(playeri) = {
@@ -89,37 +77,29 @@ BSMETA(abilityi) = {
 	BSREQ(hits), BSREQ(move), BSREQ(attack), BSREQ(range),
 	BSREQ(feats),
 	{}};
-BSMETA(fractioni) = {
-	BSREQ(id),
-	{}};
-BSMETA(gamepropertyi) = {
-	BSREQ(id),
-	{}};
 BSMETA(monsteri) = {
 	BSREQ(id),
 	BSREQ(normal), BSREQ(elite),
 	{}};
 BSDATAD(monsteri)
-BSMETA(statei) = {
-	BSREQ(id),
-	{}};
-BSMETA(varianti) = {
-	BSREQ(id),
-	{}};
-BSMETA(tilei) = {
-	BSREQ(id),
-	BSREQ(size), BSREQ(offset), BSREQ(blocks),
-	{}};
-BSDATAD(tilei)
 BSMETA(scenariotiles) = {
-	BSREQ(tile), BSREQ(position),
+	BSREQ(tile), BSREQ(position), BSREQ(inverse),
 	{}};
 BSMETA(scenarioi) = {
 	BSREQ(id),
-	BSREQ(tiles),
+	BSREQ(starts), BSREQ(tiles),
 	{}};
 BSDATAD(scenarioi)
 BSDATAD(activity)
+BSMETA(actioni) = {BSREQ(id), {}};
+BSMETA(areai) = {BSREQ(id), {}};
+BSMETA(elementi) = {BSREQ(id), {}};
+BSMETA(fractioni) = {BSREQ(id), {}};
+BSMETA(gamepropertyi) = {BSREQ(id), {}};
+BSMETA(genderi) = {BSREQ(id), {}};
+BSMETA(statei) = {BSREQ(id), {}};
+BSMETA(tilei) = {BSREQ(id), {}};
+BSMETA(varianti) = {BSREQ(id), {}};
 #define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr
 #define VRNOM(T) 0, bsdata<T>::source_ptr
 BSDATA(varianti) = {

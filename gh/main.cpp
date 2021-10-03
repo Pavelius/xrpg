@@ -16,11 +16,9 @@ int main() {
 	initialize_png();
 	if(!initialize_translation("ru"))
 		return -1;
-	if(!readf("rules/tiles.json"))
+	if(!readf("rules/core.json"))
 		return -1;
 	if(!readf("rules/scenarios.json"))
-		return -1;
-	if(!readf("rules/core.json"))
 		return -1;
 	if(!readf("rules/players.json"))
 		return -1;
