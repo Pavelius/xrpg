@@ -207,6 +207,7 @@ class mapi {
 public:
 	void				clearpath();
 	void				block(const variants& variant);
+	void                blockrange(int range);
 	void				blockwalls();
 	short unsigned		getmove(indext i) const;
 	bool				iswall(indext i) const { return walls.is(i); }

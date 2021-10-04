@@ -234,6 +234,7 @@ static void test_scenario() {
 	game.blockwalls();
 	game.setmove(index, Blocked);
 	game.makewave(index);
+	game.blockrange(4);
 }
 
 void start_menu() {

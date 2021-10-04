@@ -67,3 +67,13 @@ void mapi::block(const variants& source) {
 		setmove(i, Blocked);
 	}
 }
+
+void mapi::blockrange(int range) {
+    for(indext i = 0; i < hms * hms; i++) {
+		auto v = getmove(i);
+		if(v==Blocked)
+            continue;
+        if(v > range)
+            setmove(i, Blocked);
+	}
+}

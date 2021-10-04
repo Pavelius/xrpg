@@ -12,7 +12,7 @@ fnevent getcommand(const char* id) {
 void util_main();
 
 static bool test_variant() {
-    variant v = "Attack1";
+    variant v = "City1";
     return v.operator bool();
 }
 
@@ -22,8 +22,6 @@ int main() {
 	initialize_png();
 	if(!initialize_translation("ru"))
 		return -1;
-    if(!test_variant())
-        return -1;
 	if(!readf("rules/core.json"))
 		return -1;
 	if(!readf("rules/players.json"))

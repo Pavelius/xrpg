@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1633336990 source:/home/ws-1113/projects/xrpg/gh/main.cpp
+1633345177 source:/home/ws-1113/projects/xrpg/gh/main.cpp
 	"main.h"
 	"log.h"
 
@@ -11,7 +11,7 @@
 
 1633328574 /home/ws-1113/projects/xrpg/xrpg/serializer.h
 
-1633335572 /home/ws-1113/projects/xrpg/gh/main.h
+1633358239 /home/ws-1113/projects/xrpg/gh/main.h
 	"crt.h"
 	"draw_hexagon.h"
 	"flagable.h"
@@ -329,7 +329,7 @@
 	"draw.h"
 	"io_stream.h"
 
-1633328574 source:/home/ws-1113/projects/xrpg/gh/interface.cpp
+1633358307 source:/home/ws-1113/projects/xrpg/gh/interface.cpp
 	"main.h"
 	"draw.h"
 	"draw_hexagon.h"
@@ -366,7 +366,7 @@
 1633328574 /home/ws-1113/projects/xrpg/xrpg/draw_hexagon.h
 	"point.h"
 
-1633337603 source:/home/ws-1113/projects/xrpg/gh/event.cpp
+1633345030 source:/home/ws-1113/projects/xrpg/gh/event.cpp
 	"main.h"
 	"log.h"
 
@@ -378,7 +378,7 @@
 	"draw.h"
 	"draw_hexagon.h"
 
-1633328574 source:/home/ws-1113/projects/xrpg/gh/map.cpp
+1633358089 source:/home/ws-1113/projects/xrpg/gh/map.cpp
 	"main.h"
 	"draw_hexagon.h"
 
