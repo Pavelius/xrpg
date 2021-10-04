@@ -196,6 +196,7 @@ template<typename T> struct sliceu {
 	template<size_t N> sliceu(T(&v)[N]) { set(v, N); }
 	constexpr explicit operator bool() const { return count != 0; }
 	T*								begin() const { return (T*)bsdata<T>::source.ptr(start); }
+	void							clear() { start = count = 0; }
 	T*								end() const { return (T*)bsdata<T>::source.ptr(start + count); }
 	void							set(const T* v, unsigned count) { start = bsdata<T>::source.indexof(bsdata<T>::source.addu(v, count)); this->count = count; }
 	constexpr unsigned				size() const { return count; }

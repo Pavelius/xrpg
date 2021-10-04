@@ -76,7 +76,7 @@
     <ClCompile Include="map.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="event_reader.cpp">
+    <ClCompile Include="event.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>
@@ -123,7 +123,7 @@
     <Text Include="rules\core.txt">
       <Filter>Data</Filter>
     </Text>
-    <Text Include="rules\events.txt">
+    <Text Include="rules\city.txt">
       <Filter>Data</Filter>
     </Text>
   </ItemGroup>

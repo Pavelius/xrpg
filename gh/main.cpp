@@ -24,6 +24,8 @@ int main() {
 		return -1;
 	if(!readf("rules/scenarios.json"))
 		return -1;
+	if(!eventi::read("rules/city.txt", city_events))
+		return -1;
 	util_main();
 	draw::initializex();
 	return 0;

@@ -16,6 +16,8 @@ template<> variant::variant(const void* v) : u(0) {
 template<> variant::variant(const char* v) : u(0) {
 	if(v) {
 		for(auto& e : bsdata<varianti>()) {
+			if(e.pfind && e.pfind(*this, e, v))
+				break;
 			if(!e.source || !e.metadata)
 				continue;
 			auto i = e.source->find(v, 0);

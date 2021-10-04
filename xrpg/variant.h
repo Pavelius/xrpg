@@ -5,13 +5,16 @@
 
 #define VKIND(T, V) template<> constexpr variant_s variant::kind<T>() { return V; }
 
-enum variant_s : unsigned char;
 struct bsreq;
+union variant;
+enum variant_s : unsigned char;
 
 struct varianti {
+	typedef bool (*fnfind)(variant& result, const varianti& context, const char* name);
 	const char*			id;
 	const bsreq*		metadata;
 	array*				source;
+	fnfind				pfind;
 };
 union variant{
 	unsigned char		uc[4];

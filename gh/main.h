@@ -30,7 +30,8 @@ enum action_s : unsigned char {
 	Move, Attack, Push, Pull, Heal, DisarmTrap, Loot,
 	Range, Target, Pierce,
 	Bless, Curse, RecovedDiscarded,
-	Experience, Level
+	Experience, Level,
+	Pay,
 };
 enum action_bonus_s : char {
 	InfiniteCount = 100, MovedCount, AttackedCount, ShieldCount,
@@ -44,7 +45,7 @@ enum element_s : unsigned char {
 };
 enum variant_s : unsigned char {
 	NoVariant,
-	Action, ActionBonus, Area, Card, CardType, CombatCard, Duration, Element,
+	Action, ActionBonus, Area, Card, CardType, City, CombatCard, Duration, Element,
 	Feat, GameProperty, Menu, Monster, Object, Player,
 	Scenario, State, SummonedCreature, Tile, Trap, Type
 };
@@ -257,6 +258,20 @@ struct tilei {
 	slice<point>		blocks; // blocked squares
 	void				creating(point position, bool inverse) const;
 };
+struct eventi {
+	struct action {
+		int				stage;
+		const char*		text;
+		variants		consequences;
+	};
+	const char*			text;
+	const char*			case1;
+	const char*			case2;
+	action				actions[6];
+	void				clear();
+	static bool			read(const char* url, array& source);
+};
+extern array			city_events, road_events;
 extern gamei			game;
 inline point			i2h(indext i) { return {(short)(i % hms), (short)(i / hms)}; }
 inline indext			h2i(point v) { return v.y * hms + v.x; }

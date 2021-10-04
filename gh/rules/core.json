@@ -64,6 +64,10 @@
       "action": "Experience",
       "bonus": 5
     },
+    "Exp10": {
+      "action": "Experience",
+      "bonus": 10
+    },
     "Heal1": {
       "action": "Heal",
       "bonus": 1
@@ -303,6 +307,26 @@
     "Per6Use": {
       "action": "PerUse",
       "bonus": 6
+    },
+    "ChooseLooseGoldOrReputation": {
+      "action": "Dark",
+      "bonus": 100
+    },
+    "Reputation1": {
+      "action": "Reputation",
+      "bonus": 1
+    },
+    "Pay5": {
+      "action": "Pay",
+      "bonus": 5
+    },
+    "Pay10": {
+      "action": "Pay",
+      "bonus": 10
+    },
+    "Loose3CoinPerPlayer": {
+      "action": "Pay",
+      "bonus": -3
     }
   },
   "CombatCard": {
@@ -330,7 +354,7 @@
     "CombatCriticalHit": {
       "bonus": 100,
       "count": 1
-    }
+    },
   },
   "Menu": {
     "NewGame": { "parent": "Start" },

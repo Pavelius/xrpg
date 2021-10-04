@@ -18,5 +18,6 @@ BSDATA(actioni) = {
 	{"RecoverDiscarded"},
 	{"Experience"},
 	{"Level"},
+	{"Pay"},
 };
-assert_enum(actioni, Level)
+assert_enum(actioni, Pay)

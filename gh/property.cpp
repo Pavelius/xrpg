@@ -20,6 +20,17 @@ BSDATAD(variant)
 BSMETA(tablecsvi) = {{}};
 BSMETA(variants) = {{}};
 
+static bool find_by_index(variant& result, const varianti& context, const char* id) {
+	auto n = zlen(context.id);
+	if(memcmp(id, context.id, n) == 0 && isnum(id[n])) {
+		auto index = 0; stringbuilder::read(id + n, index);
+		result.type = (variant_s)(&context - bsdata<varianti>::elements);
+		result.value = index;
+		return true;
+	}
+	return false;
+}
+
 BSMETA(point) = {
 	BSREQ(x), BSREQ(y),
 	{}};
@@ -109,6 +120,7 @@ BSDATA(varianti) = {
 	{"Card", VRSTD(cardi)},
 	{"CardType", VRSTD(cardtypei)},
 	{"CombatCard", VRSTD(combatcardi)},
+	{"City", 0, &city_events, find_by_index},
 	{"Duration", VRSTD(durationi)},
 	{"Element", VRSTD(elementi)},
 	{"Feat", VRSTD(feati)},
