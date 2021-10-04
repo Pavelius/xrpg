@@ -177,16 +177,20 @@ public:
 	void                clear();
 	void				create(variant v);
 	void				damage(int value);
+	void				focusing() const;
 	int                 get(variant v) const;
+	indext				getindex() const;
 	deck&				getcombatdeck() const;
 	int                 getmaximumhits() const;
 	void				heal(int v);
 	bool                is(state_s v) const { return states.is(v); }
+	bool				isalive() const;
 	bool                isenemy(const object& e) const { return is(Hostile) != e.is(Hostile); }
 	bool                isinteractive() const { return true; }
 	bool                isplayer() const { return false; }
 	void                kill();
 	void				move(int v);
+	void				moving(indext i, bool interactive);
 	void				paint() const;
 	void				pull(int range, int targets);
 	void				push(int range, int targets);
@@ -206,7 +210,7 @@ class mapi {
 	flagable<hms*hms>	walls;
 public:
 	void				clearpath();
-	void				block(const variants& variant);
+	void				block(const varianta& variant);
 	void                blockrange(int range);
 	void				blockwalls();
 	short unsigned		getmove(indext i) const;
@@ -251,6 +255,7 @@ struct gamei : public mapi {
 struct collection : varianta {
 	void                match(variant v, bool keep);
 	void				matchhostile(bool keep);
+	void				selectalive();
 };
 struct tilei {
 	const char*			id;
@@ -279,7 +284,10 @@ inline indext			h2i(point v) { return v.y * hms + v.x; }
 point					h2p(point v);
 point					p2h(point v);
 namespace draw {
+void					centercamera(point v);
+indext					choosemovement();
 void					initializex();
+void					moving(point& result, point pt, int step);
 void					status(const char* format, ...);
 void					tooltips(const char* format, ...);
 }

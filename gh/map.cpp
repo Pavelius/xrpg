@@ -57,14 +57,12 @@ void mapi::makewave(indext start_index) {
 	}
 }
 
-void mapi::block(const variants& source) {
+void mapi::block(const varianta& source) {
 	for(auto v : source) {
 		object* p = v;
 		if(!p)
 			continue;
-		auto hex = p2h(p->getposition());
-		auto i = h2i(hex);
-		setmove(i, Blocked);
+		setmove(p->getindex(), Blocked);
 	}
 }
 

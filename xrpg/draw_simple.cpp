@@ -282,6 +282,38 @@ void draw::status(const char* format, ...) {
 	}
 }
 
+static void correct(short& c, short t, int s) {
+	auto d = t - c;
+	if(d > 0) {
+		if(d > s)
+			d = s;
+	} else if(d < 0) {
+		if(d < -s)
+			d = -s;
+	}
+	c += d;
+}
+
+long distance(point p1, point p2);
+
+void draw::moving(point& result, point goal, int step) {
+	auto start = result;
+	auto maxds = distance(start, goal);
+	auto curds = 0;
+	while(ismodal() && curds < maxds) {
+		result.x = (short)(start.x + (goal.x - start.x) * curds / maxds);
+		result.y = (short)(start.y + (goal.y - start.y) * curds / maxds);
+		if(scene.background)
+			scene.background();
+		doredraw();
+		waitcputime(1);
+		curds += step;
+		if(curds > maxds)
+			curds = maxds;
+	}
+	result = goal;
+}
+
 static int getcolumns(const answers& an) {
 	auto divider = an.getcount() % 2;
 	if(an.getcount() <= 4 && divider > 0)

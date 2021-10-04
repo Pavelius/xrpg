@@ -8,7 +8,6 @@ BSDATA(tilei) = {
 	{"G1b", {8, 3}, {-304, -76}},
 	{"I1b", {6, 5}, {-217, -151}, block_I1},
 	{"L1a", {5, 7}, {-173, -225}, block_L1},
-	{"SpikedTrap", {1, 1}},
 	{"StoneDoorH", {1, 1}},
 	{"StoneDoorV", {1, 1}},
 };

@@ -2,6 +2,17 @@
 
 BSDATAD(object)
 
+bool object::isalive() const {
+	switch(kind.type) {
+	case Player:
+	case Monster:
+	case SummonedCreature:
+		return true;
+	default:
+		return false;
+	}
+}
+
 void object::addattack(scripti& e) const {
 	char temp[512]; temp[0] = 0;
 	stringbuilder sb(temp);
@@ -52,7 +63,31 @@ void object::heal(int v) {
 	}
 }
 
+indext object::getindex() const {
+	return h2i(p2h(getposition()));
+}
+
 void object::move(int v) {
+	auto index = getindex();
+	game.clearpath();
+	game.blockwalls();
+	game.setmove(index, Blocked);
+	collection obstacles;
+	if(get(Jump) || get(Fly))
+		game.makewave(index);
+	else {
+		obstacles.selectalive();
+		obstacles.matchhostile(!is(Hostile));
+		game.block(obstacles);
+		game.makewave(index);
+	}
+	obstacles.clear();
+	obstacles.selectalive();
+	game.block(obstacles);
+	game.blockrange(v);
+	auto goal = draw::choosemovement();
+	if(goal != Blocked)
+		moving(goal, true);
 }
 
 void object::kill() {
@@ -194,4 +229,9 @@ void object::activate(duration_s duration, int count, variant source, variants e
 	p->effect = effect;
 	p->duration = duration;
 	p->count = count;
+}
+
+void object::moving(indext i, bool interactive) {
+	auto goal = h2p(i2h(i));
+	draw::moving(getreference(), goal, 12);
 }

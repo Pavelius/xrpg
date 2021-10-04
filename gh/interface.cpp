@@ -10,9 +10,11 @@ const int size = 50;
 static const point states_pos[] = {{-16, 16}, {-16, -16}, {16, 16}, {16, -16}};
 static int show_hex_coor = 0;
 static int show_hex_grid = 0;
-static int show_movement_cost = 1;
+static int show_movement_cost = 0;
+static int allow_drag_hero = 1;
 static indext current_index;
 static point mouse_difference;
+static const object* focused_object;
 
 point h2p(point v) {
 	return draw::h2p(v, size);
@@ -66,6 +68,10 @@ void object::paint_creature() const {
 	default: break;
 	}
 	hexagon(x, y, size);
+	if(focused_object == this) {
+		fore = colors::green;
+		hexagon(x, y, size - 2);
+	}
 	fore = push_fore;
 	paint_number(x, y + 30, hits);
 }
@@ -128,7 +134,7 @@ static void paint_tips(point pt, int v) {
 
 static void painthexgrid() {
 	current_index = Blocked;
-	for(short ix = 0; ix < hms*hms; ix++) {
+	for(short ix = 0; ix < hms * hms; ix++) {
 		auto hex = i2h(ix);
 		if(game.iswall(ix))
 			continue;
@@ -139,11 +145,12 @@ static void painthexgrid() {
 			paint_tips(pt, hex);
 		else if(show_movement_cost) {
 			auto n = game.getmove(ix);
-			if(n != Blocked && n)
+			if(n != Blocked && n) {
 				paint_tips(pt, n);
+				if(ishilitehex(pt.x, pt.y))
+					current_index = ix;
+			}
 		}
-		if(ishilitehex(pt.x, pt.y))
-			current_index = ix;
 	}
 	if(hot.key == (Ctrl + 'G'))
 		execute(cbsetint, show_hex_grid ? 0 : 1, 0, &show_hex_grid);
@@ -154,6 +161,8 @@ static void painthexgrid() {
 }
 
 static void painthilitehex() {
+	if(!show_movement_cost)
+		return;
 	if(current_index == Blocked)
 		return;
 	auto pt = h2p(i2h(current_index), size) - camera;
@@ -162,8 +171,6 @@ static void painthilitehex() {
 	fore.a = 64;
 	hexagonf(pt.x, pt.y, size);
 	fore = push_fore;
-	//auto hex = p2h(hot.mouse + camera, size);
-	//tooltips("Hex %1i, %2i", hex.x, hex.y);
 }
 
 void paintfigures() {
@@ -171,31 +178,28 @@ void paintfigures() {
 		if(dragactive(&e))
 			e.setposition(hot.mouse - mouse_difference + camera);
 		caret = e.getposition() - camera;
-		if(ishilitehex(caret.x, caret.y)) {
-			switch(e.kind.type) {
-			case Player:
-			case SummonedCreature:
-			case Monster:
-				if(hot.key == MouseLeft && hot.pressed) {
+		switch(e.kind.type) {
+		case Player:
+		case SummonedCreature:
+		case Monster:
+			if(ishilitehex(caret.x, caret.y)) {
+				if(allow_drag_hero && hot.key == MouseLeft && hot.pressed) {
 					dragbegin(&e);
 					mouse_difference = hot.mouse - caret;
 				}
 				scene.hilite = &e;
 				draw::tooltips(e.kind.getname());
-				break;
 			}
+			break;
+		case Trap:
+			if(ishilitehex(caret.x, caret.y)) {
+				scene.hilite = &e;
+				draw::tooltips(e.kind.getname());
+			}
+			break;
 		}
 		e.paint();
-		// if(scene.hilite==variant(&e))
-		//	hexagonf(caret.x, caret.y, size, 64);
 	}
-}
-
-static void paintcurrentindex() {
-	if(current_index == Blocked)
-		return;
-	auto mp = i2h(current_index);
-	tooltips("Index %1i, %2i", mp.x, mp.y);
 }
 
 static void paintgame() {
@@ -229,12 +233,43 @@ static void test_scenario() {
 	p1->set(Poison, 1);
 	p2->setposition(h2p(sc.getstart(1), size));
 	p2->set(Level, 1);
-	auto index = h2i(sc.getstart(1));
-	game.clearpath();
-	game.blockwalls();
-	game.setmove(index, Blocked);
-	game.makewave(index);
-	game.blockrange(4);
+	p2->focusing();
+	p2->move(5);
+	p1->focusing();
+	p1->move(3);
+}
+
+static void choose_movement_window() {
+	if(current_index == Blocked)
+		return;
+	switch(hot.key) {
+	case MouseLeft:
+		if(hot.pressed)
+			execute(breakparam, current_index);
+		break;
+	}
+}
+
+void object::focusing() const {
+	focused_object = this;
+	draw::centercamera(getposition());
+}
+
+indext draw::choosemovement() {
+	auto push_window = scene.window;
+	auto push_show = show_movement_cost;
+	show_movement_cost = 1;
+	scene.window = choose_movement_window;
+	simpleui();
+	show_movement_cost = push_show;
+	scene.window = push_window;
+	return (indext)hot.param;
+}
+
+void draw::centercamera(point v) {
+	v.x -= getwidth() / 2;
+	v.y -= getheight() / 2;
+	draw::moving(camera, v);
 }
 
 void start_menu() {
@@ -247,7 +282,7 @@ void start_menu() {
 	//scripti sc = {};
 	//p1->attack(1, 0, 0, 0, {});
 	//p1->act("Test string %1i and %2i", 10, 12);
-	choose_cards("Brute", 1);
+	//choose_cards("Brute", 1);
 	menui::choose("Start", 0, 0);
 }
 

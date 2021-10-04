@@ -32,6 +32,7 @@ bool				buttonrd(const char* title);
 inline bool			buttonrd(const char* title, unsigned key, const char* description) { return button(title, key, buttonrd, description, 0); }
 void				customwindow();
 bool				ishilite(int s, const void* object);
+void				moving(point& result, point target, int velocity = 12);
 void				fog(int n);
 void				grid();
 void				paintall();
@@ -45,6 +46,7 @@ void				setpositionru();
 void				setpositionlu();
 void				setpositionld();
 void				sheader(const char* string);
+void				slide(point pt, int step = 12);
 void				stext(const char* string);
 void                status(const char* format, ...);
 bool				window(bool hilite, const char* string, const char* resid);

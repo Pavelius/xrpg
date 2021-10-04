@@ -75,6 +75,7 @@ Skills: Навыки
 Slash: Полукруг
 Sound: Звук
 SpareDagger: Припасенный кинжал
+SpikedTrap: Ловушка с шипами
 Splash: Взрыв
 Strenght: Сила
 Stun: Оглушение

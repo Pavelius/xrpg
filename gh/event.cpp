@@ -126,7 +126,7 @@ bool eventi::read(const char* url, array& source) {
         if(!pi->case2)
             log::error("Not found answer #2");
 	}
-	if(source.getcount() < maximum_stage)
+	if((int)source.getcount() < maximum_stage)
         source.setcount(maximum_stage + 1);
 	delete p_alloc;
 	return true;
