@@ -52,9 +52,6 @@ static void add(variants& e, variant v) {
 	e.count++;
 }
 
-static const char*	current_url;
-static int			error_count;
-
 static int szlinenumber(const char* start, const char* pv) {
 	auto result = 1;
 	for(auto p = start; *p && p < pv; p++) {
@@ -67,11 +64,6 @@ static int szlinenumber(const char* start, const char* pv) {
 }
 
 static void warning(const char* p, const char* p_alloc, const char* format, ...) {
-	error_count++;
-	if(current_url) {
-		log::error("Errors occurs when reading events in %1", current_url);
-		current_url = 0;
-	}
 	char temp[4096]; stringbuilder sb(temp);
 	sb.add("In line %1i ", szlinenumber(p_alloc, p));
 	sb.addv(format, xva_start(format));
@@ -82,7 +74,7 @@ static const char* read_block(const char* p, const char* p_alloc, int& v, const 
 	char temp[8192];
 	v = 0; text = 0; temp[0] = 0; consequences.clear();
 	if(!isnum(p[0])) {
-		warning(p, p_alloc, "Expected number");
+		log::error("Expected number");
 		return 0;
 	}
 	p = stringbuilder::read(p, v);
@@ -97,7 +89,7 @@ static const char* read_block(const char* p, const char* p_alloc, int& v, const 
 		p = skipsp(p);
 		variant v = (const char*)temp;
 		if(!v) {
-			warning(pid, p_alloc, "Can't find variant `%1`", temp);
+			log::error("Can't find variant `%1`", temp);
 			return 0;
 		}
 		add(consequences, v);
@@ -112,8 +104,7 @@ bool eventi::read(const char* url, array& source) {
 	auto p_alloc = (const char*)loadt(url);
 	if(!p_alloc)
 		return false;
-	current_url = url;
-	error_count = 0;
+	log::seturl(url);
 	auto p = p_alloc;
 	variants resolves;
 	const auto maximum_index = sizeof(eventi::actions) / sizeof(eventi::actions[0]);
@@ -127,21 +118,21 @@ bool eventi::read(const char* url, array& source) {
 		pi->clear();
 		pi->text = text;
 		if(!isanswer(p)) {
-			warning(p, p_alloc, "Expected `~1` token");
+			log::error("Expected `~1` token");
 			break;
 		}
 		p = read_block(p + 1, p_alloc, stage, pi->case1, resolves);
 		if(!p)
 			break;
 		if(!isanswer(p)) {
-			warning(p, p_alloc, "Expected `~2` token");
+			log::error("Expected `~2` token");
 			break;
 		}
 		p = read_block(p + 1, p_alloc, stage, pi->case2, resolves);
 		auto index = 0;
 		while(p && isresolve(p)) {
 			if(index >= maximum_index) {
-				warning(p, p_alloc, "Resolution part have more %1i lines", maximum_index);
+				log::error("Resolution part have more %1i lines", maximum_index);
 				break;
 			}
 			auto& e = pi->actions[index++];
@@ -149,7 +140,11 @@ bool eventi::read(const char* url, array& source) {
 		}
 		if(!p)
 			break;
+        if(!pi->case1)
+            log::error("Not found answer #1");
+        if(!pi->case2)
+            log::error("Not found answer #2");
 	}
 	delete p_alloc;
-	return error_count==0;
+	return true;
 }

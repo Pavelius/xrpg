@@ -44,7 +44,6 @@ BSMETA(actionbonusi) = {
 	BSREQ(id),
 	BSREQ(action), BSREQ(bonus),
 	{}};
-BSDATAD(actionbonusi)
 BSMETA(cardi) = {
 	BSREQ(id),
 	BSREQ(level), BSREQ(owner),

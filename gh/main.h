@@ -22,14 +22,14 @@ enum feat_s : unsigned char {
 	Jump, Fly, NextAction,
 };
 enum statistic_s : unsigned char {
-	Moved, Attacked, Coins,
+	Moved, Attacked, Looted,
 	MonstersKilled, ItemsUsed,
 };
 enum action_s : unsigned char {
 	Shield, Retaliate,
 	Move, Attack, Push, Pull, Heal, DisarmTrap, Loot,
 	Range, Target, Pierce,
-	Bless, Curse, RecovedDiscarded,
+	Bless, Curse, RecoverDiscarded,
 	Experience, Level,
 	Pay,
 };
@@ -50,7 +50,7 @@ enum variant_s : unsigned char {
 	Scenario, State, SummonedCreature, Tile, Trap, Type
 };
 enum game_propery_s : unsigned char {
-	Reputation, Prosperty, Donate,
+	Reputation, Prosperty, Coins, Donate,
 };
 typedef short unsigned indext;
 typedef flagable<2> statef;
@@ -285,6 +285,8 @@ void					tooltips(const char* format, ...);
 VKIND(action_s, Action)
 VKIND(area_s, Area)
 VKIND(duration_s, Duration)
+VKIND(element_s, Element)
 VKIND(feat_s, Feat)
+VKIND(game_propery_s, GameProperty)
 VKIND(object, Object)
 VKIND(state_s, State)

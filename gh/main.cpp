@@ -1,4 +1,5 @@
 #include "main.h"
+#include "log.h"
 
 bool readf(const char* url);
 void initialize_json();
@@ -10,12 +11,19 @@ fnevent getcommand(const char* id) {
 
 void util_main();
 
+static bool test_variant() {
+    variant v = "Attack1";
+    return v.operator bool();
+}
+
 int main() {
     srand(randomseed());
 	initialize_json();
 	initialize_png();
 	if(!initialize_translation("ru"))
 		return -1;
+    if(!test_variant())
+        return -1;
 	if(!readf("rules/core.json"))
 		return -1;
 	if(!readf("rules/players.json"))
@@ -26,7 +34,9 @@ int main() {
 		return -1;
 	if(!eventi::read("rules/city.txt", city_events))
 		return -1;
-	util_main();
+    if(log::geterrors())
+        return -1;
+	//util_main();
 	draw::initializex();
 	return 0;
 }

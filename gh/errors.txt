@@ -1,2 +1,0 @@
-﻿Errors occurs when reading events in rules/city.txt
-In line 38 Can't find variant `Loose3CoinPerPlayer`

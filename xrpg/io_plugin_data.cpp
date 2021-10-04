@@ -145,7 +145,7 @@ bool readf(const char* url) {
 		bool read(variant& v, const char* value) {
 			v = value;
 			if(!v) {
-				warning("Can't find variant \"%1\"", value);
+				warning("Can't find variant `%1`", value);
 				return false;
 			}
 			return true;

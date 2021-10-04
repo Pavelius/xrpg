@@ -59,6 +59,8 @@
 		<Unit filename="../xrpg/draw.h" />
 		<Unit filename="../xrpg/draw_focus.cpp" />
 		<Unit filename="../xrpg/draw_focus.h" />
+		<Unit filename="../xrpg/draw_hexagon.cpp" />
+		<Unit filename="../xrpg/draw_hexagon.h" />
 		<Unit filename="../xrpg/draw_input.cpp" />
 		<Unit filename="../xrpg/draw_input.h" />
 		<Unit filename="../xrpg/draw_simple.cpp" />
@@ -110,6 +112,7 @@
 		<Unit filename="../xrpg/varianta.h" />
 		<Unit filename="../xrpg/zip.cpp" />
 		<Unit filename="action.cpp" />
+		<Unit filename="actionbonus.cpp" />
 		<Unit filename="area.cpp" />
 		<Unit filename="cardtype.cpp" />
 		<Unit filename="collection.cpp" />
@@ -117,8 +120,8 @@
 		<Unit filename="duration.cpp" />
 		<Unit filename="element.cpp" />
 		<Unit filename="errors.txt" />
+		<Unit filename="event.cpp" />
 		<Unit filename="feat.cpp" />
-		<Unit filename="fraction.cpp" />
 		<Unit filename="game.cpp" />
 		<Unit filename="gameproperty.cpp" />
 		<Unit filename="information.cpp" />
@@ -127,15 +130,19 @@
 		<Unit filename="locale/ru/Names.txt" />
 		<Unit filename="main.cpp" />
 		<Unit filename="main.h" />
+		<Unit filename="map.cpp" />
 		<Unit filename="nameable.cpp" />
 		<Unit filename="object.cpp" />
 		<Unit filename="player.cpp" />
 		<Unit filename="property.cpp" />
+		<Unit filename="rules/city.txt" />
 		<Unit filename="rules/core.json" />
 		<Unit filename="rules/monsters.json" />
 		<Unit filename="rules/players.json" />
+		<Unit filename="scenario.cpp" />
 		<Unit filename="script.cpp" />
 		<Unit filename="state.cpp" />
+		<Unit filename="tile.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />
