@@ -222,7 +222,7 @@ struct activity {
 	char				count;
 	constexpr operator bool() const { return owner; }
 };
-const int				hms = 64;
+const int				hms = 32;
 class mapi {
 	flagable<hms*hms>	walls;
 public:

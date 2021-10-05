@@ -51,18 +51,6 @@ static cube cube_round(cube c) {
 	} else {
 		s = -q - r;
 	}
-	//double rx = int(round(c.x));
-	//double ry = int(round(c.y));
-	//double rz = int(round(c.z));
-	//auto x_diff = iabs((double)rx - c.x);
-	//auto y_diff = iabs((double)ry - c.y);
-	//auto z_diff = iabs((double)rz - c.z);
-	//if(x_diff > y_diff && x_diff > z_diff)
-	//	rx = -ry - rz;
-	//else if(y_diff > z_diff)
-	//	ry = -rx - rz;
-	//else
-	//	rz = -rx - ry;
 	return {(double)q, (double)r, (double)s};
 }
 
@@ -99,8 +87,8 @@ point draw::h2p(point hex, int size) {
 }
 
 point draw::p2h(point pt, int size) {
-    double x = pt.x;
-    double y = pt.y;
+	double x = pt.x;
+	double y = pt.y;
 	auto q = ((sqrt_3 / 3.0) * x - (1.0 / 3.0) * y) / (double)size;
 	auto r = ((2.0 / 3.0) * (double)pt.y) / (double)size;
 	return cube_to_evenr(cube_round({q, -q - r, r}));

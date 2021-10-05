@@ -140,29 +140,24 @@ static void painthexgrid() {
 		auto pt = h2p(hex, size) - camera;
 		if(show_hex_grid)
 			hexagon(pt.x, pt.y, size);
-		if(show_hex_coor && !show_movement_cost)
+		if(show_movement_cost) {
+			auto n = game.getmove(ix);
+			if(n != Blocked && n) {
+				auto hex = i2h(ix);
+				auto pt = h2p(hex, size) - camera;
+				paint_tips(pt, n);
+				if(ishilitehex(pt.x, pt.y))
+					current_index = ix;
+			}
+		} else if(show_hex_coor)
 			paint_tips(pt, hex);
 	}
 	if(hot.key == (Ctrl + 'G'))
 		execute(cbsetint, show_hex_grid ? 0 : 1, 0, &show_hex_grid);
 	else if(hot.key == 'G')
 		execute(cbsetint, show_hex_coor ? 0 : 1, 0, &show_hex_coor);
-}
-
-static void paintmovement() {
-	if(!show_movement_cost)
-		return;
-	current_index = Blocked;
-	for(short ix = 0; ix < hms * hms; ix++) {
-		auto n = game.getmove(ix);
-		if(n != Blocked && n) {
-			auto hex = i2h(ix);
-			auto pt = h2p(hex, size) - camera;
-			paint_tips(pt, n);
-			if(ishilitehex(pt.x, pt.y))
-				current_index = ix;
-		}
-	}
+	else if(hot.key == 'M')
+		execute(cbsetint, show_movement_cost ? 0 : 1, 0, &show_movement_cost);
 }
 
 static void painthilitehex() {
@@ -208,14 +203,13 @@ static void paintfigures() {
 	source.select();
 	source.sort();
 	source.paint(true, false);
-	painthexgrid();
-	paintmovement();
 }
 
 static void paintgame() {
 	paintclear();
 	//rectf({0, 0, getwidth(), getheight()}, colors::white);
 	paintfigures();
+	painthexgrid();
 	painthilitehex();
 	paintcommands();
 }
@@ -241,8 +235,8 @@ static void test_scenario() {
 	p1->set(Poison, 1);
 	p1->focusing();
 	p1->move(3);
-	//p1->attack(3, 0, 0, 2, {});
-	p1->action(Push, true, true, 4, 1, 2);
+	p1->attack(3, 0, 0, 2, {});
+	//p1->action(Push, true, true, 4, 1, 2);
 	//p2->focusing();
 	//p2->move(5);
 }
@@ -287,7 +281,7 @@ void draw::centercamera(point v) {
 bool test_convert_all() {
     for(auto y = 0; y<hms; y++) {
         for(auto x = 0; x<hms; x++) {
-            point hex = {x, y};
+            point hex = {(short)x, (short)y};
             point scr = h2p(hex, size);
             point he1 = p2h(scr, size);
             if(hex!=he1)

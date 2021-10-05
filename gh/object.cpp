@@ -222,7 +222,8 @@ void object::attack(int damage, int range, int pierce, int targets, statef addit
         range = 1;
 	if(targets==0)
 		targets = 1;
-    indext start = getindex();
+	auto hex = p2h(getposition());
+    indext start = h2i(hex);
     game.clearpath();
     game.blockwalls();
     game.makewave(start);
