@@ -109,7 +109,7 @@ struct feati {
 struct playeri {
 	const char*			id;
 	gender_s			gender;
-	char				level, exp, coins;
+	char				level, exp, coins, initiative;
 	short				health[10];
 	deck				combat, hand, active, discard, lost;
 	int					get(action_s v) const;
@@ -181,7 +181,10 @@ public:
 	void				damage(int value);
 	void				focusing() const;
 	int                 get(variant v) const;
+	void				getinfo(stringbuilder& sb) const;
 	indext				getindex() const;
+	int					getinitiative() const;
+	object*				getnearestenemy() const;
 	deck&				getcombatdeck() const;
 	int                 getmaximumhits() const;
 	int                 getpriority() const;
@@ -190,7 +193,7 @@ public:
 	bool				isalive() const;
 	bool                isenemy(const object& e) const { return is(Hostile) != e.is(Hostile); }
 	bool				isfocused() const;
-	bool                isinteractive() const { return true; }
+	bool                isinteractive() const { return false; }
 	bool                isplayer() const { return false; }
 	bool				isusable() const;
 	void                kill();
@@ -214,6 +217,7 @@ struct objects : adat<object*, 64> {
     void                selectalive();
 	void                selectground();
 	void                sort();
+	void				sortnearest();
 };
 struct activity {
 	variant				owner, source;

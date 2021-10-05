@@ -103,9 +103,15 @@ void cardi::getinfo(stringbuilder& sb) const {
 	addpart(sb, lower);
 }
 
+void object::getinfo(stringbuilder& sb) const {
+	sb.clear();
+	addh(sb, kind.getname());
+}
+
 void variant::getinfo(stringbuilder& sb) const {
 	switch(type) {
 	case Card: bsdata<cardi>::get(value).getinfo(sb); break;
+	case Object: bsdata<object>::get(value).getinfo(sb); break;
 	default: break;
 	}
 }

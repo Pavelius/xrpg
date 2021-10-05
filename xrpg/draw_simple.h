@@ -14,6 +14,7 @@ struct scenei {
 	variant			hilite;
 	fnevent			background = 0;
 	fnevent			window = 0;
+	fnevent			doinput = 0;
 	const char*     status = 0;
 };
 extern point		camera;
@@ -31,6 +32,8 @@ inline bool			buttonfd(const char* title, unsigned key, const char* description)
 bool				buttonrd(const char* title);
 inline bool			buttonrd(const char* title, unsigned key, const char* description) { return button(title, key, buttonrd, description, 0); }
 void				customwindow();
+void				inputall();
+void				inputcamera();
 bool				ishilite(int s, const void* object);
 void				moving(point& result, point target, int velocity = 12);
 void				fog(int n);

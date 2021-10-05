@@ -13,6 +13,7 @@ void						breakmodal(long result);
 void						breakparam();
 void						buttoncancel();
 void						buttonok();
+void						cbsetsht();
 void						cbsetint();
 void						cbsetptr();
 void						doredraw();

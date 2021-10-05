@@ -61,6 +61,20 @@ void objects::sort() {
 	qsort(data, count, sizeof(data[0]), compare);
 }
 
+static int compare_nearest(const void* v1, const void* v2) {
+	auto p1 = *((object**)v1);
+	auto p2 = *((object**)v2);
+	auto i1 = game.getmove(p1->getindex());
+	auto i2 = game.getmove(p2->getindex());
+	if(i1 != i2)
+		return i1 - i2;
+	return p1->getinitiative() - p2->getinitiative();
+}
+
+void objects::sortnearest() {
+	qsort(data, count, sizeof(data[0]), compare_nearest);
+}
+
 object* objects::choose() const {
 	answers an;
 	for(auto p : *this)

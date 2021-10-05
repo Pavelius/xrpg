@@ -89,6 +89,14 @@ indext object::getindex() const {
 	return h2i(p2h(getposition()));
 }
 
+int	object::getinitiative() const {
+	switch(kind.type) {
+	case Player: return bsdata<playeri>::get(kind.value).initiative;
+	case Monster: 30;
+	default: return 99;
+	}
+}
+
 void object::move(int v) {
 	auto index = getindex();
 	game.clearpath();
@@ -106,9 +114,14 @@ void object::move(int v) {
 	obstacles.selectalive();
 	game.block(obstacles);
 	game.blockrange(v);
-	auto goal = draw::choosemovement();
-	if(goal != Blocked)
+	if(isinteractive()) {
+		auto goal = draw::choosemovement();
 		moving(goal, true);
+	} else if(obstacles) {
+		auto enemy = getnearestenemy();
+		if(enemy)
+			moveto(enemy->getindex(), v);
+	}
 }
 
 void object::kill() {
@@ -217,13 +230,26 @@ void object::action(action_s a, bool interactive, bool hostile, int range, int t
 	}
 }
 
+object*	object::getnearestenemy() const {
+	objects source;
+	source.selectalive();
+	source.match(Hostile, !is(Hostile));
+	if(!source)
+		return 0;
+	indext start = getindex();
+	game.clearpath();
+	game.blockwalls();
+	game.makewave(start);
+	source.sort();
+	return source[0];
+}
+
 void object::attack(int damage, int range, int pierce, int targets, statef additional) {
     if(range==0)
         range = 1;
 	if(targets==0)
 		targets = 1;
-	auto hex = p2h(getposition());
-    indext start = h2i(hex);
+    indext start = getindex();
     game.clearpath();
     game.blockwalls();
     game.makewave(start);

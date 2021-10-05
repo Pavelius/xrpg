@@ -162,13 +162,8 @@ void draw::answerbt(int i, long id, const char* title) {
 	bool is_hilited = false;
 	if(button(title, answer_hotkeys[i], buttonfd, 0, &is_hilited))
 		execute(breakparam, id);
-	if(is_hilited) {
-		variant value = (void*)id;
-		if(value) {
-			tooltips_sb.clear();
-			value.getinfo(tooltips_sb);
-		}
-	}
+	if(is_hilited)
+		scene.hilite = (void*)id;
 }
 
 void draw::customwindow() {
@@ -225,15 +220,19 @@ void draw::set(int x, int y) {
 	caret.y = y - camera.y + getheight() / 2;
 }
 
-static void inputimage() {
+void draw::inputall() {
+	inputcamera();
+}
+
+void draw::inputcamera() {
 	const int step = 32;
 	switch(hot.key) {
-	case KeyLeft: execute(cbsetint, camera.x - step, 0, &camera.x); break;
-	case KeyRight: execute(cbsetint, camera.x + step, 0, &camera.x); break;
-	case KeyUp: execute(cbsetint, camera.y - step, 0, &camera.y); break;
-	case KeyDown: execute(cbsetint, camera.y + step, 0, &camera.y); break;
-	case MouseWheelUp: execute(cbsetint, camera.y - step, 0, &camera.y); break;
-	case MouseWheelDown: execute(cbsetint, camera.y + step, 0, &camera.y); break;
+	case KeyLeft: execute(cbsetsht, camera.x - step, 0, &camera.x); break;
+	case KeyRight: execute(cbsetsht, camera.x + step, 0, &camera.x); break;
+	case KeyUp: execute(cbsetsht, camera.y - step, 0, &camera.y); break;
+	case KeyDown: execute(cbsetsht, camera.y + step, 0, &camera.y); break;
+	case MouseWheelUp: execute(cbsetsht, camera.y - step, 0, &camera.y); break;
+	case MouseWheelDown: execute(cbsetsht, camera.y + step, 0, &camera.y); break;
 	case MouseLeft:
 		if(hot.pressed && hot.hilite == board) {
 			dragbegin(&camera);
@@ -250,17 +249,14 @@ static void inputimage() {
 	}
 }
 
-static void inputall() {
-	inputimage();
-}
-
 void draw::simpleui() {
 	while(ismodal()) {
 		if(scene.background)
 			scene.background();
 		if(scene.window)
 			scene.window();
-		inputall();
+		if(scene.doinput)
+			scene.doinput();
 		domodal();
 	}
 }
@@ -326,13 +322,14 @@ static int getcolumns(const answers& an) {
 	return 2;
 }
 
-long answers::choose(const char* title, const char* cancel_text, bool interactive, const char* resid) const {
+long answers::choose(const char* title, const char* cancel_text, bool interactive, const char* resid, int columns) const {
 	if(!interactive)
 		return random();
 	auto push_caret = caret;
 	auto push_width = width;
 	setpositionru();
-	auto columns = getcolumns(*this);
+	if(columns==-1)
+		columns = getcolumns(*this);
 	auto column_width = 320;
 	width = push_width;
 	caret = push_caret;
@@ -368,7 +365,8 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 			if(buttonfd(cancel_text, KeyEscape, 0))
 				execute(buttoncancel);
 		}
-		inputall();
+		if(scene.doinput)
+			scene.doinput();
 		domodal();
 	}
 	return getresult();
@@ -438,7 +436,7 @@ void tooltips_getrect(rect& rc, int border);
 
 static void tooltips_render() {
 	// Show background
-	rect rc; tooltips_getrect(rc, metrics::padding);
+	rect rc; tooltips_getrect(rc, 0);
 	swindow(rc, false, 0);
 	// Show text
 	auto push_fore = draw::fore;
@@ -451,6 +449,8 @@ HANDLER(before_initialize) {
 	set_dark_theme();
 	if(!scene.background)
 		scene.background = paintall;
+	if(!scene.doinput)
+		scene.doinput = inputall;
 	tooltips_custom = tooltips_render;
 	tooltips_use_idle = false;
 }

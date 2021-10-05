@@ -187,12 +187,8 @@ void objects::paint(bool allow_hilite, bool allow_drag) const {
             dragbegin(p);
             mouse_difference = hot.mouse - caret;
         }
-        if(hilited) {
+        if(hilited)
             scene.hilite = p;
-            auto hex = p2h(p->getposition());
-            char temp[260]; stringbuilder sb(temp); sb.add("%1i, %2i", hex.x, hex.y);
-            draw::tooltips(temp);
-        }
         p->paint();
     }
 }
@@ -212,6 +208,17 @@ static void paintgame() {
 	painthexgrid();
 	painthilitehex();
 	paintcommands();
+}
+
+extern stringbuilder tooltips_sb;
+static void infotops() {
+	if(scene.hilite)
+		scene.hilite.getinfo(tooltips_sb);
+}
+
+static void inputgame() {
+	infotops();
+	inputall();
 }
 
 static object* create_creature(variant v, point hex, bool hostile, int level = 1) {
@@ -300,10 +307,6 @@ void start_menu() {
 	if(!test_convert_all())
         return;
 	test_scenario();
-	//scripti sc = {};
-	//p1->attack(1, 0, 0, 0, {});
-	//p1->act("Test string %1i and %2i", 10, 12);
-	//choose_cards("Brute", 1);
 	menui::choose("Start", 0, 0);
 }
 
@@ -312,6 +315,7 @@ void draw::initializex() {
 	pausetime = 1000;
 	scene.resurl = "L1a";
 	scene.background = paintgame;
+	scene.doinput = inputgame;
 	setnext(start_menu);
 	start();
 }

@@ -77,6 +77,11 @@ void draw::cbsetint() {
 	*p = hot.param;
 }
 
+void draw::cbsetsht() {
+	auto p = (short*)hot.object;
+	*p = (short)hot.param;
+}
+
 void draw::cbsetptr() {
 	auto p = (void**)hot.object;
 	*p = (void*)hot.param;
