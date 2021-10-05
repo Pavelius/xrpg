@@ -257,9 +257,10 @@ void object::attack(int damage, int range, int pierce, int targets, statef addit
 	source.selectalive();
 	source.match(Hostile, !is(Hostile));
     source.matchrange(range, true);
+	source.sortnearest();
 	for(int i = 0; i < targets && source; i++) {
 		object* target = 0;
-		if(true)
+		if(isinteractive())
 			target = source.choose();
 		else
 			target = source.data[0];
