@@ -231,10 +231,14 @@ public:
 	void				block(indext i) { setmove(i, Blocked); }
 	void                blockrange(int range);
 	void				blockwalls();
+	indext              getfarest(const short unsigned* source);
+	indext              getnearest(const short unsigned* source);
 	short unsigned		getmove(indext i) const;
+	void                getmove(short unsigned* destination);
 	bool				iswall(indext i) const { return walls.is(i); }
 	void				makewave(indext start_index);
 	void				setmove(indext i, short unsigned v);
+	void                setmove(const short unsigned* source);
 	void				setpass(indext i) { walls.remove(i); }
 	void				setwall(indext i) { walls.set(i); }
 	indext				to(indext i, int d) const;

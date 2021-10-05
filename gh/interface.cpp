@@ -239,7 +239,8 @@ static void test_scenario() {
 	p1->set(Poison, 1);
 	p1->focusing();
 	p1->move(3);
-	p1->attack(3, 0, 0, 2, {});
+	//p1->attack(3, 0, 0, 2, {});
+	p1->action(Push, true, true, 4, 1, 2);
 	//p2->focusing();
 	//p2->move(5);
 }

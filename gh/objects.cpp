@@ -38,7 +38,8 @@ void objects::match(variant v, bool keep) {
 void objects::matchrange(int range, bool keep) {
 	auto ps = begin();
 	for(auto p : *this) {
-        auto i = p->getindex();
+        auto hex = p2h(p->getposition());
+        auto i = h2i(hex);
         auto n = game.getmove(i);
         if(n==Blocked)
             continue;

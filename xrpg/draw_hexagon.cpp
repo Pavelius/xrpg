@@ -85,7 +85,9 @@ point draw::h2p(point hex, int size) {
 }
 
 point draw::p2h(point pt, int size) {
-	auto q = ((sqrt_3 / 3.0) * (double)pt.x - (1.0 / 3.0) * (double)pt.y) / (double)size;
+    double x = pt.x;
+    double y = pt.y;
+	auto q = ((sqrt_3 / 3.0) * x - (1.0 / 3.0) * y) / (double)size;
 	auto r = ((2.0 / 3.0) * (double)pt.y) / (double)size;
 	return cube_to_evenr(cube_round({q, -q - r, r}));
 }

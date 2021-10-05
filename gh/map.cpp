@@ -8,12 +8,52 @@ short unsigned mapi::getmove(indext i) const {
 	return movement_rate[i];
 }
 
+void mapi::getmove(short unsigned* destination) {
+    memcpy(destination, movement_rate, sizeof(movement_rate));
+}
+
+void mapi::setmove(const short unsigned* source) {
+    memcpy(movement_rate, source, sizeof(movement_rate));
+}
+
 void mapi::setmove(indext i, short unsigned v) {
 	movement_rate[i] = v;
 }
 
 void mapi::clearpath() {
 	memset(movement_rate, 0, sizeof(movement_rate));
+}
+
+indext mapi::getfarest(const short unsigned* source) {
+    auto nd = 0;
+    auto sd = 0;
+    auto ni = Blocked;
+    for(auto i = 0; i<hms*hms; i++) {
+        if(source[i]==Blocked || movement_rate[i]==Blocked)
+            continue;
+        if(source[i]<sd || movement_rate[i]<nd)
+            continue;
+        sd = source[i];
+        nd = movement_rate[i];
+        ni = i;
+    }
+    return ni;
+}
+
+indext mapi::getnearest(const short unsigned* source) {
+    auto nd = Blocked;
+    auto sd = 0;
+    auto ni = Blocked;
+    for(auto i = 0; i<hms*hms; i++) {
+        if(source[i]==Blocked || movement_rate[i]==Blocked)
+            continue;
+        if(source[i]<sd || movement_rate[i]>nd)
+            continue;
+        sd = source[i];
+        nd = movement_rate[i];
+        ni = i;
+    }
+    return ni;
 }
 
 void mapi::blockwalls() {
@@ -36,7 +76,7 @@ void mapi::makewave(indext start_index) {
 	auto stack_end = stack + sizeof(stack) / sizeof(stack[0]);
 	auto push_counter = stack;
 	auto pop_counter = stack;
-	movement_rate[start_index] = 0;
+	movement_rate[start_index] = Blocked;
 	*push_counter++ = start_index;
 	while(pop_counter != push_counter) {
 		auto index = *pop_counter++;

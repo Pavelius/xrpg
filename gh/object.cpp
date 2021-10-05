@@ -93,7 +93,6 @@ void object::move(int v) {
 	auto index = getindex();
 	game.clearpath();
 	game.blockwalls();
-	game.setmove(index, Blocked);
 	objects obstacles;
 	if(get(Jump) || get(Fly))
 		game.makewave(index);
@@ -139,10 +138,46 @@ void object::attack(object& enemy, const scripti& modifiers) {
 	enemy.damage(current.bonus);
 }
 
+static short unsigned move_copy[hms*hms];
+
 void object::movefrom(indext i, int range) {
+	objects enemies;
+	enemies.selectalive();
+	enemies.match(Hostile, !is(Hostile));
+    auto start = getindex();
+    game.clearpath();
+    game.blockwalls();
+    game.block(start);
+    game.block(enemies);
+    game.makewave(start);
+    game.blockrange(range);
+    game.getmove(move_copy);
+    game.clearpath();
+    game.blockwalls();
+    game.block(i);
+    game.makewave(i);
+    auto goal = game.getfarest(move_copy);
+    moving(goal, true);
 }
 
 void object::moveto(indext i, int range){
+	objects enemies;
+	enemies.selectalive();
+	enemies.match(Hostile, !is(Hostile));
+    auto start = getindex();
+    game.clearpath();
+    game.blockwalls();
+    game.block(start);
+    game.block(enemies);
+    game.makewave(start);
+    game.blockrange(range);
+    game.getmove(move_copy);
+    game.clearpath();
+    game.blockwalls();
+    game.block(i);
+    game.makewave(i);
+    auto goal = game.getnearest(move_copy);
+    moving(goal, true);
 }
 
 void object::loot(int bonus) {
@@ -163,6 +198,9 @@ void object::action(action_s a, bool interactive, bool hostile, int range, int t
         source.match(Hostile, hostile);
         source.matchrange(range, true);
     }
+    // Target count is same as available target count. In this case choosing has no sence.
+    if(source.getcount()<=targets)
+        interactive = false;
 	for(int i = 0; i < targets && source; i++) {
 		object* target = 0;
 		if(interactive)
@@ -179,8 +217,6 @@ void object::action(action_s a, bool interactive, bool hostile, int range, int t
 	}
 }
 
-extern int show_movement_cost;
-
 void object::attack(int damage, int range, int pierce, int targets, statef additional) {
     if(range==0)
         range = 1;
@@ -196,12 +232,10 @@ void object::attack(int damage, int range, int pierce, int targets, statef addit
     source.matchrange(range, true);
 	for(int i = 0; i < targets && source; i++) {
 		object* target = 0;
-		show_movement_cost = 1;
 		if(true)
 			target = source.choose();
 		else
 			target = source.data[0];
-        show_movement_cost = 0;
 		source.remove(target);
 		scripti params = {};
 		params.action = Attack;
