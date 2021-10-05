@@ -172,7 +172,8 @@ public:
 	constexpr operator bool() const { return hits != 0; }
 	void				activate(duration_s duration, int count, variant source, variants variants);
 	void				addattack(scripti& parameters) const;
-	void				apply(variant v, int bonus);
+	void				apply(const variants& source);
+	void				apply(scripti& parameters);
 	void				action(action_s a, bool interactive, bool hostile, int range, int targets, int bonus);
 	void				attack(int damage, int range, int pierce, int targets, statef additional);
 	void                attack(object& enemy, const scripti& parameters);
@@ -314,6 +315,7 @@ void					tooltips(const char* format, ...);
 }
 VKIND(action_s, Action)
 VKIND(area_s, Area)
+VKIND(cardi, Card)
 VKIND(duration_s, Duration)
 VKIND(element_s, Element)
 VKIND(feat_s, Feat)

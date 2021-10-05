@@ -241,8 +241,13 @@ static void test_scenario() {
 	create_creature("BanditGuard", {6, 12}, true, 0);
 	p1->set(Poison, 1);
 	p1->focusing();
-	p1->move(3);
-	p1->attack(3, 0, 0, 2, {});
+	variant card1 = "WardingStrenght";
+	variant card2 = "GrabAndGo";
+	cardi* pc1 = card1;
+	cardi* pc2 = card2;
+	p1->apply(pc2->lower);
+	p1->apply(pc1->upper);
+	//p1->attack(3, 0, 0, 2, {});
 	//p1->action(Push, true, true, 4, 1, 2);
 	//p2->focusing();
 	//p2->move(5);

@@ -258,9 +258,12 @@ void object::attack(int damage, int range, int pierce, int targets, statef addit
 	source.match(Hostile, !is(Hostile));
     source.matchrange(range, true);
 	source.sortnearest();
+	auto interactive = isinteractive();
+	if(source.getcount() <= targets)
+		interactive = false;
 	for(int i = 0; i < targets && source; i++) {
 		object* target = 0;
-		if(isinteractive())
+		if(interactive)
 			target = source.choose();
 		else
 			target = source.data[0];
@@ -306,37 +309,48 @@ void object::set(variant i, int v) {
 	}
 }
 
-void object::apply(variant v, int bonus) {
-	switch(v.type) {
+void object::apply(scripti& e) {
+	switch(e.action.type) {
 	case Action:
-		switch(v.value) {
+		switch(e.action.value) {
 		case Attack:
-			attack(bonus, get(Range), get(Pierce), get(Target), {});
+			attack(e.bonus, e.range, e.pierce, e.targets, e.states);
 			break;
 		case Move:
-			move(bonus);
+			move(e.bonus);
 			break;
 		case Heal:
-            action(Heal, true, false, get(Range), get(Target), bonus);
+            action(Heal, true, false, e.range, e.targets, e.bonus);
 			break;
 		case Push:
-            action(Push, true, true, get(Range), get(Target), bonus);
+            action(Push, true, true, e.range, e.targets, e.bonus);
 			break;
 		case Pull:
-            action(Pull, true, true, get(Range), get(Target), bonus);
+            action(Pull, true, true, e.range, e.targets, e.bonus);
 			break;
         case Loot:
-            loot(bonus);
+            loot(e.bonus);
             break;
 		default:
-			if(!bonus)
-				bonus = 1;
-			set(v, get(v) + bonus);
+			if(!e.bonus)
+				e.bonus = 1;
+			set(e.action, get(e.action) + e.bonus);
 			break;
 		}
 		break;
 	default:
 		break;
+	}
+}
+
+void object::apply(const variants& source) {
+	const variant* pb = source.begin();
+	const variant* pe = source.end();
+	scripti script;
+	while(pb < pe) {
+		script.clear();
+		pb = script.apply(pb, pe);
+		apply(script);
 	}
 }
 
