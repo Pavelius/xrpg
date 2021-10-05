@@ -44,3 +44,10 @@ void collection::matchhostile(bool keep) {
 	}
 	count = p - begin();
 }
+
+variant collection::choose() const {
+	answers an;
+	for(auto v : *this)
+		an.add((long)v.getpointer(), "Test" /*v.getname()*/);
+	return (void*)an.choose(0, 0, true, 0);
+}

@@ -2,11 +2,32 @@
 
 BSDATAD(object)
 
+int object::getpriority() const {
+	if(isfocused())
+		return 50;
+	switch(kind.type) {
+	case Player: return 10;
+	case SummonedCreature: return 10;
+	case Monster: return 10;
+	case Trap: return 1;
+	default: return 0;
+	}
+}
+
 bool object::isalive() const {
 	switch(kind.type) {
 	case Player:
 	case Monster:
 	case SummonedCreature:
+		return true;
+	default:
+		return false;
+	}
+}
+
+bool object::isusable() const {
+	switch(kind.type) {
+	case Trap:
 		return true;
 	default:
 		return false;
@@ -39,7 +60,8 @@ deck& object::getcombatdeck() const {
 
 int object::getmaximumhits() const {
 	switch(kind.type) {
-	case Player: return bsdata<playeri>::get(kind.value).health[1];
+	case Player: return bsdata<playeri>::get(kind.value).health[imax(0, level-1)];
+	case Monster: return bsdata<monsteri>::get(kind.value).normal[level].hits;
 	default: return 1000;
 	}
 }
@@ -123,10 +145,14 @@ void object::attack(int damage, int range, int pierce, int targets, statef addit
 	source.matchhostile(!is(Hostile));
 	if(!targets)
 		targets = 1;
-	for(auto v : source) {
-		if((targets--) <= 0)
-			break;
-		auto& enemy = bsdata<object>::get(v.value);
+	for(int i = 0; i < targets && source; i++) {
+		variant target;
+		if(true)
+			target = source.choose();
+		else
+			target = source.data[0];
+		source.remove(target);
+		auto& enemy = bsdata<object>::get(target.value);
 		scripti params = {};
 		params.action = Attack;
 		params.bonus = damage;
@@ -156,6 +182,13 @@ int object::get(variant v) const {
 	default:
 		return 0;
 	}
+}
+
+static void make_wave(indext start) {
+	game.clearpath();
+	game.blockwalls();
+	game.block(start);
+	game.makewave(start);
 }
 
 void object::set(variant i, int v) {
@@ -205,10 +238,15 @@ void object::apply(variant v, int bonus) {
 	}
 }
 
-void object::create(variant v) {
-	this->kind = v;
+void object::refresh() {
 	this->hits = getmaximumhits();
 	states.clear();
+}
+
+void object::create(variant v) {
+	this->kind = v;
+	this->level = 1;
+	refresh();
 }
 
 static activity* find_activity(variant owner, variant source) {
@@ -233,5 +271,5 @@ void object::activate(duration_s duration, int count, variant source, variants e
 
 void object::moving(indext i, bool interactive) {
 	auto goal = h2p(i2h(i));
-	draw::moving(getreference(), goal, 12);
+	draw::moving(getreference(), goal, 8);
 }

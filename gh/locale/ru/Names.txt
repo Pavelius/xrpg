@@ -5,6 +5,7 @@ Air: Воздух
 Attack: Атака
 Back: Назад
 BalancedMeasure: Взвешенный подход
+BanditGuard: Бандит-охранник
 Bonus: Бонус
 Brute: Дикарь
 Cancel: Отмена

@@ -155,6 +155,7 @@
     <ClCompile Include="area.cpp" />
     <ClCompile Include="cardtype.cpp" />
     <ClCompile Include="collection.cpp" />
+    <ClCompile Include="drawables.cpp" />
     <ClCompile Include="event.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="map.cpp" />

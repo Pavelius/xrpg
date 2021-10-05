@@ -11,7 +11,6 @@ static const point states_pos[] = {{-16, 16}, {-16, -16}, {16, 16}, {16, -16}};
 static int show_hex_coor = 0;
 static int show_hex_grid = 0;
 static int show_movement_cost = 0;
-static int allow_drag_hero = 1;
 static indext current_index;
 static point mouse_difference;
 static const object* focused_object;
@@ -141,23 +140,29 @@ static void painthexgrid() {
 		auto pt = h2p(hex, size) - camera;
 		if(show_hex_grid)
 			hexagon(pt.x, pt.y, size);
-		if(show_hex_coor)
+		if(show_hex_coor && !show_movement_cost)
 			paint_tips(pt, hex);
-		else if(show_movement_cost) {
-			auto n = game.getmove(ix);
-			if(n != Blocked && n) {
-				paint_tips(pt, n);
-				if(ishilitehex(pt.x, pt.y))
-					current_index = ix;
-			}
-		}
 	}
 	if(hot.key == (Ctrl + 'G'))
 		execute(cbsetint, show_hex_grid ? 0 : 1, 0, &show_hex_grid);
 	else if(hot.key == 'G')
 		execute(cbsetint, show_hex_coor ? 0 : 1, 0, &show_hex_coor);
-	else if(hot.key == 'M')
-		execute(cbsetint, show_movement_cost ? 0 : 1, 0, &show_movement_cost);
+}
+
+static void paintmovement() {
+	if(!show_movement_cost)
+		return;
+	current_index = Blocked;
+	for(short ix = 0; ix < hms * hms; ix++) {
+		auto n = game.getmove(ix);
+		if(n != Blocked && n) {
+			auto hex = i2h(ix);
+			auto pt = h2p(hex, size) - camera;
+			paint_tips(pt, n);
+			if(ishilitehex(pt.x, pt.y))
+				current_index = ix;
+		}
+	}
 }
 
 static void painthilitehex() {
@@ -173,40 +178,70 @@ static void painthilitehex() {
 	fore = push_fore;
 }
 
-void paintfigures() {
-	for(auto& e : bsdata<object>()) {
-		if(dragactive(&e))
-			e.setposition(hot.mouse - mouse_difference + camera);
-		caret = e.getposition() - camera;
-		switch(e.kind.type) {
-		case Player:
-		case SummonedCreature:
-		case Monster:
-			if(ishilitehex(caret.x, caret.y)) {
-				if(allow_drag_hero && hot.key == MouseLeft && hot.pressed) {
-					dragbegin(&e);
-					mouse_difference = hot.mouse - caret;
-				}
-				scene.hilite = &e;
-				draw::tooltips(e.kind.getname());
-			}
-			break;
-		case Trap:
-			if(ishilitehex(caret.x, caret.y)) {
-				scene.hilite = &e;
-				draw::tooltips(e.kind.getname());
-			}
-			break;
+struct drawables : adat<object*, 64> {
+	void selectalive() {
+		for(auto& e : bsdata<object>()) {
+			if(!e || !e.isalive())
+				continue;
+			add(&e);
 		}
-		e.paint();
 	}
+	void selectground() {
+		for(auto& e : bsdata<object>()) {
+			if(!e || e.isalive())
+				continue;
+			add(&e);
+		}
+	}
+	void paint(bool allow_hilite, bool allow_drag) const {
+		for(auto p : *this) {
+			if(dragactive(p))
+				p->setposition(hot.mouse - mouse_difference + camera);
+			caret = p->getposition() - camera;
+			auto hilited = false;
+			if(allow_hilite) {
+				if(p->kind.type!=Tile)
+					hilited = ishilitehex(caret.x, caret.y);
+			}
+			if(allow_drag && hot.key == MouseLeft && hot.pressed) {
+				dragbegin(p);
+				mouse_difference = hot.mouse - caret;
+			}
+			if(hilited) {
+				scene.hilite = p;
+				draw::tooltips(p->kind.getname());
+			}
+			p->paint();
+		}
+	}
+	static int compare(const void* v1, const void* v2) {
+		auto p1 = *((object**)v1);
+		auto p2 = *((object**)v2);
+		return p1->getpriority() - p2->getpriority();
+	}
+	void sort() {
+		qsort(data, count, sizeof(data[0]), compare);
+	}
+};
+
+static void paintfigures() {
+	drawables source;
+	source.clear();
+	source.selectground();
+	source.sort();
+	source.paint(true, false);
+	painthexgrid();
+	paintmovement();
+	source.clear();
+	source.selectalive();
+	source.sort();
+	source.paint(true, false);
 }
 
 static void paintgame() {
 	paintclear();
 	//rectf({0, 0, getwidth(), getheight()}, colors::white);
 	paintfigures();
-	painthexgrid();
 	painthilitehex();
 	paintcommands();
 }
@@ -223,20 +258,30 @@ static variant choose_cards(variant player, int level) {
 	return collection.choose(player.getname(), getnm("Cancel"), true, 0);
 }
 
+static object* create_creature(variant v, point hex, bool hostile, int level = 1) {
+	auto p = game.create(v, false);
+	p->setposition(h2p(hex, size));
+	p->set(Level, level);
+	p->refresh();
+	if(hostile)
+		p->set(Hostile, 1);
+	return p;
+}
+
 static void test_scenario() {
 	auto& sc = bsdata<scenarioi>::get(0);
 	sc.prepare(0);
-	auto p1 = game.create("Brute", false);
-	auto p2 = game.create("Thinkerer", false);
-	p1->set(Level, 1);
-	p1->setposition(h2p(sc.getstart(0), size));
+	auto p1 = create_creature("Brute", sc.getstart(0), false);
+	auto p2 = create_creature("Thinkerer", sc.getstart(1), false);
+	auto p3 = create_creature("BanditGuard", {6,10}, true, 0);
+	auto p4 = create_creature("BanditGuard", {6, 11}, true, 0);
+	auto p5 = create_creature("BanditGuard", {6, 12}, true, 0);
 	p1->set(Poison, 1);
-	p2->setposition(h2p(sc.getstart(1), size));
-	p2->set(Level, 1);
-	p2->focusing();
-	p2->move(5);
 	p1->focusing();
 	p1->move(3);
+	p1->attack(3, 0, 0, 2, {});
+	//p2->focusing();
+	//p2->move(5);
 }
 
 static void choose_movement_window() {
@@ -248,6 +293,10 @@ static void choose_movement_window() {
 			execute(breakparam, current_index);
 		break;
 	}
+}
+
+bool object::isfocused() const {
+	return focused_object == this;
 }
 
 void object::focusing() const {

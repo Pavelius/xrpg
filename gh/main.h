@@ -1,3 +1,4 @@
+#include "answers.h"
 #include "crt.h"
 #include "draw_hexagon.h"
 #include "flagable.h"
@@ -182,18 +183,22 @@ public:
 	indext				getindex() const;
 	deck&				getcombatdeck() const;
 	int                 getmaximumhits() const;
+	int                 getpriority() const;
 	void				heal(int v);
 	bool                is(state_s v) const { return states.is(v); }
 	bool				isalive() const;
 	bool                isenemy(const object& e) const { return is(Hostile) != e.is(Hostile); }
+	bool				isfocused() const;
 	bool                isinteractive() const { return true; }
 	bool                isplayer() const { return false; }
+	bool				isusable() const;
 	void                kill();
 	void				move(int v);
 	void				moving(indext i, bool interactive);
 	void				paint() const;
 	void				pull(int range, int targets);
 	void				push(int range, int targets);
+	void				refresh();
 	void                remove(state_s v) { states.remove(v); }
 	void                set(variant i, int v);
 	void				use(action_s v);
@@ -211,6 +216,7 @@ class mapi {
 public:
 	void				clearpath();
 	void				block(const varianta& variant);
+	void				block(indext i) { setmove(i, Blocked); }
 	void                blockrange(int range);
 	void				blockwalls();
 	short unsigned		getmove(indext i) const;
@@ -256,6 +262,7 @@ struct collection : varianta {
 	void                match(variant v, bool keep);
 	void				matchhostile(bool keep);
 	void				selectalive();
+	variant				choose() const;
 };
 struct tilei {
 	const char*			id;
