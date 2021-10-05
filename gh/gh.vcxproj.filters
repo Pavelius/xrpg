@@ -61,9 +61,6 @@
     <ClCompile Include="script.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="collection.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="interface.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -82,7 +79,7 @@
     <ClCompile Include="actionbonus.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="drawables.cpp">
+    <ClCompile Include="objects.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>

@@ -286,7 +286,7 @@ void draw::centercamera(point v) {
 
 bool test_convert_all() {
     for(auto y = 0; y<hms; y++) {
-        for(auto x = 0; y<hms; x++) {
+        for(auto x = 0; x<hms; x++) {
             point hex = {x, y};
             point scr = h2p(hex, size);
             point he1 = p2h(scr, size);
@@ -294,18 +294,6 @@ bool test_convert_all() {
                 return false;
         }
     }
-    return true;
-}
-
-static bool test_convert(point hex) {
-    point scr = h2p(hex, size);
-    point he1 = p2h(scr, size);
-    return hex==he1;
-}
-
-static bool test_convert() {
-    if(!test_convert({1, 0}))
-        return false;
     return true;
 }
 

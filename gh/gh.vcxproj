@@ -154,8 +154,6 @@
     <ClCompile Include="activity.cpp" />
     <ClCompile Include="area.cpp" />
     <ClCompile Include="cardtype.cpp" />
-    <ClCompile Include="collection.cpp" />
-    <ClCompile Include="drawables.cpp" />
     <ClCompile Include="event.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="map.cpp" />
@@ -170,6 +168,7 @@
     <ClCompile Include="information.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_util.cpp" />
+    <ClCompile Include="objects.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="property.cpp" />
     <ClCompile Include="scenario.cpp" />

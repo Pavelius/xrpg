@@ -7,6 +7,7 @@ using namespace draw;
 const double sqrt_3 = 1.732050807568877;
 const double cos_30 = 0.86602540378;
 extern bool line_antialiasing;
+extern "C" double round(double v);
 
 namespace {
 struct cube {
@@ -37,19 +38,32 @@ static void triangle2(point v1, point v2) {
 }
 
 static cube cube_round(cube c) {
-	double rx = int(c.x);
-	double ry = int(c.y);
-	double rz = int(c.z);
-	auto x_diff = iabs((double)rx - c.x);
-	auto y_diff = iabs((double)ry - c.y);
-	auto z_diff = iabs((double)rz - c.z);
-	if(x_diff > y_diff && x_diff > z_diff)
-		rx = -ry - rz;
-	else if(y_diff > z_diff)
-		ry = -rx - rz;
-	else
-		rz = -rx - ry;
-	return {rx, ry, rz};
+	int q = int(round(c.x));
+	int r = int(round(c.y));
+	int s = int(round(c.z));
+	double q_diff = iabs((double)q - c.x);
+	double r_diff = iabs((double)r - c.y);
+	double s_diff = iabs((double)s - c.z);
+	if(q_diff > r_diff and q_diff > s_diff) {
+		q = -r - s;
+	} else if(r_diff > s_diff) {
+		r = -q - s;
+	} else {
+		s = -q - r;
+	}
+	//double rx = int(round(c.x));
+	//double ry = int(round(c.y));
+	//double rz = int(round(c.z));
+	//auto x_diff = iabs((double)rx - c.x);
+	//auto y_diff = iabs((double)ry - c.y);
+	//auto z_diff = iabs((double)rz - c.z);
+	//if(x_diff > y_diff && x_diff > z_diff)
+	//	rx = -ry - rz;
+	//else if(y_diff > z_diff)
+	//	ry = -rx - rz;
+	//else
+	//	rz = -rx - ry;
+	return {(double)q, (double)r, (double)s};
 }
 
 point cube_to_evenq(cube c) {
