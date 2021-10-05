@@ -10,7 +10,7 @@ const int size = 50;
 static const point states_pos[] = {{-16, 16}, {-16, -16}, {16, 16}, {16, -16}};
 static int show_hex_coor = 0;
 static int show_hex_grid = 0;
-static int show_movement_cost = 0;
+int show_movement_cost = 0;
 static indext current_index;
 static point mouse_difference;
 static const object* focused_object;
@@ -178,64 +178,36 @@ static void painthilitehex() {
 	fore = push_fore;
 }
 
-struct drawables : adat<object*, 64> {
-	void selectalive() {
-		for(auto& e : bsdata<object>()) {
-			if(!e || !e.isalive())
-				continue;
-			add(&e);
-		}
-	}
-	void selectground() {
-		for(auto& e : bsdata<object>()) {
-			if(!e || e.isalive())
-				continue;
-			add(&e);
-		}
-	}
-	void paint(bool allow_hilite, bool allow_drag) const {
-		for(auto p : *this) {
-			if(dragactive(p))
-				p->setposition(hot.mouse - mouse_difference + camera);
-			caret = p->getposition() - camera;
-			auto hilited = false;
-			if(allow_hilite) {
-				if(p->kind.type!=Tile)
-					hilited = ishilitehex(caret.x, caret.y);
-			}
-			if(allow_drag && hot.key == MouseLeft && hot.pressed) {
-				dragbegin(p);
-				mouse_difference = hot.mouse - caret;
-			}
-			if(hilited) {
-				scene.hilite = p;
-				draw::tooltips(p->kind.getname());
-			}
-			p->paint();
-		}
-	}
-	static int compare(const void* v1, const void* v2) {
-		auto p1 = *((object**)v1);
-		auto p2 = *((object**)v2);
-		return p1->getpriority() - p2->getpriority();
-	}
-	void sort() {
-		qsort(data, count, sizeof(data[0]), compare);
-	}
-};
+void objects::paint(bool allow_hilite, bool allow_drag) const {
+    for(auto p : *this) {
+        if(dragactive(p))
+            p->setposition(hot.mouse - mouse_difference + camera);
+        caret = p->getposition() - camera;
+        auto hilited = false;
+        if(allow_hilite) {
+            if(p->kind.type!=Tile)
+                hilited = ishilitehex(caret.x, caret.y);
+        }
+        if(allow_drag && hot.key == MouseLeft && hot.pressed) {
+            dragbegin(p);
+            mouse_difference = hot.mouse - caret;
+        }
+        if(hilited) {
+            scene.hilite = p;
+            draw::tooltips(p->kind.getname());
+        }
+        p->paint();
+    }
+}
 
 static void paintfigures() {
-	drawables source;
+	objects source;
 	source.clear();
-	source.selectground();
+	source.select();
 	source.sort();
 	source.paint(true, false);
 	painthexgrid();
 	paintmovement();
-	source.clear();
-	source.selectalive();
-	source.sort();
-	source.paint(true, false);
 }
 
 static void paintgame() {
@@ -244,18 +216,6 @@ static void paintgame() {
 	paintfigures();
 	painthilitehex();
 	paintcommands();
-}
-
-static variant choose_cards(variant player, int level) {
-	varianta collection;
-	for(auto& e : bsdata<cardi>()) {
-		if(e.owner != player)
-			continue;
-		if(e.level != level)
-			continue;
-		collection.add(&e);
-	}
-	return collection.choose(player.getname(), getnm("Cancel"), true, 0);
 }
 
 static object* create_creature(variant v, point hex, bool hostile, int level = 1) {
@@ -272,10 +232,10 @@ static void test_scenario() {
 	auto& sc = bsdata<scenarioi>::get(0);
 	sc.prepare(0);
 	auto p1 = create_creature("Brute", sc.getstart(0), false);
-	auto p2 = create_creature("Thinkerer", sc.getstart(1), false);
-	auto p3 = create_creature("BanditGuard", {6,10}, true, 0);
-	auto p4 = create_creature("BanditGuard", {6, 11}, true, 0);
-	auto p5 = create_creature("BanditGuard", {6, 12}, true, 0);
+	create_creature("Thinkerer", sc.getstart(1), false);
+	create_creature("BanditGuard", {6,10}, true, 0);
+	create_creature("BanditGuard", {6, 11}, true, 0);
+	create_creature("BanditGuard", {6, 12}, true, 0);
 	p1->set(Poison, 1);
 	p1->focusing();
 	p1->move(3);

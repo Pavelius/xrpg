@@ -173,6 +173,7 @@ public:
 	void				activate(duration_s duration, int count, variant source, variants variants);
 	void				addattack(scripti& parameters) const;
 	void				apply(variant v, int bonus);
+	void				action(action_s a, bool interactive, bool hostile, int range, int targets, int bonus);
 	void				attack(int damage, int range, int pierce, int targets, statef additional);
 	void                attack(object& enemy, const scripti& parameters);
 	void                clear();
@@ -193,15 +194,26 @@ public:
 	bool                isplayer() const { return false; }
 	bool				isusable() const;
 	void                kill();
+	void                loot(int v);
 	void				move(int v);
+	void                movefrom(indext i, int range);
+	void                moveto(indext i, int range);
 	void				moving(indext i, bool interactive);
 	void				paint() const;
-	void				pull(int range, int targets);
-	void				push(int range, int targets);
 	void				refresh();
 	void                remove(state_s v) { states.remove(v); }
 	void                set(variant i, int v);
 	void				use(action_s v);
+};
+struct objects : adat<object*, 64> {
+    object*             choose() const;
+	void                match(variant v, bool keep);
+	void                matchrange(int range, bool keep);
+	void                paint(bool allow_hilite, bool allow_drag) const;
+    void                select();
+    void                selectalive();
+	void                selectground();
+	void                sort();
 };
 struct activity {
 	variant				owner, source;
@@ -215,7 +227,7 @@ class mapi {
 	flagable<hms*hms>	walls;
 public:
 	void				clearpath();
-	void				block(const varianta& variant);
+	void				block(const objects& vs);
 	void				block(indext i) { setmove(i, Blocked); }
 	void                blockrange(int range);
 	void				blockwalls();
@@ -257,12 +269,6 @@ struct gamei : public mapi {
 	int					get(variant i) const;
 	int					getlevel() const;
 	void				set(variant i, int v);
-};
-struct collection : varianta {
-	void                match(variant v, bool keep);
-	void				matchhostile(bool keep);
-	void				selectalive();
-	variant				choose() const;
 };
 struct tilei {
 	const char*			id;

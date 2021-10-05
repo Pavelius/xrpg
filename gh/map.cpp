@@ -57,7 +57,7 @@ void mapi::makewave(indext start_index) {
 	}
 }
 
-void mapi::block(const varianta& source) {
+void mapi::block(const objects& source) {
 	for(auto v : source) {
 		object* p = v;
 		if(!p)

@@ -51,7 +51,7 @@ bool draw::ismodal() {
 	return false;
 }
 
-void draw::breakmodal(int result) {
+void draw::breakmodal(long result) {
 	break_modal = true;
 	break_result = result;
 }
@@ -68,7 +68,7 @@ void draw::breakparam() {
 	breakmodal(hot.param);
 }
 
-int draw::getresult() {
+long draw::getresult() {
 	return break_result;
 }
 

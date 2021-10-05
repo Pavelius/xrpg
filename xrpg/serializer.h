@@ -6,8 +6,8 @@ extern "C" int						strcmp(const char* s1, const char* s2) noexcept(true); // Co
 struct serializer {
 	enum class kind { Text, Number, Array, Struct };
 	struct node {
-		const char*					name;
 		node*						parent;
+		const char*					name;
 		kind						type;
 		int							index;
 		void*						object; // application defined data

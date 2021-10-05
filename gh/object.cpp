@@ -94,12 +94,12 @@ void object::move(int v) {
 	game.clearpath();
 	game.blockwalls();
 	game.setmove(index, Blocked);
-	collection obstacles;
+	objects obstacles;
 	if(get(Jump) || get(Fly))
 		game.makewave(index);
 	else {
 		obstacles.selectalive();
-		obstacles.matchhostile(!is(Hostile));
+		obstacles.match(Hostile, !is(Hostile));
 		game.block(obstacles);
 		game.makewave(index);
 	}
@@ -139,20 +139,70 @@ void object::attack(object& enemy, const scripti& modifiers) {
 	enemy.damage(current.bonus);
 }
 
-void object::attack(int damage, int range, int pierce, int targets, statef additional) {
-	collection source;
-	source.select(bsdata<object>::source);
-	source.matchhostile(!is(Hostile));
+void object::movefrom(indext i, int range) {
+}
+
+void object::moveto(indext i, int range){
+}
+
+void object::loot(int bonus) {
+}
+
+void object::action(action_s a, bool interactive, bool hostile, int range, int targets, int bonus) {
 	if(!targets)
 		targets = 1;
+	objects source;
+    auto start = getindex();
+    if(range==0)
+        source.add(this);
+    else {
+        game.clearpath();
+        game.blockwalls();
+        game.makewave(start);
+        source.selectalive();
+        source.match(Hostile, hostile);
+        source.matchrange(range, true);
+    }
 	for(int i = 0; i < targets && source; i++) {
-		variant target;
-		if(true)
+		object* target = 0;
+		if(interactive)
 			target = source.choose();
 		else
 			target = source.data[0];
 		source.remove(target);
-		auto& enemy = bsdata<object>::get(target.value);
+		switch(a) {
+        case Heal: target->heal(bonus); break;
+        case Pull: target->moveto(start, bonus); break;
+        case Push: target->movefrom(start, bonus); break;
+        default: break;
+		}
+	}
+}
+
+extern int show_movement_cost;
+
+void object::attack(int damage, int range, int pierce, int targets, statef additional) {
+    if(range==0)
+        range = 1;
+	if(targets==0)
+		targets = 1;
+    indext start = getindex();
+    game.clearpath();
+    game.blockwalls();
+    game.makewave(start);
+	objects source;
+	source.selectalive();
+	source.match(Hostile, !is(Hostile));
+    source.matchrange(range, true);
+	for(int i = 0; i < targets && source; i++) {
+		object* target = 0;
+		show_movement_cost = 1;
+		if(true)
+			target = source.choose();
+		else
+			target = source.data[0];
+        show_movement_cost = 0;
+		source.remove(target);
 		scripti params = {};
 		params.action = Attack;
 		params.bonus = damage;
@@ -160,14 +210,8 @@ void object::attack(int damage, int range, int pierce, int targets, statef addit
 		params.pierce = pierce;
 		params.targets = targets;
 		params.states = additional;
-		attack(enemy, params);
+		attack(*target, params);
 	}
-}
-
-void object::pull(int range, int targets) {
-}
-
-void object::push(int range, int targets) {
 }
 
 int object::get(variant v) const {
@@ -182,13 +226,6 @@ int object::get(variant v) const {
 	default:
 		return 0;
 	}
-}
-
-static void make_wave(indext start) {
-	game.clearpath();
-	game.blockwalls();
-	game.block(start);
-	game.makewave(start);
 }
 
 void object::set(variant i, int v) {
@@ -218,14 +255,17 @@ void object::apply(variant v, int bonus) {
 			move(bonus);
 			break;
 		case Heal:
-			heal(bonus);
+            action(Heal, true, false, get(Range), get(Target), bonus);
 			break;
 		case Push:
-			push(get(Target), bonus);
+            action(Push, true, true, get(Range), get(Target), bonus);
 			break;
 		case Pull:
-			pull(get(Target), bonus);
+            action(Pull, true, true, get(Range), get(Target), bonus);
 			break;
+        case Loot:
+            loot(bonus);
+            break;
 		default:
 			if(!bonus)
 				bonus = 1;

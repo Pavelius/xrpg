@@ -115,7 +115,6 @@
 		<Unit filename="actionbonus.cpp" />
 		<Unit filename="area.cpp" />
 		<Unit filename="cardtype.cpp" />
-		<Unit filename="collection.cpp" />
 		<Unit filename="deck.cpp" />
 		<Unit filename="duration.cpp" />
 		<Unit filename="element.cpp" />
@@ -133,6 +132,7 @@
 		<Unit filename="map.cpp" />
 		<Unit filename="nameable.cpp" />
 		<Unit filename="object.cpp" />
+		<Unit filename="objects.cpp" />
 		<Unit filename="player.cpp" />
 		<Unit filename="property.cpp" />
 		<Unit filename="rules/city.txt" />

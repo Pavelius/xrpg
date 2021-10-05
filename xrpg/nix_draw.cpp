@@ -25,6 +25,7 @@ static unsigned     timer_interval;
 //static timespec   last_time;
 
 static int tokey(int vk) {
+    int n;
     switch(vk) {
     case XK_Control_L:
     case XK_Control_R:
@@ -100,7 +101,7 @@ static int tokey(int vk) {
     case XK_period:
         return '.';
     default:
-        return vk-XK_A;
+        return szupper(vk);
     }
 }
 

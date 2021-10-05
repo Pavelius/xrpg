@@ -14,7 +14,7 @@ BSMETA(bsreq) = {
 {}};
 
 const bsreq* bsreq::find(const char* name) const {
-	if(!this || !name || name[0] == 0)
+	if(!name || name[0] == 0)
 		return 0;
 	for(auto p = this; p->id; p++) {
 		if(strcmp(p->id, name) == 0)
@@ -24,7 +24,7 @@ const bsreq* bsreq::find(const char* name) const {
 }
 
 const bsreq* bsreq::find(const char* name, unsigned count) const {
-	if(!this || !name || name[0] == 0)
+	if(!name || name[0] == 0)
 		return 0;
 	for(auto p = this; p->id; p++) {
 		if(memcmp(p->id, name, count) == 0)
@@ -34,8 +34,6 @@ const bsreq* bsreq::find(const char* name, unsigned count) const {
 }
 
 const bsreq* bsreq::find(const char* name, const bsreq* type) const {
-	if(!this)
-		return 0;
 	for(auto p = this; p->id; p++) {
 		if(p->type != type)
 			continue;
@@ -46,7 +44,7 @@ const bsreq* bsreq::find(const char* name, const bsreq* type) const {
 }
 
 int bsreq::findenum(const char* name) const {
-	if(!this || !source || !type)
+	if(!source || !type)
 		return -1;
 	auto pn = type->find("id", bsmeta<const char*>::meta);
 	if(!pn)

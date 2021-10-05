@@ -52,25 +52,25 @@ static cube cube_round(cube c) {
 	return {rx, ry, rz};
 }
 
-static point cube_to_evenq(cube c) {
+point cube_to_evenq(cube c) {
 	auto col = c.x;
 	auto row = c.z + (c.x + ((int)c.x & 1)) / 2;
 	return {(short)col, (short)row};
 }
 
-static point cube_to_evenr(cube c) {
+point cube_to_evenr(cube c) {
 	auto col = c.x + (c.z + ((int)c.z & 1)) / 2;
 	auto row = c.z;
 	return {(short)col, (short)row};
 }
 
-static point cube_to_oddr(cube c) {
+point cube_to_oddr(cube c) {
 	auto col = c.x + (c.z - (((int)c.z) & 1)) / 2;
 	auto row = c.z;
 	return {(short)col, (short)row};
 }
 
-static cube axial_to_cube(point pt) {
+cube axial_to_cube(point pt) {
 	return {(double)pt.x, (double)(-pt.x - pt.y), (double)pt.y};
 }
 

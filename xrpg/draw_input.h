@@ -9,14 +9,14 @@ struct awindowi {
 	unsigned				flags;
 };
 extern awindowi				awindow;
-void						breakmodal(int result);
+void						breakmodal(long result);
 void						breakparam();
 void						buttoncancel();
 void						buttonok();
 void						cbsetint();
 void						cbsetptr();
 void						doredraw();
-int							getresult();
+long						getresult();
 bool						isnext();
 void						initialize(const char* title);
 bool						ismodal();
