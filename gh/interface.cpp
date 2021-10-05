@@ -194,7 +194,9 @@ void objects::paint(bool allow_hilite, bool allow_drag) const {
         }
         if(hilited) {
             scene.hilite = p;
-            draw::tooltips(p->kind.getname());
+            auto hex = p2h(p->getposition());
+            char temp[260]; stringbuilder sb(temp); sb.add("%1i, %2i", hex.x, hex.y);
+            draw::tooltips(temp);
         }
         p->paint();
     }
@@ -282,12 +284,39 @@ void draw::centercamera(point v) {
 	draw::moving(camera, v);
 }
 
+bool test_convert_all() {
+    for(auto y = 0; y<hms; y++) {
+        for(auto x = 0; y<hms; x++) {
+            point hex = {x, y};
+            point scr = h2p(hex, size);
+            point he1 = p2h(scr, size);
+            if(hex!=he1)
+                return false;
+        }
+    }
+    return true;
+}
+
+static bool test_convert(point hex) {
+    point scr = h2p(hex, size);
+    point he1 = p2h(scr, size);
+    return hex==he1;
+}
+
+static bool test_convert() {
+    if(!test_convert({1, 0}))
+        return false;
+    return true;
+}
+
 void start_menu() {
 	auto pp1 = (playeri*)bsdata<playeri>::source.ptr(0);
 	auto pp2 = (playeri*)bsdata<playeri>::source.ptr(1);
 	pp1->buildcombatdeck();
 	pp2->buildcombatdeck();
 	game.buildcombatdeck();
+	if(!test_convert_all())
+        return;
 	test_scenario();
 	//scripti sc = {};
 	//p1->attack(1, 0, 0, 0, {});
