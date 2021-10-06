@@ -110,8 +110,9 @@ struct playeri {
 	const char*			id;
 	gender_s			gender;
 	char				level, exp, coins, initiative;
+	variant				cards[2];
 	short				health[10];
-	deck				combat, hand, active, discard, lost;
+	deck				combat, hand, discard, lost;
 	int					get(action_s v) const;
 	void				buildcombatdeck();
 };
@@ -177,6 +178,7 @@ public:
 	void				action(action_s a, bool interactive, bool hostile, int range, int targets, int bonus);
 	void				attack(int damage, int range, int pierce, int targets, statef additional);
 	void                attack(object& enemy, const scripti& parameters);
+	void				chooseaction();
 	void                clear();
 	void				create(variant v);
 	void				damage(int value);
@@ -202,6 +204,7 @@ public:
 	void				move(int v);
 	void                movefrom(indext i, int range);
 	void                moveto(indext i, int range);
+	void				moveto(indext i, int range, int distance);
 	void				moving(indext i, bool interactive);
 	void				paint() const;
 	void				refresh();
@@ -321,4 +324,5 @@ VKIND(element_s, Element)
 VKIND(feat_s, Feat)
 VKIND(game_propery_s, GameProperty)
 VKIND(object, Object)
+VKIND(playeri, Player)
 VKIND(state_s, State)

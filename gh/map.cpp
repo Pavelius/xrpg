@@ -26,32 +26,32 @@ void mapi::clearpath() {
 
 indext mapi::getfarest(const short unsigned* source) {
 	auto nd = 0;
-	auto sd = 0;
+	auto sd = 40000;
 	auto ni = Blocked;
 	for(auto i = 0; i < hms * hms; i++) {
 		if(source[i] == Blocked || movement_rate[i] == Blocked)
 			continue;
-		if(source[i] < sd || movement_rate[i] < nd)
-			continue;
-		sd = source[i];
-		nd = movement_rate[i];
-		ni = i;
+		if(source[i] <= sd && movement_rate[i] >= nd) {
+			sd = source[i];
+			nd = movement_rate[i];
+			ni = i;
+		}
 	}
 	return ni;
 }
 
 indext mapi::getnearest(const short unsigned* source) {
-	auto nd = Blocked;
-	auto sd = 0;
+	auto nd = 40000;
+	auto sd = 40000;
 	auto ni = Blocked;
 	for(auto i = 0; i < hms * hms; i++) {
 		if(source[i] == Blocked || movement_rate[i] == Blocked)
 			continue;
-		if(source[i]<sd || movement_rate[i]>nd)
-			continue;
-		sd = source[i];
-		nd = movement_rate[i];
-		ni = i;
+		if(source[i] <= sd && movement_rate[i] <= nd) {
+			sd = source[i];
+			nd = movement_rate[i];
+			ni = i;
+		}
 	}
 	return ni;
 }
@@ -70,6 +70,13 @@ indext mapi::to(indext i, int d) const {
 	if(hex.x < 0 || hex.y < 0 || hex.x >= hms || hex.y >= hms)
 		return Blocked;
 	return h2i(hex);
+}
+
+static void blockzero() {
+	for(indext i = 0; i < hms * hms; i++) {
+		if(!movement_rate[i])
+			movement_rate[i] = Blocked;
+	}
 }
 
 void mapi::makewave(indext start_index) {
@@ -95,6 +102,7 @@ void mapi::makewave(indext start_index) {
 				push_counter = stack;
 		}
 	}
+	blockzero();
 }
 
 void mapi::block(const objects& source) {

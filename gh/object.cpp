@@ -60,7 +60,7 @@ deck& object::getcombatdeck() const {
 
 int object::getmaximumhits() const {
 	switch(kind.type) {
-	case Player: return bsdata<playeri>::get(kind.value).health[imax(0, level-1)];
+	case Player: return bsdata<playeri>::get(kind.value).health[imax(0, level - 1)];
 	case Monster: return bsdata<monsteri>::get(kind.value).normal[level].hits;
 	default: return 1000;
 	}
@@ -97,30 +97,39 @@ int	object::getinitiative() const {
 	}
 }
 
-void object::move(int v) {
-	auto index = getindex();
+static void calculate_movemap(indext start, int range, bool you_is_hostile, bool jump, bool fly) {
 	game.clearpath();
 	game.blockwalls();
 	objects obstacles;
-	if(get(Jump) || get(Fly))
-		game.makewave(index);
+	if(jump || fly)
+		game.makewave(start);
 	else {
 		obstacles.selectalive();
-		obstacles.match(Hostile, !is(Hostile));
+		obstacles.match(Hostile, !you_is_hostile);
 		game.block(obstacles);
-		game.makewave(index);
+		game.makewave(start);
 	}
 	obstacles.clear();
 	obstacles.selectalive();
 	game.block(obstacles);
-	game.blockrange(v);
+	game.blockrange(range);
+}
+
+static void calculate_shootmap(indext start) {
+	game.clearpath();
+	game.blockwalls();
+	game.makewave(start);
+}
+
+void object::move(int v) {
+	calculate_movemap(getindex(), v, is(Hostile), get(Jump) != 0, get(Fly) != 0);
 	if(isinteractive()) {
 		auto goal = draw::choosemovement();
 		moving(goal, true);
-	} else if(obstacles) {
+	} else {
 		auto enemy = getnearestenemy();
 		if(enemy)
-			moveto(enemy->getindex(), v);
+			moveto(enemy->getindex(), v, 1);
 	}
 }
 
@@ -151,46 +160,34 @@ void object::attack(object& enemy, const scripti& modifiers) {
 	enemy.damage(current.bonus);
 }
 
-static short unsigned move_copy[hms*hms];
+static short unsigned move_copy[hms * hms];
 
 void object::movefrom(indext i, int range) {
-	objects enemies;
-	enemies.selectalive();
-	enemies.match(Hostile, !is(Hostile));
-    auto start = getindex();
-    game.clearpath();
-    game.blockwalls();
-    game.block(start);
-    game.block(enemies);
-    game.makewave(start);
-    game.blockrange(range);
-    game.getmove(move_copy);
-    game.clearpath();
-    game.blockwalls();
-    game.block(i);
-    game.makewave(i);
-    auto goal = game.getfarest(move_copy);
-    moving(goal, true);
+	calculate_movemap(getindex(), range, is(Hostile), get(Jump) != 0, get(Fly) != 0);
+	game.getmove(move_copy);
+	calculate_shootmap(i);
+	auto goal = game.getfarest(move_copy);
+	if(goal != Blocked)
+		moving(goal, true);
 }
 
-void object::moveto(indext i, int range){
-	objects enemies;
-	enemies.selectalive();
-	enemies.match(Hostile, !is(Hostile));
-    auto start = getindex();
-    game.clearpath();
-    game.blockwalls();
-    game.block(start);
-    game.block(enemies);
-    game.makewave(start);
-    game.blockrange(range);
-    game.getmove(move_copy);
-    game.clearpath();
-    game.blockwalls();
-    game.block(i);
-    game.makewave(i);
-    auto goal = game.getnearest(move_copy);
-    moving(goal, true);
+void object::moveto(indext i, int range) {
+	calculate_movemap(getindex(), range, is(Hostile), get(Jump) != 0, get(Fly) != 0);
+	game.getmove(move_copy);
+	calculate_shootmap(i);
+	auto goal = game.getnearest(move_copy);
+	auto hex = i2h(goal);
+	moving(goal, true);
+}
+
+void object::moveto(indext i, int range, int distance) {
+	calculate_movemap(getindex(), range, is(Hostile), get(Jump) != 0, get(Fly) != 0);
+	game.getmove(move_copy);
+	calculate_shootmap(i);
+	game.blockrange(distance);
+	auto goal = game.getnearest(move_copy);
+	if(goal != Blocked)
+		moving(goal, true);
 }
 
 void object::loot(int bonus) {
@@ -200,20 +197,20 @@ void object::action(action_s a, bool interactive, bool hostile, int range, int t
 	if(!targets)
 		targets = 1;
 	objects source;
-    auto start = getindex();
-    if(range==0)
-        source.add(this);
-    else {
-        game.clearpath();
-        game.blockwalls();
-        game.makewave(start);
-        source.selectalive();
-        source.match(Hostile, hostile);
-        source.matchrange(range, true);
-    }
-    // Target count is same as available target count. In this case choosing has no sence.
-    if(source.getcount()<=targets)
-        interactive = false;
+	auto start = getindex();
+	if(range == 0)
+		source.add(this);
+	else {
+		game.clearpath();
+		game.blockwalls();
+		game.makewave(start);
+		source.selectalive();
+		source.match(Hostile, hostile);
+		source.matchrange(range, true);
+	}
+	// Target count is same as available target count. In this case choosing has no sence.
+	if(source.getcount() <= targets)
+		interactive = false;
 	for(int i = 0; i < targets && source; i++) {
 		object* target = 0;
 		if(interactive)
@@ -222,10 +219,10 @@ void object::action(action_s a, bool interactive, bool hostile, int range, int t
 			target = source.data[0];
 		source.remove(target);
 		switch(a) {
-        case Heal: target->heal(bonus); break;
-        case Pull: target->moveto(start, bonus); break;
-        case Push: target->movefrom(start, bonus); break;
-        default: break;
+		case Heal: target->heal(bonus); break;
+		case Pull: target->moveto(start, bonus); break;
+		case Push: target->movefrom(start, bonus); break;
+		default: break;
 		}
 	}
 }
@@ -240,23 +237,23 @@ object*	object::getnearestenemy() const {
 	game.clearpath();
 	game.blockwalls();
 	game.makewave(start);
-	source.sort();
+	source.sortnearest();
 	return source[0];
 }
 
 void object::attack(int damage, int range, int pierce, int targets, statef additional) {
-    if(range==0)
-        range = 1;
-	if(targets==0)
+	if(range == 0)
+		range = 1;
+	if(targets == 0)
 		targets = 1;
-    indext start = getindex();
-    game.clearpath();
-    game.blockwalls();
-    game.makewave(start);
+	indext start = getindex();
+	game.clearpath();
+	game.blockwalls();
+	game.makewave(start);
 	objects source;
 	source.selectalive();
 	source.match(Hostile, !is(Hostile));
-    source.matchrange(range, true);
+	source.matchrange(range, true);
 	source.sortnearest();
 	auto interactive = isinteractive();
 	if(source.getcount() <= targets)
@@ -305,7 +302,7 @@ void object::set(variant i, int v) {
 		}
 		break;
 	default:
-        break;
+		break;
 	}
 }
 
@@ -320,17 +317,17 @@ void object::apply(scripti& e) {
 			move(e.bonus);
 			break;
 		case Heal:
-            action(Heal, true, false, e.range, e.targets, e.bonus);
+			action(Heal, true, false, e.range, e.targets, e.bonus);
 			break;
 		case Push:
-            action(Push, true, true, e.range, e.targets, e.bonus);
+			action(Push, true, true, e.range, e.targets, e.bonus);
 			break;
 		case Pull:
-            action(Pull, true, true, e.range, e.targets, e.bonus);
+			action(Pull, true, true, e.range, e.targets, e.bonus);
 			break;
-        case Loot:
-            loot(e.bonus);
-            break;
+		case Loot:
+			loot(e.bonus);
+			break;
 		default:
 			if(!e.bonus)
 				e.bonus = 1;
@@ -388,4 +385,18 @@ void object::activate(duration_s duration, int count, variant source, variants e
 void object::moving(indext i, bool interactive) {
 	auto goal = h2p(i2h(i));
 	draw::moving(getreference(), goal, 8);
+}
+
+void object::chooseaction() {
+	playeri* player = kind;
+	if(!player)
+		return;
+	cardi* card1 = player->cards[0];
+	cardi* card2 = player->cards[1];
+	if(!card1 || !card2)
+		return;
+	answers an;
+	an.add((long)card1, getnm(card1->id));
+	an.add((long)card2, getnm(card2->id));
+	variant result = (void*)an.choose(0, 0, true, 0, 1);
 }
