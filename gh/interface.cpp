@@ -23,10 +23,10 @@ point p2h(point v) {
 	return draw::p2h(v, size);
 }
 
-static void avatar(const object* p) {
+static bool avatar(const object* p) {
 	auto ps = gres(p->getavatar(), "art/creatures");
 	if(!ps)
-		return;
+		return false;
     auto push_fore = fore;
     auto push_clip = clipping;
     rect rc = {caret.x-size/2, caret.y-size/2, caret.x + size/2, caret.y + size/2};
@@ -43,6 +43,7 @@ static void avatar(const object* p) {
         rectb(rc);
     }
     fore = push_fore;
+	return true;
 }
 
 static void paint_number(int x, int y, int value) {
@@ -216,11 +217,13 @@ void objects::paint(bool allow_hilite, bool allow_drag) const {
 }
 
 static void paintavatars() {
+	varianta collection;
     auto push_caret = caret;
     caret.x = draw::getwidth() - size/2 - 8;
     caret.y = draw::getheight() - size/2 - 8;
     for(auto& e : bsdata<object>()) {
-        avatar(&e);
+		if(!avatar(&e))
+			continue;
         caret.x -= size + 8;
     }
     caret = push_caret;

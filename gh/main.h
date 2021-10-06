@@ -40,7 +40,7 @@ enum action_bonus_s : char {
 };
 enum state_s : unsigned char {
 	Disarmed, Immobilize, Wound, Muddle, Poison, Invisibility, Stun, Strenght,
-	Jump, Fly, Mirrored, Hostile,
+	Jump, Fly, Mirrored, Hostile, UseUpper, UseLower,
 };
 enum element_s : unsigned char {
 	Fire, Ice, Air, Earth, Light, Dark, AnyElement,
@@ -181,7 +181,7 @@ public:
 	void				attack(int damage, int range, int pierce, int targets, statef additional);
 	void                attack(object& enemy, const scripti& parameters);
 	variant				chooseaction() const;
-	const variants&     choosepart(const cardi& e) const;
+	const variants&     choosepart(const cardi& e);
 	void                clear();
 	void				create(variant v);
 	void				damage(int value);

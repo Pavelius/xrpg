@@ -402,15 +402,19 @@ variant object::chooseaction() const {
     variant std_attack = "StandartAttackAction";
     variant std_move = "StandartMoveAction";
 	answers an;
-	an.add((long)card1, getnm(card1->id));
-	an.add((long)card2, getnm(card2->id));
-	an.add((long)std_attack.getpointer(), std_attack.getname());
-	an.add((long)std_move.getpointer(), std_move.getname());
+	if(!is(UseUpper))
+		an.add((long)card1, getnm(card1->id));
+	if(!is(UseLower))
+		an.add((long)card2, getnm(card2->id));
+	if(!is(UseUpper))
+		an.add((long)std_attack.getpointer(), std_attack.getname());
+	if(!is(UseLower))
+		an.add((long)std_move.getpointer(), std_move.getname());
 	variant result = (void*)an.choose(0, 0, true, 0, 1);
 	return result;
 }
 
-const variants& object::choosepart(const cardi& e) const {
+const variants& object::choosepart(const cardi& e) {
     varianta source;
     if(e.upper)
         source.add("UpperCardPart");
@@ -418,9 +422,12 @@ const variants& object::choosepart(const cardi& e) const {
         source.add("LowerCardPart");
     auto result = source.choosedef(0);
     if(result.type==ActionBonus) {
-        if(bsdata<actionbonusi>::get(result.value).bonus)
-            return e.lower;
+		if(bsdata<actionbonusi>::get(result.value).bonus) {
+			states.set(UseLower);
+			return e.lower;
+		}
     }
+	states.set(UseUpper);
     return e.upper;
 }
 

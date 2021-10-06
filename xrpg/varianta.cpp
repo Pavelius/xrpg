@@ -20,3 +20,11 @@ variant varianta::choosedef(const char* title) const {
         return data[count];
     return choose(title, 0, true, 0);
 }
+
+static int compare_addr(const void* p1, const void* p2) {
+	return *((int*)p1) - *((int*)p2);
+}
+
+void varianta::distinct() {
+	qsort(data, count, sizeof(data[0]), compare_addr);
+}

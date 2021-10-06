@@ -81,15 +81,11 @@ const variant* scripti::apply(const variant* p, const variant* pe) {
 				elements.set(a.value);
 			break;
 		case Feat:
-			switch(a.value) {
-			default:
-				if(action)
-					feats.set(a.value);
-				else {
-					action = a;
-					bonus += b;
-				}
-				break;
+			if(action)
+				feats.set(a.value);
+			else {
+				action = a;
+				bonus += b;
 			}
 			break;
 		default:
