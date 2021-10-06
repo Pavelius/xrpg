@@ -23,6 +23,28 @@ point p2h(point v) {
 	return draw::p2h(v, size);
 }
 
+static void avatar(const object* p) {
+	auto ps = gres(p->getavatar(), "art/creatures");
+	if(!ps)
+		return;
+    auto push_fore = fore;
+    auto push_clip = clipping;
+    rect rc = {caret.x-size/2, caret.y-size/2, caret.x + size/2, caret.y + size/2};
+    setclip(rc);
+    image(caret.x, caret.y, ps, 0, 0);
+    clipping = push_clip;
+    fore = colors::gray;
+    if(p->kind.type==Player)
+        fore = colors::red;
+    rectb(rc);
+    if(focused_object==p) {
+        fore = colors::green;
+        rc.offset(1, 1);
+        rectb(rc);
+    }
+    fore = push_fore;
+}
+
 static void paint_number(int x, int y, int value) {
 	char temp[16]; stringbuilder sb(temp);
 	sb.add("%1i", value);
@@ -37,7 +59,7 @@ static void paint_number(int x, int y, int value) {
 
 void object::paint_creature() const {
 	auto x = caret.x, y = caret.y;
-	auto ps = gres(kind.getid(), "art/creatures");
+	auto ps = gres(getavatar(), "art/creatures");
 	if(!ps)
 		return;
 	auto pc = gres("conditions", "art/objects");
@@ -193,6 +215,17 @@ void objects::paint(bool allow_hilite, bool allow_drag) const {
     }
 }
 
+static void paintavatars() {
+    auto push_caret = caret;
+    caret.x = draw::getwidth() - size/2 - 8;
+    caret.y = draw::getheight() - size/2 - 8;
+    for(auto& e : bsdata<object>()) {
+        avatar(&e);
+        caret.x -= size + 8;
+    }
+    caret = push_caret;
+}
+
 static void paintfigures() {
 	objects source;
 	source.clear();
@@ -207,6 +240,7 @@ static void paintgame() {
 	paintfigures();
 	painthexgrid();
 	painthilitehex();
+	paintavatars();
 	paintcommands();
 }
 
@@ -244,15 +278,7 @@ static void test_scenario() {
 	playeri* pp1 = p1->kind;
 	pp1->cards[0] = "WardingStrenght";
 	pp1->cards[1] = "GrabAndGo";
-	cardi* pc1 = pp1->cards[0];
-	cardi* pc2 = pp1->cards[1];
-	p1->chooseaction();
-	//p1->apply(pc2->lower);
-	//p1->apply(pc1->upper);
-	//p1->attack(3, 0, 0, 2, {});
-	//p1->action(Push, true, true, 4, 1, 2);
-	//p2->focusing();
-	//p2->move(5);
+	p1->maketurn();
 }
 
 static void choose_movement_window() {

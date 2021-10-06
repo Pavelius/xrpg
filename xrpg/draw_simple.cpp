@@ -157,7 +157,7 @@ extern stringbuilder tooltips_sb;
 
 void draw::answerbt(int i, long id, const char* title) {
 	static char answer_hotkeys[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'};
-	if(i >= sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]))
+	if(i >= (int)(sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0])))
 		i = sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]) - 1;
 	bool is_hilited = false;
 	if(button(title, answer_hotkeys[i], buttonfd, 0, &is_hilited))
@@ -278,18 +278,6 @@ void draw::status(const char* format, ...) {
 	}
 }
 
-static void correct(short& c, short t, int s) {
-	auto d = t - c;
-	if(d > 0) {
-		if(d > s)
-			d = s;
-	} else if(d < 0) {
-		if(d < -s)
-			d = -s;
-	}
-	c += d;
-}
-
 long distance(point p1, point p2);
 
 void draw::moving(point& result, point goal, int step) {
@@ -365,6 +353,7 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 			if(buttonfd(cancel_text, KeyEscape, 0))
 				execute(buttoncancel);
 		}
+		caret = push_caret;
 		if(scene.doinput)
 			scene.doinput();
 		domodal();

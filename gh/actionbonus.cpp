@@ -12,7 +12,7 @@ BSDATA(actionbonusi) = {
     {"Attack9", Attack, 9},
     {"Attack10", Attack, 10},
     {"AttackXMoved", Attack, 100},
-    {"ChooseGoldOrReputation1", Attack, -1},
+    {"ChooseGoldOrReputation1", ChooseGoldOrReputation, -1},
     {"Exp1", Experience, 1},
     {"Exp2", Experience, 2},
     {"Exp3", Experience, 3},
@@ -105,6 +105,7 @@ BSDATA(actionbonusi) = {
     {"Slash3", Slash, 3},
     {"Slash4", Slash, 4},
     {"Slash5", Slash, 5},
+    {"AllAdjanced", Slash, 6},
     {"Splash3", Splash, 3},
     {"Splash4", Splash, 4},
     {"Target2", Target, 2},
@@ -114,5 +115,7 @@ BSDATA(actionbonusi) = {
     {"UseFire", Fire, -1},
     {"UseIce", Ice, -1},
     {"UseLight", Light, -1},
+    {"UpperCardPart", Card, 0},
+    {"LowerCardPart", Card, 1},
 };
 BSDATAF(actionbonusi)

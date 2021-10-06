@@ -42,6 +42,7 @@ LeapingCleave: Рассечение
 Level: Уровень
 LoadGame: Загрузить игру
 Loot: Добыча
+LowerCardPart: Нижняя часть карты
 Male: Мужчина
 Move: Движение
 NewCharacter: Создать персонажа
@@ -78,6 +79,8 @@ Sound: Звук
 SpareDagger: Припасенный кинжал
 SpikedTrap: Ловушка с шипами
 Splash: Взрыв
+StandartAttackAction: Стандартная атака
+StandartMoveAction: Стандартная движение
 Strenght: Сила
 Stun: Оглушение
 StunShoot: Шокер
@@ -92,6 +95,7 @@ ToxicBolt: Отравленная стрела
 Trample: Топот
 TrapDamage6: Повреждающая ловушка (урон 6)
 TrapPoisonDamage2: Ядовитая ловушка (урон 2)
+UpperCardPart: Верхняя часть карты
 Use: Использований
 Video: Видео
 VolatileConcoction: Летучая смесь

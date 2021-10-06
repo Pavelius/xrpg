@@ -11,10 +11,10 @@ fnevent getcommand(const char* id) {
 
 void util_main();
 
-static bool test_variant() {
-    variant v = "City1";
-    return v.operator bool();
-}
+//static bool test_variant() {
+//    variant v = "City1";
+//    return v.operator bool();
+//}
 
 int main() {
     srand(randomseed());

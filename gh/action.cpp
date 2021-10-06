@@ -19,5 +19,7 @@ BSDATA(actioni) = {
 	{"Experience"},
 	{"Level"},
 	{"Pay"},
+	{"ChooseCoinOrReputation"},
+	{"NextAction"},
 };
-assert_enum(actioni, Pay)
+assert_enum(actioni, NextAction)

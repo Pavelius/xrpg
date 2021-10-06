@@ -2,6 +2,8 @@
 
 BSDATAD(object)
 
+object* last_object;
+
 int object::getpriority() const {
 	if(isfocused())
 		return 50;
@@ -60,9 +62,13 @@ deck& object::getcombatdeck() const {
 
 int object::getmaximumhits() const {
 	switch(kind.type) {
-	case Player: return bsdata<playeri>::get(kind.value).health[imax(0, level - 1)];
-	case Monster: return bsdata<monsteri>::get(kind.value).normal[level].hits;
-	default: return 1000;
+	case Player:
+        return bsdata<playeri>::get(kind.value).health[imax(0, level - 1)];
+	case Monster:
+        return bsdata<monsteri>::get(kind.value).normal[
+            imin(level, (char)(sizeof(monsteri::normal)/sizeof(monsteri::normal[0])))].hits;
+	default:
+        return 1000;
 	}
 }
 
@@ -92,7 +98,7 @@ indext object::getindex() const {
 int	object::getinitiative() const {
 	switch(kind.type) {
 	case Player: return bsdata<playeri>::get(kind.value).initiative;
-	case Monster: 30;
+	case Monster: return 30;
 	default: return 99;
 	}
 }
@@ -176,8 +182,8 @@ void object::moveto(indext i, int range) {
 	game.getmove(move_copy);
 	calculate_shootmap(i);
 	auto goal = game.getnearest(move_copy);
-	auto hex = i2h(goal);
-	moving(goal, true);
+	if(goal != Blocked)
+        moving(goal, true);
 }
 
 void object::moveto(indext i, int range, int distance) {
@@ -208,20 +214,20 @@ void object::action(action_s a, bool interactive, bool hostile, int range, int t
 		source.match(Hostile, hostile);
 		source.matchrange(range, true);
 	}
-	// Target count is same as available target count. In this case choosing has no sence.
+	// Target count is same as available target count.
+	// In this case choosing has no sence.
 	if(source.getcount() <= targets)
 		interactive = false;
 	for(int i = 0; i < targets && source; i++) {
-		object* target = 0;
 		if(interactive)
-			target = source.choose();
+			last_object = source.choose();
 		else
-			target = source.data[0];
-		source.remove(target);
+			last_object = source.data[0];
+		source.remove(last_object);
 		switch(a) {
-		case Heal: target->heal(bonus); break;
-		case Pull: target->moveto(start, bonus); break;
-		case Push: target->movefrom(start, bonus); break;
+		case Heal: last_object->heal(bonus); break;
+		case Pull: last_object->moveto(start, bonus); break;
+		case Push: last_object->movefrom(start, bonus); break;
 		default: break;
 		}
 	}
@@ -259,12 +265,11 @@ void object::attack(int damage, int range, int pierce, int targets, statef addit
 	if(source.getcount() <= targets)
 		interactive = false;
 	for(int i = 0; i < targets && source; i++) {
-		object* target = 0;
 		if(interactive)
-			target = source.choose();
+			last_object = source.choose();
 		else
-			target = source.data[0];
-		source.remove(target);
+			last_object = source.data[0];
+		source.remove(last_object);
 		scripti params = {};
 		params.action = Attack;
 		params.bonus = damage;
@@ -272,7 +277,7 @@ void object::attack(int damage, int range, int pierce, int targets, statef addit
 		params.pierce = pierce;
 		params.targets = targets;
 		params.states = additional;
-		attack(*target, params);
+		attack(*last_object, params);
 	}
 }
 
@@ -320,11 +325,10 @@ void object::apply(scripti& e) {
 			action(Heal, true, false, e.range, e.targets, e.bonus);
 			break;
 		case Push:
-			action(Push, true, true, e.range, e.targets, e.bonus);
-			break;
 		case Pull:
-			action(Pull, true, true, e.range, e.targets, e.bonus);
-			break;
+            if(!e.range)
+                e.range = 1;
+			action((action_s)e.action.value, true, true, e.range, e.targets, e.bonus);
 		case Loot:
 			loot(e.bonus);
 			break;
@@ -387,16 +391,54 @@ void object::moving(indext i, bool interactive) {
 	draw::moving(getreference(), goal, 8);
 }
 
-void object::chooseaction() {
+variant object::chooseaction() const {
 	playeri* player = kind;
 	if(!player)
-		return;
+		return variant();
 	cardi* card1 = player->cards[0];
 	cardi* card2 = player->cards[1];
 	if(!card1 || !card2)
-		return;
+		return variant();
+    variant std_attack = "StandartAttackAction";
+    variant std_move = "StandartMoveAction";
 	answers an;
 	an.add((long)card1, getnm(card1->id));
 	an.add((long)card2, getnm(card2->id));
+	an.add((long)std_attack.getpointer(), std_attack.getname());
+	an.add((long)std_move.getpointer(), std_move.getname());
 	variant result = (void*)an.choose(0, 0, true, 0, 1);
+	return result;
+}
+
+const variants& object::choosepart(const cardi& e) const {
+    varianta source;
+    if(e.upper)
+        source.add("UpperCardPart");
+    if(e.lower)
+        source.add("LowerCardPart");
+    auto result = source.choosedef(0);
+    if(result.type==ActionBonus) {
+        if(bsdata<actionbonusi>::get(result.value).bonus)
+            return e.lower;
+    }
+    return e.upper;
+}
+
+void object::maketurn() {
+    while(true) {
+        auto result = chooseaction();
+        if(!result)
+            break;
+        applyaction(result);
+    }
+}
+
+void object::applyaction(variant v) {
+    switch(v.type) {
+    case Card:
+        apply(choosepart(bsdata<cardi>::get(v.value)));
+        break;
+    default:
+        break;
+    }
 }

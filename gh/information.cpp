@@ -96,10 +96,14 @@ static void addpart(stringbuilder& sb, const variants& source) {
 void cardi::getinfo(stringbuilder& sb) const {
 	sb.clear();
 	addh(sb, getnm(id));
-	sb.addn("%1, %Level %2i, %Initiative %3i", owner.getname(), level, initiative);
-	sb.addn("[Верхняя]");
+	if(owner)
+        sb.addn("%1, %Level %2i, %Initiative %3i", owner.getname(), level, initiative);
+    auto need_header = upper && lower;
+    if(need_header)
+        sb.addn("[Верхняя]");
 	addpart(sb, upper);
-	sb.addn("[Нижняя]");
+	if(need_header)
+        sb.addn("[Нижняя]");
 	addpart(sb, lower);
 }
 

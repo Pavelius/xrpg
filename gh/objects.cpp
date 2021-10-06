@@ -79,5 +79,5 @@ object* objects::choose() const {
 	answers an;
 	for(auto p : *this)
 		an.add((long)p, p->kind.getname());
-	return (object*)an.choose(0, 0, true, 0);
+	return (object*)an.choose(0, 0, true, 0, 1);
 }

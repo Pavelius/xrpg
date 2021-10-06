@@ -29,6 +29,12 @@
     }
   },
   "Card": {
+    "StandartAttackAction": {
+      "upper": [ "Attack2" ],
+    },
+    "StandartMoveAction": {
+      "lower": [ "Move2" ]
+    },
     "WardingStrenght": {
       "level": 1,
       "owner": "Brute",
@@ -76,7 +82,7 @@
       "owner": "Brute",
       "initiative": 64,
       "upper": [ "Attack2", "Slash3" ],
-      "lower": [ "Move3", "Push1", "TargetAllAdjancedEnemies" ]
+      "lower": [ "Move3", "Push1", "AllAdjanced" ]
     },
     "LeapingCleave": {
       "level": 1,

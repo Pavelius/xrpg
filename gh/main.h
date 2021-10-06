@@ -19,8 +19,7 @@ enum area_s : unsigned char {
 };
 enum feat_s : unsigned char {
 	EnemyAttackYouInsteadNearestAlly, GainExpForRetaliate, GainExpForTarget,
-	TargetAllAlly, TargetAllAdjancedEnemies, TargetEnemyMoveThrought,
-	Jump, Fly, NextAction,
+	TargetEnemyMoveThrought
 };
 enum statistic_s : unsigned char {
 	Moved, Attacked, Looted,
@@ -31,15 +30,17 @@ enum action_s : unsigned char {
 	Move, Attack, Push, Pull, Heal, DisarmTrap, Loot,
 	Range, Target, Pierce,
 	Bless, Curse, RecoverDiscarded,
-	Experience, Level,
-	Pay,
+	Experience,
+	Level,
+	Pay, ChooseGoldOrReputation,
+	NextAction
 };
 enum action_bonus_s : char {
 	InfiniteCount = 100, MovedCount, AttackedCount, ShieldCount,
 };
 enum state_s : unsigned char {
 	Disarmed, Immobilize, Wound, Muddle, Poison, Invisibility, Stun, Strenght,
-	Mirrored, Hostile,
+	Jump, Fly, Mirrored, Hostile,
 };
 enum element_s : unsigned char {
 	Fire, Ice, Air, Earth, Light, Dark, AnyElement,
@@ -55,7 +56,7 @@ enum game_propery_s : unsigned char {
 };
 typedef short unsigned indext;
 typedef flagable<2> statef;
-typedef flagable<1 + NextAction / 8> featf;
+typedef flagable<1 + TargetEnemyMoveThrought / 8> featf;
 typedef flagable<1> elementf;
 typedef flagable<4>	playerf;
 const indext Blocked = 0xFFFF;
@@ -175,15 +176,18 @@ public:
 	void				addattack(scripti& parameters) const;
 	void				apply(const variants& source);
 	void				apply(scripti& parameters);
+	void                applyaction(variant v);
 	void				action(action_s a, bool interactive, bool hostile, int range, int targets, int bonus);
 	void				attack(int damage, int range, int pierce, int targets, statef additional);
 	void                attack(object& enemy, const scripti& parameters);
-	void				chooseaction();
+	variant				chooseaction() const;
+	const variants&     choosepart(const cardi& e) const;
 	void                clear();
 	void				create(variant v);
 	void				damage(int value);
 	void				focusing() const;
 	int                 get(variant v) const;
+	const char*         getavatar() const { return kind.getid(); }
 	void				getinfo(stringbuilder& sb) const;
 	indext				getindex() const;
 	int					getinitiative() const;
@@ -196,11 +200,12 @@ public:
 	bool				isalive() const;
 	bool                isenemy(const object& e) const { return is(Hostile) != e.is(Hostile); }
 	bool				isfocused() const;
-	bool                isinteractive() const { return false; }
+	bool                isinteractive() const { return true; }
 	bool                isplayer() const { return false; }
 	bool				isusable() const;
 	void                kill();
 	void                loot(int v);
+	void                maketurn();
 	void				move(int v);
 	void                movefrom(indext i, int range);
 	void                moveto(indext i, int range);
@@ -304,6 +309,7 @@ struct eventi {
 };
 extern array			city_events, road_events;
 extern gamei			game;
+extern object*          last_object;
 inline point			i2h(indext i) { return {(short)(i % hms), (short)(i / hms)}; }
 inline indext			h2i(point v) { return v.y * hms + v.x; }
 point					h2p(point v);
@@ -326,3 +332,4 @@ VKIND(game_propery_s, GameProperty)
 VKIND(object, Object)
 VKIND(playeri, Player)
 VKIND(state_s, State)
+VKIND(variant_s, Type)

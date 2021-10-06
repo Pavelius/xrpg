@@ -49,6 +49,8 @@ const variant* scripti::apply(const variant* p, const variant* pe) {
 			case Pierce: pierce += b; break;
 			case Range: range += b; break;
 			case Target: targets += b; break;
+			case NextAction:
+				return p + 1;
 			default:
 				if(action && action != a)
 					return p;
@@ -80,8 +82,6 @@ const variant* scripti::apply(const variant* p, const variant* pe) {
 			break;
 		case Feat:
 			switch(a.value) {
-			case NextAction:
-				return p + 1;
 			default:
 				if(action)
 					feats.set(a.value);

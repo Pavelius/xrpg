@@ -3,7 +3,6 @@
 BSDATA(feati) = {
 	{"EnemyAttackYouInsteadNearestAlly"},
 	{"GainExpForRetaliate"}, {"GainExpForTarget"},
-	{"TargetAllAlly"}, {"TargetAllAdjancedEnemies"}, {"TargetEnemyMoveThrought"},
-	{"Jump"}, {"Fly"}, {"NextAction"},
+	{"TargetEnemyMoveThrought"},
 };
-assert_enum(feati, NextAction)
+assert_enum(feati, TargetEnemyMoveThrought)

@@ -9,6 +9,8 @@ BSDATA(statei) = {
 	{"Invisibility"},
 	{"Stun", true},
 	{"Strenght"},
+	{"Jump"},
+	{"Fly"},
 	{"Mirrored"},
 	{"Hostile"},
 };

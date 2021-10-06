@@ -12,5 +12,11 @@ variant varianta::choose(const char* title, const char* cancel, bool interactive
 	for(auto v : *this)
 		an.add((size_t)v.getpointer(), v.getname());
 	an.sort();
-	return (void*)an.choose(title, cancel, interactive, resid);
+	return (void*)an.choose(title, cancel, interactive, resid, 1);
+}
+
+variant varianta::choosedef(const char* title) const {
+	if(count==1)
+        return data[count];
+    return choose(title, 0, true, 0);
 }
