@@ -17,7 +17,7 @@ variant varianta::choose(const char* title, const char* cancel, bool interactive
 
 variant varianta::choosedef(const char* title) const {
 	if(count==1)
-        return data[count];
+        return data[0];
     return choose(title, 0, true, 0);
 }
 
@@ -27,4 +27,14 @@ static int compare_addr(const void* p1, const void* p2) {
 
 void varianta::distinct() {
 	qsort(data, count, sizeof(data[0]), compare_addr);
+	auto ps = data;
+	auto pe = data + count;
+	auto v0 = variant();
+	for(auto p = data; p < pe; p++) {
+		if(v0 == *p)
+			continue;
+		*ps++ = *p;
+		v0 = *p;
+	}
+	count = ps - data;
 }

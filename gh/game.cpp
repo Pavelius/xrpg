@@ -106,3 +106,12 @@ int gamei::getlevel() const {
 	}
 	return r / c;
 }
+
+void gamei::startround() {
+	for(auto& e : bsdata<object>()) {
+		if(!e)
+			continue;
+		if(e.isalive())
+			e.prepare();
+	}
+}

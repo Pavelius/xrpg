@@ -13,7 +13,7 @@ static int show_hex_grid = 0;
 int show_movement_cost = 0;
 static indext current_index;
 static point mouse_difference;
-static const object* focused_object;
+const object* draw::focused_object;
 
 point h2p(point v) {
 	return draw::h2p(v, size);
@@ -23,8 +23,8 @@ point p2h(point v) {
 	return draw::p2h(v, size);
 }
 
-static bool avatar(const object* p) {
-	auto ps = gres(p->getavatar(), "art/creatures");
+static bool avatar(variant v) {
+	auto ps = gres(v.getid(), "art/creatures");
 	if(!ps)
 		return false;
     auto push_fore = fore;
@@ -34,10 +34,12 @@ static bool avatar(const object* p) {
     image(caret.x, caret.y, ps, 0, 0);
     clipping = push_clip;
     fore = colors::gray;
-    if(p->kind.type==Player)
+    if(v.type==Player)
         fore = colors::red;
     rectb(rc);
-    if(focused_object==p) {
+	if(ishilite(rc))
+		scene.hilite = v;
+    if(focused_object && focused_object->kind==v) {
         fore = colors::green;
         rc.offset(1, 1);
         rectb(rc);
@@ -217,14 +219,21 @@ void objects::paint(bool allow_hilite, bool allow_drag) const {
 }
 
 static void paintavatars() {
-	varianta collection;
-    auto push_caret = caret;
-    caret.x = draw::getwidth() - size/2 - 8;
-    caret.y = draw::getheight() - size/2 - 8;
-    for(auto& e : bsdata<object>()) {
-		if(!avatar(&e))
+	varianta source;
+	for(auto& e : bsdata<object>()) {
+		if(!e)
 			continue;
-        caret.x -= size + 8;
+		if(e.isalive())
+			source.add(e.kind);
+	}
+	source.distinct();
+    auto push_caret = caret;
+    caret.x = draw::getwidth() - size/2 - 4;
+    caret.y = draw::getheight() - size/2 - 4;
+    for(auto v : source) {
+		if(!avatar(v))
+			continue;
+        caret.x -= size + 4;
     }
     caret = push_caret;
 }
@@ -281,6 +290,7 @@ static void test_scenario() {
 	playeri* pp1 = p1->kind;
 	pp1->cards[0] = "WardingStrenght";
 	pp1->cards[1] = "GrabAndGo";
+	game.startround();
 	p1->maketurn();
 }
 

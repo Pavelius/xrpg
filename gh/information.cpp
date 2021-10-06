@@ -68,7 +68,7 @@ static void addpart(stringbuilder& sb, const variants& source) {
 	for(auto v : source) {
 		auto a = scripti::getaction(v);
 		auto b = scripti::getbonus(v);
-		if(a.type==Duration) {
+		if(a.type == Duration) {
 			sb.addn("* ");
 			sb.add(a.getname(), b);
 			sb.add(": ");
@@ -81,11 +81,11 @@ static void addpart(stringbuilder& sb, const variants& source) {
 		else
 			sb.add(", ");
 		if(b) {
-			if(a.type==Element && b<0)
+			if(a.type == Element && b < 0)
 				sb.add("Если %-1", a.getname());
 			else
 				sb.add("%1 %2i", a.getname(), b);
-		} else if(a.type==SummonedCreature)
+		} else if(a.type == SummonedCreature)
 			sb.add("%Summon %1", a.getname());
 		else
 			sb.add(a.getname());
@@ -94,28 +94,60 @@ static void addpart(stringbuilder& sb, const variants& source) {
 }
 
 void cardi::getinfo(stringbuilder& sb) const {
-	sb.clear();
 	addh(sb, getnm(id));
 	if(owner)
-        sb.addn("%1, %Level %2i, %Initiative %3i", owner.getname(), level, initiative);
-    auto need_header = upper && lower;
-    if(need_header)
-        sb.addn("[Верхняя]");
-	addpart(sb, upper);
-	if(need_header)
-        sb.addn("[Нижняя]");
-	addpart(sb, lower);
+		sb.addn("%1, %Level %2i, %Initiative %3i", owner.getname(), level, initiative);
+	auto need_header = upper && lower;
+	auto p = draw::focused_object;
+	if(p && (p->is(UseLower) || p->is(UseUpper)))
+		need_header = false;
+	if(!p || !p->is(UseUpper)) {
+		if(need_header)
+			sb.addn("[Верхняя]");
+		addpart(sb, upper);
+	}
+	if(!p || !p->is(UseLower)) {
+		if(need_header)
+			sb.addn("[Нижняя]");
+		addpart(sb, lower);
+	}
 }
 
 void object::getinfo(stringbuilder& sb) const {
-	sb.clear();
-	addh(sb, kind.getname());
+	switch(kind.type) {
+	case Monster: bsdata<monsteri>::get(kind.value).getinfo(sb); break;
+	case Player: bsdata<playeri>::get(kind.value).getinfo(sb); break;
+	default: break;
+	}
+}
+
+void playeri::getinfo(stringbuilder& sb) const {
+	addh(sb, getnm(id));
+}
+
+void monsteri::getinfo(stringbuilder& sb) const {
+	addh(sb, getnm(id));
+}
+
+void actionbonusi::getinfo(stringbuilder& sb) const {
+	if(action.type == Type && action.value == Card) {
+		if(last_card) {
+			addh(sb, getnm(last_card->id));
+			switch(bonus) {
+			case 0: addpart(sb, last_card->upper); break;
+			default: addpart(sb, last_card->lower); break;
+			}
+		}
+	}
 }
 
 void variant::getinfo(stringbuilder& sb) const {
 	switch(type) {
+	case ActionBonus: bsdata<actionbonusi>::get(value).getinfo(sb); break;
 	case Card: bsdata<cardi>::get(value).getinfo(sb); break;
 	case Object: bsdata<object>::get(value).getinfo(sb); break;
+	case Monster: bsdata<monsteri>::get(value).getinfo(sb); break;
+	case Player: bsdata<playeri>::get(value).getinfo(sb); break;
 	default: break;
 	}
 }

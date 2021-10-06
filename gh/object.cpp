@@ -3,6 +3,7 @@
 BSDATAD(object)
 
 object* last_object;
+cardi* last_card;
 
 int object::getpriority() const {
 	if(isfocused())
@@ -95,12 +96,16 @@ indext object::getindex() const {
 	return h2i(p2h(getposition()));
 }
 
-int	object::getinitiative() const {
-	switch(kind.type) {
-	case Player: return bsdata<playeri>::get(kind.value).initiative;
+int getcustominitiative(variant v) {
+	switch(v.type) {
+	case Player: return bsdata<playeri>::get(v.value).initiative;
 	case Monster: return 30;
 	default: return 99;
 	}
+}
+
+void object::prepare() {
+	initiative = getcustominitiative(kind);
 }
 
 static void calculate_movemap(indext start, int range, bool you_is_hostile, bool jump, bool fly) {
@@ -397,28 +402,34 @@ variant object::chooseaction() const {
 		return variant();
 	cardi* card1 = player->cards[0];
 	cardi* card2 = player->cards[1];
-	if(!card1 || !card2)
-		return variant();
-    variant std_attack = "StandartAttackAction";
-    variant std_move = "StandartMoveAction";
+	cardi* std_attack = variant("StandartAttackAction");
+	cardi* std_move = variant("StandartMoveAction");
 	answers an;
-	if(!is(UseUpper))
+	if(card1)
 		an.add((long)card1, getnm(card1->id));
-	if(!is(UseLower))
+	if(card2)
 		an.add((long)card2, getnm(card2->id));
 	if(!is(UseUpper))
-		an.add((long)std_attack.getpointer(), std_attack.getname());
+		an.add((long)std_attack, getnm(std_attack->id));
 	if(!is(UseLower))
-		an.add((long)std_move.getpointer(), std_move.getname());
+		an.add((long)std_move, getnm(std_move->id));
 	variant result = (void*)an.choose(0, 0, true, 0, 1);
+	if(result.type == Card) {
+		auto p = (cardi*)bsdata<cardi>::source.ptr(result.value);
+		if(p==card1 || p==std_attack)
+			player->cards[0].clear();
+		else if(p==card2 || p==std_move)
+			player->cards[1].clear();
+		last_card = p;
+	}
 	return result;
 }
 
 const variants& object::choosepart(const cardi& e) {
     varianta source;
-    if(e.upper)
+    if(e.upper && !is(UseUpper))
         source.add("UpperCardPart");
-    if(e.lower)
+    if(e.lower && !is(UseLower))
         source.add("LowerCardPart");
     auto result = source.choosedef(0);
     if(result.type==ActionBonus) {

@@ -77,6 +77,7 @@ struct actionbonusi {
 	const char*			id;
 	variant				action;
 	int					bonus;
+	void				getinfo(stringbuilder& sb) const;
 };
 struct cardi {
 	const char*			id;
@@ -115,6 +116,7 @@ struct playeri {
 	short				health[10];
 	deck				combat, hand, discard, lost;
 	int					get(action_s v) const;
+	void				getinfo(stringbuilder& sb) const;
 	void				buildcombatdeck();
 };
 struct statei {
@@ -154,8 +156,9 @@ struct abilityi {
 };
 struct monsteri {
 	const char*			id;
-	const char*			combat;
+	char				initiative;
 	abilityi			normal[8], elite[8];
+	void				getinfo(stringbuilder& sb) const;
 };
 struct nameable {
 	variant				kind;
@@ -165,7 +168,7 @@ struct nameable {
 };
 class object : public posable, public nameable {
 	short               hits;
-	char				level;
+	char				level, initiative;
 	statef              states;
 	void				paint_creature() const;
 	void				paint_default() const;
@@ -190,7 +193,7 @@ public:
 	const char*         getavatar() const { return kind.getid(); }
 	void				getinfo(stringbuilder& sb) const;
 	indext				getindex() const;
-	int					getinitiative() const;
+	int					getinitiative() const { return initiative; }
 	object*				getnearestenemy() const;
 	deck&				getcombatdeck() const;
 	int                 getmaximumhits() const;
@@ -212,6 +215,7 @@ public:
 	void				moveto(indext i, int range, int distance);
 	void				moving(indext i, bool interactive);
 	void				paint() const;
+	void				prepare();
 	void				refresh();
 	void                remove(state_s v) { states.remove(v); }
 	void                set(variant i, int v);
@@ -286,6 +290,7 @@ struct gamei : public mapi {
 	int					get(variant i) const;
 	int					getlevel() const;
 	void				set(variant i, int v);
+	void				startround();
 };
 struct tilei {
 	const char*			id;
@@ -309,6 +314,7 @@ struct eventi {
 };
 extern array			city_events, road_events;
 extern gamei			game;
+extern cardi*			last_card;
 extern object*          last_object;
 inline point			i2h(indext i) { return {(short)(i % hms), (short)(i / hms)}; }
 inline indext			h2i(point v) { return v.y * hms + v.x; }
@@ -317,6 +323,7 @@ point					p2h(point v);
 namespace draw {
 void					centercamera(point v);
 indext					choosemovement();
+extern const object*	focused_object;
 void					initializex();
 void					moving(point& result, point pt, int step);
 void					status(const char* format, ...);
