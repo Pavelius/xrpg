@@ -35,6 +35,7 @@
   },
   "Monster": {
     "BanditGuard": {
+      "abilities" : "Guard",
       "normal": [
         {
           "hits": 5,

@@ -82,6 +82,9 @@
     <ClCompile Include="objects.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="monster.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Logic">

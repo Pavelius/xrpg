@@ -218,6 +218,24 @@ void objects::paint(bool allow_hilite, bool allow_drag) const {
     }
 }
 
+static int getinitiative(variant v) {
+	switch(v.type) {
+	case Player: return bsdata<playeri>::get(v.value).getinitiative();
+	case Monster: return bsdata<monsteri>::get(v.value).getinitiative();
+	default: return 99;
+	}
+}
+
+static int compare_initiative(const void* p1, const void* p2) {
+	auto v1 = *((variant*)p1);
+	auto v2 = *((variant*)p2);
+	return getinitiative(v1) - getinitiative(v2);
+}
+
+static void sortavatars(varianta& source) {
+	qsort(source.data, source.count, sizeof(source.data[0]), compare_initiative);
+}
+
 static void paintavatars() {
 	varianta source;
 	for(auto& e : bsdata<object>()) {
@@ -227,6 +245,7 @@ static void paintavatars() {
 			source.add(e.kind);
 	}
 	source.distinct();
+	sortavatars(source);
     auto push_caret = caret;
     caret.x = draw::getwidth() - size/2 - 4;
     caret.y = draw::getheight() - size/2 - 4;
@@ -280,6 +299,8 @@ static object* create_creature(variant v, point hex, bool hostile, int level = 1
 static void test_scenario() {
 	auto& sc = bsdata<scenarioi>::get(0);
 	sc.prepare(0);
+	auto m1 = (monsteri*)bsdata<monsteri>::source.ptr(0);
+	m1->buildcombatdeck();
 	auto p1 = create_creature("Brute", sc.getstart(0), false);
 	create_creature("Thinkerer", sc.getstart(1), false);
 	create_creature("BanditGuard", {6,10}, true, 0);

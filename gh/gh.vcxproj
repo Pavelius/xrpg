@@ -157,6 +157,7 @@
     <ClCompile Include="event.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="map.cpp" />
+    <ClCompile Include="monster.cpp" />
     <ClCompile Include="nameable.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="deck.cpp" />

@@ -62,6 +62,7 @@ typedef flagable<4>	playerf;
 const indext Blocked = 0xFFFF;
 struct deck : varianta {
 	void				addcombat(variant owner);
+	void				addcombat8(const char* abilities);
 	void				drop(variant v) { add(v); }
 	variant				get();
 	variant				look(int n = 0);
@@ -122,6 +123,7 @@ struct playeri {
 	short				health[10];
 	deck				combat, hand, discard, lost;
 	int					get(action_s v) const;
+	int					getinitiative() const { return initiative; }
 	void				getinfo(stringbuilder& sb) const;
 	void				buildcombatdeck();
 };
@@ -162,8 +164,12 @@ struct abilityi {
 };
 struct monsteri {
 	const char*			id;
+	const char*			abilities;
 	char				initiative;
+	deck				combat;
 	abilityi			normal[8], elite[8];
+	void				buildcombatdeck();
+	int					getinitiative() const { return initiative; }
 	void				getinfo(stringbuilder& sb) const;
 };
 struct nameable {

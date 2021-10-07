@@ -9,6 +9,15 @@ void deck::addcombat(variant owner) {
 	}
 }
 
+void deck::addcombat8(const char* abilities) {
+	char temp[260]; stringbuilder sb(temp);
+	for(auto i = 0; i < 8; i++) {
+		sb.clear(); sb.add("%1Card%2i", abilities, i+1);
+		variant v((const char*)temp);
+		add(&v);
+	}
+}
+
 void deck::shuffle() {
 	zshuffle(data, count);
 }

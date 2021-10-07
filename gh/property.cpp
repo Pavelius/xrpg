@@ -94,7 +94,7 @@ BSMETA(abilityi) = {
 	{}};
 BSMETA(monsteri) = {
 	BSREQ(id),
-	BSREQ(normal), BSREQ(elite),
+	BSREQ(abilities), BSREQ(normal), BSREQ(elite),
 	{}};
 BSDATAD(monsteri)
 BSMETA(scenariotiles) = {
