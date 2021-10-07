@@ -51,6 +51,11 @@ BSMETA(cardi) = {
 	BSREQ(upper), BSREQ(lower),
 	{}};
 BSDATAD(cardi)
+BSMETA(monstercardi) = {
+	BSREQ(id),
+	BSREQ(initiative), BSREQ(abilities),
+	{}};
+BSDATAD(monstercardi)
 BSMETA(cardtypei) = {
 	BSREQ(id),
 	{}};
@@ -126,7 +131,8 @@ BSDATA(varianti) = {
 	{"GameProperty", VRSTD(gamepropertyi)},
 	{"Menu", VRSTD(menui)},
 	{"Monster", VRSTD(monsteri)},
-    {"Object", VRNOM(object)},
+	{"MonsterCard", VRSTD(monstercardi)},
+	{"Object", VRNOM(object)},
 	{"Player", VRSTD(playeri)},
 	{"Scenario", VRSTD(scenarioi)},
 	{"State", VRSTD(statei)},

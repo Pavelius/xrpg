@@ -1,4 +1,38 @@
 {
+  "MonsterCard": {
+    "GuardCard1": {
+      "initiative": 15,
+      "abilities": [ "Shield1", "Retaliate2", "Shuffle" ]
+    },
+    "GuardCard2": {
+      "initiative": 30,
+      "abilities": [ "Move1", "AttackM1" ]
+    },
+    "GuardCard3": {
+      "initiative": 35,
+      "abilities": [ "MoveM1", "Attack0", "Range2" ]
+    },
+    "GuardCard4": {
+      "initiative": 50,
+      "abilities": [ "Move0", "Attack0" ]
+    },
+    "GuardCard5": {
+      "initiative": 50,
+      "abilities": [ "Move0", "Attack0" ]
+    },
+    "GuardCard6": {
+      "initiative": 70,
+      "abilities": [ "MoveM1", "Attack1" ]
+    },
+    "GuardCard7": {
+      "initiative": 55,
+      "abilities": [ "MoveM1", "Attack0", "NextAction", "Strenght" ]
+    },
+    "GuardCard8": {
+      "initiative": 15,
+      "abilities": [ "Shield1", "Attack0", "Poison" ]
+    }
+  },
   "Monster": {
     "BanditGuard": {
       "normal": [

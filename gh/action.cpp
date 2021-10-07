@@ -20,6 +20,7 @@ BSDATA(actioni) = {
 	{"Level"},
 	{"Pay"},
 	{"ChooseCoinOrReputation"},
+	{"Shuffle"},
 	{"NextAction"},
 };
 assert_enum(actioni, NextAction)

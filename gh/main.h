@@ -33,7 +33,7 @@ enum action_s : unsigned char {
 	Experience,
 	Level,
 	Pay, ChooseGoldOrReputation,
-	NextAction
+	Shuffle, NextAction
 };
 enum action_bonus_s : char {
 	InfiniteCount = 100, MovedCount, AttackedCount, ShieldCount,
@@ -48,7 +48,7 @@ enum element_s : unsigned char {
 enum variant_s : unsigned char {
 	NoVariant,
 	Action, ActionBonus, Area, Card, CardType, City, CombatCard, Duration, Element,
-	Feat, GameProperty, Menu, Monster, Object, Player,
+	Feat, GameProperty, Menu, Monster, MonsterCard, Object, Player,
 	Scenario, State, SummonedCreature, Tile, Trap, Type
 };
 enum game_propery_s : unsigned char {
@@ -85,6 +85,12 @@ struct cardi {
 	variant				owner;
 	int					initiative;
 	variants			upper, lower;
+	void				getinfo(stringbuilder& sb) const;
+};
+struct monstercardi {
+	const char*			id;
+	int					initiative;
+	variants			abilities;
 	void				getinfo(stringbuilder& sb) const;
 };
 struct combatcardi {
