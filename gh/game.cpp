@@ -2,6 +2,8 @@
 
 gamei game;
 
+objects gamei::creatures;
+
 void gamei::add(variant i, int v) {
 	set(i, get(i) + v);
 }
@@ -54,6 +56,11 @@ void gamei::buildcombatdeck() {
 	enemy_combat.clear();
 	enemy_combat.addcombat({});
 	enemy_combat.shuffle();
+}
+
+void gamei::buildcreatures() {
+	creatures.clear();
+	creatures.selectalive();
 }
 
 static object* find_emphty() {
@@ -114,4 +121,16 @@ void gamei::startround() {
 		if(e.isalive())
 			e.prepare();
 	}
+}
+
+void gamei::makemoves() {
+	for(auto p : creatures) {
+		p->maketurn();
+	}
+}
+
+void gamei::makeround() {
+	buildcreatures();
+	startround();
+	makemoves();
 }

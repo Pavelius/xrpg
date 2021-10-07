@@ -294,13 +294,17 @@ struct gamei : public mapi {
 	deck				road, city;
 	deck				enemy_combat;
 	char				elements[AnyElement];
+	static objects		creatures;
 	void				add(variant i, int v = 1);
 	void				buildcombatdeck();
+	void				buildcreatures();
 	object*				create(variant v, bool inverse);
 	object*				create(point position, variant v, bool inverse);
 	bool				isallow(variant v) const;
 	int					get(variant i) const;
 	int					getlevel() const;
+	void				makemoves();
+	void				makeround();
 	void				set(variant i, int v);
 	void				startround();
 };
