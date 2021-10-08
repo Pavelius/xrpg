@@ -157,6 +157,7 @@ extern point			dragmouse, caret;
 extern color			fore, fore_stroke;
 extern unsigned char    alpha;
 extern int				width, height;
+extern int				width_maximum, height_maximum;
 extern const sprite*	font; // Currently selected font
 extern double			linw;
 extern char				link[4096];
@@ -190,17 +191,13 @@ void					image(int x, int y, const sprite* e, int id, int flags);
 void					image(int x, int y, const sprite* e, int id, int flags, color* pal);
 void					key2str(stringbuilder& sb, int key);
 void					line(int x1, int y1, int x2, int y2); // Draw line
-void					line(int x1, int y1, int x2, int y2, color c1); // Draw line
-inline void				line(point p1, point p2, color c1) { line(p1.x, p1.y, p2.x, p2.y, c1); }
 void					linet(int x1, int y1, int x2, int y2);
-inline void				linet(point p1, point p2) { linet(p1.x, p1.y, p2.x, p2.y); }
 void					pixel(int x, int y);
 void					pixel(int x, int y, unsigned char alpha);
 unsigned char*			ptr(int x, int y);
 int						rawinput();
 void					rectb(rect rc); // Draw rectangle border
 void					rectb(rect rc, int radius);
-void					rectb(rect rc, color c1, int radius);
 void					rectb3d(rect rc); // Draw rectangle border
 void					rectf(rect rc); // Draw rectangle area. Right and bottom side is one pixel less.
 void					rectfe(rect rc, int radius);
@@ -221,7 +218,7 @@ int						text(rect rc, const char* string, unsigned state = 0, int* max_width = 
 int						textc(int x, int y, int width, const char* string, int count = -1, unsigned flags = 0, bool* clipped = 0);
 int						textbc(const char* string, int width);
 int						texte(rect rc, const char* string, unsigned flags, int i1, int i2);
-int						textf(int x, int y, int width, const char* text, int* max_width = 0, int min_height = 0, int* cashe_height = 0, const char** cashe_string = 0);
+int						textf(int x, int y, const char* text, int* max_width = 0, int min_height = 0, int* cashe_height = 0, const char** cashe_string = 0);
 int						textf(rect& rc, const char* string);
 int						texth();
 int						texth(const char* string, int width);

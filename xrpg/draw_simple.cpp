@@ -87,7 +87,7 @@ void draw::sheader(const char* string) {
 
 void draw::stext(const char* string) {
 	draw::link[0] = 0;
-	caret.y += textf(caret.x, caret.y, width, string);
+	caret.y += textf(caret.x, caret.y, string);
 	if(draw::link[0])
 		tooltips(draw::link);
 }
@@ -100,7 +100,7 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 	const sprite* image_surface = 0;
 	if(string) {
 		auto push_clipping = clipping; clipping.clear();
-		text_height = draw::textf(0, 0, width, string);
+		text_height = draw::textf(0, 0, string);
 		clipping = push_clipping;
 	}
 	if(resid) {
@@ -450,9 +450,12 @@ static void tooltips_render() {
 	swindow(rc, false, 0);
 	// Show text
 	auto push_fore = draw::fore;
-	draw::fore = colors::tips::text;
-	draw::textf(rc.x1, rc.y1, rc.width(), tooltips_sb.begin());
-	draw::fore = push_fore;
+	auto push_width = width;
+	fore = colors::tips::text;
+	width = rc.width();
+	textf(rc.x1, rc.y1, tooltips_sb.begin());
+	width = push_width;
+	fore = push_fore;
 }
 
 HANDLER(before_initialize) {

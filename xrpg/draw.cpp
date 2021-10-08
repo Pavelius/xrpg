@@ -1022,12 +1022,6 @@ void draw::spline(point* original_points, int n) {
 	bezier(points[0].x, points[0].y, x1, y1, x2, y2);
 }
 
-void draw::line(int x0, int y0, int x1, int y1, color c1) {
-	auto push_fore = fore; fore = c1;
-	line(x0, y0, x1, y1);
-	fore = push_fore;
-}
-
 void draw::linet(int x0, int y0, int x1, int y1) {
 	int dx = iabs(x1 - x0), sx = x0 < x1 ? 1 : -1;
 	int dy = -iabs(y1 - y0), sy = y0 < y1 ? 1 : -1;
@@ -1133,12 +1127,6 @@ void draw::rectb(rect rc, int radius) {
 	bezierseg(rc.x2 - radius, rc.y1, rc.x2, rc.y1, rc.x2, rc.y1 + radius);
 	bezierseg(rc.x1 + radius, rc.y2, rc.x1, rc.y2, rc.x1, rc.y2 - radius);
 	bezierseg(rc.x2 - radius, rc.y2, rc.x2, rc.y2, rc.x2, rc.y2 - radius);
-}
-
-void draw::rectb(rect rc, color c1, int radius) {
-	auto push_fore = fore; fore = c1;
-	rectb(rc, radius);
-	fore = push_fore;
 }
 
 void draw::rectf(rect rc) {
@@ -1583,7 +1571,7 @@ static void hilite_text_line(int x, int y, int width, int height, const char* st
 	if(i1 >= 0 && i1 == i2
 		&& (i1 < count || (i1 == count && string[count] == 0))) {
 		int rx1 = x0 + draw::textw(string, i1);
-		draw::line(rx1, y, rx1, y + height, colors::text);
+		draw::line(rx1, y, rx1, y + height);
 	}
 }
 

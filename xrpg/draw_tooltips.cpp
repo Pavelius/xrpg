@@ -4,21 +4,23 @@
 #include "handler.h"
 #include "stringbuilder.h"
 
-static char				tooltips_text[4096];
-static int				px, py, pw;
-bool					tooltips_use_idle = true;
-stringbuilder			tooltips_sb(tooltips_text);
+using namespace draw;
+
+static char		tooltips_text[4096];
+static int		px, py, pw;
+bool			tooltips_use_idle = true;
+stringbuilder	tooltips_sb(tooltips_text);
 
 void tooltips_getrect(rect& rc, int border) {
 	// Calculate rect
 	auto x = px, y = py;
 	if(x == -1000 && y == -1000) {
-		if(draw::hot.hilite) {
-			x = draw::hot.hilite.x1 + border;
-			y = draw::hot.hilite.y2 + border + 2;
+		if(hot.hilite) {
+			x = hot.hilite.x1 + border;
+			y = hot.hilite.y2 + border + 2;
 		} else {
-			x = draw::hot.mouse.x + 32;
-			y = draw::hot.mouse.y + 32;
+			x = hot.mouse.x + 32;
+			y = hot.mouse.y + 32;
 		}
 	}
 	auto w = pw;
@@ -40,15 +42,18 @@ static void tooltips_render() {
 	// Show background
 	rect rc; tooltips_getrect(rc, metrics::padding);
 	auto push_fore = draw::fore;
-	draw::fore = colors::tips::back;
-	draw::rectf(rc);
-	draw::fore = colors::border;
-	draw::rectb(rc);
+	auto push_width = width;
+	width = rc.width();
+	fore = colors::tips::back;
+	rectf(rc);
+	fore = colors::border;
+	rectb(rc);
 	rc = rc + metrics::padding;
 	// Show text
-	draw::fore = colors::tips::text;
-	draw::textf(rc.x1, rc.y1, rc.width(), tooltips_sb.begin());
-	draw::fore = push_fore;
+	fore = colors::tips::text;
+	textf(rc.x1, rc.y1, tooltips_sb.begin());
+	fore = push_fore;
+	width = push_width;
 }
 
 fnevent	tooltips_custom = tooltips_render;

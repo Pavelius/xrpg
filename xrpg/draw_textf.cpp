@@ -69,7 +69,7 @@ static const char* word(const char* text) {
 	return text;
 }
 
-static int textfln(int x0, int y0, int width, const char** string, color c1, int* max_width) {
+static int textfln(int x0, int y0, const char** string, color c1, int* max_width) {
 	char temp[4096];
 	int y = y0;
 	int x = x0;
@@ -168,7 +168,7 @@ static int textfln(int x0, int y0, int width, const char** string, color c1, int
 			int x3 = imin(x2, x);
 			int y2 = y + draw::texth();
 			if(flags&TextUscope)
-				draw::line(x4, y2, x3, y2, draw::fore);
+				draw::line(x4, y2, x3, y2);
 			rect rc = {x4, y, x3, y2};
 			if(ishilite(rc)) {
 				if(flags&TextUscope) {
@@ -194,7 +194,7 @@ static int textfln(int x0, int y0, int width, const char** string, color c1, int
 	return y - y0;
 }
 
-int draw::textf(int x, int y, int width, const char* string, int* max_width,
+int draw::textf(int x, int y, const char* string, int* max_width,
 	int min_height, int* cashe_height, const char** cashe_string) {
 	auto push_fore = fore;
 	auto push_font = font;
@@ -216,23 +216,23 @@ int draw::textf(int x, int y, int width, const char* string, int* max_width,
 		if(match(&p, "#--")) { // Header 3
 			p = skipsp(p);
 			font = metrics::small;
-			y += textfln(x, y, width, &p, colors::h3, &mw2);
+			y += textfln(x, y, &p, colors::h3, &mw2);
 		} else if(match(&p, "###")) { // Header 3
 			p = skipsp(p);
 			font = metrics::h3;
-			y += textfln(x, y, width, &p, colors::h3, &mw2);
+			y += textfln(x, y, &p, colors::h3, &mw2);
 		} else if(match(&p, "##")) {// Header 2
 			p = skipsp(p);
 			font = metrics::h2;
-			y += textfln(x, y, width, &p, colors::h2, &mw2);
+			y += textfln(x, y, &p, colors::h2, &mw2);
 		} else if(match(&p, "#")) { // Header 1
 			p = skipsp(p);
 			font = metrics::h1;
-			y += textfln(x, y, width, &p, colors::h1, &mw2);
+			y += textfln(x, y, &p, colors::h1, &mw2);
 		} else if(match(&p, "---")) { // Line
 			p = skipspcr(p);
 			y += 2;
-			line(x, y, x + width, y, fore);
+			line(x, y, x + width, y);
 			y += 2;
 		} else if(match(&p, "...")) { // Без форматирования
 			p = skipcr(p);
@@ -263,12 +263,15 @@ int draw::textf(int x, int y, int width, const char* string, int* max_width,
 			circlef(x + dx + 2, y + dx, rd);
 			circle(x + dx + 2, y + dx, rd);
 			int mw3 = 0;
-			y += textfln(x + texth(), y, width - texth(), &p, color_text, &mw3);
+			auto push_width = width;
+			width -= texth();
+			y += textfln(x + texth(), y, &p, color_text, &mw3);
 			mw3 += texth();
+			width = push_width;
 			if(mw2 < mw3)
 				mw2 = mw3;
 		} else
-			y += textfln(x, y, width, &p, color_text, &mw2);
+			y += textfln(x, y, &p, color_text, &mw2);
 		// Возвратим стандартные настройки блока
 		font = metrics::font;
 		fore = color_text;
@@ -285,7 +288,10 @@ int draw::textf(int x, int y, int width, const char* string, int* max_width,
 int draw::textf(rect& rc, const char* string) {
 	auto push_clipping = clipping;
 	clipping.clear();
-	rc.y2 = rc.y1 + draw::textf(0, 0, rc.width(), string, &rc.x2, 0, 0, 0);
+	auto push_width = width;
+	width = rc.width();
+	rc.y2 = rc.y1 + draw::textf(0, 0, string, &rc.x2, 0, 0, 0);
+	width = push_width;
 	rc.x2 += rc.x1;
 	clipping = push_clipping;
 	return rc.height();
