@@ -171,7 +171,10 @@ static void fielc(const rect& rc, unsigned flags, void* source, int size, array&
 			gradv(rc, active.lighten(), active.darken());
 	} else
 		gradv(rc, colors::button.lighten(), colors::button.darken());
-	rectb(rc, colors::border);
+	auto push_fore = fore;
+	fore = colors::border;
+	rectb(rc);
+	fore = push_fore;
 	rect rco = rc + metrics::edit;
 	if(focused) {
 		rect r1 = rco; r1.offset(-1);

@@ -100,7 +100,8 @@ int draw::tabv(rect ro, bool show_close, bool right_side, void** data, int start
 	auto push_fore = fore;
 	fore = colors::form;
 	rectf(rc);
-	rectb(rc, colors::border);
+	fore = colors::border;
+	rectb(rc);
 	fore = push_fore;
 	return tabs({ro.x1, ro.y1, ro.x2, ro.y1 + dy}, show_close, right_side, data, start, count, current, hilite, gtext, 0, colors::form);
 }

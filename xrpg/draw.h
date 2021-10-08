@@ -199,7 +199,6 @@ void					pixel(int x, int y, unsigned char alpha);
 unsigned char*			ptr(int x, int y);
 int						rawinput();
 void					rectb(rect rc); // Draw rectangle border
-void					rectb(rect rc, color c1);
 void					rectb(rect rc, int radius);
 void					rectb(rect rc, color c1, int radius);
 void					rectb3d(rect rc); // Draw rectangle border

@@ -130,12 +130,14 @@ bool draw::button(const rect& rc, const char* title, const char* tips, unsigned 
 			gradv(rcb, b1, b2);
 	}
 	if(border) {
-		auto bc = focused ? colors::active : c0;
-		if(bc.gray().r >= 100)
-			bc = bc.mix(colors::black, 160);
+		auto push_fore = fore;
+		fore = focused ? colors::active : c0;
+		if(fore.gray().r >= 100)
+			fore = fore.mix(colors::black, 160);
 		else
-			bc = bc.mix(colors::white, 160);
-		rectb(rc, bc);
+			fore = fore.mix(colors::white, 160);
+		rectb(rc);
+		fore = push_fore;
 	}
 	auto rco = rc; rco.offset(2, 2);
 	if(title) {

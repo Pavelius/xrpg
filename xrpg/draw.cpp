@@ -1134,12 +1134,6 @@ void draw::rectb(rect rc, int radius) {
 	bezierseg(rc.x2 - radius, rc.y2, rc.x2, rc.y2, rc.x2, rc.y2 - radius);
 }
 
-void draw::rectb(rect rc, color c1) {
-	auto push_fore = fore; fore = c1;
-	rectb(rc);
-	fore = push_fore;
-}
-
 void draw::rectb(rect rc, color c1, int radius) {
 	auto push_fore = fore; fore = c1;
 	rectb(rc, radius);

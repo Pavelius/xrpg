@@ -448,7 +448,8 @@ static void fieldf(const rect& rco, unsigned flags, void* source, int size, bool
 	auto push_fore = fore;
 	fore = colors::window;
 	rectf(rc);
-	rectb(rc, colors::border);
+	fore = colors::border;
+	rectb(rc);
 	fore = push_fore;
 	auto focused = isfocused(rc, source);
 	if(increment) {

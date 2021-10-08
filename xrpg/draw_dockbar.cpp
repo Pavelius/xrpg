@@ -87,10 +87,13 @@ static int paint_control(rect rc, const controla& elements, int& current, color 
 	if(elements) {
 		auto current_hilite = -1;
 		const int dy = texth() + 8;
+		auto push_fore = fore;
+		fore = colors::border;
 		if(metrics::show::padding)
-			rectb({rc.x1, rc.y1 + dy, rc.x2, rc.y2}, colors::border);
+			rectb({rc.x1, rc.y1 + dy, rc.x2, rc.y2});
 		else
-			line(rc.x1, rc.y1 + dy, rc.x2, rc.y1 + dy, colors::border);
+			line(rc.x1, rc.y1 + dy, rc.x2, rc.y1 + dy);
+		fore = push_fore;
 		rect rct = {rc.x1, rc.y1, rc.x2, rc.y1 + dy};
 		if(tabs(rct, false, false, (void**)elements.begin(), 0, elements.getcount(),
 			current, &current_hilite, get_control_name, 0, back)) {

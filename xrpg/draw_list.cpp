@@ -66,7 +66,8 @@ void list::hilight(const rect& rc) const {
 	const color c1 = focused ? colors::button : colors::button.mix(colors::window, 192);
 	rect r1 = {rc.x1, rc.y1, rc.x2 - 1, rc.y2 - 1};
 	fore = c1;
-	rectf(r1); rectb(r1, c1);
+	rectf(r1);
+	rectb(r1);
 	fore = push_fore;
 	if(focused)
 		rectx(r1);

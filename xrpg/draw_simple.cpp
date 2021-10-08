@@ -35,8 +35,11 @@ static bool swindow(rect rc, bool hilight, int border) {
 		if(hot.pressed)
 			op = 0xFF;
 	}
+	auto push_fore = fore;
 	rectf(rc, c, op);
-	rectb(rc, b);
+	fore = b;
+	rectb(rc);
+	fore = push_fore;
 	return rs;
 }
 
@@ -408,7 +411,9 @@ void draw::bar(int value, int maximum) {
 	rectf(rc);
 	fore = push_fore;
 	rectf(r1);
-	rectb(rc, colors::border);
+	fore = colors::border;
+	rectb(rc);
+	fore = push_fore;
 	caret.y += rc.height();
 }
 

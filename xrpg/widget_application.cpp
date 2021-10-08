@@ -299,8 +299,9 @@ static void render_element(unsigned flags, const setting::header& e) {
 		fore = colors::text.mix(c1, 196);
 		auto label = getnm(e.group);
 		text(caret.x + (width - textw(label)) / 2, caret.y + metrics::padding, label);
+		fore = colors::border;
+		rectb({caret.x, caret.y, caret.x + width, y2 + metrics::padding});
 		fore = push_fore;
-		rectb({caret.x, caret.y, caret.x + width, y2 + metrics::padding}, colors::border);
 	}
 	caret.y = y2;
 	if(e.group)
@@ -430,10 +431,15 @@ static struct widget_settings : controls::control {
 		auto h1 = 28;
 		// Paint tabs
 		auto hilited = -1;
-		if(metrics::show::padding)
-			rectb({rc.x1, rc.y1 + h1, rc.x2, rc.y2}, colors::border);
-		else
-			line(rc.x1, rc.y1 + h1, rc.x2 - metrics::padding, rc.y1 + h1, colors::border);
+		if(true) {
+			auto push_fore = fore;
+			fore = colors::border;
+			if(metrics::show::padding)
+				rectb({rc.x1, rc.y1 + h1, rc.x2, rc.y2});
+			else
+				line(rc.x1, rc.y1 + h1, rc.x2 - metrics::padding, rc.y1 + h1);
+			fore = push_fore;
+		}
 		if(draw::tabs({rc.x1, rc.y1, rc.x2, rc.y1 + h1}, false, false,
 			(void**)tabs.data, 0, tabs.count, current_tab, &hilited,
 			get_page_name, 0, colors::form)) {

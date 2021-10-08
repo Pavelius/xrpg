@@ -180,7 +180,10 @@ int table::rowheader(const rect& rc) const {
 	if(no_change_order)
 		b1 = b1.mix(b2, 192);
 	gradv(rch, b1, b2);
-	rectb(rch, colors::border);
+	auto push_fore = fore;
+	fore = colors::border;
+	rectb(rch);
+	fore = push_fore;
 	auto push_clip = clipping; setclip({rc.x1, rc.y1, rc.x2, rc.y2 + 1});
 	color active = colors::button.mix(colors::button, 128);
 	color a1 = active.lighten();
@@ -276,7 +279,10 @@ void table::rowtotal(const rect& rc) const {
 	color b1 = colors::button.lighten();
 	color b2 = colors::button.darken();
 	gradv(rch, b1, b2);
-	rectb(rch, colors::border);
+	auto push_fore = fore;
+	fore = colors::border;
+	rectb(rch);
+	fore = push_fore;
 	auto push_clip = clipping; setclip({rc.x1, rc.y1, rc.x2, rc.y2 + 1});
 	rect r1;
 	r1.x1 = rch.x1 - origin_x;
