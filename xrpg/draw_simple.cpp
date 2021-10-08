@@ -35,8 +35,12 @@ static bool swindow(rect rc, bool hilight, int border) {
 		if(hot.pressed)
 			op = 0xFF;
 	}
+	auto push_alpha = alpha;
 	auto push_fore = fore;
-	rectf(rc, c, op);
+	fore = c;
+	alpha = op;
+	rectf(rc);
+	alpha = push_alpha;
 	fore = b;
 	rectb(rc);
 	fore = push_fore;
@@ -369,31 +373,34 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 
 void draw::grid() {
 	auto push = fore;
+	auto push_alpha = alpha;
+	alpha = 64;
 	fore = colors::border;
 	auto x2 = getwidth(), y2 = getheight();
 	auto sx = scene.grid, sy = scene.grid;
 	for(auto x = 0; x < x2; x += sx)
-		rectf({x, 0, x + 1, y2}, colors::border, 64);
+		rectf({x, 0, x + 1, y2});
 	for(auto y = 0; y < y2; y += sy)
-		rectf({0, y, x2, y + 1}, colors::border, 64);
+		rectf({0, y, x2, y + 1});
+	alpha = push_alpha;
 	fore = push;
 }
 
 void draw::fog(int n) {
+	auto push_alpha = alpha;
 	auto push_fore = fore;
+	alpha = n;
 	fore = colors::black;
-	if(n == 0xFF)
-		rectf({caret.x, caret.y, caret.x + scene.grid, caret.y + scene.grid});
-	else
-		rectf({caret.x, caret.y, caret.x + scene.grid, caret.y + scene.grid}, colors::black, n);
+	rectf({caret.x, caret.y, caret.x + scene.grid, caret.y + scene.grid});
 	fore = push_fore;
+	alpha = push_alpha;
 }
 
-void draw::avatar(const char* id, unsigned char alpha) {
+void draw::avatar(const char* id) {
 	auto p = gres(id, "art/portraits");
 	if(!p)
 		return;
-	image(caret.x, caret.y, p, 0, 0, alpha);
+	image(caret.x, caret.y, p, 0, 0);
 	width = p->get(0).sx;
 	rectb({caret.x, caret.y, caret.x + width, caret.y + width});
 	caret.y += p->get(0).sy + 1;

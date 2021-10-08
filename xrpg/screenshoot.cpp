@@ -11,9 +11,15 @@ screenshoot::screenshoot(rect rc, bool fade) : surface(rc.width(), rc.height(), 
 		if(fade) {
 			auto push_canvas = canvas;
 			auto push_clip = clipping;
+			auto push_alpha = alpha;
+			auto push_fore = fore;
 			canvas = this;
 			setclip();
-			rectf({0, 0, width, height}, colors::black, 128);
+			alpha = 128;
+			fore = colors::black;
+			rectf({0, 0, width, height});
+			fore = push_fore;
+			alpha = push_alpha;
 			clipping = push_clip;
 			canvas = push_canvas;
 		}

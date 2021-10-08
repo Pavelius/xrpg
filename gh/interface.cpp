@@ -71,7 +71,7 @@ void object::paint_creature() const {
 	unsigned char alpha = 255;
 	if(is(Invisibility))
 		alpha = 64;
-	image(x, y, ps, 0, 0, alpha);
+	image(x, y, ps, 0, 0);
 	auto spi = 0;
 	for(auto i = Disarmed; i <= Strenght; i = (state_s)(i + 1)) {
 		if(i == Invisibility)
@@ -192,9 +192,11 @@ static void painthilitehex() {
 		return;
 	auto pt = h2p(i2h(current_index), size) - camera;
 	auto push_fore = fore;
+	auto push_alpha = alpha;
 	fore = colors::white;
-	fore.a = 64;
+	alpha = 64;
 	hexagonf(pt.x, pt.y, size);
+	alpha = push_alpha;
 	fore = push_fore;
 }
 

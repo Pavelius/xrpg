@@ -24,7 +24,7 @@ extern int          pausetime;
 extern int			tab_pixels;
 extern int			width;
 void				answerbt(int index, long id, const char* title);
-void				avatar(const char* id, unsigned char alpha = 0xFF);
+void				avatar(const char* id);
 void				bar(int value, int maximum);
 bool				button(const char* title, unsigned key, bool(*p)(const char*), const char* description, bool* is_hilited);
 bool				buttonfd(const char* title);

@@ -27,6 +27,7 @@ color				colors::tips::text;
 color				colors::tips::back;
 // Color context and font context
 fnevent				draw::domodal;
+unsigned char       draw::alpha = 255;
 color				draw::fore;
 color				draw::fore_stroke;
 int					draw::width;
@@ -96,11 +97,11 @@ static void set32(color* p, unsigned count) {
 
 static void set32a(color* p, unsigned count) {
 	auto p2 = p + count;
-	if(fore.a == 255)
+	if(draw::alpha == 255)
 		set32(p, count);
-	else if(!fore.a)
+	else if(!draw::alpha)
 		return;
-	else if(fore.a == 128) {
+	else if(draw::alpha == 128) {
 		while(p < p2) {
 			p->r = (p->r + fore.r) >> 1;
 			p->g = (p->g + fore.g) >> 1;
@@ -109,9 +110,9 @@ static void set32a(color* p, unsigned count) {
 		}
 	} else {
 		while(p < p2) {
-			p->r = (p->r * (255 - fore.a) + fore.r * fore.a) >> 8;
-			p->g = (p->g * (255 - fore.a) + fore.g * fore.a) >> 8;
-			p->b = (p->b * (255 - fore.a) + fore.b * fore.a) >> 8;
+			p->r = (p->r * (255 - draw::alpha) + fore.r * draw::alpha) >> 8;
+			p->g = (p->g * (255 - draw::alpha) + fore.g * draw::alpha) >> 8;
+			p->b = (p->b * (255 - draw::alpha) + fore.b * draw::alpha) >> 8;
 			p++;
 		}
 	}
@@ -875,11 +876,11 @@ void draw::line(int x0, int y0, int x1, int y1) {
 	else if(y0 == y1) {
 		if(!correct(x0, y0, x1, y1, clipping, false))
 			return;
-        set32x(canvas->ptr(x0, y0), canvas->scanline, x1 - x0 + 1, 1, (fore.a==0 || fore.a==255) ? set32 : set32a);
+        set32x(canvas->ptr(x0, y0), canvas->scanline, x1 - x0 + 1, 1, (alpha==255) ? set32 : set32a);
 	} else if(x0 == x1) {
 		if(!correct(x0, y0, x1, y1, clipping, false))
 			return;
-		set32x(canvas->ptr(x0, y0), canvas->scanline, 1, y1 - y0 + 1, (fore.a==0 || fore.a==255) ? set32 : set32a);
+		set32x(canvas->ptr(x0, y0), canvas->scanline, 1, y1 - y0 + 1, (alpha==255) ? set32 : set32a);
 	} else if(line_antialiasing) {
 		int dx = iabs(x1 - x0), sx = x0 < x1 ? 1 : -1;
 		int dy = iabs(y1 - y0), sy = y0 < y1 ? 1 : -1;
@@ -1109,18 +1110,18 @@ void draw::rectb3d(rect rc) {
 		return;
 	if(r1.x1 == r1.x2)
 		return;
-	auto push_fore = fore;
-	fore.a = 128;
+	auto push_alpha = alpha;
+	alpha = 128;
 	if(rc.y1 >= clipping.y1 && rc.y1 <= clipping.y2)
 		set32a((color*)ptr(r1.x1, r1.y1), r1.y2 - r1.y1);
 	if(rc.x1 >= clipping.x1 && rc.x1 <= clipping.x2)
 		set32h((color*)ptr(r1.x1, r1.y1), r1.y2 - r1.y1, 128);
-	fore.a = 64;
+	alpha = 64;
 	if(rc.y2 >= clipping.y1 && rc.y2 <= clipping.y2)
 		set32a((color*)ptr(r1.x1, r1.y2), r1.x2 - r1.x1);
 	if(rc.x2 >= clipping.x1 && rc.x2 <= clipping.x2)
 		set32h((color*)ptr(r1.x2, r1.y1), r1.y2 - r1.y1, 64);
-	fore = push_fore;
+	alpha = push_alpha;
 }
 
 void draw::rectb(rect rc, int radius) {
@@ -1147,10 +1148,10 @@ void draw::rectf(rect rc) {
 		return;
 	if(rc.x1 == rc.x2)
 		return;
-	set32x(ptr(rc.x1, rc.y1), canvas->scanline, rc.x2 - rc.x1, rc.y2 - rc.y1, set32);
+    set32x(ptr(rc.x1, rc.y1), canvas->scanline, rc.x2 - rc.x1, rc.y2 - rc.y1, (alpha==255) ? set32 : set32a);
 }
 
-static void rectfpt(int xc1, int yc1, int xc2, int yc2, int r, const color c1, unsigned char alpha) {
+static void rectfpt(int xc1, int yc1, int xc2, int yc2, int r) {
 	if(xc1 - r >= clipping.x2 || xc2 + r < clipping.x1 || yc1 - r >= clipping.y2 || yc2 + r < clipping.y1)
 		return;
 	xc1 += r; xc2 -= r;
@@ -1159,11 +1160,11 @@ static void rectfpt(int xc1, int yc1, int xc2, int yc2, int r, const color c1, u
 	do {
 		if(yp != y) {
 			yp = y;
-			rectf({xc1 + x, yc1 - y, xc1, yc1 - y + 1}, c1, alpha);
-			rectf({xc2 - x, yc1 - y, xc2, yc1 - y + 1}, c1, alpha);
+			rectf({xc1 + x, yc1 - y, xc1, yc1 - y + 1});
+			rectf({xc2 - x, yc1 - y, xc2, yc1 - y + 1});
 			if(y != 0) {
-				rectf({xc1 + x, yc2 + y, xc1, yc2 + y + 1}, c1, alpha);
-				rectf({xc2 - x, yc2 + y, xc2, yc2 + y + 1}, c1, alpha);
+				rectf({xc1 + x, yc2 + y, xc1, yc2 + y + 1});
+				rectf({xc2 - x, yc2 + y, xc2, yc2 + y + 1});
 			}
 		}
 		r = err;
@@ -1174,28 +1175,13 @@ static void rectfpt(int xc1, int yc1, int xc2, int yc2, int r, const color c1, u
 	} while(x < 0);
 }
 
-void draw::rectfe(rect rc, int r, unsigned char alpha) {
-	rectfpt(rc.x1, rc.y1, rc.x2, rc.y2, r, fore, alpha);
-	rectf({rc.x1 + r, rc.y1, rc.x2 - r, rc.y1 + r}, fore, alpha);
-	rectf({rc.x1, rc.y1 + r + 1, rc.x1 + r, rc.y2 - r}, fore, alpha);
-	rectf({rc.x2 - r, rc.y1 + r + 1, rc.x2, rc.y2 - r}, fore, alpha);
-	rectf({rc.x1 + r, rc.y2 - r, rc.x2 - r, rc.y2}, fore, alpha);
-	rectf({rc.x1 + r, rc.y1 + r, rc.x2 - r, rc.y2 - r}, fore, alpha);
-}
-
-void draw::rectf(rect rc, color c1, unsigned char alpha) {
-	if(!canvas)
-		return;
-	if(!correct(rc.x1, rc.y1, rc.x2, rc.y2, clipping))
-		return;
-	if(rc.x1 == rc.x2)
-		return;
-	auto pf = fore;
-	fore = c1;
-	if(alpha!=255)
-        fore.a = alpha;
-	set32x(ptr(rc.x1, rc.y1), canvas->scanline, rc.x2 - rc.x1, rc.y2 - rc.y1, (alpha==255) ? set32 : set32a);
-	fore = pf;
+void draw::rectfe(rect rc, int r) {
+	rectfpt(rc.x1, rc.y1, rc.x2, rc.y2, r);
+	rectf({rc.x1 + r, rc.y1, rc.x2 - r, rc.y1 + r});
+	rectf({rc.x1, rc.y1 + r + 1, rc.x1 + r, rc.y2 - r});
+	rectf({rc.x2 - r, rc.y1 + r + 1, rc.x2, rc.y2 - r});
+	rectf({rc.x1 + r, rc.y2 - r, rc.x2 - r, rc.y2});
+	rectf({rc.x1 + r, rc.y1 + r, rc.x2 - r, rc.y2 - r});
 }
 
 void draw::rectx(rect rc) {
@@ -1255,7 +1241,7 @@ void draw::gradh(rect rc, const color c1, const color c2, int skip) {
 	fore = pf;
 }
 
-void draw::circlef(int xm, int ym, int r, const color c1, unsigned char alpha) {
+void draw::circlef(int xm, int ym, int r) {
 	if(xm - r >= clipping.x2 || xm + r < clipping.x1 || ym - r >= clipping.y2 || ym + r < clipping.y1)
 		return;
 	int x = -r, y = 0, err = 2 - 2 * r, y1, y2 = -1000;
@@ -1263,10 +1249,10 @@ void draw::circlef(int xm, int ym, int r, const color c1, unsigned char alpha) {
 		y1 = ym + y;
 		if(y2 != y) {
 			y2 = y;
-			rectf({xm + x, y1, xm - x, y1 + 1}, c1, alpha);
+			rectf({xm + x, y1, xm - x, y1 + 1});
 			if(y != 0) {
 				y1 = ym - y;
-				rectf({xm + x, y1, xm - x, y1 + 1}, c1, alpha);
+				rectf({xm + x, y1, xm - x, y1 + 1});
 			}
 		}
 		r = err;
@@ -1313,12 +1299,6 @@ void draw::circle(int xm, int ym, int r) {
 			err -= --y * 2 - 1;
 		}
 	}
-}
-
-void draw::circle(int x, int y, int r, const color c1) {
-	auto fore_push = fore; fore = c1;
-	circle(x, y, r);
-	fore = fore_push;
 }
 
 void draw::setclip(rect rcn) {
@@ -1749,7 +1729,7 @@ static void image_round(int xm, int ym, int r, unsigned char* source, int dy, in
 	} while(x < 0);
 }
 
-void draw::image(int x, int y, const sprite* e, int id, int flags, unsigned char alpha) {
+void draw::image(int x, int y, const sprite* e, int id, int flags) {
 	int x2, y2;
 	color* pal;
 	if(!e)
@@ -1908,10 +1888,10 @@ void draw::image(int x, int y, const sprite* e, int id, int flags, unsigned char
 	}
 }
 
-void draw::image(int x, int y, const sprite* e, int id, int flags, unsigned char alpha, color* pal) {
+void draw::image(int x, int y, const sprite* e, int id, int flags, color* pal) {
 	auto pal_push = draw::palt;
 	draw::palt = pal;
-	image(x, y, e, id, flags | ImagePallette, alpha);
+	image(x, y, e, id, flags | ImagePallette);
 	draw::palt = pal_push;
 }
 

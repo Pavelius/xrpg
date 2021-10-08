@@ -260,8 +260,8 @@ int draw::textf(int x, int y, int width, const char* string, int* max_width,
 			// Список
 			int dx = texth() / 2;
 			int rd = texth() / 6;
-			circlef(x + dx + 2, y + dx, rd, color_text);
-			circle(x + dx + 2, y + dx, rd, color_text);
+			circlef(x + dx + 2, y + dx, rd);
+			circle(x + dx + 2, y + dx, rd);
 			int mw3 = 0;
 			y += textfln(x + texth(), y, width - texth(), &p, color_text, &mw3);
 			mw3 += texth();

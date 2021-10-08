@@ -155,6 +155,7 @@ extern rect				clipping; // Clipping area
 extern fnevent			domodal;
 extern point			dragmouse, caret;
 extern color			fore, fore_stroke;
+extern unsigned char    alpha;
 extern int				width, height;
 extern const sprite*	font; // Currently selected font
 extern double			linw;
@@ -168,8 +169,7 @@ void					bezierseg(int x0, int y0, int x1, int y1, int x2, int y2);
 void					blit(surface& dest, int x, int y, int width, int height, unsigned flags, const surface& source, int x_source, int y_source);
 void					blit(surface& dest, int x, int y, int width, int height, unsigned flags, const surface& source, int x_source, int y_source, int width_source, int height_source);
 void					circle(int x, int y, int radius);
-void					circle(int x, int y, int radius, const color c1);
-void					circlef(int x, int y, int radius, const color c1, unsigned char alpha = 0xFF);
+void					circlef(int x, int y, int radius);
 void					create(int x, int y, int width, int height, unsigned flags, int bpp);
 bool					dragactive(const void* p);
 bool					dragactive();
@@ -186,8 +186,8 @@ const sprite*			gres(const char* name, const char* folder = 0, point size = {});
 int						hittest(int x, int test_x, const char* string, int lenght);
 int						hittest(rect rc, const char* string, unsigned state, point mouse);
 bool					ishilite(const rect& rc);
-void					image(int x, int y, const sprite* e, int id, int flags, unsigned char alpha = 0xFF);
-void					image(int x, int y, const sprite* e, int id, int flags, unsigned char alpha, color* pal);
+void					image(int x, int y, const sprite* e, int id, int flags);
+void					image(int x, int y, const sprite* e, int id, int flags, color* pal);
 void					key2str(stringbuilder& sb, int key);
 void					line(int x1, int y1, int x2, int y2); // Draw line
 void					line(int x1, int y1, int x2, int y2, color c1); // Draw line
@@ -203,8 +203,7 @@ void					rectb(rect rc, int radius);
 void					rectb(rect rc, color c1, int radius);
 void					rectb3d(rect rc); // Draw rectangle border
 void					rectf(rect rc); // Draw rectangle area. Right and bottom side is one pixel less.
-void					rectfe(rect rc, int radius, unsigned char alpha);
-void					rectf(rect rc, color c1, unsigned char alpha);
+void					rectfe(rect rc, int radius);
 void					rectx(rect rc);
 void					set(void(*proc)(int& x, int& y, int x0, int x2, int* max_width, int& w, const char* id));
 void					setcaption(const char* string);
