@@ -343,12 +343,16 @@ class widget_codeview : public control, vector<char> {
 		if(focused) {
 			auto x1 = x + pos1.x * fontsize.x;
 			auto y1 = y + pos1.y * fontsize.y;
-			line(x1, y1, x1, y1 + fontsize.y, colors::text.mix(colors::active));
+			fore = colors::text.mix(colors::active);
+			line(x1, y1, x1, y1 + fontsize.y);
 		}
 		auto draw_selecton = (p1 != -1);
 		if(draw_selecton) {
+			auto push_alpha = alpha;
 			auto p1 = getbeginpos();
 			auto p2 = getendpos();
+			alpha = 128;
+			fore = colors::active;
 			for(auto i = p1.y; i <= p2.y; i++) {
 				auto x1 = client.x1;
 				auto x2 = client.x2;
@@ -357,8 +361,9 @@ class widget_codeview : public control, vector<char> {
 					x1 = x + p1.x * fontsize.x;
 				if(i == p2.y)
 					x2 = x + p2.x * fontsize.x;
-				rectf({x1, y1, x2, y1 + fontsize.y}, colors::active, 128);
+				rectf({x1, y1, x2, y1 + fontsize.y});
 			}
+			alpha = push_alpha;
 		}
 		font = push_font;
 		fore = push_fore;

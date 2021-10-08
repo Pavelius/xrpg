@@ -4,6 +4,8 @@
 #include "handler.h"
 #include "stringbuilder.h"
 
+using namespace draw;
+
 namespace {
 struct sbcolumn {
 	int					width;
@@ -35,8 +37,11 @@ void draw::statusbar(rect& rb) {
 	rb.y2 -= sb_rect.height();
 	//auto dx = font->height + 6;
 	gradv(sb_rect, colors::button.lighten(), colors::button.darken());
-	line(sb_rect.x1, sb_rect.y1, sb_rect.x2, sb_rect.y1, colors::border);
+	auto push_fore = fore;
+	fore = colors::border;
+	line(sb_rect.x1, sb_rect.y1, sb_rect.x2, sb_rect.y1);
 	sb_rect.offset(4, 3);
+	fore = push_fore;
 }
 
 void draw::statuscolumn(int index, int width, const char* format, ...) {
@@ -64,10 +69,17 @@ HANDLER(before_input) {
 		if(!e)
 			break;
 		x = x - e.width - padding;
-		draw::line(x, sb_rect.y1, x, sb_rect.y2, colors::border);
+		auto push_fore = fore;
+		fore = colors::border;
+		draw::line(x, sb_rect.y1, x, sb_rect.y2);
+		fore = push_fore;
 		if(e.name)
 			draw::text(x + padding, sb_rect.y1, e.name, -1, 0, e.width);
 	}
-	if(sb_text[0])
-		draw::textf(sb_rect.x1, sb_rect.y1, x - sb_rect.x1, sb_text);
+	if(sb_text[0]) {
+		auto push_width = width;
+		width = x - sb_rect.x1;
+		textf(sb_rect.x1, sb_rect.y1, sb_text);
+		width = push_width;
+	}
 }

@@ -1,7 +1,7 @@
 #include "color.h"
 #include "crt.h"
 
-//color colors::blue(0, 0, 255);
+color colors::black;
 color colors::gray(128, 128, 128);
 color colors::green(0, 255, 0);
 color colors::red(255, 0, 0);

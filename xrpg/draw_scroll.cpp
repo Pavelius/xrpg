@@ -72,15 +72,27 @@ void scroll::view(bool focused) {
 		a = true;
 	if(a) {
 		auto slide = getslide();
-		rectf(work, colors::button, 128);
+		auto push_alpha = alpha;
+		auto push_fore = fore;
+		alpha = 128;
+		fore = colors::button;
+		rectf(work);
+		alpha = push_alpha;
+		fore = push_fore;
 		button(slide, 0, 0, 0, colors::button, false, hot.pressed, false, true);
 	} else {
 		if(focused) {
 			auto slide = getslide();
+			auto push_alpha = alpha;
+			auto push_fore = fore;
+			alpha = 128;
+			fore = colors::active;
 			if(horizontal)
-				rectf({slide.x1, slide.y2 - 4, slide.x2, slide.y2}, colors::blue, 128);
+				rectf({slide.x1, slide.y2 - 4, slide.x2, slide.y2});
 			else
-				rectf({slide.x2 - 4, slide.y1, slide.x2, slide.y2}, colors::blue, 128);
+				rectf({slide.x2 - 4, slide.y1, slide.x2, slide.y2});
+			alpha = push_alpha;
+			fore = push_fore;
 		}
 	}
 	// Mouse wheel is overlapped on window, so must be in view() block, rather that input()
@@ -150,14 +162,14 @@ void scroll::input() {
 			if(ishilite())
 				hot.key = InputNoUpdate;
 			break;
-		//case MouseWheelUp:
+		case MouseWheelUp:
 		//	if(draw::ishilite(client))
 		//		execute(&scroll::setorigin, *origin - wheel);
-		//	break;
-		//case MouseWheelDown:
+			break;
+		case MouseWheelDown:
 		//	if(draw::ishilite(client))
 		//		execute(&scroll::setorigin, *origin + wheel);
-		//	break;
+			break;
 		}
 	}
 }

@@ -29,10 +29,18 @@ void draw::splitv(int x, int y, int& value, int height, int size, int minimum, i
 	}
 	if(mode) {
 		hot.cursor = cursor::LeftRight;
-		if(hot.pressed)
-			rectf(rc, colors::button.darken(), 128);
-		else
-			rectf(rc, colors::button, 128);
+		auto push_fore = fore;
+		auto push_alpha = alpha;
+		alpha = 128;
+		if(hot.pressed) {
+			fore = colors::button.darken();
+			rectf(rc);
+		} else {
+			fore = colors::button;
+			rectf(rc);
+		}
+		alpha = push_alpha;
+		fore = push_fore;
 	}
 }
 
@@ -61,10 +69,16 @@ void draw::splith(int x, int y, int width, int& value, int size, int minimum, in
 		split_value = value;
 	}
 	if(mode) {
+		auto push_fore = fore;
+		auto push_alpha = alpha;
+		alpha = 128;
 		hot.cursor = cursor::UpDown;
 		if(hot.pressed)
-			rectf(rc, colors::button.darken(), 128);
+			fore = colors::button.darken();
 		else
-			rectf(rc, colors::button, 128);
+			fore = colors::button;
+		rectf(rc);
+		alpha = push_alpha;
+		fore = push_fore;
 	}
 }

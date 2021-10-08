@@ -78,8 +78,15 @@ void list::rowhilite(const rect& rc, int index) const {
 		auto a = ishilite({rc.x1, rc.y1, rc.x2 - 1, rc.y2 - 1});
 		if(index == current)
 			hilight(rc);
-		else if(a && index == current_hilite_row)
-			rectf(rc, colors::button, 64);
+		else if(a && index == current_hilite_row) {
+			auto push_fore = fore;
+			auto push_alpha = alpha;
+			alpha = 64;
+			fore = colors::button;
+			rectf(rc);
+			alpha = push_alpha;
+			fore = push_fore;
+		}
 	}
 }
 
@@ -93,8 +100,12 @@ void list::row(const rect& rc, int line) const {
 	}
 	char temp[260]; stringbuilder sb(temp);
 	auto p = getname(line, 0, sb);
-	if(p)
-		textc(r1.x1 + metrics::edit, r1.y1 + metrics::edit, r1.width() - metrics::edit * 2, p);
+	if(p) {
+		auto push_width = width;
+		width = r1.width() - metrics::edit * 2;
+		textc(r1.x1 + metrics::edit, r1.y1 + metrics::edit, p);
+		width = push_width;
+	}
 }
 
 int	list::getrowheight() {
@@ -115,16 +126,15 @@ bool list::isopen(int index) const {
 void list::treemark(const rect& rc, int line, int level) const {
 	if(!isgroup(line))
 		return;
-	color c1 = colors::text;
 	auto isopen = list::isopen(line);
 	int x = rc.x1 + rc.width() / 2;
 	int y = rc.y1 + rc.height() / 2 - 1;
 	if(ishilite(rc))
 		current_hilite_treemark = line;
-	circle(x, y, 6, c1);
-	draw::line(x - 4, y, x + 4, y, c1);
+	circle(x, y, 6);
+	draw::line(x - 4, y, x + 4, y);
 	if(!isopen)
-		draw::line(x, y - 4, x, y + 4, c1);
+		draw::line(x, y - 4, x, y + 4);
 }
 
 void list::post_select() {
@@ -176,12 +186,19 @@ void list::paintrows(const rect& rc) const {
 		if(ix >= maximum)
 			break;
 		rect rcm = {x1, y1, x2, y1 + pixels_per_line};
+		auto push_fore = fore;
+		fore = colors::border;
 		if(hilite_odd_lines) {
-			if(ix & 1)
-				rectf({rcm.x1, rcm.y1, rcm.x2, rcm.y2}, colors::border, 16);
+			if(ix & 1) {
+				auto push_alpha = alpha;
+				alpha = 16;
+				rectf({rcm.x1, rcm.y1, rcm.x2, rcm.y2});
+				alpha = push_alpha;
+			}
 		}
 		if(show_grid_lines)
-			line(rc.x1, rcm.y2 - 1, rc.x2, rcm.y2 - 1, colors::border);
+			line(rc.x1, rcm.y2 - 1, rc.x2, rcm.y2 - 1);
+		fore = push_fore;
 		row(rcm, ix);
 		y1 += pixels_per_line;
 		ix++;

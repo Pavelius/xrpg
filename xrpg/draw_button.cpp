@@ -62,7 +62,10 @@ bool draw::addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const 
 	auto result = button({rc.x2, rc.y1, rc.x2 + width, rc.y2},
 		t1, tt1, k1, colors::button,
 		false, false, false, false);
-	line(rc.x2, rc.y1, rc.x2, rc.y2, colors::border);
+	auto push_fore = fore;
+	fore = colors::border;
+	line(rc.x2, rc.y1, rc.x2, rc.y2);
+	fore = push_fore;
 	return result;
 }
 
@@ -81,7 +84,10 @@ int draw::addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const c
 		result = 2;
 	if((hot.key == k2 || hot.key == k1) && !focused)
 		result = 0;
-	draw::line(rc.x2, rc.y1, rc.x2, rc.y2, colors::border);
+	auto push_fore = fore;
+	fore = colors::border;
+	draw::line(rc.x2, rc.y1, rc.x2, rc.y2);
+	fore = push_fore;
 	return result;
 }
 

@@ -39,13 +39,18 @@ static bool sheet(rect& rc, rect& rct, const char* string, bool* area_result, bo
 		ty += 1;
 	}
 	text(rct.x1 + ts, ty, string, -1, 0);
-	fore = push_fore;
 	if(a) {
 		if(hot.key == MouseLeft && hot.pressed)
 			result = true;
-		else
-			draw::rectf({rct.x1 + 1, rct.y1 + 1, rct.x2, rct.y2 - 2}, back, 64);
+		else {
+			fore = back;
+			auto push_alpha = alpha;
+			alpha = 64;
+			draw::rectf({rct.x1 + 1, rct.y1 + 1, rct.x2, rct.y2 - 2});
+			alpha = push_alpha;
+		}
 	}
+	fore = push_fore;
 	if(right_side)
 		rc.x2 -= rct.width();
 	else
@@ -85,8 +90,8 @@ int draw::tabs(rect rc, bool show_close, bool right_side, void** data, int start
 					result = 2;
 				tooltips(getnm("Close"));
 			}
-			line(rcx.x1 + 4, rcx.y1 + 4, rcx.x2 - 4, rcx.y2 - 4, fore);
-			line(rcx.x2 - 4, rcx.y1 + 4, rcx.x1 + 4, rcx.y2 - 4, fore);
+			line(rcx.x1 + 4, rcx.y1 + 4, rcx.x2 - 4, rcx.y2 - 4);
+			line(rcx.x2 - 4, rcx.y1 + 4, rcx.x1 + 4, rcx.y2 - 4);
 		}
 	}
 	if(result_x1)

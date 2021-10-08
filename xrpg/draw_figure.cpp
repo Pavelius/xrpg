@@ -11,7 +11,7 @@ void draw::field(int x, int y, figure type, int size) {
 		circle(x, y, size);
 		break;
 	case figure::CircleFill:
-		circlef(x, y, size, fore, 128);
+		circlef(x, y, size);
 		circle(x, y, size);
 		break;
 	case figure::Rect:

@@ -321,7 +321,10 @@ static struct widget_settings_header : controls::list {
 	}
 	void row(const rect& rc, int index) const override {
 		list::row({rc.x1 + 1, rc.y1 + 1, rc.x2 - 1, rc.y2}, index);
-		textc(rc.x1 + metrics::edit, rc.y1 + metrics::edit, rc.width() - metrics::edit * 2, getnm(rows[index]->division));
+		auto push_width = width;
+		width = rc.width() - metrics::edit * 2;
+		textc(rc.x1 + metrics::edit, rc.y1 + metrics::edit, getnm(rows[index]->division));
+		width = push_width;
 	}
 	const header* getcurrent() {
 		return rows[current];
@@ -576,7 +579,10 @@ static struct widget_application : draw::controls::control {
 			rc.y1 += dy;
 			if(current_active_control)
 				current_active_control->view(rc, metrics::show::padding, true, false);
-			line(rct.x1, rct.y2, rct.x2, rct.y2, colors::border);
+			auto push_fore = fore;
+			fore = colors::border;
+			line(rct.x1, rct.y2, rct.x2, rct.y2);
+			fore = push_fore;
 			auto current_hilite = -1;
 			auto result = draw::tabs(rct, false, false, (void**)ct.begin(), 0, z1,
 				current_select, &current_hilite, getlabel, &rct.x1, colors::window);

@@ -220,11 +220,18 @@ int table::rowheader(const rect& rc) const {
 					clickcolumn(i);
 			}
 		}
-		line(r1.x2 - 1, r1.y1, r1.x2 - 1, r1.y2, colors::border);
+		auto push_fore = fore;
+		fore = colors::border;
+		line(r1.x2 - 1, r1.y1, r1.x2 - 1, r1.y2);
+		fore = push_fore;
 		stringbuilder sb(temp); temp[0] = 0;
 		auto p = getheader(i, sb);
-		if(p)
-			textc(r1.x1 + metrics::edit, r1.y1 + metrics::edit, r1.width() - metrics::edit * 2, p);
+		if(p) {
+			auto push_width = width;
+			width = r1.width() - metrics::edit * 2;
+			textc(r1.x1 + metrics::edit, r1.y1 + metrics::edit, p);
+			width = push_width;
+		}
 		a = ishilite({r1.x2 + metrics::edit - 1, r1.y1, r1.x2 + metrics::edit + 1, r1.y2});
 		if(a) {
 			hot.cursor = cursor::LeftRight;
@@ -295,7 +302,10 @@ void table::rowtotal(const rect& rc) const {
 		r1.x2 = r1.x2 + columns[i].width;
 		if(columns[i].size == widtht::Inner)
 			continue;
-		line(r1.x2, r1.y1, r1.x2, r1.y2, colors::border);
+		auto push_fore = fore;
+		fore = colors::border;
+		line(r1.x2, r1.y1, r1.x2, r1.y2);
+		fore = push_fore;
 		auto result = gettotal(i);
 		temp[0] = 0;
 		if(result) {
@@ -340,8 +350,12 @@ void table::row(const rect& rc, int index) const {
 				level_ident -= mx;
 			}
 		}
-		if(show_grid_lines && columns[i].size != widtht::Inner)
-			draw::line(r1.x2, r1.y1, r1.x2, r1.y2, colors::border);
+		if(show_grid_lines && columns[i].size != widtht::Inner) {
+			auto push_fore = fore;
+			fore = colors::border;
+			line(r1.x2, r1.y1, r1.x2, r1.y2);
+			fore = push_fore;
+		}
 		ishilite(r1);
 		((const_cast<table*>(this))->*pc->method->render)(r1, index, i);
 		x1 += pc->width;
@@ -543,7 +557,10 @@ void table::cell(const rect& rc, int line, int column, const char* label) {
 	cellhilite(rc, line, column, label, align);
 	bool clipped = false;
 	rect r1 = rc + metrics::edit;
-	textc(r1.x1, r1.y1, r1.width(), label, -1, align, &clipped);
+	auto push_width = width;
+	width = r1.width();
+	textc(r1.x1, r1.y1, label, -1, align, &clipped);
+	width = push_width;
 	if(clipped) {
 		if(ishilite(r1)) {
 			tooltips(r1.x1, r1.y1, 200);

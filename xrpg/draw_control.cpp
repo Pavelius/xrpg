@@ -43,8 +43,12 @@ void control::post(const char* id, int value) const {
 }
 
 void control::icon(int x, int y, int index, bool disabled) const {
-	if(index!=-1)
-		image(x, y, getimages(), index, 0, disabled ? 0x80 : 0xFF);
+	if(index != -1) {
+		auto push_alpha = alpha;
+		alpha = disabled ? 0x80 : 0xFF;
+		image(x, y, getimages(), index, 0);
+		alpha = push_alpha;
+	}
 }
 
 static bool execute_command_by_keyboard(const controls::control* p, const char** source) {
@@ -123,7 +127,13 @@ void control::view(const rect& ro, bool show_border, bool show_background, bool 
 	client = rc;
 	paintnc();
 	if(show_shadow) {
-		rectf({rc.x2 + 1, rc.y1 + 4, rc.x2 + 5, rc.y2}, colors::black, 32);
-		rectf({rc.x1 + 4, rc.y2, rc.x2 + 5, rc.y2 + 5}, colors::black, 32);
+		auto push_fore = fore;
+		auto push_alpha = alpha;
+		fore = colors::form;
+		alpha = 32;
+		rectf({rc.x2 + 1, rc.y1 + 4, rc.x2 + 5, rc.y2});
+		rectf({rc.x1 + 4, rc.y2, rc.x2 + 5, rc.y2 + 5});
+		alpha = push_alpha;
+		fore = push_fore;
 	}
 }
