@@ -7,10 +7,6 @@ int draw::tab_pixels = 0;
 
 static void(*draw_icon)(int& x, int& y, int x0, int x2, int* max_width, int& w, const char* name);
 
-void draw::set(void(*proc)(int& x, int& y, int x0, int x2, int* max_width, int& w, const char* id)) {
-	draw_icon = proc;
-}
-
 static bool match(const char** string, const char* name) {
 	int n = zlen(name);
 	if(memcmp(*string, name, n) != 0)

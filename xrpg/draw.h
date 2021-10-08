@@ -163,6 +163,7 @@ extern double			linw;
 extern char				link[4096];
 extern color*			palt;
 extern int				tab_pixels;
+extern fnevent          pbackground, ptips, pwindow;
 int						aligned(int x, int width, unsigned state, int string_width);
 int						alignedh(const rect& rc, const char* string, unsigned state);
 void					bezier(int x0, int y0, int x1, int y1, int x2, int y2);
@@ -202,7 +203,6 @@ void					rectb3d(rect rc); // Draw rectangle border
 void					rectf(rect rc); // Draw rectangle area. Right and bottom side is one pixel less.
 void					rectfe(rect rc, int radius);
 void					rectx(rect rc);
-void					set(void(*proc)(int& x, int& y, int x0, int x2, int* max_width, int& w, const char* id));
 void					setcaption(const char* string);
 void					setclip(rect rc);
 inline void				setclip() { clipping.set(0, 0, getwidth(), getheight()); }
