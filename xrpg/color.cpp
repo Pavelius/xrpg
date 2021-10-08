@@ -1,9 +1,7 @@
 #include "color.h"
 #include "crt.h"
 
-// Common used color
-color colors::black(0, 0, 0);
-color colors::blue(0, 0, 255);
+//color colors::blue(0, 0, 255);
 color colors::gray(128, 128, 128);
 color colors::green(0, 255, 0);
 color colors::red(255, 0, 0);
@@ -12,7 +10,7 @@ color colors::white(255, 255, 255);
 
 color color::gray() const {
 	unsigned char level = (r + g + b) / 3;
-	return{level, level, level, a};
+	return{level, level, level, 0};
 }
 
 bool color::isdark() const {
@@ -37,7 +35,6 @@ color color::lighten() const {
 		result.b = 255;
 	else
 		result.b = n;
-	result.a = a;
 	return result;
 }
 
@@ -46,7 +43,6 @@ color color::darken() const {
 	result.r = r - (r >> 3);
 	result.g = g - (g >> 3);
 	result.b = b - (b >> 3);
-	result.a = a;
 	return result;
 }
 
@@ -55,7 +51,6 @@ color color::mix(const color c1, unsigned char a) const {
 	result.r = (((int)r*a) + (c1.r*(255 - a))) >> 8;
 	result.g = (((int)g*a) + (c1.g*(255 - a))) >> 8;
 	result.b = (((int)b*a) + (c1.b*(255 - a))) >> 8;
-	result.a = a;
 	return result;
 }
 
@@ -64,7 +59,6 @@ color color::negative() const {
 	result.r = ~r;
 	result.g = ~g;
 	result.b = ~b;
-	result.a = ~a;
 	return result;
 }
 

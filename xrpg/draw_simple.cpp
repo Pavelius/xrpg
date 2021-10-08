@@ -390,7 +390,7 @@ void draw::fog(int n) {
 	auto push_alpha = alpha;
 	auto push_fore = fore;
 	alpha = n;
-	fore = colors::black;
+	fore = colors::form;
 	rectf({caret.x, caret.y, caret.x + scene.grid, caret.y + scene.grid});
 	fore = push_fore;
 	alpha = push_alpha;

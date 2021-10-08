@@ -1485,8 +1485,9 @@ void draw::text(int x, int y, const char* string, int count, unsigned flags, int
 	}
 }
 
-int draw::textc(int x, int y, int width, const char* string, int count, unsigned flags, bool* clipped) {
-	auto push_clip = clipping; setclip({x, y, x + width, y + texth()});
+int draw::textc(int x, int y, const char* string, int count, unsigned flags, bool* clipped) {
+	auto push_clip = clipping;
+	setclip({x, y, x + width, y + texth()});
 	auto w = textw(string, count);
 	if(clipped)
 		*clipped = w > width;

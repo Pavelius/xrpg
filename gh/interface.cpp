@@ -68,7 +68,8 @@ void object::paint_creature() const {
 	auto pc = gres("conditions", "art/objects");
 	if(!pc)
 		return;
-	unsigned char alpha = 255;
+    auto push_alpha = alpha;
+    alpha = 255;
 	if(is(Invisibility))
 		alpha = 64;
 	image(x, y, ps, 0, 0);
@@ -85,7 +86,7 @@ void object::paint_creature() const {
 		}
 	}
 	auto push_fore = fore;
-	fore = colors::blue;
+	fore = colors::text;
 	switch(kind.type) {
 	case Player: fore = colors::red; break;
 	case Monster: fore = colors::white; break;
@@ -96,6 +97,7 @@ void object::paint_creature() const {
 		fore = colors::green;
 		hexagon(x, y, size - 2);
 	}
+	alpha = push_alpha;
 	fore = push_fore;
 	paint_number(x, y + 30, hits);
 }

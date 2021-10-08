@@ -29,8 +29,7 @@ struct color {
 	void					write(void* scanline, int x, int bpp, const void* pallette = 0, int color_count = 0) const;
 };
 namespace colors {
-extern color				black;
-extern color				blue;
+//extern color				blue;
 extern color				gray;
 extern color				green;
 extern color				red;

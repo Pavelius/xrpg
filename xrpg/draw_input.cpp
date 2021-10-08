@@ -112,7 +112,7 @@ void draw::initialize(const char* title) {
 	draw::width = 320;
 	draw::font = metrics::font;
 	draw::fore = colors::text;
-	draw::fore_stroke = colors::blue;
+	draw::fore_stroke = colors::active;
 	draw::create(awindow.x, awindow.y, awindow.width, awindow.height, awindow.flags, 32);
 	draw::setcaption(title);
 }

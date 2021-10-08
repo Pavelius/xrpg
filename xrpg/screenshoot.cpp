@@ -16,7 +16,7 @@ screenshoot::screenshoot(rect rc, bool fade) : surface(rc.width(), rc.height(), 
 			canvas = this;
 			setclip();
 			alpha = 128;
-			fore = colors::black;
+			fore = colors::form;
 			rectf({0, 0, width, height});
 			fore = push_fore;
 			alpha = push_alpha;

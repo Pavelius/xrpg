@@ -142,11 +142,11 @@
 
 1627282035 /home/ws-1113/projects/xrpg/xrpg/bstream.h
 
-1631169706 source:/home/ws-1113/projects/xrpg/xrpg/color.cpp
+1633704006 source:/home/ws-1113/projects/xrpg/xrpg/color.cpp
 	"color.h"
 	"crt.h"
 
-1629181108 /home/ws-1113/projects/xrpg/xrpg/color.h
+1633704003 /home/ws-1113/projects/xrpg/xrpg/color.h
 
 1632927465 source:/home/ws-1113/projects/xrpg/xrpg/crt_translate.cpp
 	"crt.h"
@@ -156,12 +156,12 @@
 
 1633332635 /home/ws-1113/projects/xrpg/xrpg/log.h
 
-1633702915 source:/home/ws-1113/projects/xrpg/xrpg/draw.cpp
+1633703657 source:/home/ws-1113/projects/xrpg/xrpg/draw.cpp
 	"color.h"
 	"crt.h"
 	"draw.h"
 
-1633703203 /home/ws-1113/projects/xrpg/xrpg/draw.h
+1633703633 /home/ws-1113/projects/xrpg/xrpg/draw.h
 	"color.h"
 	"point.h"
 	"stringbuilder.h"
@@ -178,7 +178,7 @@
 
 1628677516 /home/ws-1113/projects/xrpg/xrpg/handler.h
 
-1633500073 source:/home/ws-1113/projects/xrpg/xrpg/draw_input.cpp
+1633704019 source:/home/ws-1113/projects/xrpg/xrpg/draw_input.cpp
 	"crt.h"
 	"draw.h"
 	"draw_input.h"
@@ -191,7 +191,7 @@
 	"serializer.h"
 	"stringbuilder.h"
 
-1633703335 source:/home/ws-1113/projects/xrpg/xrpg/draw_simple.cpp
+1633703792 source:/home/ws-1113/projects/xrpg/xrpg/draw_simple.cpp
 	"answers.h"
 	"draw.h"
 	"draw_button.h"
@@ -214,7 +214,7 @@
 	"draw_button.h"
 	"handler.h"
 
-1633700480 source:/home/ws-1113/projects/xrpg/xrpg/draw_tooltips.cpp
+1633703437 source:/home/ws-1113/projects/xrpg/xrpg/draw_tooltips.cpp
 	"draw.h"
 	"draw_button.h"
 	"draw_input.h"
@@ -276,7 +276,7 @@
 	"crt.h"
 	"draw.h"
 
-1633701835 source:/home/ws-1113/projects/xrpg/xrpg/screenshoot.cpp
+1633703798 source:/home/ws-1113/projects/xrpg/xrpg/screenshoot.cpp
 	"screenshoot.h"
 
 1628677516 /home/ws-1113/projects/xrpg/xrpg/screenshoot.h
@@ -330,7 +330,7 @@
 	"draw.h"
 	"io_stream.h"
 
-1633702316 source:/home/ws-1113/projects/xrpg/gh/interface.cpp
+1633704046 source:/home/ws-1113/projects/xrpg/gh/interface.cpp
 	"main.h"
 	"draw.h"
 	"draw_hexagon.h"

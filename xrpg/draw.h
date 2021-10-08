@@ -215,7 +215,7 @@ void					sysredraw();
 void					text(int x, int y, const char* string, int count = -1, unsigned flags = 0);
 void					text(int x, int y, const char* string, int count, unsigned flags, int maximum_width, bool* clipped = 0);
 int						text(rect rc, const char* string, unsigned state = 0, int* max_width = 0);
-int						textc(int x, int y, int width, const char* string, int count = -1, unsigned flags = 0, bool* clipped = 0);
+int						textc(int x, int y, const char* string, int count = -1, unsigned flags = 0, bool* clipped = 0);
 int						textbc(const char* string, int width);
 int						texte(rect rc, const char* string, unsigned flags, int i1, int i2);
 int						textf(int x, int y, const char* text, int* max_width = 0, int min_height = 0, int* cashe_height = 0, const char** cashe_string = 0);
