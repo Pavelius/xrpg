@@ -208,7 +208,7 @@ void draw::radio(void* source, int size, unsigned bits, const char* label, const
 			need_select = true;
 	}
 	if(focused) {
-		rectx({rc1.x1, rc1.y1, rc1.x2, rc1.y2}, draw::fore);
+		rectx({rc1.x1, rc1.y1, rc1.x2, rc1.y2});
 		if(hot.key == KeySpace)
 			need_select = true;
 	}
@@ -269,7 +269,7 @@ void draw::checkbox(void* source, int size, unsigned bits, const char* label, co
 			need_value = true;
 	}
 	if(focused) {
-		draw::rectx({rc1.x1 - 2, rc1.y1 - 1, rc1.x2 + 2, rc1.y2 + 1}, draw::fore);
+		draw::rectx({rc1.x1 - 2, rc1.y1 - 1, rc1.x2 + 2, rc1.y2 + 1});
 		if(hot.key == KeySpace)
 			need_value = true;
 	}

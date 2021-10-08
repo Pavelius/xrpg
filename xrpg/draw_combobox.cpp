@@ -175,7 +175,7 @@ static void fielc(const rect& rc, unsigned flags, void* source, int size, array&
 	rect rco = rc + metrics::edit;
 	if(focused) {
 		rect r1 = rco; r1.offset(-1);
-		rectx(r1, colors::text);
+		rectx(r1);
 	}
 	auto v = (void*)getsource(source, size);
 	if(size != sizeof(void*))

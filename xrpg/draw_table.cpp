@@ -481,7 +481,10 @@ column& table::addcolimage() {
 
 static bool changefield(rect rc, void* row, const column& col, stringbuilder& sb, bool isnumber) {
 	rc.offset(metrics::edit);
-	draw::rectf({rc.x1 - 1, rc.y1 - 1, rc.x2, rc.y2}, colors::window);
+	auto push_fore = fore;
+	fore = colors::window;
+	draw::rectf({rc.x1 - 1, rc.y1 - 1, rc.x2, rc.y2});
+	fore = push_fore;
 	rc.x2 -= 1;
 	return draw::edit(rc, col.value.ptr(row), col.value.size, col.align|TextSingleLine, isnumber);
 }

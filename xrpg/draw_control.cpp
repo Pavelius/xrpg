@@ -108,10 +108,18 @@ void control::view(const rect& ro, bool show_border, bool show_background, bool 
 	rect rc = ro;
 	if(show_toolbar && hastoolbar())
 		rc.y1 += toolbar(rc.x1, rc.y1, rc.width(), 0);
-	if(show_background)
-		rectf(rc, colors::window);
-	if(show_border)
-		rectb(rc, colors::border);
+	if(show_background) {
+		auto push_fore = fore;
+		fore = colors::window;
+		rectf(rc);
+		fore = push_fore;
+	}
+	if(show_border) {
+		auto push_fore = fore;
+		fore = colors::border;
+		rectb(rc);
+		fore = push_fore;
+	}
 	client = rc;
 	paintnc();
 	if(show_shadow) {

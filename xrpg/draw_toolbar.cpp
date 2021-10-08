@@ -20,14 +20,19 @@ static bool tool(const rect& rc, bool disabled, bool checked, bool press, bool f
 	if(checked)
 		pressed = true;
 	if(a) {
+		auto push_fore = fore;
 		if(pressed) {
-			rectf(rc, colors::form.mix(colors::border, 128));
-			rectb(rc, colors::border);
-
+			fore = colors::form.mix(colors::border, 128);
+			rectf(rc);
+			fore = colors::border;
+			rectb(rc);
 		} else {
-			rectf(rc, colors::form.mix(colors::active, 128));
-			rectb(rc, colors::border);
+			fore = colors::form.mix(colors::active, 128);
+			rectf(rc);
+			fore = colors::border;
+			rectb(rc);
 		}
+		fore = push_fore;
 	}
 	return result;
 }

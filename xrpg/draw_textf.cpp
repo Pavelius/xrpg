@@ -243,7 +243,10 @@ int draw::textf(int x, int y, int width, const char* string, int* max_width,
 				int c = textbc(p, width);
 				if(!c)
 					break;
-				rectf({x, y, x + width, y + texth()}, c1);
+				auto push_fore = fore;
+				fore = c1;
+				rectf({x, y, x + width, y + texth()});
+				fore = push_fore;
 				text(x, y, p, c);
 				y += texth();
 				p += c;

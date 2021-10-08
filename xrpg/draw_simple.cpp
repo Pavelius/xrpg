@@ -175,8 +175,11 @@ void draw::customwindow() {
 
 void draw::paintclear() {
 	scene.hilite.clear();
-	rectf({0, 0, getwidth(), getheight()}, colors::window);
+	auto push_fore = fore;
+	fore = colors::window;
+	rectf({0, 0, getwidth(), getheight()});
 	tooltips(metrics::padding * 3, metrics::padding * 3, 320);
+	fore = push_fore;
 }
 
 void draw::paintimage() {
@@ -374,10 +377,13 @@ void draw::grid() {
 }
 
 void draw::fog(int n) {
+	auto push_fore = fore;
+	fore = colors::black;
 	if(n == 0xFF)
-		rectf({caret.x, caret.y, caret.x + scene.grid, caret.y + scene.grid}, colors::black);
+		rectf({caret.x, caret.y, caret.x + scene.grid, caret.y + scene.grid});
 	else
 		rectf({caret.x, caret.y, caret.x + scene.grid, caret.y + scene.grid}, colors::black, n);
+	fore = push_fore;
 }
 
 void draw::avatar(const char* id, unsigned char alpha) {
@@ -397,7 +403,10 @@ void draw::bar(int value, int maximum) {
 	rect r1 = rc; r1.x1++; r1.y1++;
 	if(value != maximum)
 		r1.x2 = r1.x1 + (rc.width() - 2) * value / maximum;
-	rectf(rc, colors::form);
+	auto push_fore = fore;
+	fore = colors::form;
+	rectf(rc);
+	fore = push_fore;
 	rectf(r1);
 	rectb(rc, colors::border);
 	caret.y += rc.height();

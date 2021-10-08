@@ -32,7 +32,10 @@ static void test_table() {
 	object.addcol("Weight", "Number").set(ANREQ(traiti, weight));
 	while(ismodal()) {
 		rect rc = {0, 0, getwidth(), getheight()};
-		rectf(rc, colors::form);
+		auto push_fore = fore;
+		fore = colors::form;
+		rectf(rc);
+		fore = push_fore;
 		int x = 10, y = 10;
 		buttonl(x, y, "OK", buttonok, KeyEnter);
 		buttonl(x, y, getnm("Cancel"), buttoncancel, KeyEscape);

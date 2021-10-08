@@ -1189,12 +1189,6 @@ void draw::rectfe(rect rc, int r, unsigned char alpha) {
 	rectf({rc.x1 + r, rc.y1 + r, rc.x2 - r, rc.y2 - r}, fore, alpha);
 }
 
-void draw::rectf(rect rc, color c1) {
-	auto push_fore = fore; fore = c1;
-	rectf(rc);
-	fore = push_fore;
-}
-
 void draw::rectf(rect rc, color c1, unsigned char alpha) {
 	if(!canvas)
 		return;
@@ -1210,13 +1204,11 @@ void draw::rectf(rect rc, color c1, unsigned char alpha) {
 	fore = pf;
 }
 
-void draw::rectx(rect rc, color c1) {
-	auto push_fore = fore; fore = c1;
+void draw::rectx(rect rc) {
 	linet(rc.x1, rc.y1, rc.x2, rc.y1);
 	linet(rc.x2, rc.y1 + 1, rc.x2, rc.y2);
 	linet(rc.x2 - 1, rc.y2, rc.x1, rc.y2);
 	linet(rc.x1, rc.y2 - 1, rc.x1, rc.y1);
-	fore = push_fore;
 }
 
 void draw::gradv(rect rc, const color c1, const color c2, int skip) {
@@ -1608,7 +1600,10 @@ static void hilite_text_line(int x, int y, int width, int height, const char* st
 			rx1 = x0 + 1 + draw::textw(string, i1);
 		if(i2 >= 0 && i2 <= count)
 			rx2 = x0 + 1 + draw::textw(string, i2);
-		draw::rectf({rx1, y, rx2, y + height}, colors::button);
+		auto push_fore = fore;
+		fore = colors::button;
+		draw::rectf({rx1, y, rx2, y + height});
+		fore = push_fore;
 	}
 	draw::text(x0, y, string, count);
 	if(i1 >= 0 && i1 == i2
@@ -1939,7 +1934,10 @@ void draw::stroke(int x, int y, const sprite* e, int id, int flags, unsigned cha
 	auto push_clip = clipping;
 	auto push_canvas = canvas; canvas = &sf;
 	setclip();
-	rectf({0, 0, sf.width, sf.height}, tr);
+	auto push_fore = fore;
+	fore = tr;
+	rectf({0, 0, sf.width, sf.height});
+	fore = push_fore;
 	image(1, 1, e, id, ImageNoOffset);
 	canvas = push_canvas;
 	clipping = push_clip;

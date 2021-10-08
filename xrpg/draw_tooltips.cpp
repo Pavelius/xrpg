@@ -39,11 +39,13 @@ void tooltips_getrect(rect& rc, int border) {
 static void tooltips_render() {
 	// Show background
 	rect rc; tooltips_getrect(rc, metrics::padding);
-	draw::rectf(rc, colors::tips::back);
-	draw::rectb(rc, colors::border);
+	auto push_fore = draw::fore;
+	draw::fore = colors::tips::back;
+	draw::rectf(rc);
+	draw::fore = colors::border;
+	draw::rectb(rc);
 	rc = rc + metrics::padding;
 	// Show text
-	auto push_fore = draw::fore;
 	draw::fore = colors::tips::text;
 	draw::textf(rc.x1, rc.y1, rc.width(), tooltips_sb.begin());
 	draw::fore = push_fore;

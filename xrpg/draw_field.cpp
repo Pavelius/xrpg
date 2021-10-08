@@ -445,8 +445,11 @@ static void fieldf(const rect& rco, unsigned flags, void* source, int size, bool
 		return;
 	rect rc = rco;
 	const unsigned edit_mask = AlignMask | TextSingleLine | TextBold | TextStroke;
-	rectf(rc, colors::window);
+	auto push_fore = fore;
+	fore = colors::window;
+	rectf(rc);
 	rectb(rc, colors::border);
+	fore = push_fore;
 	auto focused = isfocused(rc, source);
 	if(increment) {
 		auto result = addbutton(rc, focused,

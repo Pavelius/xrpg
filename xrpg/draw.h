@@ -155,7 +155,7 @@ extern rect				clipping; // Clipping area
 extern fnevent			domodal;
 extern point			dragmouse, caret;
 extern color			fore, fore_stroke;
-extern int				width;
+extern int				width, height;
 extern const sprite*	font; // Currently selected font
 extern double			linw;
 extern char				link[4096];
@@ -205,9 +205,8 @@ void					rectb(rect rc, color c1, int radius);
 void					rectb3d(rect rc); // Draw rectangle border
 void					rectf(rect rc); // Draw rectangle area. Right and bottom side is one pixel less.
 void					rectfe(rect rc, int radius, unsigned char alpha);
-void					rectf(rect rc, color c1);
 void					rectf(rect rc, color c1, unsigned char alpha);
-void					rectx(rect rc, color c1);
+void					rectx(rect rc);
 void					set(void(*proc)(int& x, int& y, int x0, int x2, int* max_width, int& w, const char* id));
 void					setcaption(const char* string);
 void					setclip(rect rc);

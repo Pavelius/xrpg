@@ -740,7 +740,9 @@ bool draw::edit(control& e, fnevent heartbeat) {
 	while(ismodal()) {
 		auto tb = e.getimages();
 		rect rc = {0, 0, draw::getwidth(), draw::getheight()};
-		draw::rectf(rc, colors::form);
+		auto push_fore = colors::form;
+		draw::rectf(rc);
+		fore = push_fore;
 		if(metrics::show::statusbar)
 			draw::statusbar(rc);
 		rect rt = rc;
@@ -780,7 +782,10 @@ void draw::application() {
 		auto tb = pc->getimages();
 		draw::fore = colors::text;
 		rect rc = {0, 0, draw::getwidth(), draw::getheight()};
-		draw::rectf(rc, colors::form);
+		auto push_fore = fore;
+		fore = colors::form;
+		draw::rectf(rc);
+		fore = push_fore;
 		if(metrics::show::statusbar)
 			statusbar(rc);
 		rect rt = rc;
