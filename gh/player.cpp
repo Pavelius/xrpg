@@ -6,6 +6,14 @@ void playeri::buildcombatdeck() {
 	combat.shuffle();
 }
 
+void playeri::buildhand() {
+	variant onwer = this;
+	for(auto& e : bsdata<cardi>()) {
+		if(e.owner == onwer && e.level == 1)
+			hand.add(&e);
+	}
+}
+
 int playeri::get(action_s v) const {
 	switch(v) {
 	case Coins: return coins;

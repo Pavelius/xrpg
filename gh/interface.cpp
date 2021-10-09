@@ -251,7 +251,6 @@ static void paintgame() {
 	paintfigures();
 	painthexgrid();
 	painthilitehex();
-	paintavatars();
 	paintcommands();
 }
 
@@ -288,11 +287,11 @@ static void test_scenario() {
 	create_creature("BanditGuard", {6, 11}, true, 0);
 	create_creature("BanditGuard", {6, 12}, true, 0);
 	pp = p1->kind;
-	pp->cards[0] = "WardingStrenght";
-	pp->cards[1] = "GrabAndGo";
+	pp->buildcombatdeck();
+	pp->buildhand();
 	pp = p2->kind;
-	pp->cards[0] = "StunShoot";
-	pp->cards[1] = "ToxicBolt";
+	pp->buildcombatdeck();
+	pp->buildhand();
 	game.playtactic();
 }
 

@@ -354,6 +354,7 @@ void object::apply(const variants& source) {
 	while(pb < pe) {
 		script.clear();
 		pb = script.apply(pb, pe);
+		modify(script);
 		apply(script);
 	}
 }
@@ -450,7 +451,18 @@ static void remove_state(object* p, state_s v) {
 	p->remove(v);
 }
 
+static void choose_card(variant& result, deck& source) {
+	result = source.choose(0, 0, true, 0);
+	source.remove(result);
+}
+
 void object::beginround() {
+	playeri* player = kind;
+	if(player) {
+		focusing();
+		choose_card(player->cards[0], player->hand);
+		choose_card(player->cards[1], player->hand);
+	}
 	initiative = game.getinitiative(kind);
 }
 

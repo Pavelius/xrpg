@@ -54,6 +54,9 @@ enum variant_s : unsigned char {
 enum game_propery_s : unsigned char {
 	Reputation, Prosperty, Coins, Donate,
 };
+enum stage_s : unsigned char {
+	CardSelections, DetermineInitiative, CreaturesTurns,
+};
 typedef short unsigned indext;
 typedef flagable<2> statef;
 typedef flagable<1 + TargetEnemyMoveThrought / 8> featf;
@@ -127,6 +130,7 @@ struct playeri {
 	int					getinitiative() const;
 	void				getinfo(stringbuilder& sb) const;
 	void				buildcombatdeck();
+	void				buildhand();
 };
 struct statei {
 	const char*			id;
@@ -219,8 +223,8 @@ public:
 	bool				isalive() const;
 	bool                isenemy(const object& e) const { return is(Hostile) != e.is(Hostile); }
 	bool				isfocused() const;
-	bool                isinteractive() const { return true; }
-	bool                isplayer() const { return false; }
+	bool                isinteractive() const { return isplayer(); }
+	bool                isplayer() const { return kind.type==Player; }
 	bool				isusable() const;
 	void                kill();
 	void                loot(int v);
@@ -292,6 +296,7 @@ struct scenarioi {
 struct gamei : public mapi {
 	short				ability[Donate + 1];
 	int					difficult, rounds;
+	stage_s				stage;
 	adat<variant, 4>	players;
 	playerf				allowed_players;
 	deck				market;
@@ -301,7 +306,6 @@ struct gamei : public mapi {
 	void				add(variant i, int v = 1);
 	void				beginround();
 	void				buildcombatdeck();
-	void				buildcreatures();
 	object*				create(variant v, bool inverse);
 	object*				create(point position, variant v, bool inverse);
 	void				endround();

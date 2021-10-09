@@ -1,7 +1,6 @@
 #include "main.h"
 
 gamei game;
-static objects creatures;
 
 void gamei::add(variant i, int v) {
 	set(i, get(i) + v);
@@ -57,12 +56,6 @@ void gamei::buildcombatdeck() {
 	enemy_combat.shuffle();
 }
 
-void gamei::buildcreatures() {
-	creatures.clear();
-	creatures.selectalive();
-	creatures.sort();
-}
-
 static object* find_emphty() {
 	for(auto& e : bsdata<object>()) {
 		if(!e)
@@ -115,14 +108,17 @@ int gamei::getlevel() const {
 }
 
 void gamei::beginround() {
-	for(auto p : creatures) {
-		if(!p->operator bool())
-			continue;
+	objects creatures;
+	creatures.selectalive();
+	creatures.sort();
+	for(auto p : creatures)
 		p->beginround();
-	}
 }
 
 void gamei::maketurn() {
+	objects creatures;
+	creatures.selectalive();
+	creatures.sort();
 	for(auto p : creatures) {
 		if(!p->operator bool())
 			continue;
@@ -132,12 +128,12 @@ void gamei::maketurn() {
 }
 
 void gamei::endround() {
+	objects creatures;
+	creatures.selectalive();
+	creatures.sort();
 	// All creatures make end round action
-	for(auto p : creatures) {
-		if(!p->operator bool())
-			continue;
+	for(auto p : creatures)
 		p->beginround();
-	}
 	// Reshuffle mosters card
 	varianta source;
 	selectkind(source);
@@ -152,7 +148,6 @@ void gamei::endround() {
 }
 
 void gamei::makeround() {
-	buildcreatures();
 	beginround();
 	maketurn();
 	endround();

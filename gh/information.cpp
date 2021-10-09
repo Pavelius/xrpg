@@ -124,8 +124,14 @@ void object::getinfo(stringbuilder& sb) const {
 	addh(sb, kind.getname());
 	sb.addn("%Initiative %1i", getinitiative());
 	sb.add(", %Hits %1i/%2i", hits, getmaximumhits());
-	if(kind.type == Monster)
-		adde(sb, bsdata<monsteri>::get(kind.value).get(level, is(Elite)));
+	monsteri* pm = kind;
+	if(pm) {
+		adde(sb, pm->get(level, is(Elite)));
+		auto v = pm->abilities_deck.look(0);
+		monstercardi* p = v;
+		if(p)
+			addpart(sb, p->abilities);
+	}
 }
 
 void playeri::getinfo(stringbuilder& sb) const {
@@ -135,12 +141,6 @@ void playeri::getinfo(stringbuilder& sb) const {
 
 void monsteri::getinfo(stringbuilder& sb) const {
 	addh(sb, getnm(id));
-	auto v = abilities_deck.look(0);
-	monstercardi* p = v;
-	if(p) {
-		sb.addn("%Initiative %1i", p->initiative);
-		addpart(sb, p->abilities);
-	}
 }
 
 void actionbonusi::getinfo(stringbuilder& sb) const {
