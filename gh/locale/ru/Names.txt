@@ -48,6 +48,7 @@ Move: Движение
 NewCharacter: Создать персонажа
 NewGame: Новая игра
 Next: Далее
+NextAction: Следующее действие
 NoGender: Безполый
 NoItem: Нет предмета
 OverwhelmingAssault: Подавление
@@ -72,6 +73,7 @@ Rules: Правила
 Settings: Настройки
 Shield: Щит
 ShieldBash: Удар щитом
+Shuffle: Перетасовать
 Skewer: Вертел
 Skills: Навыки
 Slash: Полукруг

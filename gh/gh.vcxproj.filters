@@ -55,9 +55,6 @@
     <ClCompile Include="nameable.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="activity.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="script.cpp">
       <Filter>Logic</Filter>
     </ClCompile>

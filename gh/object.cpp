@@ -4,6 +4,7 @@ BSDATAD(object)
 
 object* last_object;
 cardi* last_card;
+static statef last_object_states;
 
 int object::getpriority() const {
 	if(isfocused())
@@ -12,7 +13,8 @@ int object::getpriority() const {
 	case Player: return 10;
 	case SummonedCreature: return 10;
 	case Monster: return 10;
-	case Trap: return 1;
+	case Trap: return 5;
+	case Tile: return bsdata<tilei>::get(kind.value).priority;
 	default: return 0;
 	}
 }
@@ -94,18 +96,6 @@ void object::heal(int v) {
 
 indext object::getindex() const {
 	return h2i(p2h(getposition()));
-}
-
-int getcustominitiative(variant v) {
-	switch(v.type) {
-	case Player: return bsdata<playeri>::get(v.value).initiative;
-	case Monster: return 30;
-	default: return 99;
-	}
-}
-
-void object::prepare() {
-	initiative = getcustominitiative(kind);
 }
 
 static void calculate_movemap(indext start, int range, bool you_is_hostile, bool jump, bool fly) {
@@ -286,12 +276,20 @@ void object::attack(int damage, int range, int pierce, int targets, statef addit
 	}
 }
 
+static int getmonster(monsteri* p, variant a) {
+	if(!p)
+		return 0;
+}
+
 int object::get(variant v) const {
 	switch(v.type) {
 	case Action:
 		switch(v.value) {
 		case Level: return level;
-		default: return 0;
+		default:
+			if(kind.type == Monster)
+				return bsdata<monsteri>::get(kind.value).get(level, is(Elite)).get((action_s)v.value);
+			return 0;
 		}
 	case State:
 		return states.is(v.value) ? 1 : 0;
@@ -398,31 +396,35 @@ void object::moving(indext i, bool interactive) {
 
 variant object::chooseaction() const {
 	playeri* player = kind;
-	if(!player)
-		return variant();
-	cardi* card1 = player->cards[0];
-	cardi* card2 = player->cards[1];
-	cardi* std_attack = variant("StandartAttackAction");
-	cardi* std_move = variant("StandartMoveAction");
-	answers an;
-	if(card1)
-		an.add((long)card1, getnm(card1->id));
-	if(card2)
-		an.add((long)card2, getnm(card2->id));
-	if(!is(UseUpper))
-		an.add((long)std_attack, getnm(std_attack->id));
-	if(!is(UseLower))
-		an.add((long)std_move, getnm(std_move->id));
-	variant result = (void*)an.choose(0, 0, true, 0, 1);
-	if(result.type == Card) {
-		auto p = (cardi*)bsdata<cardi>::source.ptr(result.value);
-		if(p==card1 || p==std_attack)
-			player->cards[0].clear();
-		else if(p==card2 || p==std_move)
-			player->cards[1].clear();
-		last_card = p;
+	if(player) {
+		cardi* card1 = player->cards[0];
+		cardi* card2 = player->cards[1];
+		cardi* std_attack = variant("StandartAttackAction");
+		cardi* std_move = variant("StandartMoveAction");
+		answers an;
+		if(card1)
+			an.add((long)card1, getnm(card1->id));
+		if(card2)
+			an.add((long)card2, getnm(card2->id));
+		if(!is(UseUpper))
+			an.add((long)std_attack, getnm(std_attack->id));
+		if(!is(UseLower))
+			an.add((long)std_move, getnm(std_move->id));
+		variant result = (void*)an.choose(0, 0, true, 0, 1);
+		if(result.type == Card) {
+			auto p = (cardi*)bsdata<cardi>::source.ptr(result.value);
+			if(p == card1 || p == std_attack)
+				player->cards[0].clear();
+			else if(p == card2 || p == std_move)
+				player->cards[1].clear();
+			last_card = p;
+		}
+		return result;
 	}
-	return result;
+	monsteri* monster = kind;
+	if(monster)
+		return monster->abilities_deck.look(0);
+	return variant();
 }
 
 const variants& object::choosepart(const cardi& e) {
@@ -442,13 +444,36 @@ const variants& object::choosepart(const cardi& e) {
     return e.upper;
 }
 
+static void remove_state(object* p, state_s v) {
+	if(!last_object_states.is(v) || !p->is(v))
+		return;
+	p->remove(v);
+}
+
+void object::beginround() {
+	initiative = game.getinitiative(kind);
+}
+
 void object::maketurn() {
-    while(true) {
-        auto result = chooseaction();
-        if(!result)
-            break;
-        applyaction(result);
-    }
+	last_object_states = states;
+	switch(kind.type) {
+	case Player:
+		while(true) {
+			auto result = chooseaction();
+			if(!result)
+				break;
+			applyaction(result);
+		}
+		break;
+	case Monster:
+		applyaction(chooseaction());
+		break;
+	}
+	remove_state(this, Muddle);
+	remove_state(this, Immobilize);
+	remove_state(this, Invisibility);
+	remove_state(this, Stun);
+	remove_state(this, Strenght);
 }
 
 void object::applyaction(variant v) {
@@ -456,7 +481,19 @@ void object::applyaction(variant v) {
     case Card:
         apply(choosepart(bsdata<cardi>::get(v.value)));
         break;
-    default:
+	case MonsterCard:
+		apply(bsdata<monstercardi>::get(v.value).abilities);
+		break;
+	default:
         break;
     }
+}
+
+void object::modify(scripti& e) const {
+	if(e.action)
+		e.bonus += get(e.action);
+}
+
+int object::getinitiative() const {
+	return initiative;
 }

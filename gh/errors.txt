@@ -1,2 +1,2 @@
-﻿Error loading rules/monsters.json
-Can't find variant `Attack0`
+﻿Errors occurs in locale/ru/Names.txt.txt
+Define translate for 'Shuffle'

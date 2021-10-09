@@ -40,7 +40,7 @@ enum action_bonus_s : char {
 };
 enum state_s : unsigned char {
 	Disarmed, Immobilize, Wound, Muddle, Poison, Invisibility, Stun, Strenght,
-	Jump, Fly, Mirrored, Hostile, UseUpper, UseLower,
+	Jump, Fly, Mirrored, Hostile, UseUpper, UseLower, Elite,
 };
 enum element_s : unsigned char {
 	Fire, Ice, Air, Earth, Light, Dark, AnyElement,
@@ -63,9 +63,10 @@ const indext Blocked = 0xFFFF;
 struct deck : varianta {
 	void				addcombat(variant owner);
 	void				addcombat8(const char* abilities);
+	void				changeone();
 	void				drop(variant v) { add(v); }
 	variant				get();
-	variant				look(int n = 0);
+	variant				look(int n = 0) const;
 	void				shuffle();
 };
 struct actioni {
@@ -118,12 +119,12 @@ struct feati {
 struct playeri {
 	const char*			id;
 	gender_s			gender;
-	char				level, exp, coins, initiative;
+	char				level, exp, coins;
 	variant				cards[2];
 	short				health[10];
 	deck				combat, hand, discard, lost;
 	int					get(action_s v) const;
-	int					getinitiative() const { return initiative; }
+	int					getinitiative() const;
 	void				getinfo(stringbuilder& sb) const;
 	void				buildcombatdeck();
 };
@@ -161,15 +162,16 @@ struct summoni {
 struct abilityi {
 	char				hits, move, attack, range;
 	variants			feats;
+	int					get(action_s v) const;
 };
 struct monsteri {
 	const char*			id;
 	const char*			abilities;
-	char				initiative;
-	deck				combat;
+	deck				abilities_deck;
 	abilityi			normal[8], elite[8];
 	void				buildcombatdeck();
-	int					getinitiative() const { return initiative; }
+	const abilityi&		get(int level, bool tought) const;
+	int					getinitiative() const;
 	void				getinfo(stringbuilder& sb) const;
 };
 struct nameable {
@@ -195,17 +197,19 @@ public:
 	void				action(action_s a, bool interactive, bool hostile, int range, int targets, int bonus);
 	void				attack(int damage, int range, int pierce, int targets, statef additional);
 	void                attack(object& enemy, const scripti& parameters);
+	void				beginround();
 	variant				chooseaction() const;
 	const variants&     choosepart(const cardi& e);
 	void                clear();
 	void				create(variant v);
 	void				damage(int value);
+	void				endround();
 	void				focusing() const;
 	int                 get(variant v) const;
 	const char*         getavatar() const { return kind.getid(); }
 	void				getinfo(stringbuilder& sb) const;
 	indext				getindex() const;
-	int					getinitiative() const { return initiative; }
+	int					getinitiative() const;
 	object*				getnearestenemy() const;
 	deck&				getcombatdeck() const;
 	int                 getmaximumhits() const;
@@ -221,13 +225,13 @@ public:
 	void                kill();
 	void                loot(int v);
 	void                maketurn();
+	void				modify(scripti& e) const;
 	void				move(int v);
 	void                movefrom(indext i, int range);
 	void                moveto(indext i, int range);
 	void				moveto(indext i, int range, int distance);
 	void				moving(indext i, bool interactive);
 	void				paint() const;
-	void				prepare();
 	void				refresh();
 	void                remove(state_s v) { states.remove(v); }
 	void                set(variant i, int v);
@@ -287,30 +291,35 @@ struct scenarioi {
 };
 struct gamei : public mapi {
 	short				ability[Donate + 1];
-	int					difficult;
+	int					difficult, rounds;
 	adat<variant, 4>	players;
 	playerf				allowed_players;
 	deck				market;
 	deck				road, city;
 	deck				enemy_combat;
 	char				elements[AnyElement];
-	static objects		creatures;
 	void				add(variant i, int v = 1);
+	void				beginround();
 	void				buildcombatdeck();
 	void				buildcreatures();
 	object*				create(variant v, bool inverse);
 	object*				create(point position, variant v, bool inverse);
+	void				endround();
 	bool				isallow(variant v) const;
 	int					get(variant i) const;
+	static int			getinitiative(variant v);
 	int					getlevel() const;
-	void				makemoves();
 	void				makeround();
+	void				maketurn();
+	static void			playtactic();
+	static void			selectkind(varianta& source);
+	static void			sort(varianta& source);
 	void				set(variant i, int v);
-	void				startround();
 };
 struct tilei {
 	const char*			id;
 	point				size; // size of field in tiles
+	int					priority;
 	point				offset; // offset to upper left tile
 	slice<point>		blocks; // blocked squares
 	void				creating(point position, bool inverse) const;
@@ -352,6 +361,8 @@ VKIND(duration_s, Duration)
 VKIND(element_s, Element)
 VKIND(feat_s, Feat)
 VKIND(game_propery_s, GameProperty)
+VKIND(monsteri, Monster)
+VKIND(monstercardi, MonsterCard)
 VKIND(object, Object)
 VKIND(playeri, Player)
 VKIND(state_s, State)

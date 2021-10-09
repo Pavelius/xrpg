@@ -5,6 +5,7 @@ using namespace draw;
 
 int draw::tab_pixels = 0;
 static int original_x1;
+static int original_x2;
 
 static void(*draw_icon)(int& x, int& y, int x0, int x2, int* max_width, int& w, const char* name);
 
@@ -74,7 +75,6 @@ static void apply_line_feed(int x1) {
 
 static const char* textfln(const char* p, int x1, color c1) {
 	char temp[4096];
-	int x2 = original_x1 + width;
 	unsigned flags = 0;
 	draw::fore = c1;
 	temp[0] = 0;
@@ -148,7 +148,7 @@ static const char* textfln(const char* p, int x1, color c1) {
 		} else {
 			const char* p2 = word(p);
 			w = textw(p, p2 - p);
-			if(caret.x + w > x2)
+			if(caret.x + w > original_x2)
 				apply_line_feed(x1);
 			text(caret.x, caret.y, p, p2 - p, flags);
 			p = p2;
@@ -157,8 +157,8 @@ static const char* textfln(const char* p, int x1, color c1) {
 		caret.x += w;
 		p = textspc(p);
 		if(temp[0] || (flags & TextUscope) != 0) {
-			int x3 = imin(x2, original_x1);
-			int y2 = caret.y + texth();
+			auto x3 = imin(original_x2, original_x1);
+			auto y2 = caret.y + texth();
 			if(flags & TextUscope)
 				line(x4, y2, x3, y2);
 			rect rc = {x4, caret.y, x3, y2};
@@ -171,7 +171,6 @@ static const char* textfln(const char* p, int x1, color c1) {
 					zcpy(link, temp, sizeof(link) - 1);
 			}
 		}
-		// Line feed
 		if(p[0] == 0 || p[0] == 10 || p[0] == 13) {
 			p = skipcr(p);
 			apply_line_feed(x1);
@@ -189,6 +188,7 @@ void draw::textf(const char* string, int min_height, int* cashe_height, const ch
 	color color_text = fore;
 	const char* p = string;
 	original_x1 = caret.x;
+	original_x2 = original_x1 + width;
 	int y0 = caret.y;
 	if(cashe_height) {
 		*cashe_string = p;
@@ -245,12 +245,10 @@ void draw::textf(const char* string, int min_height, int* cashe_height, const ch
 			int rd = texth() / 6;
 			circlef(caret.x + dx + 2, caret.y + dx, rd);
 			circle(caret.x + dx + 2, caret.y + dx, rd);
-			auto push_width = width;
-			auto x1 = caret.x;
-			caret.x += texth(); width -= texth();
+			auto push_x = caret.x;
+			caret.x += texth();
 			p = textfln(p, caret.x, color_text);
-			caret.x = x1;
-			width = push_width;
+			caret.x = push_x;
 		} else
 			p = textfln(p, original_x1, color_text);
 		// Возвратим стандартные настройки блока

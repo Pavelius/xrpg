@@ -68,7 +68,10 @@ static void addpart(stringbuilder& sb, const variants& source) {
 	for(auto v : source) {
 		auto a = scripti::getaction(v);
 		auto b = scripti::getbonus(v);
-		if(a.type == Duration) {
+		if(a.type == Action && a.value == NextAction) {
+			count = 0;
+			continue;
+		} else if(a.type == Duration) {
 			sb.addn("* ");
 			sb.add(a.getname(), b);
 			sb.add(": ");
@@ -123,10 +126,17 @@ void object::getinfo(stringbuilder& sb) const {
 
 void playeri::getinfo(stringbuilder& sb) const {
 	addh(sb, getnm(id));
+	sb.addn("%Initiative %1i", getinitiative());
 }
 
 void monsteri::getinfo(stringbuilder& sb) const {
 	addh(sb, getnm(id));
+	auto v = abilities_deck.look(0);
+	monstercardi* p = v;
+	if(p) {
+		sb.addn("%Initiative %1i", p->initiative);
+		addpart(sb, p->abilities);
+	}
 }
 
 void actionbonusi::getinfo(stringbuilder& sb) const {

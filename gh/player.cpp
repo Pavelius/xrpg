@@ -14,3 +14,10 @@ int playeri::get(action_s v) const {
 	default: return 0;
 	}
 }
+
+int playeri::getinitiative() const {
+	cardi* p = cards[0];
+	if(!p)
+		return 99;
+	return p->initiative;
+}

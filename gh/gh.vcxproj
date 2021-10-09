@@ -151,7 +151,6 @@
   <ItemGroup>
     <ClCompile Include="action.cpp" />
     <ClCompile Include="actionbonus.cpp" />
-    <ClCompile Include="activity.cpp" />
     <ClCompile Include="area.cpp" />
     <ClCompile Include="cardtype.cpp" />
     <ClCompile Include="event.cpp" />

@@ -326,6 +326,8 @@ static int getcolumns(const answers& an) {
 long answers::choose(const char* title, const char* cancel_text, bool interactive, const char* resid, int columns) const {
 	if(!interactive)
 		return random();
+	if(!elements)
+		return 0;
 	auto push_caret = caret;
 	auto push_width = width;
 	setpositionru();

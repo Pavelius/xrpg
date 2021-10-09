@@ -54,7 +54,13 @@ void objects::matchrange(int range, bool keep) {
 static int compare(const void* v1, const void* v2) {
 	auto p1 = *((object**)v1);
 	auto p2 = *((object**)v2);
-	return p1->getpriority() - p2->getpriority();
+	auto i1 = p1->getpriority();
+	auto i2 = p2->getpriority();
+	if(i1 != i2)
+		return i1 - i2;
+	i1 = p1->getinitiative();
+	i2 = p2->getinitiative();
+	return i1 - i2;
 }
 
 void objects::sort() {

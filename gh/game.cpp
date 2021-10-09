@@ -1,8 +1,7 @@
 #include "main.h"
 
 gamei game;
-
-objects gamei::creatures;
+static objects creatures;
 
 void gamei::add(variant i, int v) {
 	set(i, get(i) + v);
@@ -61,6 +60,7 @@ void gamei::buildcombatdeck() {
 void gamei::buildcreatures() {
 	creatures.clear();
 	creatures.selectalive();
+	creatures.sort();
 }
 
 static object* find_emphty() {
@@ -114,23 +114,99 @@ int gamei::getlevel() const {
 	return r / c;
 }
 
-void gamei::startround() {
-	for(auto& e : bsdata<object>()) {
-		if(!e)
+void gamei::beginround() {
+	for(auto p : creatures) {
+		if(!p->operator bool())
 			continue;
-		if(e.isalive())
-			e.prepare();
+		p->beginround();
 	}
 }
 
-void gamei::makemoves() {
+void gamei::maketurn() {
 	for(auto p : creatures) {
+		if(!p->operator bool())
+			continue;
+		p->focusing();
 		p->maketurn();
+	}
+}
+
+void gamei::endround() {
+	// All creatures make end round action
+	for(auto p : creatures) {
+		if(!p->operator bool())
+			continue;
+		p->beginround();
+	}
+	// Reshuffle mosters card
+	varianta source;
+	selectkind(source);
+	sort(source);
+	for(auto v : source) {
+		monsteri* pm = v;
+		if(!pm)
+			continue;
+		pm->abilities_deck.changeone();
+		// TODO: Make reshufle
 	}
 }
 
 void gamei::makeround() {
 	buildcreatures();
-	startround();
-	makemoves();
+	beginround();
+	maketurn();
+	endround();
+	rounds++;
+}
+
+static bool allow_next_round() {
+	int side = -1;
+	for(auto& e : bsdata<object>()) {
+		if(!e)
+			continue;
+		if(e.isalive()) {
+			auto ns = e.is(Hostile) ? 1 : 0;
+			if(side == -1)
+				side = ns;
+			else if(side != ns)
+				return true;
+		}
+	}
+	return false;
+}
+
+void gamei::playtactic() {
+	game.rounds = 0;
+	while(allow_next_round())
+		game.makeround();
+}
+
+void gamei::selectkind(varianta& source) {
+	for(auto& e : bsdata<object>()) {
+		if(!e)
+			continue;
+		if(e.isalive())
+			source.add(e.kind);
+	}
+	source.distinct();
+}
+
+int gamei::getinitiative(variant v) {
+	switch(v.type) {
+	case Card: return bsdata<cardi>::get(v.value).initiative;
+	case Monster: return bsdata<monsteri>::get(v.value).getinitiative();
+	case MonsterCard: return bsdata<monstercardi>::get(v.value).initiative;
+	case Player: return bsdata<playeri>::get(v.value).getinitiative();
+	default: return 99;
+	}
+}
+
+static int compare_initiative(const void* p1, const void* p2) {
+	auto v1 = *((variant*)p1);
+	auto v2 = *((variant*)p2);
+	return game.getinitiative(v1) - game.getinitiative(v2);
+}
+
+void gamei::sort(varianta& source) {
+	qsort(source.data, source.count, sizeof(source.data[0]), compare_initiative);
 }

@@ -14,7 +14,7 @@ void deck::addcombat8(const char* abilities) {
 	for(auto i = 0; i < 8; i++) {
 		sb.clear(); sb.add("%1Card%2i", abilities, i+1);
 		variant v((const char*)temp);
-		add(&v);
+		add(v);
 	}
 }
 
@@ -30,8 +30,13 @@ variant deck::get() {
 	return r;
 }
 
-variant deck::look(int n) {
+variant deck::look(int n) const {
 	if(n >= (int)count)
 		return variant();
 	return data[n];
+}
+
+void deck::changeone() {
+	auto v = get();
+	add(v);
 }
