@@ -4,6 +4,7 @@
 using namespace draw;
 
 int draw::tab_pixels = 0;
+static int original_x1;
 
 static void(*draw_icon)(int& x, int& y, int x0, int x2, int* max_width, int& w, const char* name);
 
@@ -37,21 +38,21 @@ static const char* glink(const char* p, char* result, unsigned result_maximum) {
 }
 
 static int gettabwidth() {
-	return draw::tab_pixels ? draw::tab_pixels : draw::textw(' ') * 4;
+	return tab_pixels ? tab_pixels : textw(' ') * 4;
 }
 
-static const char* textspc(const char* p, int x0, int& x) {
+static const char* textspc(const char* p) {
 	int tb;
 	while(true) {
 		switch(p[0]) {
 		case ' ':
 			p++;
-			x += draw::textw(' ');
+			caret.x += draw::textw(' ');
 			continue;
 		case '\t':
 			p++;
 			tb = gettabwidth();
-			x = x0 + ((x - x0 + tb) / tb)*tb;
+			caret.x = original_x1 + ((caret.x - original_x1 + tb) / tb) * tb;
 			continue;
 		}
 		break;
@@ -65,32 +66,33 @@ static const char* word(const char* text) {
 	return text;
 }
 
-static int textfln(int x0, int y0, const char** string, color c1, int* max_width) {
+static void apply_line_feed(int x1) {
+	width_maximum = imax(width_maximum, caret.x - original_x1);
+	caret.x = x1;
+	caret.y += texth();
+}
+
+static const char* textfln(const char* p, int x1, color c1) {
 	char temp[4096];
-	int y = y0;
-	int x = x0;
-	int x2 = x0 + width;
-	const char* p = *string;
+	int x2 = original_x1 + width;
 	unsigned flags = 0;
 	draw::fore = c1;
-	if(max_width)
-		*max_width = 0;
 	temp[0] = 0;
 	while(true) {
 		if(p[0] == '*' && p[1] == '*') {
 			p += 2;
-			if(flags&TextBold)
+			if(flags & TextBold)
 				flags &= ~TextBold;
 			else
 				flags |= TextBold;
 			continue;
 		} else if(p[0] == '*') {
 			p++;
-			if(flags&TextItalic)
+			if(flags & TextItalic)
 				flags &= ~TextItalic;
 			else {
-				if((flags&TextItalic) == 0)
-					x += draw::texth() / 3;
+				if((flags & TextItalic) == 0)
+					caret.x += texth() / 3;
 				flags |= TextItalic;
 			}
 			continue;
@@ -103,38 +105,38 @@ static int textfln(int x0, int y0, const char** string, color c1, int* max_width
 			switch(*p) {
 			case '~':
 				p++;
-				draw::fore = colors::text.mix(colors::window, 64);
+				fore = colors::text.mix(colors::window, 64);
 				break;
 			case '+':
 				p++;
-				draw::fore = colors::green;
+				fore = colors::green;
 				break;
 			case '-':
 				p++;
-				draw::fore = colors::red;
+				fore = colors::red;
 				break;
 			case '!':
 				p++;
-				draw::fore = colors::yellow;
+				fore = colors::yellow;
 				break;
 			case '#':
 				p++;
 				flags |= TextUscope;
-				draw::fore = colors::special;
+				fore = colors::special;
 				break;
 			default:
-				draw::fore = colors::special;
+				fore = colors::special;
 				break;
 			}
 			p = glink(p, temp, sizeof(temp) / sizeof(temp[0]) - 1);
 		} else if(p[0] == ']') {
 			p++;
-			draw::fore = c1;
+			fore = c1;
 			temp[0] = 0;
 			flags &= ~TextUscope;
 		}
 		// Обработаем пробелы и табуляцию
-		p = textspc(p, x0, x);
+		p = textspc(p);
 		int w;
 		if(p[0] == ':' && p[1] >= 'a' && p[1] <= 'z') {
 			p++;
@@ -143,112 +145,97 @@ static int textfln(int x0, int y0, const char** string, color c1, int* max_width
 			if(*p == ':')
 				p++;
 			w = 0;
-			if(draw_icon)
-				draw_icon(x, y, x0, x2, max_width, w, temp);
 		} else {
 			const char* p2 = word(p);
-			w = draw::textw(p, p2 - p);
-			if(x + w > x2) {
-				if(max_width)
-					*max_width = imax(*max_width, x - x0);
-				x = x0;
-				y += draw::texth();
-			}
-			draw::text(x, y, p, p2 - p, flags);
+			w = textw(p, p2 - p);
+			if(caret.x + w > x2)
+				apply_line_feed(x1);
+			text(caret.x, caret.y, p, p2 - p, flags);
 			p = p2;
 		}
-		int x4 = x;
-		x += w;
-		p = textspc(p, x0, x);
-		if(temp[0] || (flags&TextUscope) != 0) {
-			int x3 = imin(x2, x);
-			int y2 = y + draw::texth();
-			if(flags&TextUscope)
-				draw::line(x4, y2, x3, y2);
-			rect rc = {x4, y, x3, y2};
+		int x4 = caret.x;
+		caret.x += w;
+		p = textspc(p);
+		if(temp[0] || (flags & TextUscope) != 0) {
+			int x3 = imin(x2, original_x1);
+			int y2 = caret.y + texth();
+			if(flags & TextUscope)
+				line(x4, y2, x3, y2);
+			rect rc = {x4, caret.y, x3, y2};
 			if(ishilite(rc)) {
-				if(flags&TextUscope) {
+				if(flags & TextUscope) {
 					hot.cursor = cursor::Hand;
-					if(temp[0] && hot.key == MouseLeft && !hot.pressed) {
-						zcpy(draw::link, temp, sizeof(draw::link) - 1);
-						//draw::execute(HtmlLink);
-					}
+					if(temp[0] && hot.key == MouseLeft && !hot.pressed)
+						zcpy(link, temp, sizeof(link) - 1);
 				} else
-					zcpy(draw::link, temp, sizeof(draw::link) - 1);
+					zcpy(link, temp, sizeof(link) - 1);
 			}
 		}
-		// Отметим перевод строки и окончание строки
+		// Line feed
 		if(p[0] == 0 || p[0] == 10 || p[0] == 13) {
-			y += draw::texth();
 			p = skipcr(p);
+			apply_line_feed(x1);
 			break;
 		}
 	}
-	if(max_width)
-		*max_width = imax(*max_width, x - x0);
-	*string = p;
-	return y - y0;
+	width_maximum = imax(width_maximum, caret.x - original_x1);
+	return p;
 }
 
-int draw::textf(int x, int y, const char* string, int* max_width,
-	int min_height, int* cashe_height, const char** cashe_string) {
+void draw::textf(const char* string, int min_height, int* cashe_height, const char** cashe_string) {
+	width_maximum = 0;
 	auto push_fore = fore;
 	auto push_font = font;
 	color color_text = fore;
 	const char* p = string;
-	int y0 = y;
+	original_x1 = caret.x;
+	int y0 = caret.y;
 	if(cashe_height) {
 		*cashe_string = p;
 		*cashe_height = 0;
 	}
-	if(max_width)
-		*max_width = 0;
 	while(p[0]) {
 		int mw2 = 0;
-		if(cashe_height && (y - y0) <= min_height) {
+		if(cashe_height && (caret.y - y0) <= min_height) {
 			*cashe_string = p;
-			*cashe_height = y - y0;
+			*cashe_height = caret.y - y0;
 		}
 		if(match(&p, "#--")) { // Header 3
-			p = skipsp(p);
 			font = metrics::small;
-			y += textfln(x, y, &p, colors::h3, &mw2);
+			p = textfln(skipsp(p), original_x1, colors::h3);
 		} else if(match(&p, "###")) { // Header 3
-			p = skipsp(p);
 			font = metrics::h3;
-			y += textfln(x, y, &p, colors::h3, &mw2);
+			p = textfln(skipsp(p), original_x1, colors::h3);
 		} else if(match(&p, "##")) {// Header 2
-			p = skipsp(p);
 			font = metrics::h2;
-			y += textfln(x, y, &p, colors::h2, &mw2);
+			p = textfln(skipsp(p), original_x1, colors::h2);
 		} else if(match(&p, "#")) { // Header 1
-			p = skipsp(p);
 			font = metrics::h1;
-			y += textfln(x, y, &p, colors::h1, &mw2);
+			p = textfln(skipsp(p), original_x1, colors::h1);
 		} else if(match(&p, "---")) { // Line
 			p = skipspcr(p);
-			y += 2;
-			line(x, y, x + width, y);
-			y += 2;
+			caret.y += 2;
+			line(caret.x, caret.y, caret.x + width, caret.y);
+			caret.y += 2;
 		} else if(match(&p, "...")) { // Без форматирования
 			p = skipcr(p);
 			font = metrics::font;
 			color c1 = colors::window.mix(colors::border, 256 - 32);
-			y += texth() / 2;
+			caret.y += texth() / 2;
 			while(p[0]) {
 				int c = textbc(p, width);
 				if(!c)
 					break;
 				auto push_fore = fore;
 				fore = c1;
-				rectf({x, y, x + width, y + texth()});
+				rectf({caret.x, caret.y, caret.x + width, caret.y + texth()});
 				fore = push_fore;
-				text(x, y, p, c);
-				y += texth();
+				text(caret.x, caret.y, p, c);
+				caret.y += texth();
 				p += c;
 				if(match(&p, "...")) {
 					p = skipcr(p);
-					y += texth() / 2;
+					caret.y += texth() / 2;
 					break;
 				}
 			}
@@ -256,39 +243,35 @@ int draw::textf(int x, int y, const char* string, int* max_width,
 			// Список
 			int dx = texth() / 2;
 			int rd = texth() / 6;
-			circlef(x + dx + 2, y + dx, rd);
-			circle(x + dx + 2, y + dx, rd);
-			int mw3 = 0;
+			circlef(caret.x + dx + 2, caret.y + dx, rd);
+			circle(caret.x + dx + 2, caret.y + dx, rd);
 			auto push_width = width;
-			width -= texth();
-			y += textfln(x + texth(), y, &p, color_text, &mw3);
-			mw3 += texth();
+			auto x1 = caret.x;
+			caret.x += texth(); width -= texth();
+			p = textfln(p, caret.x, color_text);
+			caret.x = x1;
 			width = push_width;
-			if(mw2 < mw3)
-				mw2 = mw3;
 		} else
-			y += textfln(x, y, &p, color_text, &mw2);
+			p = textfln(p, original_x1, color_text);
 		// Возвратим стандартные настройки блока
 		font = metrics::font;
 		fore = color_text;
-		if(max_width) {
-			if(*max_width < mw2)
-				*max_width = mw2;
-		}
 	}
 	fore = push_fore;
 	font = push_font;
-	return y - y0;
 }
 
 int draw::textf(rect& rc, const char* string) {
 	auto push_clipping = clipping;
 	clipping.clear();
 	auto push_width = width;
+	auto push_caret = caret; caret = {};
 	width = rc.width();
-	rc.y2 = rc.y1 + draw::textf(0, 0, string, &rc.x2, 0, 0, 0);
+	draw::textf(string);
+	rc.x2 = rc.x1 + width_maximum;
+	rc.y2 = rc.y2 + caret.y;
 	width = push_width;
-	rc.x2 += rc.x1;
+	caret = push_caret;
 	clipping = push_clipping;
 	return rc.height();
 }

@@ -30,7 +30,7 @@ fnevent				draw::domodal;
 unsigned char       draw::alpha = 255;
 color				draw::fore;
 color				draw::fore_stroke;
-int					draw::width;
+int					draw::width, draw::width_maximum;
 const sprite*		draw::font;
 double				draw::linw = 1.0;
 color*				draw::palt;

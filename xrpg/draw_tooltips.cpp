@@ -51,7 +51,11 @@ static void tooltips_render() {
 	rc = rc + metrics::padding;
 	// Show text
 	fore = colors::tips::text;
-	textf(rc.x1, rc.y1, tooltips_sb.begin());
+	auto push_caret = caret;
+	caret.x = rc.x1;
+	caret.y = rc.y1;
+	textf(tooltips_sb.begin());
+	caret = push_caret;
 	fore = push_fore;
 	width = push_width;
 }

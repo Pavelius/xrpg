@@ -79,7 +79,11 @@ HANDLER(before_input) {
 	if(sb_text[0]) {
 		auto push_width = width;
 		width = x - sb_rect.x1;
-		textf(sb_rect.x1, sb_rect.y1, sb_text);
+		auto push_caret = caret;
+		caret.x = sb_rect.x1;
+		caret.y = sb_rect.y1;
+		textf(sb_text);
+		caret = push_caret;
 		width = push_width;
 	}
 }

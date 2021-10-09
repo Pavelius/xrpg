@@ -157,7 +157,7 @@ extern point			dragmouse, caret;
 extern color			fore, fore_stroke;
 extern unsigned char    alpha;
 extern int				width, height;
-extern int				width_maximum, height_maximum;
+extern int				width_maximum;
 extern const sprite*	font; // Currently selected font
 extern double			linw;
 extern char				link[4096];
@@ -218,7 +218,7 @@ int						text(rect rc, const char* string, unsigned state = 0, int* max_width = 
 int						textc(int x, int y, const char* string, int count = -1, unsigned flags = 0, bool* clipped = 0);
 int						textbc(const char* string, int width);
 int						texte(rect rc, const char* string, unsigned flags, int i1, int i2);
-int						textf(int x, int y, const char* text, int* max_width = 0, int min_height = 0, int* cashe_height = 0, const char** cashe_string = 0);
+void					textf(const char* text, int min_height = 0, int* cashe_height = 0, const char** cashe_string = 0);
 int						textf(rect& rc, const char* string);
 int						texth();
 int						texth(const char* string, int width);
