@@ -20,17 +20,17 @@ int draw::textw(const sprite* font) {
 	return fwidth(font)[wsymbol(font, 'A')];
 }
 
-void draw::glyph(int x, int y, int sym, unsigned flags) {
+void draw::glyph(int sym, unsigned flags) {
 	static unsigned char koeff[] = {128, 160};
 	int id = font->glyph(sym);
 	if(sym >= 0x21) {
 		if(flags&TextStroke) {
 			color push_fore = fore;
 			fore = fore_stroke;
-			stroke(x, y + font->ascend, font, id, flags, 2, koeff);
+			stroke(caret.x, caret.y + font->ascend, font, id, flags, 2, koeff);
 			fore = push_fore;
 		}
-		image(x, y + font->ascend, font, id, flags, 0);
+		image(caret.x, caret.y + font->ascend, font, id, flags, 0);
 	}
 }
 

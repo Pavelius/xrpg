@@ -150,7 +150,7 @@ static const char* textfln(const char* p, int x1, color c1) {
 			w = textw(p, p2 - p);
 			if(caret.x + w > original_x2)
 				apply_line_feed(x1);
-			text(caret.x, caret.y, p, p2 - p, flags);
+			text(p, p2 - p, flags);
 			p = p2;
 		}
 		int x4 = caret.x;
@@ -230,7 +230,8 @@ void draw::textf(const char* string, int min_height, int* cashe_height, const ch
 				fore = c1;
 				rectf({caret.x, caret.y, caret.x + width, caret.y + texth()});
 				fore = push_fore;
-				text(caret.x, caret.y, p, c);
+				text(p, c);
+				caret.x = original_x1;
 				caret.y += texth();
 				p += c;
 				if(match(&p, "...")) {
@@ -243,12 +244,15 @@ void draw::textf(const char* string, int min_height, int* cashe_height, const ch
 			// Список
 			int dx = texth() / 2;
 			int rd = texth() / 6;
-			circlef(caret.x + dx + 2, caret.y + dx, rd);
-			circle(caret.x + dx + 2, caret.y + dx, rd);
-			auto push_x = caret.x;
+			auto push_caret = caret;
+			caret.x += dx + 2;
+			caret.y += dx;
+			circlef(rd);
+			circle(rd);
+			caret = push_caret;
 			caret.x += texth();
 			p = textfln(p, caret.x, color_text);
-			caret.x = push_x;
+			caret.x = push_caret.x;
 		} else
 			p = textfln(p, original_x1, color_text);
 		// Возвратим стандартные настройки блока

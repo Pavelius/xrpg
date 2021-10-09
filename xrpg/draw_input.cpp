@@ -33,6 +33,8 @@ void draw::doredraw() {
 
 
 bool draw::ismodal() {
+	caret = {0, 0};
+	width = getwidth();
 	hot.cursor = cursor::Arrow;
 	hot.hilite.clear();
 	if(hot.key == InputNeedUpdate)

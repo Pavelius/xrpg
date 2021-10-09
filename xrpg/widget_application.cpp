@@ -298,7 +298,11 @@ static void render_element(unsigned flags, const setting::header& e) {
 		auto push_fore = fore;
 		fore = colors::text.mix(c1, 196);
 		auto label = getnm(e.group);
-		text(caret.x + (width - textw(label)) / 2, caret.y + metrics::padding, label);
+		auto push_caret = caret;
+		caret.x += (width - textw(label)) / 2;
+		caret.y += metrics::padding;
+		text(label);
+		caret = push_caret;
 		fore = colors::border;
 		rectb({caret.x, caret.y, caret.x + width, y2 + metrics::padding});
 		fore = push_fore;

@@ -55,7 +55,11 @@ static void paint_number(int x, int y, int value) {
 	auto push_font = font;
 	fore_stroke = colors::red;
 	font = metrics::h2;
-	text(x - textw(temp) / 2, y, temp, -1, TextStroke);
+	auto push_caret = caret;
+	caret.x = x - textw(temp) / 2;
+	caret.y = y;
+	text(temp, -1, TextStroke);
+	caret = push_caret;
 	fore_stroke = push_stroke;
 	font = push_font;
 }
@@ -149,13 +153,21 @@ static bool ishilitehex(int x, int y) {
 static void paint_tips(point pt, point v) {
 	char temp[64]; stringbuilder sb(temp);
 	sb.add("%1i, %2i", v.x, v.y);
-	text(pt.x - textw(temp) / 2, pt.y, temp);
+	auto push_caret = caret;
+	caret.x = pt.x - textw(temp) / 2;
+	caret.y = pt.y;
+	text(temp);
+	caret = push_caret;
 }
 
 static void paint_tips(point pt, int v) {
 	char temp[64]; stringbuilder sb(temp);
 	sb.add("%1i", v);
-	text(pt.x - textw(temp) / 2, pt.y, temp);
+	auto push_caret = caret;
+	caret.x = pt.x - textw(temp) / 2;
+	caret.y = pt.y;
+	text(temp);
+	caret = push_caret;
 }
 
 static void painthexgrid() {

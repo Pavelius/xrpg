@@ -51,7 +51,7 @@ void draw::titletext(const char* label, int label_width, const char* separator) 
 	char temp[1024]; stringbuilder sb(temp);
 	sb.add(label);
 	sb.add(separator);
-	text(caret.x, caret.y + 4, temp);
+	text(temp);
 	caret.x += label_width;
 	width -= label_width;
 }
@@ -237,20 +237,20 @@ static color getcolor(color normal, bool disabled) {
 	return normal;
 }
 
-static void mark_check(int x, int y, int size, bool focused, bool checked, bool hilite) {
+static void mark_check(int size, bool focused, bool checked, bool hilite) {
 	auto push_fore = fore;
 	fore = colors::window;
 	if((hilite && hot.pressed))
 		fore = fore.mix(colors::form);
-	field(x, y, figure::RectFill, size);
+	field(figure::RectFill, size);
 	fore = colors::border;
-	field(x, y, figure::Rect, size);
+	field(figure::Rect, size);
 	fore = push_fore;
 	if(checked) {
 		auto push = linw; linw = 1.3;
 		if(hilite)
 			fore = fore.mix(colors::active, 32);
-		field(x, y, figure::Check, size - 4);
+		field(figure::Check, size - 4);
 		linw = push;
 	}
 	fore = push_fore;
@@ -270,7 +270,10 @@ void draw::checkbox(void* source, int size, unsigned bits, const char* label, co
 	auto value = getsource(source, size);
 	auto checked = (value & (1 << bits)) != 0;
 	auto a = draw::ishilite(rc);
-	mark_check(caret.x + 10, caret.y + imax((rc1.height()) / 2, 0), 7, focused, checked, a);
+	caret.x += 10;
+	caret.y += imax((rc1.height()) / 2, 0);
+	mark_check(7, focused, checked, a);
+	caret = push_caret;
 	auto need_value = false;
 	if(a && hot.key == MouseLeft) {
 		if(!hot.pressed)

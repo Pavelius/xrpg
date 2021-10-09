@@ -336,7 +336,10 @@ class widget_codeview : public control, vector<char> {
 			auto& ei = bsdata<groupi>::elements[type];
 			if(type != WhiteSpace) {
 				fore = ei.fore;
-				text(x1, y1, pb, ps - pb, ei.flags);
+				auto push_caret = caret;
+				caret.x = x1; caret.y = y1;
+				text(pb, ps - pb, ei.flags);
+				caret = push_caret;
 			}
 		}
 		// Draw hilite

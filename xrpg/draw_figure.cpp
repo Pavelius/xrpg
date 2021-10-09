@@ -1,18 +1,19 @@
 #include "draw.h"
 #include "draw_figure.h"
 
-void draw::field(int x, int y, figure type, int size) {
+void draw::field(figure type, int size) {
+	int x = caret.x, y = caret.y;
 	switch(type) {
 	case figure::Check:
 		line(x - size, y - size + 2, x, y + size);
 		line(x + size, y - size, x, y + size);
 		break;
 	case figure::Circle:
-		circle(x, y, size);
+		circle(size);
 		break;
 	case figure::CircleFill:
-		circlef(x, y, size);
-		circle(x, y, size);
+		circlef(size);
+		circle(size);
 		break;
 	case figure::Rect:
 		rectb({x - size, y - size, x + size, y + size});
@@ -46,8 +47,13 @@ void draw::field(int x, int y, figure type, int size) {
 	}
 }
 
-void draw::field(int x, int y, figure type, int size, const char* format) {
-	field(x, y, type, size);
-	if(format)
-		text(x - textw(format)/2, y + size + 2, format);
+void draw::field(figure type, int size, const char* format) {
+	field(type, size);
+	if(format) {
+		auto push_caret = caret;
+		caret.x -= textw(format) / 2;
+		caret.y += size + 2;
+		text(format);
+		caret = push_caret;
+	}
 }

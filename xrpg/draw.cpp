@@ -1230,7 +1230,8 @@ void draw::gradh(rect rc, const color c1, const color c2, int skip) {
 	fore = pf;
 }
 
-void draw::circlef(int xm, int ym, int r) {
+void draw::circlef(int r) {
+	int xm = caret.x, ym = caret.y;
 	if(xm - r >= clipping.x2 || xm + r < clipping.x1 || ym - r >= clipping.y2 || ym + r < clipping.y1)
 		return;
 	int x = -r, y = 0, err = 2 - 2 * r, y1, y2 = -1000;
@@ -1252,7 +1253,8 @@ void draw::circlef(int xm, int ym, int r) {
 	} while(x < 0);
 }
 
-void draw::circle(int xm, int ym, int r) {
+void draw::circle(int r) {
+	int xm = caret.x, ym = caret.y;
 	int x = r, y = 0; // II. quadrant from bottom left to top right
 	int x2, e2, err = 2 - 2 * r; // error of 1.step
 	r = 1 - err;
@@ -1440,22 +1442,24 @@ int draw::texth(const char* string, int width) {
 	return y1;
 }
 
-void draw::text(int x, int y, const char* string, int count, unsigned flags) {
+void draw::text(const char* string, int count, unsigned flags) {
 	if(!font)
 		return;
 	auto dy = texth();
-	if(y >= clipping.y2 || y + dy < clipping.y1)
+	if(caret.y >= clipping.y2 || caret.y + dy < clipping.y1)
 		return;
 	if(count == -1)
 		count = zlen(string);
 	const char *s1 = string;
 	const char *s2 = string + count;
+	auto push_caret = caret;
 	while(s1 < s2) {
 		int sm = szget(&s1);
 		if(sm >= 0x21)
-			glyph(x, y, sm, flags);
-		x += textw(sm);
+			glyph(sm, flags);
+		caret.x += textw(sm);
 	}
+	caret = push_caret;
 }
 
 /*void draw::text(int x, int y, const char* string, int count, unsigned flags, int maximum_width, bool* clipped) {
@@ -1491,7 +1495,10 @@ void draw::textc(const char* string, int count, unsigned flags) {
 	setclip({caret.x, caret.y, caret.x + width, caret.y + texth()});
 	auto w = textw(string, count);
 	text_clipped = w > width;
-	text(aligned(caret.x, width, flags, w), caret.y, string, count, flags);
+	auto push_caret = caret;
+	caret.x = aligned(caret.x, width, flags, w);
+	text(string, count, flags);
+	caret = push_caret;
 	clipping = push_clip;
 	caret.y += texth();
 }
@@ -1525,53 +1532,59 @@ int draw::textbc(const char* string, int width) {
 int	draw::text(rect rc, const char* string, unsigned state, int* max_width) {
 	if(!string || string[0] == 0)
 		return 0;
-	int x1 = rc.x1;
-	int y1 = rc.y1 + alignedh(rc, string, state);
+	auto push_caret = caret;
+	caret.x = rc.x1;
+	caret.y = rc.y1 + alignedh(rc, string, state);
 	int dy = texth();
 	if(max_width)
 		*max_width = 0;
 	if(state & TextSingleLine) {
 		auto push_clip = clipping; setclip(rc);
-		text(aligned(x1, rc.width(), state, draw::textw(string)), y1,
-			string, -1, state);
+		caret.x = aligned(caret.x, rc.width(), state, draw::textw(string));
+		text(string, -1, state);
 		clipping = push_clip;
-		return dy;
+		caret = push_caret;
 	} else {
 		int w1 = rc.width();
-		while(y1 < rc.y2) {
+		while(caret.y < rc.y2) {
 			int c = textbc(string, w1);
 			if(!c)
 				break;
 			int w = textw(string, c);
 			if(max_width && *max_width < w)
 				*max_width = w;
-			text(aligned(x1, w1, state, w), y1, string, c, state);
-			y1 += dy;
+			caret.x = aligned(push_caret.x, w1, state, w);
+			text(string, c, state);
+			caret.y += dy;
 			string = skiptr(string + c);
 		}
-		return y1 - rc.y1;
+		dy = caret.y - rc.y1;
 	}
+	caret = push_caret;
+	return dy;
 }
 
 static void hilite_text_line(int x, int y, int width, int height, const char* string, int count, unsigned state, int i1, int i2) {
 	int w = draw::textw(string, count);
-	auto x0 = draw::aligned(x, width, state, w);
+	auto push_caret = caret;
+	caret.x = draw::aligned(x, width, state, w);
+	caret.y = y;
 	if(i1 != i2 && ((i1 >= 0 && i1 < count) || (i2 >= 0 && i2 < count) || (i1 < 0 && i2 >= count))) {
-		int rx1 = x0 + 1;
-		int rx2 = x0 + w + 1;
+		int rx1 = caret.x + 1;
+		int rx2 = caret.x + w + 1;
 		if(i1 >= 0 && i1 <= count)
-			rx1 = x0 + 1 + draw::textw(string, i1);
+			rx1 = caret.x + 1 + draw::textw(string, i1);
 		if(i2 >= 0 && i2 <= count)
-			rx2 = x0 + 1 + draw::textw(string, i2);
+			rx2 = caret.x + 1 + draw::textw(string, i2);
 		auto push_fore = fore;
 		fore = colors::button;
 		draw::rectf({rx1, y, rx2, y + height});
 		fore = push_fore;
 	}
-	draw::text(x0, y, string, count);
+	text(string, count);
 	if(i1 >= 0 && i1 == i2
 		&& (i1 < count || (i1 == count && string[count] == 0))) {
-		int rx1 = x0 + draw::textw(string, i1);
+		int rx1 = caret.x + draw::textw(string, i1);
 		draw::line(rx1, y, rx1, y + height);
 	}
 }

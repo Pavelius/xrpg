@@ -77,9 +77,11 @@ void draw::setpositionld() {
 void draw::sheader(const char* string) {
 	auto push_font = font;
 	auto push_fore = fore;
+	auto push_caret = caret;
 	font = metrics::h2;
 	fore = colors::h2;
-	text(caret.x, caret.y, string);
+	text(string);
+	caret = push_caret;
 	caret.y += texth() + 2;
 	fore = push_fore;
 	font = push_font;

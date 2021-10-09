@@ -38,7 +38,11 @@ static bool sheet(rect& rc, rect& rct, const char* string, bool* area_result, bo
 		fore = colors::active;
 		ty += 1;
 	}
-	text(rct.x1 + ts, ty, string, -1, 0);
+	auto push_caret = caret;
+	caret.x = rct.x1 + ts;
+	caret.y = ty;
+	text(string, -1, 0);
+	caret = push_caret;
 	if(a) {
 		if(hot.key == MouseLeft && hot.pressed)
 			result = true;

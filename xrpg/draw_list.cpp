@@ -131,14 +131,16 @@ void list::treemark(const rect& rc, int line, int level) const {
 	if(!isgroup(line))
 		return;
 	auto isopen = list::isopen(line);
-	int x = rc.x1 + rc.width() / 2;
-	int y = rc.y1 + rc.height() / 2 - 1;
+	auto push_caret = caret;
+	caret.x = rc.x1 + rc.width() / 2;
+	caret.y = rc.y1 + rc.height() / 2 - 1;
 	if(ishilite(rc))
 		current_hilite_treemark = line;
-	circle(x, y, 6);
-	draw::line(x - 4, y, x + 4, y);
+	circle(6);
+	caret = push_caret;
+	draw::line(caret.x - 4, caret.y, caret.x + 4, caret.y);
 	if(!isopen)
-		draw::line(x, y - 4, x, y + 4);
+		draw::line(caret.x, caret.y - 4, caret.x, caret.y + 4);
 }
 
 void list::post_select() {
