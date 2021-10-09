@@ -1458,7 +1458,7 @@ void draw::text(int x, int y, const char* string, int count, unsigned flags) {
 	}
 }
 
-void draw::text(int x, int y, const char* string, int count, unsigned flags, int maximum_width, bool* clipped) {
+/*void draw::text(int x, int y, const char* string, int count, unsigned flags, int maximum_width, bool* clipped) {
 	if(clipped)
 		*clipped = false;
 	if(!font)
@@ -1484,7 +1484,7 @@ void draw::text(int x, int y, const char* string, int count, unsigned flags, int
 			glyph(x, y, sm, flags);
 		x = x1;
 	}
-}
+}*/
 
 void draw::textc(const char* string, int count, unsigned flags) {
 	auto push_clip = clipping;

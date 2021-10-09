@@ -185,8 +185,16 @@ static void fielc(const rect& rc, unsigned flags, void* source, int size, array&
 		v = database.ptr((long)v);
 	char temp[260]; stringbuilder sb(temp);
 	auto pn = plist.getname(v, sb);
-	if(pn)
-		text(rco.x1, rco.y1, pn, -1, 0, rco.width());
+	if(pn) {
+		auto push_caret = caret;
+		auto push_width = width;
+		auto width = rco.width();
+		caret.x = rco.x1;
+		caret.y = rco.y1;
+		textc(pn, -1, 0);
+		width = push_width;
+		caret = push_caret;
+	}
 	if(tips && a && !hot.pressed)
 		tooltips(tips);
 	auto execute_drop_down = false;

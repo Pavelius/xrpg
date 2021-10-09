@@ -64,26 +64,30 @@ HANDLER(before_input) {
 	if(!sb_rect)
 		return;
 	const int padding = 4;
-	auto x = sb_rect.x2;
+	auto push_caret = caret;
+	auto push_width = width;
+	caret.x = sb_rect.x2;
 	for(auto& e : sb_coldata) {
 		if(!e)
 			break;
-		x = x - e.width - padding;
+		width = e.width;
+		caret.x = caret.x - width - padding;
 		auto push_fore = fore;
 		fore = colors::border;
-		draw::line(x, sb_rect.y1, x, sb_rect.y2);
+		line(caret.x, sb_rect.y1, caret.x, sb_rect.y2);
 		fore = push_fore;
-		if(e.name)
-			draw::text(x + padding, sb_rect.y1, e.name, -1, 0, e.width);
+		if(e.name) {
+			caret.x += padding;
+			caret.y = sb_rect.y1;
+			textc(e.name, -1, 0);
+		}
 	}
 	if(sb_text[0]) {
-		auto push_width = width;
-		width = x - sb_rect.x1;
-		auto push_caret = caret;
+		width = caret.x - sb_rect.x1;
 		caret.x = sb_rect.x1;
 		caret.y = sb_rect.y1;
 		textf(sb_text);
-		caret = push_caret;
-		width = push_width;
 	}
+	width = push_width;
+	caret = push_caret;
 }
