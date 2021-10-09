@@ -116,12 +116,16 @@ void cardi::getinfo(stringbuilder& sb) const {
 	}
 }
 
+static void adde(stringbuilder& sb, const abilityi& e) {
+	sb.addn("%Attack %1i, %Move %2i, %Range %3i", e.attack, e.move, e.range);
+}
+
 void object::getinfo(stringbuilder& sb) const {
-	switch(kind.type) {
-	case Monster: bsdata<monsteri>::get(kind.value).getinfo(sb); break;
-	case Player: bsdata<playeri>::get(kind.value).getinfo(sb); break;
-	default: break;
-	}
+	addh(sb, kind.getname());
+	sb.addn("%Initiative %1i", getinitiative());
+	sb.add(", %Hits %1i/%2i", hits, getmaximumhits());
+	if(kind.type == Monster)
+		adde(sb, bsdata<monsteri>::get(kind.value).get(level, is(Elite)));
 }
 
 void playeri::getinfo(stringbuilder& sb) const {

@@ -31,6 +31,7 @@ GainExpForTarget: Опыт 1 за каждую цель
 GrabAndGo: Бери и беги
 HarmlessContraption: Безобидное приспособление
 Heal: Лечение
+Hits: Хиты
 HookGun: Крюкомет
 HotKey: Горячая клавиша
 Human: Человек
