@@ -228,8 +228,12 @@ int table::rowheader(const rect& rc) const {
 		auto p = getheader(i, sb);
 		if(p) {
 			auto push_width = width;
+			auto push_caret = caret;
+			caret.x = r1.x1 + metrics::edit;
+			caret.y = r1.y1 + metrics::edit;
 			width = r1.width() - metrics::edit * 2;
-			textc(r1.x1 + metrics::edit, r1.y1 + metrics::edit, p);
+			textc(p);
+			caret = push_caret;
 			width = push_width;
 		}
 		a = ishilite({r1.x2 + metrics::edit - 1, r1.y1, r1.x2 + metrics::edit + 1, r1.y2});
@@ -555,13 +559,16 @@ void table::cell(const rect& rc, int line, int column, const char* label) {
 		return;
 	auto align = columns[column].align;
 	cellhilite(rc, line, column, label, align);
-	bool clipped = false;
 	rect r1 = rc + metrics::edit;
 	auto push_width = width;
+	auto push_caret = caret;
+	caret.x = r1.x1;
+	caret.y = r1.y1;
 	width = r1.width();
-	textc(r1.x1, r1.y1, label, -1, align, &clipped);
+	textc(label, -1, align);
 	width = push_width;
-	if(clipped) {
+	caret = push_caret;
+	if(text_clipped) {
 		if(ishilite(r1)) {
 			tooltips(r1.x1, r1.y1, 200);
 			tooltips(label);

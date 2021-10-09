@@ -322,9 +322,13 @@ static struct widget_settings_header : controls::list {
 	void row(const rect& rc, int index) const override {
 		list::row({rc.x1 + 1, rc.y1 + 1, rc.x2 - 1, rc.y2}, index);
 		auto push_width = width;
+		auto push_caret = caret;
+		caret.x = rc.x1 + metrics::edit;
+		caret.y = rc.y1 + metrics::edit;
 		width = rc.width() - metrics::edit * 2;
-		textc(rc.x1 + metrics::edit, rc.y1 + metrics::edit, getnm(rows[index]->division));
+		textc(getnm(rows[index]->division));
 		width = push_width;
+		caret = push_caret;
 	}
 	const header* getcurrent() {
 		return rows[current];

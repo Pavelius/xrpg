@@ -102,8 +102,12 @@ void list::row(const rect& rc, int line) const {
 	auto p = getname(line, 0, sb);
 	if(p) {
 		auto push_width = width;
+		auto push_caret = caret;
+		caret.x = r1.x1 + metrics::edit;
+		caret.y = r1.y1 + metrics::edit;
 		width = r1.width() - metrics::edit * 2;
-		textc(r1.x1 + metrics::edit, r1.y1 + metrics::edit, p);
+		textc(p);
+		caret = push_caret;
 		width = push_width;
 	}
 }

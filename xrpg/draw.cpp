@@ -31,6 +31,7 @@ unsigned char       draw::alpha = 255;
 color				draw::fore;
 color				draw::fore_stroke;
 int					draw::width, draw::width_maximum;
+bool				draw::text_clipped;
 const sprite*		draw::font;
 double				draw::linw = 1.0;
 color*				draw::palt;
@@ -1485,15 +1486,14 @@ void draw::text(int x, int y, const char* string, int count, unsigned flags, int
 	}
 }
 
-int draw::textc(int x, int y, const char* string, int count, unsigned flags, bool* clipped) {
+void draw::textc(const char* string, int count, unsigned flags) {
 	auto push_clip = clipping;
-	setclip({x, y, x + width, y + texth()});
+	setclip({caret.x, caret.y, caret.x + width, caret.y + texth()});
 	auto w = textw(string, count);
-	if(clipped)
-		*clipped = w > width;
-	text(aligned(x, width, flags, w), y, string, count, flags);
+	text_clipped = w > width;
+	text(aligned(caret.x, width, flags, w), caret.y, string, count, flags);
 	clipping = push_clip;
-	return texth();
+	caret.y += texth();
 }
 
 int draw::textbc(const char* string, int width) {
