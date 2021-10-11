@@ -367,6 +367,7 @@ void object::refresh() {
 void object::create(variant v) {
 	this->kind = v;
 	this->level = 1;
+	this->initiative = 0;
 	refresh();
 }
 

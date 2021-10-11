@@ -122,15 +122,17 @@ static void adde(stringbuilder& sb, const abilityi& e) {
 
 void object::getinfo(stringbuilder& sb) const {
 	addh(sb, kind.getname());
-	sb.addn("%Initiative %1i", getinitiative());
-	sb.add(", %Hits %1i/%2i", hits, getmaximumhits());
-	monsteri* pm = kind;
-	if(pm) {
-		adde(sb, pm->get(level, is(Elite)));
-		auto v = pm->abilities_deck.look(0);
-		monstercardi* p = v;
-		if(p)
-			addpart(sb, p->abilities);
+	if(initiative) {
+		sb.addn("%Initiative %1i", getinitiative());
+		sb.add(", %Hits %1i/%2i", hits, getmaximumhits());
+		monsteri* pm = kind;
+		if(pm) {
+			adde(sb, pm->get(level, is(Elite)));
+			auto v = pm->abilities_deck.look(0);
+			monstercardi* p = v;
+			if(p)
+				addpart(sb, p->abilities);
+		}
 	}
 }
 

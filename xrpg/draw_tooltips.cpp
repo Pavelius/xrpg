@@ -8,7 +8,6 @@ using namespace draw;
 
 static char		tooltips_text[4096];
 static int		px, py, pw;
-bool			tooltips_use_idle = true;
 stringbuilder	tooltips_sb(tooltips_text);
 
 void tooltips_getrect(rect& rc, int border) {
@@ -60,25 +59,6 @@ static void tooltips_render() {
 	width = push_width;
 }
 
-fnevent	tooltips_custom = tooltips_render;
-
-HANDLER(before_modal) {
-	tooltips_sb.clear();
-	px = py = -1000;
-	pw = 0;
-}
-
-HANDLER(before_input) {
-	if(!tooltips_text[0])
-		return;
-	if(!draw::font)
-		return;
-	if(tooltips_use_idle && draw::hot.key != InputIdle)
-		return;
-	if(tooltips_custom)
-		tooltips_custom();
-}
-
 void draw::tooltips(const char* format, ...) {
 	tooltips_sb.addv(format, xva_start(format));
 }
@@ -87,4 +67,20 @@ void draw::tooltips(int x, int y, int width) {
 	px = x;
 	py = y;
 	pw = width;
+}
+
+void draw::tooltipsbeforemodal() {
+	tooltips_sb.clear();
+	px = py = -1000;
+	pw = 0;
+}
+
+void draw::tooltipspaint() {
+	if(!draw::font)
+		return;
+	if(!tooltips_text[0])
+		return;
+	if(draw::hot.key != InputIdle)
+		return;
+	tooltips_render();
 }

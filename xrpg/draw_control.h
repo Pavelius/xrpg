@@ -91,6 +91,7 @@ public:
 	constexpr list(bool show_header = false) : control(), origin(0), origin_x(0), page(0), page_x(0),
 		current(0), current_column(0), pixels_per_line(0),
 		show_header(show_header), show_selection(true), show_grid_lines(false), hilite_odd_lines(true) {}
+	static void				beforemodal();
 	virtual void			collapse(int line) {}
 	void					correction();
 	virtual void			ensurevisible();

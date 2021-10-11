@@ -328,13 +328,13 @@ void object::focusing() const {
 }
 
 indext draw::choosemovement() {
-	auto push_window = scene.window;
+	auto push_window = pwindow;
 	auto push_show = show_movement_cost;
 	show_movement_cost = 1;
-	scene.window = choose_movement_window;
+	pwindow = choose_movement_window;
 	simpleui();
 	show_movement_cost = push_show;
-	scene.window = push_window;
+	pwindow = push_window;
 	return (indext)hot.param;
 }
 
@@ -369,12 +369,16 @@ void start_menu() {
 	menui::choose("Start", 0, 0);
 }
 
+static void beforemodal() {
+
+}
+
 void draw::initializex() {
 	initialize("GH simulator");
 	pausetime = 1000;
 	scene.resurl = "L1a";
-	scene.background = paintgame;
-	scene.doinput = inputgame;
+	pbackground = paintgame;
+	ptips = inputgame;
 	setnext(start_menu);
 	start();
 }

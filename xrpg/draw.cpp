@@ -26,7 +26,8 @@ color				colors::special;
 color				colors::tips::text;
 color				colors::tips::back;
 // Color context and font context
-fnevent				draw::domodal;
+fnevent				draw::domodal, draw::pbackground, draw::pwindow, draw::ptips;
+fnevent				draw::pbeforemodal, draw::pleavemodal, draw::pinput;
 unsigned char       draw::alpha = 255;
 color				draw::fore;
 color				draw::fore_stroke;
@@ -54,6 +55,12 @@ sprite*				metrics::h1 = (sprite*)loadb("art/fonts/h1.pma");
 sprite*				metrics::h2 = (sprite*)loadb("art/fonts/h2.pma");
 sprite*				metrics::h3 = (sprite*)loadb("art/fonts/h3.pma");
 sprite*				metrics::small = (sprite*)loadb("art/fonts/small.pma");
+//
+static bool			break_modal;
+static long			break_result;
+static fnevent		next_proc;
+extern rect			sys_static_area;
+awindowi			draw::awindow = {100, 100, 800, 600, 160, WFMinmax | WFResize};
 
 long distance(point p1, point p2) {
 	auto dx = p1.x - p2.x;
@@ -2240,4 +2247,110 @@ void draw::execute(fnevent proc, long value, long value2, const void* object) {
 	hot.param = value;
 	hot.param2 = value2;
 	hot.object = object;
+}
+
+static void standart_domodal() {
+	if(draw::ptips)
+		draw::ptips();
+	draw::hot.key = draw::rawinput();
+	if(!draw::hot.key)
+		exit(0);
+	if(pinput)
+		pinput();
+}
+
+void draw::doredraw() {
+	//before_input->execute();
+	draw::sysredraw();
+	if(pinput)
+		pinput();
+}
+
+bool draw::ismodal() {
+	caret = {0, 0};
+	width = getwidth();
+	hot.cursor = cursor::Arrow;
+	hot.hilite.clear();
+	if(hot.key == InputNeedUpdate)
+		hot.key = InputUpdate;
+	else
+		domodal = standart_domodal;
+	if(pbeforemodal)
+		pbeforemodal();
+	if(hot.mouse.x < 0 || hot.mouse.y < 0)
+		sys_static_area.clear();
+	else
+		sys_static_area = {0, 0, draw::getwidth(), draw::getheight()};
+	if(!next_proc && !break_modal)
+		return true;
+	break_modal = false;
+	if(pleavemodal)
+		pleavemodal();
+	return break_modal;
+}
+
+void draw::breakmodal(long result) {
+	break_modal = true;
+	break_result = result;
+}
+
+void draw::buttoncancel() {
+	breakmodal(0);
+}
+
+void draw::buttonok() {
+	breakmodal(1);
+}
+
+void draw::breakparam() {
+	breakmodal(hot.param);
+}
+
+long draw::getresult() {
+	return break_result;
+}
+
+void draw::cbsetint() {
+	auto p = (int*)hot.object;
+	*p = hot.param;
+}
+
+void draw::cbsetsht() {
+	auto p = (short*)hot.object;
+	*p = (short)hot.param;
+}
+
+void draw::cbsetptr() {
+	auto p = (void**)hot.object;
+	*p = (void*)hot.param;
+}
+
+bool draw::isnext() {
+	return next_proc != 0;
+}
+
+void draw::setnext(fnevent v) {
+	next_proc = v;
+}
+
+void draw::start() {
+	while(next_proc) {
+		auto p = next_proc;
+		next_proc = 0; p();
+	}
+}
+
+void draw::setneedupdate() {
+	hot.key = InputNeedUpdate;
+}
+
+void draw::initialize(const char* title) {
+	//before_initialize->execute();
+	//after_initialize->execute();
+	draw::width = 320;
+	draw::font = metrics::font;
+	draw::fore = colors::text;
+	draw::fore_stroke = colors::active;
+	draw::create(awindow.x, awindow.y, awindow.width, awindow.height, awindow.flags, 32);
+	draw::setcaption(title);
 }

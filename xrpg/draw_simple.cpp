@@ -235,10 +235,6 @@ void draw::set(int x, int y) {
 	caret.y = y - camera.y + getheight() / 2;
 }
 
-void draw::inputall() {
-	inputcamera();
-}
-
 void draw::inputcamera() {
 	const int step = 32;
 	switch(hot.key) {
@@ -266,12 +262,10 @@ void draw::inputcamera() {
 
 void draw::simpleui() {
 	while(ismodal()) {
-		if(scene.background)
-			scene.background();
-		if(scene.window)
-			scene.window();
-		if(scene.doinput)
-			scene.doinput();
+		if(pbackground)
+			pbackground();
+		if(pwindow)
+			pwindow();
 		domodal();
 	}
 }
@@ -285,8 +279,8 @@ void draw::status(const char* format, ...) {
 		return;
 	auto start_time = getcputime();
 	while(ismodal() && getpassedtime(start_time) < pausetime) {
-		if(scene.background)
-			scene.background();
+		if(pbackground)
+			pbackground();
 		tooltips_sb.addv(format, xva_start(format));
 		doredraw();
 		waitcputime(1);
@@ -302,8 +296,8 @@ void draw::moving(point& result, point goal, int step) {
 	while(ismodal() && curds < maxds) {
 		result.x = (short)(start.x + (goal.x - start.x) * curds / maxds);
 		result.y = (short)(start.y + (goal.y - start.y) * curds / maxds);
-		if(scene.background)
-			scene.background();
+		if(pbackground)
+			pbackground();
 		doredraw();
 		waitcputime(1);
 		curds += step;
@@ -341,10 +335,10 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 	if(columns > 1)
 		column_width = column_width / columns - metrics::padding;
 	while(ismodal()) {
-		if(scene.background)
-			scene.background();
-		if(scene.window)
-			scene.window();
+		if(pbackground)
+			pbackground();
+		if(pwindow)
+			pwindow();
 		auto push_caret = caret;
 		auto push_width = width;
 		setpositionru();
@@ -371,8 +365,8 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 				execute(buttoncancel);
 		}
 		caret = push_caret;
-		if(scene.doinput)
-			scene.doinput();
+		//if(scene.doinput)
+		//	scene.doinput();
 		domodal();
 	}
 	return getresult();
@@ -432,12 +426,12 @@ void draw::bar(int value, int maximum) {
 }
 
 static void choose_window() {
-	scene.window = (fnevent)hot.object;
+	pwindow = (fnevent)hot.object;
 }
 
 void draw::windows(const command* source) {
 	for(auto p = source; *p; p++) {
-		if(scene.window == p->proc)
+		if(pwindow == p->proc)
 			continue;
 		if(buttonrd(getnm(p->id), p->key, getdescription(p->id)))
 			execute(choose_window, 0, 0, (void*)p->proc);
@@ -446,12 +440,13 @@ void draw::windows(const command* source) {
 
 void set_dark_theme();
 
-extern fnevent tooltips_custom;
-extern bool tooltips_use_idle;
-
 void tooltips_getrect(rect& rc, int border);
 
-static void tooltips_render() {
+static void paintcustomtips() {
+	if(!draw::font)
+		return;
+	if(tooltips_sb && !tooltips_sb.begin()[0])
+		return;
 	// Show background
 	rect rc; tooltips_getrect(rc, 0);
 	swindow(rc, false, 0);
@@ -468,12 +463,15 @@ static void tooltips_render() {
 	fore = push_fore;
 }
 
-HANDLER(before_initialize) {
+void draw::inputall() {
+	inputcamera();
+	paintcustomtips();
+}
+
+void draw::simpleinitialize() {
 	set_dark_theme();
-	if(!scene.background)
-		scene.background = paintall;
-	if(!scene.doinput)
-		scene.doinput = inputall;
-	tooltips_custom = tooltips_render;
-	tooltips_use_idle = false;
+	if(!pbackground)
+		pbackground = paintall;
+	if(!ptips)
+		ptips = inputall;
 }

@@ -21,7 +21,7 @@ int						list::current_hilite_treemark;
 int						list::current_hilite_row;
 int						list::current_hilite_column;
 
-HANDLER(before_modal) {
+void list::beforemodal() {
 	list::current_hilite_row = -1;
 	list::current_hilite_treemark = -1;
 }

@@ -933,13 +933,10 @@ void initialize_codeview() {
 	fontsize.x = draw::textw('A');
 	fontsize.y = draw::texth();
 	draw::font = old_font;
-}
-
-HANDLER(after_theme_change) {
-	update_theme();
 	update_theme_colors();
 }
 
-HANDLER(after_initialize) {
-	update_theme_colors();
-}
+//HANDLER(after_theme_change) {
+//	update_theme();
+//	update_theme_colors();
+//}

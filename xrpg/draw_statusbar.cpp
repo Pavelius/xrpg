@@ -53,14 +53,14 @@ void draw::statuscolumn(int index, int width, const char* format, ...) {
 	sc.addsz();
 }
 
-HANDLER(before_modal) {
+void draw::statusbeforemodal() {
 	memset(sb_coldata, 0, sizeof(sb_coldata));
 	sb_rect.clear();
 	sb.clear();
 	sc.clear();
 }
 
-HANDLER(before_input) {
+void draw::statuspaint() {
 	if(!sb_rect)
 		return;
 	const int padding = 4;

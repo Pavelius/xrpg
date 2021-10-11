@@ -12,9 +12,6 @@ struct scenei {
 	const char*		resurl = 0;
 	const command*	commands = 0;
 	variant			hilite;
-	fnevent			background = 0;
-	fnevent			window = 0;
-	fnevent			doinput = 0;
 	const char*     status = 0;
 };
 extern point		camera;

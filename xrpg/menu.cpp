@@ -1,5 +1,5 @@
 #include "answers.h"
-#include "draw_input.h"
+#include "draw.h"
 #include "requisit.h"
 #include "menu.h"
 

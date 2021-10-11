@@ -2,7 +2,7 @@
 #include "datetime.h"
 #include "draw_button.h"
 #include "draw_control.h"
-#include "draw_input.h"
+#include "draw.h"
 #include "handler.h"
 #include "io_stream.h"
 #include "setting.h"
@@ -72,13 +72,6 @@ static class widget_logging : public plugin, public table {
 		return false;
 	}
 public:
-	void initialize() {
-		show_header = false;
-		show_grid_lines = false;
-		addcol("Message", ANREQ(logi, text), "Text").set(widtht::Auto);
-		addcol("Date", ANREQ(logi, stamp), "Date").set(widtht::Fixed);
-		atexit(before_application_exit);
-	}
 	widget_logging() : plugin("MessageList", dock::Bottom), table(rows), rows(sizeof(logi)) {
 		no_change_count = true;
 		readonly = true;
@@ -90,8 +83,12 @@ void logmsg(const char* format, ...) {
 	logmsgv(format, xva_start(format));
 }
 
-HANDLER(after_initialize) {
-	widget.initialize();
+void draw::loginitialize() {
+	widget.show_header = false;
+	widget.show_grid_lines = false;
+	widget.addcol("Message", ANREQ(logi, text), "Text").set(widtht::Auto);
+	widget.addcol("Date", ANREQ(logi, stamp), "Date").set(widtht::Fixed);
+	atexit(before_application_exit);
 }
 
 static setting::element logging_common[] = {

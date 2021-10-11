@@ -163,7 +163,8 @@ extern double			linw;
 extern char				link[4096];
 extern color*			palt;
 extern int				tab_pixels;
-extern fnevent          pbackground, ptips, pwindow;
+extern fnevent          pbackground, ptips, pwindow, pinput;
+extern fnevent          pbeforemodal, pleavemodal;
 int						aligned(int x, int width, unsigned state, int string_width);
 int						alignedh(const rect& rc, const char* string, unsigned state);
 void					bezier(int x0, int y0, int x1, int y1, int x2, int y2);
@@ -229,4 +230,37 @@ void					triangle(point v1, point v2, point v3);
 void					triangle(point v1, point v2, point v3, color c1);
 void					updatewindow();
 void					write(const char* url, unsigned char* bits, int width, int height, int bpp, int scanline, color* pallette);
+}
+namespace draw {
+void					applicationinitialize();
+void					applicationafterinitialize();
+void					simpleinitialize();
+void					statusbeforemodal();
+void					statuspaint();
+void					tooltipsbeforemodal();
+void					tooltipspaint();
+void					loginitialize();
+}
+namespace draw {
+struct awindowi {
+	int					x, y, width, height;
+	int					header_width;
+	unsigned			flags;
+};
+extern awindowi			awindow;
+void					breakmodal(long result);
+void					breakparam();
+void					buttoncancel();
+void					buttonok();
+void					cbsetsht();
+void					cbsetint();
+void					cbsetptr();
+void					doredraw();
+long					getresult();
+bool					isnext();
+void					initialize(const char* title);
+bool					ismodal();
+void					setneedupdate();
+void					setnext(fnevent v);
+void					start();
 }

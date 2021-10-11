@@ -108,11 +108,10 @@ int gamei::getlevel() const {
 }
 
 void gamei::beginround() {
-	objects creatures;
-	creatures.selectalive();
-	creatures.sort();
-	for(auto p : creatures)
-		p->beginround();
+	for(auto& e : bsdata<object>()) {
+		if(e.isalive())
+			e.beginround();
+	}
 }
 
 void gamei::maketurn() {

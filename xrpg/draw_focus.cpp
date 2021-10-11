@@ -24,7 +24,7 @@ static const void*		hilite_focus;
 static unsigned			hilite_bits;
 static adat<focusable>	elements;
 
-HANDLER(before_modal) {
+void draw::focusbeforemodal() {
 	elements.clear();
 	hilite_focus = 0;
 	hilite_bits = 0;
@@ -33,7 +33,7 @@ HANDLER(before_modal) {
 	hot.focus = {};
 }
 
-HANDLER(leave_modal) {
+void draw::focusleavemodal() {
 	setfocus(0, 0, true);
 }
 
@@ -162,7 +162,7 @@ void draw::setfocus(const void* value, unsigned bits, bool instant) {
 		execute(setfocus_callback, bits, 0, (void*)value);
 }
 
-HANDLER(after_input) {
+void draw::focusinput() {
 	const focusable* p;
 	if(block_left_right && (hot.key == KeyLeft || hot.key == KeyRight))
 		return;

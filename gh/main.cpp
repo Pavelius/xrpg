@@ -1,3 +1,4 @@
+#include "draw.h"
 #include "main.h"
 #include "log.h"
 
@@ -35,6 +36,7 @@ int main() {
     if(log::geterrors())
         return -1;
 	//util_main();
+	draw::simpleinitialize();
 	draw::initializex();
 	return 0;
 }

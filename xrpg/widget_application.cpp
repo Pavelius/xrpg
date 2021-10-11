@@ -1024,13 +1024,24 @@ static void exit_application() {
 	io::write(settings_file_name, "settings", 0);
 }
 
-HANDLER(before_initialize) {
+static void beforemodal() {
+	controls::list::beforemodal();
+	focusbeforemodal();
+	tooltipsbeforemodal();
+	statusbeforemodal();
+}
+
+static void leavemodal() {
+	focusleavemodal();
+}
+
+void draw::applicationinitialize() {
 	set_light_theme();
 	atexit(exit_application);
 	io::read(settings_file_name, "settings", 0);
 }
 
-HANDLER(after_initialize) {
+void draw::applicationafterinitialize() {
 	setting_header.initialize();
 	control_viewer.initialize();
 }
