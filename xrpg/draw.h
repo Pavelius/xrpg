@@ -192,8 +192,8 @@ bool					ishilite(const rect& rc);
 void					image(int x, int y, const sprite* e, int id, int flags);
 void					image(int x, int y, const sprite* e, int id, int flags, color* pal);
 void					key2str(stringbuilder& sb, int key);
-void					line(int x1, int y1, int x2, int y2); // Draw line
-void					linet(int x1, int y1, int x2, int y2);
+void					line(int x, int y); // Draw line
+void					linet(int x, int y);
 void					pixel(int x, int y);
 void					pixel(int x, int y, unsigned char alpha);
 unsigned char*			ptr(int x, int y);
@@ -203,10 +203,12 @@ void					rectb(rect rc, int radius);
 void					rectb3d(rect rc); // Draw rectangle border
 void					rectf(rect rc); // Draw rectangle area. Right and bottom side is one pixel less.
 void					rectfe(rect rc, int radius);
-void					rectx(rect rc);
+void					rectx();
+void					rectfocus();
 void					setcaption(const char* string);
 void					setclip(rect rc);
 inline void				setclip() { clipping.set(0, 0, getwidth(), getheight()); }
+void					setoffset(int x, int y);
 void					settimer(unsigned milleseconds);
 const char*				skiptr(const char* string);
 void					spline(point* points, int n);

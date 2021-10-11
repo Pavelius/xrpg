@@ -63,13 +63,12 @@ void list::hilight(const rect& rc) const {
 	auto push_fore = fore;
 	auto focused = isfocused();
 	const color c1 = focused ? colors::button : colors::button.mix(colors::window, 192);
-	rect r1 = {rc.x1, rc.y1, rc.x2 - 1, rc.y2 - 1};
 	fore = c1;
-	rectf(r1);
-	rectb(r1);
+	//rectf(r1);
+	//rectb(r1);
 	fore = push_fore;
 	if(focused)
-		rectx(r1);
+		rectfocus();
 }
 
 void list::rowhilite(const rect& rc, int index) const {
@@ -137,9 +136,14 @@ void list::treemark(const rect& rc, int line, int level) const {
 		current_hilite_treemark = line;
 	circle(6);
 	caret = push_caret;
-	draw::line(caret.x - 4, caret.y, caret.x + 4, caret.y);
-	if(!isopen)
-		draw::line(caret.x, caret.y - 4, caret.x, caret.y + 4);
+	caret.x -= 4;
+	draw::line(caret.x + 4, caret.y);
+	if(!isopen) {
+		caret.x = push_caret.x;
+		caret.y = push_caret.y - 4;
+		draw::line(caret.x, caret.y+4);
+	}
+	caret = push_caret;
 }
 
 void list::post_select() {
@@ -201,8 +205,9 @@ void list::paintrows(const rect& rc) const {
 				alpha = push_alpha;
 			}
 		}
-		if(show_grid_lines)
+		if(show_grid_lines) {
 			line(rc.x1, rcm.y2 - 1, rc.x2, rcm.y2 - 1);
+		}
 		fore = push_fore;
 		row(rcm, ix);
 		y1 += pixels_per_line;

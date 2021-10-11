@@ -64,7 +64,9 @@ bool draw::addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const 
 		false, false, false, false);
 	auto push_fore = fore;
 	fore = colors::border;
-	line(rc.x2, rc.y1, rc.x2, rc.y2);
+	caret.x = rc.x2;
+	caret.y = rc.y1;
+	line(rc.x2, rc.y2);
 	fore = push_fore;
 	return result;
 }
@@ -86,7 +88,9 @@ int draw::addbutton(rect& rc, bool focused, const char* t1, unsigned k1, const c
 		result = 0;
 	auto push_fore = fore;
 	fore = colors::border;
-	draw::line(rc.x2, rc.y1, rc.x2, rc.y2);
+	caret.x = rc.x2;
+	caret.y = rc.y1;
+	draw::line(rc.x2, rc.y2);
 	fore = push_fore;
 	return result;
 }
@@ -216,7 +220,7 @@ void draw::radio(void* source, int size, unsigned bits, const char* label, const
 			need_select = true;
 	}
 	if(focused) {
-		rectx({rc1.x1, rc1.y1, rc1.x2, rc1.y2});
+		rectfocus();
 		if(hot.key == KeySpace)
 			need_select = true;
 	}
@@ -280,7 +284,7 @@ void draw::checkbox(void* source, int size, unsigned bits, const char* label, co
 			need_value = true;
 	}
 	if(focused) {
-		draw::rectx({rc1.x1 - 2, rc1.y1 - 1, rc1.x2 + 2, rc1.y2 + 1});
+		rectfocus();
 		if(hot.key == KeySpace)
 			need_value = true;
 	}

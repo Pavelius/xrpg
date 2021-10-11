@@ -89,10 +89,12 @@ static int paint_control(rect rc, const controla& elements, int& current, color 
 		const int dy = texth() + 8;
 		auto push_fore = fore;
 		fore = colors::border;
+		caret.x = rc.x1;
+		caret.y = rc.y1 + dy;
 		if(metrics::show::padding)
-			rectb({rc.x1, rc.y1 + dy, rc.x2, rc.y2});
+			rectb({caret.x, caret.y + dy, rc.x2, rc.y2});
 		else
-			line(rc.x1, rc.y1 + dy, rc.x2, rc.y1 + dy);
+			line(rc.x2, rc.y1 + dy);
 		fore = push_fore;
 		rect rct = {rc.x1, rc.y1, rc.x2, rc.y1 + dy};
 		if(tabs(rct, false, false, (void**)elements.begin(), 0, elements.getcount(),

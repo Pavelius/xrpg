@@ -20,20 +20,26 @@ static void triangle2(point v1, point v2) {
 	float curx1 = v1.x;
 	float curx2 = float(v1.x + (v2.x - v1.x) * 2);
 	auto push_line = line_antialiasing;
+	auto push_caret = caret;
 	line_antialiasing = false;
 	if(v1.y < v2.y) {
 		for(auto scanlineY = v1.y; scanlineY <= v2.y; scanlineY++) {
-			line((int)curx1, scanlineY, (int)curx2, scanlineY);
+			caret.x = (short)curx1;
+			caret.y = scanlineY;
+			line((int)curx2, scanlineY);
 			curx1 += invslope1;
 			curx2 -= invslope1;
 		}
 	} else {
 		for(auto scanlineY = v1.y; scanlineY >= v2.y; scanlineY--) {
-			line((int)curx1, scanlineY, (int)curx2, scanlineY);
+			caret.x = (short)curx1;
+			caret.y = scanlineY;
+			line((int)curx2, scanlineY);
 			curx1 -= invslope1;
 			curx2 += invslope1;
 		}
 	}
+	caret = push_caret;
 	line_antialiasing = push_line;
 }
 
@@ -108,14 +114,12 @@ void draw::hexagon(int x, int y, int size) {
 		{(short)(x - size * cos_30), (short)(y - size / 2)},
 		{(short)x, (short)(y - size)},
 	};
-	for(auto i = 0; i < 5; i++) {
-		auto p1 = points[i];
-		auto p2 = points[i + 1];
-		line(p1.x, p1.y, p2.x, p2.y);
-	}
-	auto p1 = points[5];
-	auto p2 = points[0];
-	line(p1.x, p1.y, p2.x, p2.y);
+	auto push_caret = caret;
+	caret = points[0];
+	for(auto i = 1; i < 6; i++)
+		line(points[i].x, points[i].y);
+	line(points[0].x, points[0].y);
+	caret = push_caret;
 }
 
 void draw::hexagonf(short x, short y, int size) {

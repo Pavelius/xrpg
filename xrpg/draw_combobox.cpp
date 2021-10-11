@@ -175,25 +175,26 @@ static void fielc(const rect& rc, unsigned flags, void* source, int size, array&
 	rectb(rc);
 	fore = push_fore;
 	rect rco = rc + metrics::edit;
+	auto push_caret = caret;
+	auto push_width = width;
+	width = rco.width();
+	caret.x = rco.x1;
+	caret.y = rco.y1;
 	if(focused) {
 		rect r1 = rco; r1.offset(-1);
-		rectx(r1);
+		caret.x = rco.x1;
+		caret.y = rco.y1;
+		rectx();
 	}
 	auto v = (void*)getsource(source, size);
 	if(size != sizeof(void*))
 		v = database.ptr((long)v);
 	char temp[260]; stringbuilder sb(temp);
 	auto pn = plist.getname(v, sb);
-	if(pn) {
-		auto push_caret = caret;
-		auto push_width = width;
-		auto width = rco.width();
-		caret.x = rco.x1;
-		caret.y = rco.y1;
+	if(pn)
 		textc(pn, -1, 0);
-		width = push_width;
-		caret = push_caret;
-	}
+	caret = push_caret;
+	width = push_width;
 	if(tips && a && !hot.pressed)
 		tooltips(tips);
 	auto execute_drop_down = false;

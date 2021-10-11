@@ -343,10 +343,10 @@ class widget_codeview : public control, vector<char> {
 		}
 		// Draw hilite
 		if(focused) {
-			auto x1 = x + pos1.x * fontsize.x;
-			auto y1 = y + pos1.y * fontsize.y;
+			caret.x = x + pos1.x * fontsize.x;
+			caret.y = y + pos1.y * fontsize.y;
 			fore = colors::text.mix(colors::active);
-			line(x1, y1, x1, y1 + fontsize.y);
+			line(caret.x, caret.y + fontsize.y);
 		}
 		auto draw_selecton = (p1 != -1);
 		if(draw_selecton) {

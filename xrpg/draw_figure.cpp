@@ -2,11 +2,13 @@
 #include "draw_figure.h"
 
 void draw::field(figure type, int size) {
-	int x = caret.x, y = caret.y;
+	auto push_caret = caret;
 	switch(type) {
 	case figure::Check:
-		line(x - size, y - size + 2, x, y + size);
-		line(x + size, y - size, x, y + size);
+		caret.x = push_caret.x - size;
+		caret.y = push_caret.y - size + 2;
+		line(push_caret.x, push_caret.y + size);
+		line(push_caret.x + size, push_caret.y - size);
 		break;
 	case figure::Circle:
 		circle(size);
@@ -16,35 +18,48 @@ void draw::field(figure type, int size) {
 		circle(size);
 		break;
 	case figure::Rect:
-		rectb({x - size, y - size, x + size, y + size});
+		rectb({push_caret.x - size, push_caret.y - size, push_caret.x + size, push_caret.y + size});
 		break;
 	case figure::Rect3D:
-		rectb3d({x - size, y - size, x + size, y + size});
+		rectb3d({push_caret.x - size, push_caret.y - size, push_caret.x + size, push_caret.y + size});
 		break;
 	case figure::RectFill:
-		rectf({x - size, y - size, x + size, y + size});
+		rectf({push_caret.x - size, push_caret.y - size, push_caret.x + size, push_caret.y + size});
 		break;
 	case figure::TrianlgeUp:
-		line(x - size, y - size, x + size, y - size);
-		line(x + size, y - size, x, y + size);
-		line(x - size, y - size, x, y + size);
+		caret.x = push_caret.x - size;
+		caret.y = push_caret.y - size;
+		line(push_caret.x + size, push_caret.y - size);
+		line(push_caret.x, push_caret.y + size);
+		line(push_caret.x - size, push_caret.y - size);
 		break;
 	case figure::Trianlge:
-		line(x - size, y + size, x + size, y + size);
-		line(x + size, y + size, x, y - size);
-		line(x, y - size, x, y + size);
+		caret.x = push_caret.x - size;
+		caret.y = push_caret.y + size;
+		line(push_caret.x + size, push_caret.y + size);
+		line(push_caret.x, push_caret.y - size);
+		line(push_caret.x, push_caret.y + size);
 		break;
 	case figure::Close:
-		line(x - size, y - size, x + size, y + size);
-		line(x - size, y + size, x + size, y - size);
+		caret.x = push_caret.x - size;
+		caret.y = push_caret.y - size;
+		line(push_caret.x + size, push_caret.y + size);
+		caret.x = push_caret.x - size;
+		caret.y = push_caret.y + size;
+		line(push_caret.x + size, push_caret.y - size);
 		break;
 	case figure::Cross:
-		line(x - size, y, x + size, y);
-		line(x, y - size, x, y + size);
+		caret.x = push_caret.x - size;
+		caret.x = push_caret.y - size;
+		line(push_caret.x + size, push_caret.y + size);
+		caret.x = push_caret.x + size;
+		caret.x = push_caret.y - size;
+		line(push_caret.x - size, push_caret.y + size);
 		break;
 	default:
 		break;
 	}
+	caret = push_caret;
 }
 
 void draw::field(figure type, int size, const char* format) {
