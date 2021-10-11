@@ -57,12 +57,9 @@
 		<Unit filename="../xrpg/crt_translate.cpp" />
 		<Unit filename="../xrpg/draw.cpp" />
 		<Unit filename="../xrpg/draw.h" />
-		<Unit filename="../xrpg/draw_focus.cpp" />
 		<Unit filename="../xrpg/draw_focus.h" />
 		<Unit filename="../xrpg/draw_hexagon.cpp" />
 		<Unit filename="../xrpg/draw_hexagon.h" />
-		<Unit filename="../xrpg/draw_input.cpp" />
-		<Unit filename="../xrpg/draw_input.h" />
 		<Unit filename="../xrpg/draw_simple.cpp" />
 		<Unit filename="../xrpg/draw_simple.h" />
 		<Unit filename="../xrpg/draw_text.cpp" />

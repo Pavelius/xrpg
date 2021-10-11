@@ -6,8 +6,11 @@
 
 using namespace draw;
 
-scenei					draw::scene;
 point					draw::camera;
+int                     draw::grid_size = 32;
+variant                 draw::hilite_object;
+command*                draw::input_commands;
+const char*             draw::image_url;
 int                     draw::pausetime;
 static point			camera_drag;
 static rect				board;
@@ -174,7 +177,7 @@ void draw::answerbt(int i, long id, const char* title) {
 	if(button(title, answer_hotkeys[i], buttonfd, 0, &is_hilited))
 		execute(breakparam, id);
 	if(is_hilited)
-		scene.hilite = (void*)id;
+		hilite_object = (void*)id;
 }
 
 void draw::customwindow() {
@@ -185,7 +188,7 @@ void draw::customwindow() {
 }
 
 void draw::paintclear() {
-	scene.hilite.clear();
+	hilite_object.clear();
 	auto push_fore = fore;
 	fore = colors::window;
 	rectf({0, 0, getwidth(), getheight()});
@@ -194,9 +197,9 @@ void draw::paintclear() {
 }
 
 void draw::paintimage() {
-	if(!scene.resurl)
+	if(!image_url)
 		return;
-	auto p = gres(scene.resurl, "art/background");
+	auto p = gres(image_url, "art/background");
 	if(!p)
 		return;
 	auto& fr = p->get(0);
@@ -217,10 +220,10 @@ void draw::paintimage() {
 }
 
 void draw::paintcommands() {
-	if(!scene.commands)
+	if(!input_commands)
 		return;
 	setpositionld();
-	windows(scene.commands);
+	windows(input_commands);
 }
 
 void draw::paintall() {
@@ -377,7 +380,7 @@ void draw::grid() {
 	alpha = 64;
 	fore = colors::border;
 	auto x2 = getwidth(), y2 = getheight();
-	auto sx = scene.grid, sy = scene.grid;
+	auto sx = grid_size, sy = grid_size;
 	for(auto x = 0; x < x2; x += sx)
 		rectf({x, 0, x + 1, y2});
 	for(auto y = 0; y < y2; y += sy)
@@ -391,7 +394,7 @@ void draw::fog(int n) {
 	auto push_fore = fore;
 	alpha = n;
 	fore = colors::form;
-	rectf({caret.x, caret.y, caret.x + scene.grid, caret.y + scene.grid});
+	rectf({caret.x, caret.y, caret.x + grid_size, caret.y + grid_size});
 	fore = push_fore;
 	alpha = push_alpha;
 }

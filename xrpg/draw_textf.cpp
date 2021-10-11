@@ -7,8 +7,6 @@ int draw::tab_pixels = 0;
 static int original_x1;
 static int original_x2;
 
-static void(*draw_icon)(int& x, int& y, int x0, int x2, int* max_width, int& w, const char* name);
-
 static bool match(const char** string, const char* name) {
 	int n = zlen(name);
 	if(memcmp(*string, name, n) != 0)
@@ -195,7 +193,6 @@ void draw::textf(const char* string, int min_height, int* cashe_height, const ch
 		*cashe_height = 0;
 	}
 	while(p[0]) {
-		int mw2 = 0;
 		if(cashe_height && (caret.y - y0) <= min_height) {
 			*cashe_string = p;
 			*cashe_height = caret.y - y0;

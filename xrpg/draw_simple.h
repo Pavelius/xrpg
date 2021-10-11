@@ -4,22 +4,14 @@
 
 #pragma once
 
-typedef void(*fnevent)();
-
 namespace draw {
-struct scenei {
-	int				grid = 32;
-	const char*		resurl = 0;
-	const command*	commands = 0;
-	variant			hilite;
-	const char*     status = 0;
-};
 extern point		camera;
-extern point		caret;
-extern scenei		scene;
+extern int			grid_size;
+extern variant		hilite_object;
+extern const char*	image_url;
+extern command*	    input_commands;
+extern const char*  input_status;
 extern int          pausetime;
-extern int			tab_pixels;
-extern int			width;
 void				answerbt(int index, long id, const char* title);
 void				avatar(const char* id);
 void				bar(int value, int maximum);

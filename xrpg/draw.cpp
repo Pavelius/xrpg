@@ -1594,6 +1594,7 @@ static void hilite_text_line(int x, int y, int width, int height, const char* st
 		int rx1 = caret.x + draw::textw(string, i1);
 		draw::line(rx1, y, rx1, y + height);
 	}
+	caret = push_caret;
 }
 
 int	draw::texte(rect rc, const char* string, unsigned state, int p1, int p2) {
@@ -2345,8 +2346,6 @@ void draw::setneedupdate() {
 }
 
 void draw::initialize(const char* title) {
-	//before_initialize->execute();
-	//after_initialize->execute();
 	draw::width = 320;
 	draw::font = metrics::font;
 	draw::fore = colors::text;

@@ -22,7 +22,7 @@ point p2h(point v) {
 	return draw::p2h(v, size);
 }
 
-static bool avatar(variant v) {
+/*static bool avatar(variant v) {
 	auto ps = gres(v.getid(), "art/creatures");
 	if(!ps)
 		return false;
@@ -37,7 +37,7 @@ static bool avatar(variant v) {
         fore = colors::red;
     rectb(rc);
 	if(ishilite(rc))
-		scene.hilite = v;
+		hilite_object = v;
     if(focused_object && focused_object->kind==v) {
         fore = colors::green;
         rc.offset(1, 1);
@@ -45,7 +45,7 @@ static bool avatar(variant v) {
     }
     fore = push_fore;
 	return true;
-}
+}*/
 
 static void paint_number(int x, int y, int value) {
 	char temp[16]; stringbuilder sb(temp);
@@ -228,11 +228,12 @@ void objects::paint(bool allow_hilite, bool allow_drag) const {
             mouse_difference = hot.mouse - caret;
         }
         if(hilited)
-            scene.hilite = p;
+            hilite_object = p;
         p->paint();
     }
 }
 
+/*
 static void paintavatars() {
 	varianta source;
 	game.selectkind(source);
@@ -246,7 +247,7 @@ static void paintavatars() {
         caret.x -= size + 4;
     }
     caret = push_caret;
-}
+}*/
 
 static void paintfigures() {
 	objects source;
@@ -267,8 +268,8 @@ static void paintgame() {
 
 extern stringbuilder tooltips_sb;
 static void infotops() {
-	if(scene.hilite)
-		scene.hilite.getinfo(tooltips_sb);
+	if(hilite_object)
+		hilite_object.getinfo(tooltips_sb);
 }
 
 static void inputgame() {
@@ -369,13 +370,15 @@ void start_menu() {
 }
 
 static void beforemodal() {
-
+    tooltipsbeforemodal();
 }
 
 void draw::initializex() {
+    simpleinitialize();
 	initialize("GH simulator");
 	pausetime = 1000;
-	scene.resurl = "L1a";
+	image_url = "gloomhaven";
+	pbeforemodal = beforemodal;
 	pbackground = paintgame;
 	ptips = inputgame;
 	setnext(start_menu);

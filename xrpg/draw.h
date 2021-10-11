@@ -232,6 +232,12 @@ void					updatewindow();
 void					write(const char* url, unsigned char* bits, int width, int height, int bpp, int scanline, color* pallette);
 }
 namespace draw {
+struct awindowi {
+	int					x, y, width, height;
+	int					header_width;
+	unsigned			flags;
+};
+extern awindowi			awindow;
 void					applicationinitialize();
 void					applicationafterinitialize();
 void					fieldsetfocus();
@@ -243,12 +249,6 @@ void					tooltipspaint();
 void					loginitialize();
 }
 namespace draw {
-struct awindowi {
-	int					x, y, width, height;
-	int					header_width;
-	unsigned			flags;
-};
-extern awindowi			awindow;
 void					breakmodal(long result);
 void					breakparam();
 void					buttoncancel();

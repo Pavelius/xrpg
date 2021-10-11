@@ -68,8 +68,8 @@ int object::getmaximumhits() const {
 	case Player:
         return bsdata<playeri>::get(kind.value).health[imax(0, level - 1)];
 	case Monster:
-        return bsdata<monsteri>::get(kind.value).normal[
-            imin(level, (char)(sizeof(monsteri::normal)/sizeof(monsteri::normal[0])))].hits;
+        return maptbl(bsdata<monsteri>::get(kind.value).normal, level).hits;
+            //imin((unsigned char)level, (unsigned char)(sizeof(monsteri::normal)/sizeof(monsteri::normal[0])-1))].hits;
 	default:
         return 1000;
 	}
@@ -276,11 +276,6 @@ void object::attack(int damage, int range, int pierce, int targets, statef addit
 	}
 }
 
-static int getmonster(monsteri* p, variant a) {
-	if(!p)
-		return 0;
-}
-
 int object::get(variant v) const {
 	switch(v.type) {
 	case Action:
@@ -481,6 +476,8 @@ void object::maketurn() {
 	case Monster:
 		applyaction(chooseaction());
 		break;
+    default:
+        break;
 	}
 	remove_state(this, Muddle);
 	remove_state(this, Immobilize);

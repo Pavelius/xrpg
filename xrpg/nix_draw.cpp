@@ -20,12 +20,9 @@ static Display*     dpy;
 static GC           gc;
 static int          scr;
 static Window       rootwin;
-static unsigned long last_time;
 static unsigned     timer_interval;
-//static timespec   last_time;
 
 static int tokey(int vk) {
-    int n;
     switch(vk) {
     case XK_Control_L:
     case XK_Control_R:
@@ -163,10 +160,6 @@ static int mousekey(int k, bool dbl = false) {
     case Button5: return MouseWheelDown;
     default: return 0;
     }
-}
-
-static int read_keyboard(char* result, unsigned maximum) {
-    //Xutf8LookupString(ic, &e.xkey, temp, sizeof(temp)-1, 0, 0);
 }
 
 static void apply_keyboard_mask(unsigned mask) {
