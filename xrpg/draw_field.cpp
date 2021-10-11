@@ -4,7 +4,6 @@
 #include "draw_button.h"
 #include "draw_clipboard.h"
 #include "draw_control.h"
-#include "draw_input.h"
 #include "draw_focus.h"
 #include "draw_scroll.h"
 #include "handler.h"
@@ -549,6 +548,6 @@ bool draw::edit(const rect& rc, void* source, int size, unsigned align, bool isn
 	return getresult() != 0;
 }
 
-HANDLER(before_setfocus) {
+void draw::fieldsetfocus() {
 	field_save_and_clear();
 }

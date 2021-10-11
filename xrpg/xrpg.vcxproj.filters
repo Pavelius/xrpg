@@ -153,9 +153,6 @@
     <ClInclude Include="draw_simple.h">
       <Filter>Interface</Filter>
     </ClInclude>
-    <ClInclude Include="draw_input.h">
-      <Filter>Interface</Filter>
-    </ClInclude>
     <ClInclude Include="flagable.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -295,9 +292,6 @@
     </ClCompile>
     <ClCompile Include="markup.cpp">
       <Filter>Support</Filter>
-    </ClCompile>
-    <ClCompile Include="draw_input.cpp">
-      <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="draw_theme.cpp">
       <Filter>Interface</Filter>

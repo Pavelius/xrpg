@@ -1,6 +1,0 @@
-#include "crt.h"
-#include "draw.h"
-#include "draw_input.h"
-#include "draw_focus.h"
-#include "handler.h"
-#include "io_plugin.h"

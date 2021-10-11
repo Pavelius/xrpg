@@ -27,7 +27,7 @@ color				colors::tips::text;
 color				colors::tips::back;
 // Color context and font context
 fnevent				draw::domodal, draw::pbackground, draw::pwindow, draw::ptips;
-fnevent				draw::pbeforemodal, draw::pleavemodal, draw::pinput;
+fnevent				draw::pbeforemodal, draw::pleavemodal, draw::pinput, draw::psetfocus;
 unsigned char       draw::alpha = 255;
 color				draw::fore;
 color				draw::fore_stroke;

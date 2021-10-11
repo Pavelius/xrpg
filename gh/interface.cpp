@@ -2,7 +2,6 @@
 #include "draw.h"
 #include "draw_hexagon.h"
 #include "draw_simple.h"
-#include "draw_input.h"
 
 using namespace draw;
 

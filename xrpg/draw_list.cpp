@@ -1,7 +1,6 @@
 #include "crt.h"
 #include "draw.h"
 #include "draw_control.h"
-#include "draw_input.h"
 #include "draw_focus.h"
 #include "draw_scroll.h"
 #include "handler.h"

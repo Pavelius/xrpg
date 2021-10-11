@@ -164,7 +164,7 @@ extern char				link[4096];
 extern color*			palt;
 extern int				tab_pixels;
 extern fnevent          pbackground, ptips, pwindow, pinput;
-extern fnevent          pbeforemodal, pleavemodal;
+extern fnevent          pbeforemodal, pleavemodal, psetfocus;
 int						aligned(int x, int width, unsigned state, int string_width);
 int						alignedh(const rect& rc, const char* string, unsigned state);
 void					bezier(int x0, int y0, int x1, int y1, int x2, int y2);
@@ -234,6 +234,7 @@ void					write(const char* url, unsigned char* bits, int width, int height, int 
 namespace draw {
 void					applicationinitialize();
 void					applicationafterinitialize();
+void					fieldsetfocus();
 void					simpleinitialize();
 void					statusbeforemodal();
 void					statuspaint();

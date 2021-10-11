@@ -164,7 +164,6 @@
     <ClInclude Include="draw_dockbar.h" />
     <ClInclude Include="draw_figure.h" />
     <ClInclude Include="draw_focus.h" />
-    <ClInclude Include="draw_input.h" />
     <ClInclude Include="draw_scroll.h" />
     <ClInclude Include="draw_simple.h" />
     <ClInclude Include="draw_valuelist.h" />
@@ -232,7 +231,6 @@
     <ClCompile Include="draw_field.cpp" />
     <ClCompile Include="draw_figure.cpp" />
     <ClCompile Include="draw_focus.cpp" />
-    <ClCompile Include="draw_input.cpp" />
     <ClCompile Include="draw_list.cpp" />
     <ClCompile Include="draw_scroll.cpp" />
     <ClCompile Include="draw_scrollable.cpp" />

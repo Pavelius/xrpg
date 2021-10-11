@@ -4,7 +4,6 @@
 #include "draw.h"
 #include "draw_button.h"
 #include "draw_control.h"
-#include "draw_input.h"
 #include "draw_figure.h"
 #include "draw_simple.h"
 #include "io_stream.h"
@@ -113,18 +112,6 @@ static void test_appliaction() {
 	if(!code::parse("10*2 + 5", "expression"))
 		return;
 	draw::setnext(draw::application);
-}
-
-static void test_simpleui() {
-	draw::initialize("Test UI");
-	scene.resurl = "wild";
-	auto push_proc = scene.window;
-	scene.window = common_status;
-	answers an;
-	an.add(1, "Test #%1i", 1);
-	an.add(2, "Test #%1i", 2);
-	an.choose("Выбирайте положенный ответ", getnm("Cancel"), true, "space");
-	scene.window = push_proc;
 }
 
 int main() {

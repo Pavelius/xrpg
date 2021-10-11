@@ -1,12 +1,8 @@
 #include "crt.h"
 #include "draw.h"
-#include "draw_input.h"
 #include "draw_focus.h"
-#include "handler.h"
 
 using namespace draw;
-
-handler*				before_setfocus;
 
 namespace {
 struct focusable {
@@ -154,8 +150,10 @@ void draw::setfocus(const void* value, unsigned bits, bool instant) {
 	if(isfocused(value, bits))
 		return;
 	if(instant) {
-		if(current_focus != value || current_bits != bits)
-			before_setfocus->execute();
+		if(current_focus != value || current_bits != bits) {
+			if(psetfocus)
+				psetfocus();
+		}
 		current_focus = value;
 		current_bits = bits;
 	} else

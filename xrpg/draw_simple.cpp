@@ -1,7 +1,6 @@
 #include "answers.h"
 #include "draw.h"
 #include "draw_button.h"
-#include "draw_input.h"
 #include "draw_simple.h"
 #include "handler.h"
 
