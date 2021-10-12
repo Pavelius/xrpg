@@ -1,32 +1,57 @@
+#include "crt.h"
 #include "io_stream.h"
 #include "log.h"
 #include "stringbuilder.h"
 
 static int error_count;
 static const char* current_url;
+static const char* current_file;
+
+void log::setfile(const char* v) {
+	current_file = v;
+}
 
 void log::seturl(const char* v) {
     current_url = v;
 }
 
-void log::errorv(const char* format) {
+const char* endline(const char* p) {
+	while(*p && !(*p == 10 || *p == 13))
+		p++;
+	return p;
+}
+
+int getline(const char* pb, const char* pc) {
+	auto p = pb;
+	auto r = 0;
+	while(p < pc) {
+		p = endline(p);
+		p = skipcr(p);
+		r++;
+	}
+	return r;
+}
+
+void log::errorv(const char* position, const char* format) {
 	static io::file file("errors.txt", StreamWrite|StreamText);
 	if(!file)
 		return;
 	error_count++;
+	if(current_file && position)
+		file << "In line " << getline(current_file, position) << ": ";
 	file << format << "\n";
 }
 
-void log::error(const char* format, ...) {
+void log::error(const char* position, const char* format, ...) {
 	char temp[4096]; stringbuilder sb(temp);
 	if(current_url) {
         sb.add("In file %1", current_url);
         current_url = 0;
-        errorv(temp);
+        errorv(0, temp);
         sb.clear();
 	}
 	sb.addv(format, xva_start(format));
-	errorv(temp);
+	errorv(position, temp);
 }
 
 int log::geterrors() {

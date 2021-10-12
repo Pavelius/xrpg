@@ -416,5 +416,8 @@
     <ClCompile Include="draw_hexagon.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
+    <ClCompile Include="io_bsreq.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

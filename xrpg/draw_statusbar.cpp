@@ -38,7 +38,7 @@ void draw::statusbar(rect& rb) {
 	gradv(sb_rect, colors::button.lighten(), colors::button.darken());
 	auto push_fore = fore;
 	fore = colors::border;
-	line(sb_rect.x1, sb_rect.y1, sb_rect.x2, sb_rect.y1);
+	//line(sb_rect.x1, sb_rect.y1, sb_rect.x2, sb_rect.y1);
 	sb_rect.offset(4, 3);
 	fore = push_fore;
 }
@@ -73,7 +73,7 @@ void draw::statuspaint() {
 		caret.x = caret.x - width - padding;
 		auto push_fore = fore;
 		fore = colors::border;
-		line(caret.x, sb_rect.y1, caret.x, sb_rect.y2);
+		//line(caret.x, sb_rect.y1, caret.x, sb_rect.y2);
 		fore = push_fore;
 		if(e.name) {
 			caret.x += padding;

@@ -157,8 +157,8 @@ static const char* textfln(const char* p, int x1, color c1) {
 		if(temp[0] || (flags & TextUscope) != 0) {
 			auto x3 = imin(original_x2, original_x1);
 			auto y2 = caret.y + texth();
-			if(flags & TextUscope)
-				line(x4, y2, x3, y2);
+			//if(flags & TextUscope)
+			//	line(x4, y2, x3, y2);
 			rect rc = {x4, caret.y, x3, y2};
 			if(ishilite(rc)) {
 				if(flags & TextUscope) {
@@ -212,7 +212,8 @@ void draw::textf(const char* string, int min_height, int* cashe_height, const ch
 		} else if(match(&p, "---")) { // Line
 			p = skipspcr(p);
 			caret.y += 2;
-			line(caret.x, caret.y, caret.x + width, caret.y);
+			line(caret.x + width, caret.y);
+			caret.x = original_x1;
 			caret.y += 2;
 		} else if(match(&p, "...")) { // Без форматирования
 			p = skipcr(p);

@@ -221,7 +221,7 @@ int table::rowheader(const rect& rc) const {
 		}
 		auto push_fore = fore;
 		fore = colors::border;
-		line(r1.x2 - 1, r1.y1, r1.x2 - 1, r1.y2);
+		//line(r1.x2 - 1, r1.y1, r1.x2 - 1, r1.y2);
 		fore = push_fore;
 		stringbuilder sb(temp); temp[0] = 0;
 		auto p = getheader(i, sb);
@@ -307,7 +307,7 @@ void table::rowtotal(const rect& rc) const {
 			continue;
 		auto push_fore = fore;
 		fore = colors::border;
-		line(r1.x2, r1.y1, r1.x2, r1.y2);
+		//line(r1.x2, r1.y1, r1.x2, r1.y2);
 		fore = push_fore;
 		auto result = gettotal(i);
 		temp[0] = 0;
@@ -356,7 +356,7 @@ void table::row(const rect& rc, int index) const {
 		if(show_grid_lines && columns[i].size != widtht::Inner) {
 			auto push_fore = fore;
 			fore = colors::border;
-			line(r1.x2, r1.y1, r1.x2, r1.y2);
+			//line(r1.x2, r1.y1, r1.x2, r1.y2);
 			fore = push_fore;
 		}
 		ishilite(r1);

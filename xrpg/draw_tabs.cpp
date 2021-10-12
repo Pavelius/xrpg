@@ -32,9 +32,9 @@ static bool sheet(rect& rc, rect& rct, const char* string, bool* area_result, bo
 		fore = back;
 		rectf({rct.x1 + 1, rct.y1 + 1, rct.x2, rct.y2 + 1});
 		fore = colors::border;
-		line(rct.x1, rct.y1, rct.x2, rct.y1);
-		line(rct.x1, rct.y1, rct.x1, rct.y2);
-		line(rct.x2, rct.y1, rct.x2, rct.y2);
+		//line(rct.x1, rct.y1, rct.x2, rct.y1);
+		//line(rct.x1, rct.y1, rct.x1, rct.y2);
+		//line(rct.x2, rct.y1, rct.x2, rct.y2);
 		fore = colors::active;
 		ty += 1;
 	}
@@ -94,8 +94,8 @@ int draw::tabs(rect rc, bool show_close, bool right_side, void** data, int start
 					result = 2;
 				tooltips(getnm("Close"));
 			}
-			line(rcx.x1 + 4, rcx.y1 + 4, rcx.x2 - 4, rcx.y2 - 4);
-			line(rcx.x2 - 4, rcx.y1 + 4, rcx.x1 + 4, rcx.y2 - 4);
+			//line(rcx.x1 + 4, rcx.y1 + 4, rcx.x2 - 4, rcx.y2 - 4);
+			//line(rcx.x2 - 4, rcx.y1 + 4, rcx.x1 + 4, rcx.y2 - 4);
 		}
 	}
 	if(result_x1)

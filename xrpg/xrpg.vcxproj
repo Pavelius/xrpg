@@ -203,6 +203,7 @@
     <ClCompile Include="dialog.cpp" />
     <ClCompile Include="draw_color.cpp" />
     <ClCompile Include="draw_hexagon.cpp" />
+    <ClCompile Include="io_bsreq.cpp" />
     <ClCompile Include="io_plugin_data.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="parser.cpp" />

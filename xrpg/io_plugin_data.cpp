@@ -49,7 +49,7 @@ bool readf(const char* url) {
 			}
 			char temp[4096]; stringbuilder sb(temp);
 			sb.addv(text, xva_start(text));
-			log::error(temp);
+			log::error(0, temp);
 		}
 		const bsreq* getmetadata(serializer::node& e) const {
 			if(e.parent->type == serializer::kind::Array)

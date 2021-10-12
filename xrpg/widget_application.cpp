@@ -446,8 +446,8 @@ static struct widget_settings : controls::control {
 			fore = colors::border;
 			if(metrics::show::padding)
 				rectb({rc.x1, rc.y1 + h1, rc.x2, rc.y2});
-			else
-				line(rc.x1, rc.y1 + h1, rc.x2 - metrics::padding, rc.y1 + h1);
+			//else
+			//	line(rc.x1, rc.y1 + h1, rc.x2 - metrics::padding, rc.y1 + h1);
 			fore = push_fore;
 		}
 		if(draw::tabs({rc.x1, rc.y1, rc.x2, rc.y1 + h1}, false, false,
@@ -588,7 +588,7 @@ static struct widget_application : draw::controls::control {
 				current_active_control->view(rc, metrics::show::padding, true, false);
 			auto push_fore = fore;
 			fore = colors::border;
-			line(rct.x1, rct.y2, rct.x2, rct.y2);
+			//line(rct.x1, rct.y2, rct.x2, rct.y2);
 			fore = push_fore;
 			auto current_hilite = -1;
 			auto result = draw::tabs(rct, false, false, (void**)ct.begin(), 0, z1,

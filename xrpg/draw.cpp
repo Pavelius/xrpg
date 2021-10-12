@@ -935,7 +935,7 @@ void draw::line(int x1, int y1) {
 	caret.y = y1;
 }
 
-//void draw::bezierseg(int x0, int y0, int x1, int y1, int x2, int y2) {
+void draw::bezierseg(int x0, int y0, int x1, int y1, int x2, int y2) {
 //	int sx = x2 - x1, sy = y2 - y1;
 //	long xx = x0 - x1, yy = y0 - y1, xy;             /* relative values for checks */
 //	double dx, dy, err, ed, cur = xx * sy - yy * sx;    /* curvature */
@@ -971,7 +971,7 @@ void draw::line(int x1, int y1) {
 //		} while(dy < dx);                  /* gradient negates -> close curves */
 //	}
 //	line(x0, y0, x2, y2);                  /* plot remaining needle to end */
-//}
+}
 
 //void draw::bezier(int x0, int y0, int x1, int y1, int x2, int y2) {
 //	int x = x0 - x1, y = y0 - y1;
@@ -1056,7 +1056,7 @@ static void triangle_bottom(point v1, point v2, point v3) {
 	float curx1 = v1.x;
 	float curx2 = v1.x;
 	for(int scanlineY = v1.y; scanlineY <= v2.y; scanlineY++) {
-		line((int)curx1, scanlineY, (int)curx2, scanlineY);
+		//line((int)curx1, scanlineY, (int)curx2, scanlineY);
 		curx1 += invslope1;
 		curx2 += invslope2;
 	}
@@ -1068,7 +1068,7 @@ static void triangle_top(point v1, point v2, point v3) {
 	float curx1 = v3.x;
 	float curx2 = v3.x;
 	for(int scanlineY = v3.y; scanlineY > v1.y; scanlineY--) {
-		line((int)curx1, scanlineY, (int)curx2, scanlineY);
+		//line((int)curx1, scanlineY, (int)curx2, scanlineY);
 		curx1 -= invslope1;
 		curx2 -= invslope2;
 	}
@@ -1099,19 +1099,19 @@ void draw::triangle(point v1, point v2, point v3, color c1) {
 }
 
 void draw::rectb(rect rc) {
-	line(rc.x1, rc.y1, rc.x2, rc.y1);
-	line(rc.x2, rc.y1 + 1, rc.x2, rc.y2);
-	line(rc.x2 - 1, rc.y2, rc.x1, rc.y2);
-	line(rc.x1, rc.y2 - 1, rc.x1, rc.y1);
+	//line(rc.x1, rc.y1, rc.x2, rc.y1);
+	//line(rc.x2, rc.y1 + 1, rc.x2, rc.y2);
+	//line(rc.x2 - 1, rc.y2, rc.x1, rc.y2);
+	//line(rc.x1, rc.y2 - 1, rc.x1, rc.y1);
 }
 
 void draw::rectb3d(rect rc) {
 	if(!draw::canvas)
 		return;
-	line(rc.x1, rc.y1, rc.x2, rc.y1);
-	line(rc.x2, rc.y1 + 1, rc.x2, rc.y2);
-	line(rc.x2 - 1, rc.y2, rc.x1, rc.y2);
-	line(rc.x1, rc.y2 - 1, rc.x1, rc.y1);
+	//line(rc.x1, rc.y1, rc.x2, rc.y1);
+	//line(rc.x2, rc.y1 + 1, rc.x2, rc.y2);
+	//line(rc.x2 - 1, rc.y2, rc.x1, rc.y2);
+	//line(rc.x1, rc.y2 - 1, rc.x1, rc.y1);
 	rc.offset(1, 1);
 	correct(rc.x1, rc.y1, rc.x2, rc.y2); rect r1 = rc;
 	if(!correct(r1.x1, r1.y1, r1.x2, r1.y2, clipping))
@@ -1133,10 +1133,10 @@ void draw::rectb3d(rect rc) {
 }
 
 void draw::rectb(rect rc, int radius) {
-	line(rc.x1 + radius, rc.y1, rc.x2 - radius, rc.y1);
-	line(rc.x2, rc.y1 + radius, rc.x2, rc.y2 - radius);
-	line(rc.x2 - radius, rc.y2, rc.x1 + radius, rc.y2);
-	line(rc.x1, rc.y2 - radius, rc.x1, rc.y1 + radius);
+	//line(rc.x1 + radius, rc.y1, rc.x2 - radius, rc.y1);
+	//line(rc.x2, rc.y1 + radius, rc.x2, rc.y2 - radius);
+	//line(rc.x2 - radius, rc.y2, rc.x1 + radius, rc.y2);
+	//line(rc.x1, rc.y2 - radius, rc.x1, rc.y1 + radius);
 	bezierseg(rc.x1 + radius, rc.y1, rc.x1, rc.y1, rc.x1, rc.y1 + radius);
 	bezierseg(rc.x2 - radius, rc.y1, rc.x2, rc.y1, rc.x2, rc.y1 + radius);
 	bezierseg(rc.x1 + radius, rc.y2, rc.x1, rc.y2, rc.x1, rc.y2 - radius);
@@ -1614,7 +1614,7 @@ static void hilite_text_line(int x, int y, int width, int height, const char* st
 	if(i1 >= 0 && i1 == i2
 		&& (i1 < count || (i1 == count && string[count] == 0))) {
 		int rx1 = caret.x + draw::textw(string, i1);
-		draw::line(rx1, y, rx1, y + height);
+		//draw::line(rx1, y, rx1, y + height);
 	}
 	caret = push_caret;
 }

@@ -107,7 +107,8 @@ int draw::getdistance(point h1, point h2) {
 }
 
 void draw::hexagon(int x, int y, int size) {
-	point points[6] = {{(short)(x + size * cos_30), (short)(y - size / 2)},
+	point points[6] = {
+		{(short)(x + size * cos_30), (short)(y - size / 2)},
 		{(short)(x + size * cos_30), (short)(y + size / 2)},
 		{(short)x, (short)(y + size)},
 		{(short)(x - size * cos_30), (short)(y + size / 2)},

@@ -56,7 +56,7 @@ static const char* read_block(const char* p, const char* p_alloc, int& v, const 
 	char temp[8192];
 	v = 0; text = 0; temp[0] = 0; consequences.clear();
 	if(!isnum(p[0])) {
-		log::error("Expected number");
+		log::error(p, "Expected number");
 		return p;
 	}
 	p = stringbuilder::read(p, v);
@@ -70,7 +70,7 @@ static const char* read_block(const char* p, const char* p_alloc, int& v, const 
 		p = skipsp(p);
 		variant v = (const char*)temp;
 		if(!v) {
-			log::error("Can't find variant `%1`", temp);
+			log::error(p, "Can't find variant `%1`", temp);
 			return p;
 		}
 		add(consequences, v);
@@ -103,28 +103,28 @@ bool eventi::read(const char* url, array& source) {
 		pi->clear();
 		pi->text = text;
 		if(!isanswer(p)) {
-			log::error("Expected `~1` token");
+			log::error(p, "Expected `~1` token");
 			break;
 		}
 		p = read_block(p + 1, p_alloc, stage, pi->case1, resolves);
 		if(!isanswer(p)) {
-			log::error("Expected `~2` token");
+			log::error(p, "Expected `~2` token");
 			break;
 		}
 		p = read_block(p + 1, p_alloc, stage, pi->case2, resolves);
 		auto index = 0;
 		while(isresolve(p)) {
 			if(index >= maximum_index) {
-				log::error("Resolution part have more %1i lines", maximum_index);
+				log::error(p, "Resolution part have more %1i lines", maximum_index);
 				break;
 			}
 			auto& e = pi->actions[index++];
 			p = read_block(p + 2, p_alloc, e.stage, e.text, e.consequences);
 		}
         if(!pi->case1)
-            log::error("Not found answer #1");
+            log::error(p, "Not found answer #1");
         if(!pi->case2)
-            log::error("Not found answer #2");
+            log::error(p, "Not found answer #2");
 	}
 	if((int)source.getcount() < maximum_stage)
         source.setcount(maximum_stage + 1);

@@ -206,7 +206,7 @@ void list::paintrows(const rect& rc) const {
 			}
 		}
 		if(show_grid_lines) {
-			line(rc.x1, rcm.y2 - 1, rc.x2, rcm.y2 - 1);
+			//line(rc.x1, rcm.y2 - 1, rc.x2, rcm.y2 - 1);
 		}
 		fore = push_fore;
 		row(rcm, ix);
