@@ -110,3 +110,21 @@ static const char* read(const char* p, const bsreq* type, array* source, int key
 	auto object = findv(source, type, keys, key_count);
 	return p;
 }
+
+static array* findbase(const char* id) {
+	return 0;
+}
+
+static void parse(const char* p) {
+	while(*p) {
+		if(*p != '#') {
+			log::error(p, "Expected symbol `#`");
+			return;
+		}
+		p = readid(p + 1);
+		auto base = findbase(temp);
+		while(*p) {
+
+		}
+	}
+}
