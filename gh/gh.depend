@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1634021881 source:/home/ws-1113/projects/xrpg/gh/main.cpp
+1634044038 source:/home/ws-1113/projects/xrpg/gh/main.cpp
 	"bsreq.h"
 	"draw.h"
 	"main.h"
@@ -392,7 +392,7 @@
 1633948651 source:/home/ws-1113/projects/xrpg/gh/monster.cpp
 	"main.h"
 
-1634035892 source:/home/ws-1113/projects/xrpg/xrpg/io_bsreq.cpp
+1634044562 source:/home/ws-1113/projects/xrpg/xrpg/io_bsreq.cpp
 	"bsreq.h"
 	"log.h"
 	"stringbuilder.h"

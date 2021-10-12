@@ -1,0 +1,7 @@
+#SummonedCreature
+
+Decoy hits(2) move(2)
+Ork hits(4) move(1)
+ feats Attack1 Defend1 Raid1
+Knights hits(2) move(3)
+ feats Attack1 Defend1 Raid1 Iron

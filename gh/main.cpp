@@ -13,10 +13,13 @@ fnevent getcommand(const char* id) {
 
 void util_main();
 
-//static bool test_variant() {
-//    variant v = "City1";
-//    return v.operator bool();
-//}
+static bool test_bsreq() {
+    int result;
+    for(auto& e : bsdata<summoni>()) {
+        result++;
+    }
+    return result!=2;
+}
 
 int main() {
     srand(randomseed());
@@ -25,6 +28,8 @@ int main() {
 	if(!initialize_translation("ru"))
 		return -1;
     bsreq::read("rules/test_cards.txt");
+    if(!test_bsreq())
+        return -1;
     return 0;
 	if(!readf("rules/core.json"))
 		return -1;

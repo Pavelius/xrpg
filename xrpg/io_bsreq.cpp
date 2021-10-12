@@ -12,6 +12,20 @@ struct valuei {
 	void clear() { memset(this, 0, sizeof(*this)); }
 };
 
+static const char* skipsym(const char* p, char sym) {
+    if(sym==10) {
+        if(*p==10 || *p==13)
+            return skipcr(p);
+        log::errorv(p, "Expected line feed");
+    } else {
+        if(*p==sym)
+            return p + 1;
+        char temp[2] = {sym, 0};
+        log::error(p, "Expected symbol `%1`", temp);
+    }
+    return "";
+}
+
 static const bsreq* getkey(const bsreq* type) {
 	return type->find("id", bsmeta<const char*>::meta);
 }
@@ -34,9 +48,11 @@ static const char* readv(const char* p, const bsreq* req, valuei& e) {
 		e.text = szdup(temp);
 	} else if(*p == '-' || isnum(*p)) {
 		auto minus = false;
-		if(*p == '-')
+		if(*p == '-') {
 			minus = true;
-		p = stringbuilder::read(p + 1, e.number);
+			p++;
+		}
+		p = stringbuilder::read(p, e.number);
 		if(minus)
 			e.number = -e.number;
 	} else {
@@ -45,7 +61,10 @@ static const char* readv(const char* p, const bsreq* req, valuei& e) {
 			log::error(p, "Expected idetifier");
 		else if(req->is(KindText))
 			e.text = szdup(temp);
-		else {
+		else if(req->type==bsmeta<variant>::meta) {
+            variant v1 = (const char*)temp;
+            e.number = v1.u;
+		} else {
             auto pk = getkey(req->type);
             if(!pk)
                 log::error(p, "Requisit don't have source type when load identifier `%1`", temp);
@@ -88,9 +107,9 @@ static bool compare(const void* p, const bsreq* type, const valuei* keys, int ke
 	return true;
 }
 
-static void writev(void* p, const bsreq* req, const valuei& v) {
-    auto p1 = req->ptr(p);
-    if(req->is(KindNumber))
+static void writev(void* p, const bsreq* req, int index, const valuei& v) {
+    auto p1 = req->ptr(p, index);
+    if(req->is(KindNumber) || req->type==bsmeta<variant>::meta)
         req->set(p1, v.number);
     else if(req->is(KindText))
         req->set(p1, (long)szdup(v.text));
@@ -100,7 +119,7 @@ static void writev(void* p, const bsreq* req, const valuei& v) {
 
 static void fill(void* p, const bsreq* type, const valuei* keys, int key_count) {
 	for(int i = 0; i < key_count; i++)
-        writev(p, type + i, keys[i]);
+        writev(p, type + i, 0, keys[i]);
 }
 
 static void* findv(array* source, const bsreq* type, valuei* keys, int key_count) {
@@ -112,28 +131,31 @@ static void* findv(array* source, const bsreq* type, valuei* keys, int key_count
 	return 0;
 }
 
+static const char* read_array(const char* p, void* object, const bsreq* req) {
+    auto index = 0;
+    while(*p && *p!=')') {
+        valuei v;
+        p = readv(p, req, v);
+        writev(object, req, index++, v);
+    }
+    if(*p==')')
+        p = skipsp(p+1);
+	return p;
+}
+
 static const char* read_dictionary(const char* p, void* object, const bsreq* type) {
     while(*p && !(*p==13 || *p==10)) {
         p = readid(p);
         auto req = type->find(temp);
         if(!req)
             log::error(p, "Not found requisit `%1`", temp);
-        if(*p!='(') {
-            log::error(p, "Expected symbnol `(`");
-            return "";
-        }
-        p = skipsp(p+1);
-        while(*p && *p!=')') {
-            valuei e;
-            p = readv(p, req, e);
-        }
-        if(*p==')')
-            p = skipsp(p+1);
+        p = skipsym(p, '(');
+        p = read_array(p, object, type);
     }
 	return p;
 }
 
-static const char* readv(const char* p, const bsreq* type, array* source, int key_count) {
+static const char* readv(const char* p, const bsreq* type, array* source, int key_count, void** result_object) {
 	if(!key_count)
         key_count = 1;
 	valuei keys[8] = {};
@@ -159,24 +181,19 @@ static varianti* findbase(const char* id) {
 
 static void parse(const char* p) {
 	while(*p) {
-		if(*p != '#') {
-			log::error(p, "Expected symbol `#`");
-			return;
-		}
+        p = skipsp(skipsym(p, '#'));
 		p = readid(p + 1);
 		auto pd = findbase(temp);
-		if(!pd) {
+		if(!pd && temp[0]) {
 			log::error(p, "Not find data type for `%1`", temp);
 			return;
 		}
-		if(*p==10 || *p==13)
+        p = skipsp(skipsym(p, 10));
+		while(*p) {
+            void* object = 0;
+            p = readv(p, pd->metadata, pd->source, pd->key_count, &object);
             p = skipspcr(p);
-        else {
-			log::error(p, "Excpected line feed");
-			return;
 		}
-		while(*p && *p!='#')
-            p = readv(p, pd->metadata, pd->source, pd->key_count);
 	}
 }
 
