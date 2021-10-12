@@ -1,12 +1,12 @@
 # depslib dependency file v1.0
-1633948651 source:/home/ws-1113/projects/xrpg/gh/main.cpp
+1634021881 source:/home/ws-1113/projects/xrpg/gh/main.cpp
+	"bsreq.h"
 	"draw.h"
 	"main.h"
 	"log.h"
 
-1633328574 /home/ws-1113/projects/xrpg/xrpg/bsreq.h
+1634019760 /home/ws-1113/projects/xrpg/xrpg/bsreq.h
 	"crt.h"
-	"serializer.h"
 
 1633949179 /home/ws-1113/projects/xrpg/xrpg/crt.h
 
@@ -37,7 +37,7 @@
 
 1627282035 /home/ws-1113/projects/xrpg/xrpg/rect.h
 
-1633328574 /home/ws-1113/projects/xrpg/xrpg/variant.h
+1634020900 /home/ws-1113/projects/xrpg/xrpg/variant.h
 	"crt.h"
 	"stringbuilder.h"
 
@@ -85,7 +85,7 @@
 1633334571 source:/home/ws-1113/projects/xrpg/gh/gameproperty.cpp
 	"main.h"
 
-1633948651 source:/home/ws-1113/projects/xrpg/gh/information.cpp
+1633953111 source:/home/ws-1113/projects/xrpg/gh/information.cpp
 	"main.h"
 
 1633948651 source:/home/ws-1113/projects/xrpg/gh/player.cpp
@@ -155,14 +155,14 @@
 	"log.h"
 	"stringbuilder.h"
 
-1633332635 /home/ws-1113/projects/xrpg/xrpg/log.h
+1634019100 /home/ws-1113/projects/xrpg/xrpg/log.h
 
-1633950442 source:/home/ws-1113/projects/xrpg/xrpg/draw.cpp
+1634019100 source:/home/ws-1113/projects/xrpg/xrpg/draw.cpp
 	"color.h"
 	"crt.h"
 	"draw.h"
 
-1633950417 /home/ws-1113/projects/xrpg/xrpg/draw.h
+1634019100 /home/ws-1113/projects/xrpg/xrpg/draw.h
 	"color.h"
 	"point.h"
 	"stringbuilder.h"
@@ -226,7 +226,7 @@
 	"crt.h"
 	"io_plugin.h"
 
-1633337172 source:/home/ws-1113/projects/xrpg/xrpg/io_plugin_data.cpp
+1634019100 source:/home/ws-1113/projects/xrpg/xrpg/io_plugin_data.cpp
 	"bsreq.h"
 	"crt.h"
 	"flagable.h"
@@ -243,7 +243,8 @@
 	"io_stream.h"
 	"stringbuilder.h"
 
-1633332624 source:/home/ws-1113/projects/xrpg/xrpg/log.cpp
+1634019100 source:/home/ws-1113/projects/xrpg/xrpg/log.cpp
+	"crt.h"
 	"io_stream.h"
 	"log.h"
 	"stringbuilder.h"
@@ -316,7 +317,7 @@
 1633948651 source:/home/ws-1113/projects/xrpg/xrpg/draw_text.cpp
 	"draw.h"
 
-1633949322 source:/home/ws-1113/projects/xrpg/xrpg/draw_textf.cpp
+1634019100 source:/home/ws-1113/projects/xrpg/xrpg/draw_textf.cpp
 	"crt.h"
 	"draw.h"
 
@@ -327,7 +328,7 @@
 	"draw.h"
 	"io_stream.h"
 
-1633952870 source:/home/ws-1113/projects/xrpg/gh/interface.cpp
+1633953034 source:/home/ws-1113/projects/xrpg/gh/interface.cpp
 	"main.h"
 	"draw.h"
 	"draw_hexagon.h"
@@ -363,14 +364,14 @@
 1633328574 /home/ws-1113/projects/xrpg/xrpg/draw_hexagon.h
 	"point.h"
 
-1633415305 source:/home/ws-1113/projects/xrpg/gh/event.cpp
+1634019100 source:/home/ws-1113/projects/xrpg/gh/event.cpp
 	"main.h"
 	"log.h"
 
 1633948651 source:/home/ws-1113/projects/xrpg/gh/tile.cpp
 	"main.h"
 
-1633701366 source:/home/ws-1113/projects/xrpg/xrpg/draw_hexagon.cpp
+1634019100 source:/home/ws-1113/projects/xrpg/xrpg/draw_hexagon.cpp
 	"crt.h"
 	"draw.h"
 	"draw_hexagon.h"
@@ -390,4 +391,10 @@
 
 1633948651 source:/home/ws-1113/projects/xrpg/gh/monster.cpp
 	"main.h"
+
+1634035892 source:/home/ws-1113/projects/xrpg/xrpg/io_bsreq.cpp
+	"bsreq.h"
+	"log.h"
+	"stringbuilder.h"
+	"variant.h"
 

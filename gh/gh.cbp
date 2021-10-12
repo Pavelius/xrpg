@@ -68,6 +68,7 @@
 		<Unit filename="../xrpg/draw_tooltips.cpp" />
 		<Unit filename="../xrpg/gender.cpp" />
 		<Unit filename="../xrpg/gender.h" />
+		<Unit filename="../xrpg/io_bsreq.cpp" />
 		<Unit filename="../xrpg/io_plugin.cpp" />
 		<Unit filename="../xrpg/io_plugin.h" />
 		<Unit filename="../xrpg/io_plugin_data.cpp" />
@@ -137,6 +138,7 @@
 		<Unit filename="rules/core.json" />
 		<Unit filename="rules/monsters.json" />
 		<Unit filename="rules/players.json" />
+		<Unit filename="rules/test_cards.txt" />
 		<Unit filename="scenario.cpp" />
 		<Unit filename="script.cpp" />
 		<Unit filename="state.cpp" />

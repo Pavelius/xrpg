@@ -1,3 +1,4 @@
+#include "bsreq.h"
 #include "draw.h"
 #include "main.h"
 #include "log.h"
@@ -23,6 +24,8 @@ int main() {
 	initialize_png();
 	if(!initialize_translation("ru"))
 		return -1;
+    bsreq::read("rules/test_cards.txt");
+    return 0;
 	if(!readf("rules/core.json"))
 		return -1;
 	if(!readf("rules/players.json"))

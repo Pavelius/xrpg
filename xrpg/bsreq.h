@@ -1,5 +1,5 @@
 #include "crt.h"
-#include "serializer.h"
+//#include "serializer.h"
 
 #pragma once
 
@@ -21,12 +21,12 @@ enum bstype_s : unsigned char {
 };
 // Metadata field descriptor
 struct bsreq {
-	struct custom {
+	/*struct custom {
 		const bsreq*		source = 0;
 		virtual void		create(const bsreq* type, void* object) {}
 		virtual void		read(serializer::reader* reader, const bsreq* type, serializer::node& e, const char* value) {}
 		bool				readf(const char* url);
-	};
+	};*/
 	const char*				id; // field identifier
 	unsigned				offset; // offset from begin of class or object
 	unsigned				size; // size of single element
@@ -53,12 +53,12 @@ struct bsreq {
 	char*					ptr(const void* data) const { return (char*)data + offset; }
 	char*					ptr(const void* data, int index) const { return (char*)data + offset + index * size; }
 	void*					ptr(const void* data, const char* url, const bsreq** result) const;
-	bool					read(const char* url, const void* object) const;
+	static void				read(const char* url);
 	void					set(const void* p, long value) const;
 	bool					write(const char* url, void* object) const;
 };
 NOBSDATA(bsreq)
-struct bsparse {
+/*struct bsparse {
 	enum error_s {
 		NoErrors,
 		ErrorNotFoundIdentifier1p, ErrorExpected1p, ErrorFile1pNotFound,
@@ -72,7 +72,7 @@ struct bsparse {
 	virtual const bsreq*	getrequisit(const bsreq* type, const char* name) { return type->find(name); }
 	virtual array*			getsource(const bsreq* type);
 	virtual void			read(const char* url);
-};
+};*/
 // Abstract metadata class
 template<typename T> struct bsmeta {
 	typedef T				data_type;

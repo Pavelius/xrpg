@@ -15,6 +15,7 @@ struct varianti {
 	const bsreq*		metadata;
 	array*				source;
 	fnfind				pfind;
+	int                 key_count;
 };
 union variant{
 	unsigned char		uc[4];
