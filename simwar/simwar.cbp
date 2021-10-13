@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="simwar" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option platforms="Unix;" />
+				<Option output="simwar_debug" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../objects/debug/simwar" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectCompilerOptionsRelation="0" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-D_DEBUG" />
+					<Add directory="../xrpg" />
+				</Compiler>
+				<Linker>
+					<Add library="X11" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="simwar" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../../objects/release/simwar" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="../xrpg" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="X11" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-g" />
+		</Compiler>
+		<Unit filename="../xrpg/answers.cpp" />
+		<Unit filename="../xrpg/answers.h" />
+		<Unit filename="../xrpg/archive.cpp" />
+		<Unit filename="../xrpg/archive.h" />
+		<Unit filename="../xrpg/bsreq.cpp" />
+		<Unit filename="../xrpg/bsreq.h" />
+		<Unit filename="../xrpg/bstream.cpp" />
+		<Unit filename="../xrpg/bstream.h" />
+		<Unit filename="../xrpg/color.cpp" />
+		<Unit filename="../xrpg/color.h" />
+		<Unit filename="../xrpg/crt.cpp" />
+		<Unit filename="../xrpg/crt.h" />
+		<Unit filename="../xrpg/crt_translate.cpp" />
+		<Unit filename="../xrpg/dataset.h" />
+		<Unit filename="../xrpg/draw.cpp" />
+		<Unit filename="../xrpg/draw.h" />
+		<Unit filename="../xrpg/draw_focus.h" />
+		<Unit filename="../xrpg/draw_simple.cpp" />
+		<Unit filename="../xrpg/draw_simple.h" />
+		<Unit filename="../xrpg/draw_text.cpp" />
+		<Unit filename="../xrpg/draw_textf.cpp" />
+		<Unit filename="../xrpg/draw_theme.cpp" />
+		<Unit filename="../xrpg/draw_tooltips.cpp" />
+		<Unit filename="../xrpg/gender.cpp" />
+		<Unit filename="../xrpg/gender.h" />
+		<Unit filename="../xrpg/io_bsreq.cpp" />
+		<Unit filename="../xrpg/io_plugin.cpp" />
+		<Unit filename="../xrpg/io_plugin.h" />
+		<Unit filename="../xrpg/io_plugin_data.cpp" />
+		<Unit filename="../xrpg/io_plugin_json.cpp" />
+		<Unit filename="../xrpg/io_stream.cpp" />
+		<Unit filename="../xrpg/io_stream.h" />
+		<Unit filename="../xrpg/log.cpp" />
+		<Unit filename="../xrpg/log.h" />
+		<Unit filename="../xrpg/moveable.cpp" />
+		<Unit filename="../xrpg/moveable.h" />
+		<Unit filename="../xrpg/nix_draw.cpp" />
+		<Unit filename="../xrpg/nix_io_file.cpp" />
+		<Unit filename="../xrpg/nix_time.cpp" />
+		<Unit filename="../xrpg/png.cpp" />
+		<Unit filename="../xrpg/point.cpp" />
+		<Unit filename="../xrpg/point.h" />
+		<Unit filename="../xrpg/posable.h" />
+		<Unit filename="../xrpg/rect.h" />
+		<Unit filename="../xrpg/requisit.cpp" />
+		<Unit filename="../xrpg/requisit.h" />
+		<Unit filename="../xrpg/resource_dynamic.cpp" />
+		<Unit filename="../xrpg/screenshoot.cpp" />
+		<Unit filename="../xrpg/screenshoot.h" />
+		<Unit filename="../xrpg/serializer.cpp" />
+		<Unit filename="../xrpg/serializer.h" />
+		<Unit filename="../xrpg/stringact.cpp" />
+		<Unit filename="../xrpg/stringact.h" />
+		<Unit filename="../xrpg/stringbuilder.cpp" />
+		<Unit filename="../xrpg/stringbuilder.h" />
+		<Unit filename="../xrpg/surface_serial.cpp" />
+		<Unit filename="../xrpg/szdup.cpp" />
+		<Unit filename="../xrpg/variant.cpp" />
+		<Unit filename="../xrpg/variant.h" />
+		<Unit filename="../xrpg/varianta.cpp" />
+		<Unit filename="../xrpg/varianta.h" />
+		<Unit filename="../xrpg/zip.cpp" />
+		<Unit filename="consumable.cpp" />
+		<Unit filename="errors.txt" />
+		<Unit filename="main.cpp" />
+		<Unit filename="main.h" />
+		<Unit filename="property.cpp" />
+		<Unit filename="rules/test_data.txt" />
+		<Unit filename="stat.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

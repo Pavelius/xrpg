@@ -1,0 +1,277 @@
+# depslib dependency file v1.0
+1627282035 source:/home/ws-1113/projects/xrpg/xrpg/answers.cpp
+	"answers.h"
+
+1633500073 /home/ws-1113/projects/xrpg/xrpg/answers.h
+	"crt.h"
+	"stringbuilder.h"
+
+1633949179 /home/ws-1113/projects/xrpg/xrpg/crt.h
+
+1632740417 /home/ws-1113/projects/xrpg/xrpg/stringbuilder.h
+
+1628677516 source:/home/ws-1113/projects/xrpg/xrpg/archive.cpp
+	"archive.h"
+
+1629181108 /home/ws-1113/projects/xrpg/xrpg/archive.h
+	"crt.h"
+	"io_stream.h"
+
+1629874022 /home/ws-1113/projects/xrpg/xrpg/io_stream.h
+
+1633415405 source:/home/ws-1113/projects/xrpg/xrpg/bsreq.cpp
+	"bsreq.h"
+	"crt.h"
+	"stringbuilder.h"
+
+1634108783 /home/ws-1113/projects/xrpg/xrpg/bsreq.h
+	"crt.h"
+
+1627282035 source:/home/ws-1113/projects/xrpg/xrpg/bstream.cpp
+	"bstream.h"
+
+1627282035 /home/ws-1113/projects/xrpg/xrpg/bstream.h
+
+1633948651 source:/home/ws-1113/projects/xrpg/xrpg/color.cpp
+	"color.h"
+	"crt.h"
+
+1633948651 /home/ws-1113/projects/xrpg/xrpg/color.h
+
+1630910008 source:/home/ws-1113/projects/xrpg/xrpg/crt.cpp
+	"crt.h"
+	"io_stream.h"
+
+1632927465 source:/home/ws-1113/projects/xrpg/xrpg/crt_translate.cpp
+	"crt.h"
+	"io_stream.h"
+	"log.h"
+	"stringbuilder.h"
+
+1634019100 /home/ws-1113/projects/xrpg/xrpg/log.h
+
+1634019100 source:/home/ws-1113/projects/xrpg/xrpg/draw.cpp
+	"color.h"
+	"crt.h"
+	"draw.h"
+
+1634019100 /home/ws-1113/projects/xrpg/xrpg/draw.h
+	"color.h"
+	"point.h"
+	"stringbuilder.h"
+
+1627282035 /home/ws-1113/projects/xrpg/xrpg/point.h
+	"rect.h"
+
+1627282035 /home/ws-1113/projects/xrpg/xrpg/rect.h
+
+1633952919 source:/home/ws-1113/projects/xrpg/xrpg/draw_simple.cpp
+	"answers.h"
+	"draw.h"
+	"draw_button.h"
+	"draw_simple.h"
+	"handler.h"
+
+1630910008 /home/ws-1113/projects/xrpg/xrpg/draw_button.h
+	"color.h"
+	"markup.h"
+	"rect.h"
+	"stringbuilder.h"
+
+1630910008 /home/ws-1113/projects/xrpg/xrpg/markup.h
+	"crt.h"
+	"stringbuilder.h"
+
+1633952953 /home/ws-1113/projects/xrpg/xrpg/draw_simple.h
+	"command.h"
+	"point.h"
+	"variant.h"
+
+1627987500 /home/ws-1113/projects/xrpg/xrpg/command.h
+
+1634020900 /home/ws-1113/projects/xrpg/xrpg/variant.h
+	"crt.h"
+	"stringbuilder.h"
+
+1628677516 /home/ws-1113/projects/xrpg/xrpg/handler.h
+
+1633948651 source:/home/ws-1113/projects/xrpg/xrpg/draw_text.cpp
+	"draw.h"
+
+1634019100 source:/home/ws-1113/projects/xrpg/xrpg/draw_textf.cpp
+	"crt.h"
+	"draw.h"
+
+1629181108 source:/home/ws-1113/projects/xrpg/xrpg/draw_theme.cpp
+	"draw.h"
+	"draw_button.h"
+	"handler.h"
+
+1633948651 source:/home/ws-1113/projects/xrpg/xrpg/draw_tooltips.cpp
+	"draw.h"
+	"draw_button.h"
+	"handler.h"
+	"stringbuilder.h"
+
+1627282035 source:/home/ws-1113/projects/xrpg/xrpg/gender.cpp
+	"crt.h"
+	"gender.h"
+
+1627282035 /home/ws-1113/projects/xrpg/xrpg/gender.h
+
+1634123381 source:/home/ws-1113/projects/xrpg/xrpg/io_bsreq.cpp
+	"bsreq.h"
+	"log.h"
+	"stringbuilder.h"
+	"variant.h"
+
+1627282035 source:/home/ws-1113/projects/xrpg/xrpg/io_plugin.cpp
+	"crt.h"
+	"io_plugin.h"
+
+1630910008 /home/ws-1113/projects/xrpg/xrpg/io_plugin.h
+	"io_stream.h"
+	"serializer.h"
+	"stringbuilder.h"
+
+1633415366 /home/ws-1113/projects/xrpg/xrpg/serializer.h
+
+1634019100 source:/home/ws-1113/projects/xrpg/xrpg/io_plugin_data.cpp
+	"bsreq.h"
+	"crt.h"
+	"flagable.h"
+	"io_plugin.h"
+	"log.h"
+	"variant.h"
+
+1630476358 /home/ws-1113/projects/xrpg/xrpg/flagable.h
+
+1633328574 source:/home/ws-1113/projects/xrpg/xrpg/io_plugin_json.cpp
+	"crt.h"
+	"io_plugin.h"
+
+1627371753 source:/home/ws-1113/projects/xrpg/xrpg/io_stream.cpp
+	"crt.h"
+	"io_stream.h"
+	"stringbuilder.h"
+
+1634019100 source:/home/ws-1113/projects/xrpg/xrpg/log.cpp
+	"crt.h"
+	"io_stream.h"
+	"log.h"
+	"stringbuilder.h"
+
+1633948651 source:/home/ws-1113/projects/xrpg/xrpg/menu.cpp
+	"answers.h"
+	"draw.h"
+	"requisit.h"
+	"menu.h"
+
+1631701891 /home/ws-1113/projects/xrpg/xrpg/requisit.h
+	"variant.h"
+
+1631861102 /home/ws-1113/projects/xrpg/xrpg/menu.h
+
+1627282035 source:/home/ws-1113/projects/xrpg/xrpg/moveable.cpp
+	"moveable.h"
+
+1627282035 /home/ws-1113/projects/xrpg/xrpg/moveable.h
+	"posable.h"
+
+1633415305 /home/ws-1113/projects/xrpg/xrpg/posable.h
+	"point.h"
+
+1633949267 source:/home/ws-1113/projects/xrpg/xrpg/nix_draw.cpp
+	<X11/keysym.h>
+	<X11/Xlib.h>
+	<X11/Xutil.h>
+	<X11/XKBlib.h>
+	"crt.h"
+	"draw.h"
+
+1630567196 source:/home/ws-1113/projects/xrpg/xrpg/nix_io_file.cpp
+	<cstdio>
+	<unistd.h>
+	"crt.h"
+	"io_stream.h"
+
+1632992211 source:/home/ws-1113/projects/xrpg/xrpg/nix_time.cpp
+	"time.h"
+
+1632739489 source:/home/ws-1113/projects/xrpg/xrpg/png.cpp
+	"draw.h"
+
+1627282035 source:/home/ws-1113/projects/xrpg/xrpg/point.cpp
+	"point.h"
+
+1631774283 source:/home/ws-1113/projects/xrpg/xrpg/requisit.cpp
+	"requisit.h"
+
+1632125860 source:/home/ws-1113/projects/xrpg/xrpg/resource_dynamic.cpp
+	"crt.h"
+	"draw.h"
+
+1633703798 source:/home/ws-1113/projects/xrpg/xrpg/screenshoot.cpp
+	"screenshoot.h"
+
+1628677516 /home/ws-1113/projects/xrpg/xrpg/screenshoot.h
+	"point.h"
+	"draw.h"
+
+1630910008 source:/home/ws-1113/projects/xrpg/xrpg/serializer.cpp
+	"serializer.h"
+
+1633949314 source:/home/ws-1113/projects/xrpg/xrpg/stringact.cpp
+	"crt.h"
+	"stringact.h"
+
+1632983027 /home/ws-1113/projects/xrpg/xrpg/stringact.h
+	"gender.h"
+	"stringbuilder.h"
+
+1633012626 source:/home/ws-1113/projects/xrpg/xrpg/stringbuilder.cpp
+	"crt.h"
+	"stringbuilder.h"
+
+1627371753 source:/home/ws-1113/projects/xrpg/xrpg/surface_serial.cpp
+	"draw.h"
+	"io_stream.h"
+
+1627569918 source:/home/ws-1113/projects/xrpg/xrpg/szdup.cpp
+	"crt.h"
+
+1633328574 source:/home/ws-1113/projects/xrpg/xrpg/variant.cpp
+	"variant.h"
+
+1633700480 source:/home/ws-1113/projects/xrpg/xrpg/varianta.cpp
+	"answers.h"
+	"varianta.h"
+
+1633700480 /home/ws-1113/projects/xrpg/xrpg/varianta.h
+	"crt.h"
+	"variant.h"
+
+1630304752 source:/home/ws-1113/projects/xrpg/xrpg/zip.cpp
+	"crt.h"
+
+1634121302 source:/home/ws-1113/projects/xrpg/simwar/main.cpp
+	"bsreq.h"
+	"log.h"
+	"main.h"
+
+1634120069 /home/ws-1113/projects/xrpg/simwar/main.h
+	"dataset.h"
+	"variant.h"
+
+1627371753 /home/ws-1113/projects/xrpg/xrpg/dataset.h
+
+1634113418 source:/home/ws-1113/projects/xrpg/simwar/property.cpp
+	"bsreq.h"
+	"main.h"
+
+1634120079 source:/home/ws-1113/projects/xrpg/simwar/stat.cpp
+	"main.h"
+
+1634112077 source:/home/ws-1113/projects/xrpg/simwar/consumable.cpp
+	"main.h"
+

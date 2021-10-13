@@ -14,8 +14,8 @@ struct valuei {
 };
 
 static void next() {
-	while(*p == ' ' || *p == 9)
-		p++;
+    while(*p == ' ' || *p == 9)
+        p++;
 }
 
 static bool iscr() {
@@ -29,7 +29,7 @@ static void skipsym(char sym) {
 				p = skipcr(p);
 			return;
 		}
-        log::errorv(p, "Expected line feed");
+        log::error(p, "Expected line feed");
     } else {
 		if(*p == sym) {
 			p = p + 1;
@@ -51,15 +51,23 @@ static void readid() {
 		log::error(p, "Expected identifier");
 	else
 		p = sb.psidf(p);
+	next();
 }
 
-static bool read_value(valuei& e, const bsreq* req) {
+static bool isvalue() {
+    return (p[0]=='-' && isnum(p[1]))
+        || (p[0]=='\"')
+        || isnum(p[0])
+        || ischa(p[0]);
+}
+
+static void read_value(valuei& e, const bsreq* req) {
 	e.clear();
-	next();
 	if(*p == '\"') {
 		stringbuilder sb(temp);
 		p = sb.psstr(p + 1, *p);
 		e.text = szdup(temp);
+        next();
 	} else if(*p == '-' || isnum(*p)) {
 		auto minus = false;
 		if(*p == '-') {
@@ -69,6 +77,7 @@ static bool read_value(valuei& e, const bsreq* req) {
 		p = stringbuilder::read(p, e.number);
 		if(minus)
 			e.number = -e.number;
+        next();
 	} else if(ischa(p[0])) {
 		readid();
 		if(!req) {
@@ -95,10 +104,7 @@ static bool read_value(valuei& e, const bsreq* req) {
                     e.data = req->source->ptr(e.number);
             }
 		}
-	} else
-		return false;
-	next();
-	return true;
+	}
 }
 
 static bool compare(const void* p, const bsreq* requisit, const valuei& value) {
@@ -151,14 +157,30 @@ static void* find_object(array* source, const bsreq* type, valuei* keys, int key
 	return 0;
 }
 
-static void read_array(void* object, const bsreq* req) {
+static void read_dset(void* object, const bsreq* req) {
     auto index = 0;
-    while(*p) {
+    while(*p && isvalue()) {
         valuei v;
-		if(!read_value(v, req))
-			break;
+        readid();
+        index = req->source->find(temp, 0);
+        if(index==-1) {
+            index = 0;
+            log::error(p, "Not found field `%1` in array of requisit `%2`", temp, req->id);
+        }
+        skipsym('(');
+        read_value(v, req);
+        skipsym(')');
         write_value(object, req, index++, v);
 		next();
+    }
+}
+
+static void read_array(void* object, const bsreq* req) {
+    auto index = 0;
+    while(*p && isvalue()) {
+        valuei v;
+        read_value(v, req);
+        write_value(object, req, index++, v);
     }
 }
 
@@ -170,14 +192,14 @@ static bool islevel(int level) {
 	auto pb = p;
 	p = skipsp(p);
 	auto i = p - pb;
-	if(i == level)
+	if(i == level && ischa(*p))
 		return true;
 	p = push_p;
 	return false;
 }
 
 static void read_dictionary(void* object, const bsreq* type, int level) {
-    while(*p && !iscr()) {
+    while(ischa(*p)) {
         readid();
         auto req = type->find(temp);
         if(!req)
@@ -186,15 +208,21 @@ static void read_dictionary(void* object, const bsreq* type, int level) {
         read_array(object, req);
 		skipsym(')');
     }
-	while(*p && islevel(level + 1)) {
+    auto pb = p;
+	while(islevel(level + 1)) {
 		readid();
 		auto req = type->find(temp);
 		if(!req)
 			log::error(p, "Not found requisit `%1`", temp);
-		if(req && req->is(KindScalar))
+        else if(req->is(KindDSet))
+            read_dset(object, req);
+		else if(req->is(KindScalar))
 			read_dictionary(req->ptr(object), req->type, level + 1);
 		else
 			read_array(object, type);
+        if(pb==p)
+            break;
+        pb = p;
 	}
 }
 
@@ -224,8 +252,8 @@ static varianti* find_type(const char* id) {
 }
 
 static void parse() {
+    auto pb = p;
 	while(*p) {
-		auto pb = p;
 		skipsym('#');
 		readid();
 		auto pd = find_type(temp);
@@ -241,9 +269,11 @@ static void parse() {
 			next();
 			if(pb == p)
 				break;
+            pb = p;
 		}
 		if(pb == p)
 			break;
+        pb = p;
 	}
 }
 
