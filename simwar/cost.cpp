@@ -1,8 +1,8 @@
 #include "main.h"
 
-BSDATA(consumablei) = {
+BSDATA(costi) = {
 	{"Gold"},
 	{"Mana"},
 	{"Fame"},
 };
-assert_enum(consumablei, Fame)
+assert_enum(costi, Fame)

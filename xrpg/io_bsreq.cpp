@@ -18,6 +18,11 @@ static void next() {
         p++;
 }
 
+static void nextline() {
+    while(*p == 10 || *p == 13)
+        p++;
+}
+
 static bool iscr() {
 	return p[0] == 10 || p[0] == 13;
 }
@@ -263,13 +268,9 @@ static void parse() {
 			return;
 		}
 		skipsym(10);
-		while(*p) {
+		while(*p && *p!='#') {
             read_object(pd->metadata, pd->source, pd->key_count, 0);
-			p = skipcr(p);
-			next();
-			if(pb == p)
-				break;
-            pb = p;
+			nextline();
 		}
 		if(pb == p)
 			break;

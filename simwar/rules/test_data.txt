@@ -1,3 +1,13 @@
+#Resources
+
+Ore
+Wood
+Gems
+Sulfur
+Iron
+Horses
+Leather
+
 #Units
 
 Spearmens
@@ -33,7 +43,7 @@ Orks
  cost Gold(30)
  upkeep Gold(2)
 Ogres
- stats Attack(3) Defend(2) Damage(5) Hits(14) Level(2)
+ stats Attack(3) Defend(2) Damage(5) Hits(16) Level(2)
  cost Gold(50)
  upkeep Gold(5)
 WolfRiders

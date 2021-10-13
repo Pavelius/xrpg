@@ -119,7 +119,7 @@
 
 1627282035 /home/ws-1113/projects/xrpg/xrpg/gender.h
 
-1634123381 source:/home/ws-1113/projects/xrpg/xrpg/io_bsreq.cpp
+1634128542 source:/home/ws-1113/projects/xrpg/xrpg/io_bsreq.cpp
 	"bsreq.h"
 	"log.h"
 	"stringbuilder.h"
@@ -254,18 +254,19 @@
 1630304752 source:/home/ws-1113/projects/xrpg/xrpg/zip.cpp
 	"crt.h"
 
-1634121302 source:/home/ws-1113/projects/xrpg/simwar/main.cpp
+1634128260 source:/home/ws-1113/projects/xrpg/simwar/main.cpp
 	"bsreq.h"
 	"log.h"
 	"main.h"
 
-1634120069 /home/ws-1113/projects/xrpg/simwar/main.h
+1634129879 /home/ws-1113/projects/xrpg/simwar/main.h
 	"dataset.h"
+	"flagable.h"
 	"variant.h"
 
-1627371753 /home/ws-1113/projects/xrpg/xrpg/dataset.h
+1634127965 /home/ws-1113/projects/xrpg/xrpg/dataset.h
 
-1634113418 source:/home/ws-1113/projects/xrpg/simwar/property.cpp
+1634127852 source:/home/ws-1113/projects/xrpg/simwar/property.cpp
 	"bsreq.h"
 	"main.h"
 
@@ -273,5 +274,11 @@
 	"main.h"
 
 1634112077 source:/home/ws-1113/projects/xrpg/simwar/consumable.cpp
+	"main.h"
+
+1634127792 source:/home/ws-1113/projects/xrpg/simwar/cost.cpp
+	"main.h"
+
+1634129828 source:/home/ws-1113/projects/xrpg/simwar/combat.cpp
 	"main.h"
 

@@ -3,8 +3,6 @@
 
 NOBSDATA(statable)
 
-//BSMETA(resourceable) = {{}};
-//BSMETA(statable) = {{}};
 BSMETA(variant) = {{}};
 BSMETA(varianti) = {BSREQ(id), {}};
 BSDATAD(variant)
@@ -12,14 +10,18 @@ BSDATAD(variant)
 BSMETA(stati) = {
     BSREQ(id),
 {}};
-BSMETA(consumablei) = {
+BSMETA(costi) = {
     BSREQ(id),
 {}};
+BSMETA(resourcei) = {
+    BSREQ(id),
+{}};
+BSDATAD(resourcei)
 BSMETA(uniti) = {
     BSREQ(id),
     BSARR(stats, KindDSet, char, bsdata<stati>::source_ptr),
-    BSARR(cost, KindDSet, char, bsdata<consumablei>::source_ptr),
-    BSARR(upkeep, KindDSet, char, bsdata<consumablei>::source_ptr),
+    BSARR(cost, KindDSet, char, bsdata<costi>::source_ptr),
+    BSARR(upkeep, KindDSet, char, bsdata<costi>::source_ptr),
 {}};
 BSDATAD(uniti)
 
@@ -27,6 +29,7 @@ BSDATAD(uniti)
 #define VRNOM(T) 0, bsdata<T>::source_ptr
 BSDATA(varianti) = {
 	{"NoVariant"},
+	{"Resources", VRSTD(resourcei)},
 	{"Units", VRSTD(uniti)},
 };
 assert_enum(varianti, Unit)

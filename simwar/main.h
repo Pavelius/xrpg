@@ -1,19 +1,20 @@
 #include "dataset.h"
+#include "flagable.h"
 #include "variant.h"
 
 enum stat_s : unsigned char {
     Attack, Defend, Raid, Move, Damage, Hits,
     Level
 };
-enum consumable_s : unsigned char {
+enum cost_s : unsigned char {
     Gold, Mana, Fame
 };
 enum variant_s : unsigned char {
-    NoVariant, Unit
+    NoVariant, Resource, Unit
 };
-struct statable : dataset<stat_s, 16> {
+struct statable : dataset<16> {
 };
-struct resourceable : dataset<consumable_s, 8> {
+struct costa : dataset<8> {
 };
 struct nameable {
     const char*         id;
@@ -21,10 +22,27 @@ struct nameable {
 struct stati {
     const char*         id;
 };
-struct consumablei {
+struct costi {
     const char*         id;
+};
+struct resourcei {
+    const char*         id;
+};
+struct resourcea : flagable<2> {
 };
 struct uniti : nameable {
     statable            stats;
-    resourceable        cost, upkeep;
+    costa               cost, upkeep;
+};
+struct army : adat<variant, 18> {
+    void                damage(int hits);
+};
+struct hero : uniti {
+    army                troops;
+};
+struct provincei : nameable {
+    costa               income;
+    char                explored;
+    resourcea           resources;
+    army                troops;
 };

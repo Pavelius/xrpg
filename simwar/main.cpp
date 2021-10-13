@@ -3,7 +3,9 @@
 #include "main.h"
 
 static bool test_data() {
-    auto& e1 = bsdata<uniti>::get(0); // Speadmens
+    auto pr = bsdata<resourcei>::source_ptr;
+    auto pu = bsdata<uniti>::source_ptr;
+    auto& e1 = *((uniti*)pu->ptr(0)); // Speadmens
     if(e1.stats.get(Defend)!=2)
         return false;
     auto& e2 = bsdata<uniti>::get(1);

@@ -103,7 +103,8 @@
 		<Unit filename="../xrpg/varianta.cpp" />
 		<Unit filename="../xrpg/varianta.h" />
 		<Unit filename="../xrpg/zip.cpp" />
-		<Unit filename="consumable.cpp" />
+		<Unit filename="combat.cpp" />
+		<Unit filename="cost.cpp" />
 		<Unit filename="errors.txt" />
 		<Unit filename="main.cpp" />
 		<Unit filename="main.h" />
