@@ -1,4 +1,5 @@
 #SummonedCreature
 
-Decoy hits(2) move(2)
+Decoy hits(2)
+ move 2
 Ork hits(4) move(1)

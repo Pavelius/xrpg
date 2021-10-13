@@ -14,7 +14,7 @@ fnevent getcommand(const char* id) {
 void util_main();
 
 static bool test_bsreq() {
-    int result;
+    int result = 0;
     for(auto& e : bsdata<summoni>()) {
         result++;
     }

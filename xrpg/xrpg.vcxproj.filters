@@ -212,9 +212,6 @@
     <ClCompile Include="io_plugin.cpp">
       <Filter>Support</Filter>
     </ClCompile>
-    <ClCompile Include="io_plugin_bsreq.cpp">
-      <Filter>Support</Filter>
-    </ClCompile>
     <ClCompile Include="io_plugin_json.cpp">
       <Filter>Support</Filter>
     </ClCompile>

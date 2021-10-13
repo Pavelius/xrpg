@@ -4,6 +4,7 @@
 #include "variant.h"
 
 static char			temp[512];
+static const char*	p;
 
 struct valuei {
 	const char*		text;
@@ -12,36 +13,49 @@ struct valuei {
 	void clear() { memset(this, 0, sizeof(*this)); }
 };
 
-static const char* skipsym(const char* p, char sym) {
+static void next() {
+	while(*p == ' ' || *p == 9)
+		p++;
+}
+
+static bool iscr() {
+	return p[0] == 10 || p[0] == 13;
+}
+
+static void skipsym(char sym) {
     if(sym==10) {
-        if(*p==10 || *p==13)
-            return skipcr(p);
+		if(iscr()) {
+			while(iscr())
+				p = skipcr(p);
+			return;
+		}
         log::errorv(p, "Expected line feed");
     } else {
-        if(*p==sym)
-            return p + 1;
+		if(*p == sym) {
+			p = p + 1;
+			next();
+			return;
+		}
         char temp[2] = {sym, 0};
         log::error(p, "Expected symbol `%1`", temp);
     }
-    return "";
 }
 
 static const bsreq* getkey(const bsreq* type) {
 	return type->find("id", bsmeta<const char*>::meta);
 }
 
-static const char* readid(const char* p) {
+static void readid() {
 	stringbuilder sb(temp); temp[0] = 0;
-	if(!ischa(*p)) {
+	if(!ischa(*p))
 		log::error(p, "Expected identifier");
-		return p;
-	}
-	p = sb.psidf(p);
-	return skipsp(p);
+	else
+		p = sb.psidf(p);
 }
 
-static const char* readv(const char* p, const bsreq* req, valuei& e) {
+static bool read_value(valuei& e, const bsreq* req) {
 	e.clear();
+	next();
 	if(*p == '\"') {
 		stringbuilder sb(temp);
 		p = sb.psstr(p + 1, *p);
@@ -55,19 +69,21 @@ static const char* readv(const char* p, const bsreq* req, valuei& e) {
 		p = stringbuilder::read(p, e.number);
 		if(minus)
 			e.number = -e.number;
-	} else {
-		p = readid(p);
-		if(p[0] == '(')
-			log::error(p, "Expected idetifier");
-		else if(req->is(KindText))
+	} else if(ischa(p[0])) {
+		readid();
+		if(!req) {
+			// Nothing to do
+		} else if(req->is(KindText))
 			e.text = szdup(temp);
-		else if(req->type==bsmeta<variant>::meta) {
-            variant v1 = (const char*)temp;
-            e.number = v1.u;
+		else if(req->type == bsmeta<variant>::meta) {
+			variant v1 = (const char*)temp;
+			if(!v1)
+				log::error(p, "Can't find variant `%1`", temp);
+			e.number = v1.u;
 		} else {
             auto pk = getkey(req->type);
             if(!pk)
-                log::error(p, "Requisit don't have source type when load identifier `%1`", temp);
+                log::error(p, "Requisit don't have key when load identifier `%1`", temp);
             else if(!req->source)
                 log::error(p, "Invalid source array where read identifier `%1`", temp);
             else {
@@ -79,8 +95,10 @@ static const char* readv(const char* p, const bsreq* req, valuei& e) {
                     e.data = req->source->ptr(e.number);
             }
 		}
-	}
-	return skipsp(p);
+	} else
+		return false;
+	next();
+	return true;
 }
 
 static bool compare(const void* p, const bsreq* requisit, const valuei& value) {
@@ -107,8 +125,10 @@ static bool compare(const void* p, const bsreq* type, const valuei* keys, int ke
 	return true;
 }
 
-static void writev(void* p, const bsreq* req, int index, const valuei& v) {
-    auto p1 = req->ptr(p, index);
+static void write_value(void* object, const bsreq* req, int index, const valuei& v) {
+	if(!req)
+		return;
+    auto p1 = req->ptr(object, index);
     if(req->is(KindNumber) || req->type==bsmeta<variant>::meta)
         req->set(p1, v.number);
     else if(req->is(KindText))
@@ -117,12 +137,12 @@ static void writev(void* p, const bsreq* req, int index, const valuei& v) {
         req->set(p1, (long)v.data);
 }
 
-static void fill(void* p, const bsreq* type, const valuei* keys, int key_count) {
+static void fill(void* object, const bsreq* type, const valuei* keys, int key_count) {
 	for(int i = 0; i < key_count; i++)
-        writev(p, type + i, 0, keys[i]);
+        write_value(object, type + i, 0, keys[i]);
 }
 
-static void* findv(array* source, const bsreq* type, valuei* keys, int key_count) {
+static void* find_object(array* source, const bsreq* type, valuei* keys, int key_count) {
 	auto pe = source->end();
 	for(auto p = source->begin(); p < pe; p += source->size) {
 		if(compare(p, type, keys, key_count))
@@ -131,45 +151,69 @@ static void* findv(array* source, const bsreq* type, valuei* keys, int key_count
 	return 0;
 }
 
-static const char* read_array(const char* p, void* object, const bsreq* req) {
+static void read_array(void* object, const bsreq* req) {
     auto index = 0;
-    while(*p && *p!=')') {
+    while(*p) {
         valuei v;
-        p = readv(p, req, v);
-        writev(object, req, index++, v);
+		if(!read_value(v, req))
+			break;
+        write_value(object, req, index++, v);
+		next();
     }
-    if(*p==')')
-        p = skipsp(p+1);
-	return p;
 }
 
-static const char* read_dictionary(const char* p, void* object, const bsreq* type) {
-    while(*p && !(*p==13 || *p==10)) {
-        p = readid(p);
+static bool islevel(int level) {
+	if(!iscr())
+		return false;
+	auto push_p = p;
+	p = skipcr(p);
+	auto pb = p;
+	p = skipsp(p);
+	auto i = p - pb;
+	if(i == level)
+		return true;
+	p = push_p;
+	return false;
+}
+
+static void read_dictionary(void* object, const bsreq* type, int level) {
+    while(*p && !iscr()) {
+        readid();
         auto req = type->find(temp);
         if(!req)
             log::error(p, "Not found requisit `%1`", temp);
-        p = skipsym(p, '(');
-        p = read_array(p, object, type);
+        skipsym('(');
+        read_array(object, req);
+		skipsym(')');
     }
-	return p;
+	while(*p && islevel(level + 1)) {
+		readid();
+		auto req = type->find(temp);
+		if(!req)
+			log::error(p, "Not found requisit `%1`", temp);
+		if(req && req->is(KindScalar))
+			read_dictionary(req->ptr(object), req->type, level + 1);
+		else
+			read_array(object, type);
+	}
 }
 
-static const char* readv(const char* p, const bsreq* type, array* source, int key_count, void** result_object) {
+static void* read_object(const bsreq* type, array* source, int key_count, int level) {
 	if(!key_count)
         key_count = 1;
 	valuei keys[8] = {};
 	for(auto i = 0; i < key_count; i++)
-		p = readv(p, type + i, keys[i]);
-	auto object = findv(source, type, keys, key_count);
+		read_value(keys[i], type + i);
+	auto object = find_object(source, type, keys, key_count);
 	if(!object) {
         object = source->add();
         fill(object, type, keys, key_count);
 	}
-	return read_dictionary(p, object, type);
+	read_dictionary(object, type, level);
+	return object;
 }
 
-static varianti* findbase(const char* id) {
+static varianti* find_type(const char* id) {
     for(auto& e : bsdata<varianti>()) {
         if(!e.source || !e.id)
             continue;
@@ -179,21 +223,27 @@ static varianti* findbase(const char* id) {
 	return 0;
 }
 
-static void parse(const char* p) {
+static void parse() {
 	while(*p) {
-        p = skipsp(skipsym(p, '#'));
-		p = readid(p + 1);
-		auto pd = findbase(temp);
-		if(!pd && temp[0]) {
+		auto pb = p;
+		skipsym('#');
+		readid();
+		auto pd = find_type(temp);
+		if(!pd) {
+			if(temp[0])
 			log::error(p, "Not find data type for `%1`", temp);
 			return;
 		}
-        p = skipsp(skipsym(p, 10));
+		skipsym(10);
 		while(*p) {
-            void* object = 0;
-            p = readv(p, pd->metadata, pd->source, pd->key_count, &object);
-            p = skipspcr(p);
+            read_object(pd->metadata, pd->source, pd->key_count, 0);
+			p = skipcr(p);
+			next();
+			if(pb == p)
+				break;
 		}
+		if(pb == p)
+			break;
 	}
 }
 
@@ -205,6 +255,7 @@ void bsreq::read(const char* url) {
         return;
     }
     log::setfile(pb);
-    parse(pb);
+	p = pb;
+    parse();
     delete pb;
 }

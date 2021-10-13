@@ -249,7 +249,6 @@
     <ClCompile Include="draw_textf.cpp" />
     <ClCompile Include="io_stream.cpp" />
     <ClCompile Include="io_plugin.cpp" />
-    <ClCompile Include="io_plugin_bsreq.cpp" />
     <ClCompile Include="io_plugin_json.cpp" />
     <ClCompile Include="markup.cpp" />
     <ClCompile Include="menu.cpp" />
