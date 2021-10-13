@@ -189,6 +189,7 @@
     <Text Include="rules\core.txt" />
     <Text Include="rules\city.txt" />
     <Text Include="rules\test_cards.txt" />
+    <Text Include="rules\test_data.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

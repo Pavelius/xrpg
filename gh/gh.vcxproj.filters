@@ -132,5 +132,8 @@
     <Text Include="rules\test_cards.txt">
       <Filter>Data</Filter>
     </Text>
+    <Text Include="rules\test_data.txt">
+      <Filter>Data</Filter>
+    </Text>
   </ItemGroup>
 </Project>
