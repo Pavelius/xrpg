@@ -41,6 +41,7 @@ void				sheader(const char* string);
 void				slide(point pt, int step = 12);
 void				stext(const char* string);
 void                status(const char* format, ...);
+bool				swindow(bool hilight, int border = 0);
 bool				window(bool hilite, const char* string, const char* resid);
 void				windows(const command* source);
 }

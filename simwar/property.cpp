@@ -44,6 +44,7 @@ BSDATAD(troop)
 BSDATA(varianti) = {
 	{"NoVariant"},
     {"Bonus", VRSTD(bonusi), 1},
+    {"Cost", VRSTD(costi), 1},
     {"Landscape", VRSTD(landscapei), 1},
     {"Player", VRSTD(resourcei), 1},
     {"Resource", VRSTD(resourcei), 1},

@@ -14,6 +14,8 @@ static bool test_data() {
         return pu;
     auto& e2 = bsdata<uniti>::get(1);
     auto& e3 = bsdata<uniti>::get(2);
+    auto player = playeri::getcurrent();
+    player->total.set(Gold, 1000);
     return true;
 }
 

@@ -23,9 +23,10 @@ unsigned char			opacity = 186;
 unsigned char			opacity_hilighted = 210;
 }
 
-static bool swindow(rect rc, bool hilight, int border) {
+bool draw::swindow(bool hilight, int border) {
 	if(border == 0)
 		border = metrics::padding;
+	rect rc = {caret.x, caret.y, caret.x + width, caret.y + height};
 	rc.offset(-border, -border);
 	color c = colors::form;
 	color b = colors::form;
@@ -118,12 +119,14 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 	auto padding_height = 0;
 	if(image_height && text_height)
 		padding_height = metrics::padding;
-	rect rc = {caret.x, caret.y, caret.x + width, caret.y + image_height + text_height + padding_height};
-	auto rs = swindow(rc, hilite, 0);
+	auto push_height = height;
+	height = image_height + text_height + padding_height;
+	auto rs = swindow(hilite, 0);
 	if(image_surface) {
 		image(caret.x, caret.y, image_surface, 0, 0);
 		caret.y += image_height + padding_height;
 	}
+	height = push_height;
 	if(string)
 		stext(string);
 	caret.y += metrics::border * 2;
@@ -135,9 +138,10 @@ bool draw::buttonfd(const char* title) {
 		return false;
 	rect rc = {caret.x, caret.y, caret.x + width, caret.y};
 	textw(rc, title);
-	rc.x2 = rc.x1 + width;
-	rc.y2 = rc.y2 + metrics::padding;
-	auto result = swindow(rc, true, 0);
+	auto push_height = height;
+	height = rc.height();
+	auto result = swindow(true, 0);
+	height = push_height;
 	text(rc, title, AlignCenterCenter);
 	caret.y += metrics::border * 2 + rc.height();
 	return result;
@@ -149,7 +153,10 @@ bool draw::buttonrd(const char* title) {
 	rect rc = {caret.x, caret.y, caret.x + width, caret.y};
 	textw(rc, title);
 	rc.y2 = rc.y2 + metrics::padding;
-	auto result = swindow(rc, true, 0);
+	auto push_height = height;
+	height = rc.height();
+	auto result = swindow(true, 0);
+	height = push_height;
 	text(rc, title, AlignCenterCenter);
 	caret.x += rc.width() + metrics::padding * 3;
 	return result;
@@ -183,7 +190,7 @@ void draw::answerbt(int i, long id, const char* title) {
 void draw::customwindow() {
 	setpositionlu();
 	auto height = 300;
-	swindow({caret.x, caret.y, caret.x + width, caret.y + height}, false, 0);
+	swindow(false, 0);
 	tooltips(caret.x + metrics::padding, caret.y + height + metrics::padding * 4, width);
 }
 
@@ -441,7 +448,7 @@ static void paintcustomtips() {
 		return;
 	// Show background
 	rect rc; tooltips_getrect(rc, 0);
-	swindow(rc, false, 0);
+	swindow(false, 0);
 	// Show text
 	auto push_fore = draw::fore;
 	auto push_width = width;

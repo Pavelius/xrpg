@@ -10,7 +10,7 @@ enum cost_s : unsigned char {
     Gold, Mana, Fame
 };
 enum variant_s : unsigned char {
-    NoVariant, Bonus, Landscape, Player, Resource, Stat, Troop, Unit
+    NoVariant, Bonus, Cost, Landscape, Player, Resource, Stat, Troop, Unit
 };
 enum labdscape_s : unsigned char {
     Plains, Forest, Hills, Swamp, Desert, Waste, Sea,
@@ -20,7 +20,7 @@ struct bonusi {
     variant     type;
     int         bonus;
 };
-struct costa : dataset<8> {
+struct costa : dataset<8, short> {
 };
 struct nameable {
     const char* id;
@@ -75,7 +75,7 @@ struct sitetypei : nameable {
 struct sitei {
     variant     type;
     variant     owner;
-    char        visibile;
+    char        conceal; // Percent chance of conceal site. Visible only if lower that `explored` province.
 };
 struct eventi {
     const char* id;
@@ -83,13 +83,16 @@ struct eventi {
 };
 struct playeri {
     const char* id;
-    costa       income, total;
+    costa       total;
+    int         get(variant v) const;
+    static playeri* getcurrent();
 };
 namespace draw {
 void            initialize();
 }
 int             getfix(stringbuilder* sb, int v, variant id);
 VKIND(bonusi, Bonus)
+VKIND(cost_s, Cost)
 VKIND(stat_s, Stat)
 VKIND(troop, Troop)
 VKIND(uniti, Unit)
