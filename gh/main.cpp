@@ -27,10 +27,10 @@ int main() {
 	initialize_png();
 	if(!initialize_translation("ru"))
 		return -1;
-    bsreq::read("rules/test_cards.txt");
-    if(!test_bsreq())
-        return -1;
-    return 0;
+    //bsreq::read("rules/test_cards.txt");
+    //if(!test_bsreq())
+    //    return -1;
+    //return 0;
 	if(!readf("rules/core.json"))
 		return -1;
 	if(!readf("rules/players.json"))

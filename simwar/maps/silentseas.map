@@ -1,0 +1,102 @@
+include "tactics"
+include "earth_calendar"
+
+nation orcs
+nation northerners
+nation southerners
+
+action raiding order(2) raid(1) support(-3) gold(2) cost_per_unit(1)
+action attacking order(4) attack(1) support(-6) cost(5) fame(1) cost_per_unit(1)
+action defending order(5) defend(1) cost(1)
+action recruit order(3) recruit(1)
+action support order(3) support(5) cost(6)
+action economy order(3) economy(2) cost(8)
+action mobilization order(2) movement(2) cost(2)
+action quest order(1)
+
+game map("silentseas.png")
+game year(1241)
+game casualties(4)
+game income_per_level(2)
+game default_action(quest)
+game support_minimum(-60)
+game support_maximum(50)
+game economy_minimum(-5)
+game economy_maximum(5)
+game support_attack(20)
+game support_defend(20)
+game loyalty_base(15)
+game loyalty_maximum(100)
+game loyalty_noble_modifier(2)
+game desert_base(5)
+
+landscape plains income(4)
+landscape mountains income(2) defend(2)
+landscape swamp income(1) defend(2)
+landscape forest income(3) defend(1)
+landscape waste income(1)
+
+province snake_forest position(401, 996) landscape(forest) nation(southerners) neighbors(southen_coast, gracefull_plains)
+province green_acres position(256, 821) landscape(plains) nation(southerners) neighbors(southen_coast, iron_crags, khellos_coast)
+province southen_coast position(191, 994) landscape(plains) level(2) nation(southerners) neighbors(green_acres, snake_forest)
+province lone_mountain position(1024, 383) landscape(plains) level(2) nation(orcs) neighbors(theeth_forest, green_hills)
+province theeth_forest position(830, 396) landscape(forest) nation(orcs) neighbors(green_hills, iron_peaks, waste_of_battles, lone_mountain)
+province green_hills position(738, 227) landscape(plains) nation(orcs) neighbors(theeth_forest, dead_swamp, lone_mountain)
+province gracefull_plains position(617, 849) landscape(plains) nation(southerners) neighbors(waste_of_battles, iron_crags, snake_forest)
+province khellos_coast position(353, 616) landscape(waste) nation(northerners) neighbors(dead_forest, hilly_land, waste_of_battles, green_acres, iron_crags)
+province hilly_land position(227, 422) landscape(waste) level(1) nation(northerners) neighbors(dead_forest, khellos_coast, dead_swamp)
+province iron_peaks position(582, 444) landscape(mountains) nation(northerners) neighbors(dead_swamp, waste_of_battles, dead_forest, theeth_forest)
+province waste_of_battles position(660, 609) landscape(waste) nation(northerners) neighbors(iron_crags, khellos_coast, gracefull_plains, iron_peaks, theeth_forest)
+province iron_crags position(443, 747) landscape(mountains) nation(northerners) neighbors(green_acres, gracefull_plains, khellos_coast, waste_of_battles)
+province dead_swamp position(419, 311) landscape(swamp) nation(orcs) neighbors(iron_peaks, hilly_land, green_hills)
+province dead_forest position(423, 478) landscape(swamp) nation(orcs) neighbors(hilly_land, khellos_coast, iron_peaks)
+
+trait general defend(1) attack(1)
+trait wizard defend(1) magic(1)
+trait hireling attack(1) raid(2) nobility(-1)
+trait raider raid(3) nobility(-1)
+
+trait mad attack(1) sword(1) good(-1)
+trait carefull shield(1)
+trait bloody attack(2) defend(1) good(-1)
+trait cunning attack(1) raid(1)
+trait noble nobility(1) good(1)
+
+hero gordek avatar("art/portraits/gordek.bmp") traits(bloody, hireling) player(red) best_tactic(lighting_attack) origin(waste)
+hero mistra avatar("art/portraits/mistra.bmp") traits(carefull, wizard) best_tactic(careful_defence) gender(female) origin(forest)
+hero antaris avatar("art/portraits/antaris.bmp") traits(bloody, wizard) best_tactic(messy_fighting) origin(plains)
+hero groomsh avatar("art/portraits/groomsh.bmp") traits(cunning, general) player(green) best_tactic(careful_defence) origin(mountains)
+hero bogart avatar("art/portraits/bogard.bmp") traits(bloody, general) best_tactic(messy_fighting) origin(forest)
+hero argh avatar("art/portraits/argh.bmp") traits(mad, general) best_tactic(messy_fighting) origin(waste)
+hero toybo avatar("art/portraits/toybo.bmp") traits(noble, general) best_tactic(careful_defence) origin(mountains)
+
+unit orcs attack(1) defend(1) raid(1) cost(3) income(-1) recruit(2) nation(orcs)
+unit black_orcs attack(2) defend(2) cost(5) income(-2) level(1) nation(orcs)
+unit wolf_riders attack(2) raid(1) defend(1) cost(6) income(-2) wait(2) level(2) nation(orcs) landscape(plains, hills, forest)
+unit barbarians attack(1) defend(1) cost(2) income(-1) recruit(3) nation(northerners) mourning(1)
+unit berserks attack(2) defend(1) sword(1) cost(4) income(-2) nation(northerners) mourning(1)
+unit spearmans attack(1) defend(2) cost(3) income(-1) recruit(2) nation(southerners) mourning(1)
+unit swordsmans attack(2) defend(2) cost(5) income(-2) level(1) nation(southerners) mourning(1)
+unit cavalry attack(2) raid(1) defend(1) sword(1) cost(7) income(-2) level(2) nation(southerners) landscape(plains, hills) mourning(1) wait(2)
+
+// Red player start
+player red cost(50) type(computer)
+province southen_coast player(red)
+troop type(spearmans) province(southen_coast) home(southen_coast)
+troop type(spearmans) province(southen_coast) home(southen_coast)
+
+// Green player start
+player green cost(50) type(human)
+province lone_mountain player(green)
+troop type(orcs) province(lone_mountain) home(lone_mountain)
+troop type(orcs) province(lone_mountain) home(lone_mountain)
+
+event capture_incasator
+ effects gold(-10)
+ effects test(attack) gold(0)
+ effects test(sword) gold(10)
+
+event barbarian_invasion
+ effects attack(1) units(berserks, barbarians, barbarians)
+ effects test(raid) wounds(1)
+ effects test(nobility) recruit(1) units(barbarians)

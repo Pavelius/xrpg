@@ -14,13 +14,13 @@ struct valuei {
 };
 
 static void next() {
-    while(*p == ' ' || *p == 9)
-        p++;
+	while(*p == ' ' || *p == 9)
+		p++;
 }
 
 static void nextline() {
-    while(*p == 10 || *p == 13)
-        p++;
+	while(*p == 10 || *p == 13)
+		p++;
 }
 
 static bool iscr() {
@@ -28,22 +28,22 @@ static bool iscr() {
 }
 
 static void skipsym(char sym) {
-    if(sym==10) {
+	if(sym == 10) {
 		if(iscr()) {
 			while(iscr())
 				p = skipcr(p);
 			return;
 		}
-        log::error(p, "Expected line feed");
-    } else {
+		log::error(p, "Expected line feed");
+	} else {
 		if(*p == sym) {
 			p = p + 1;
 			next();
 			return;
 		}
-        char temp[2] = {sym, 0};
-        log::error(p, "Expected symbol `%1`", temp);
-    }
+		char temp[2] = {sym, 0};
+		log::error(p, "Expected symbol `%1`", temp);
+	}
 }
 
 static const bsreq* getkey(const bsreq* type) {
@@ -60,10 +60,10 @@ static void readid() {
 }
 
 static bool isvalue() {
-    return (p[0]=='-' && isnum(p[1]))
-        || (p[0]=='\"')
-        || isnum(p[0])
-        || ischa(p[0]);
+	return (p[0] == '-' && isnum(p[1]))
+		|| (p[0] == '\"')
+		|| isnum(p[0])
+		|| ischa(p[0]);
 }
 
 static void read_value(valuei& e, const bsreq* req) {
@@ -72,7 +72,7 @@ static void read_value(valuei& e, const bsreq* req) {
 		stringbuilder sb(temp);
 		p = sb.psstr(p + 1, *p);
 		e.text = szdup(temp);
-        next();
+		next();
 	} else if(*p == '-' || isnum(*p)) {
 		auto minus = false;
 		if(*p == '-') {
@@ -82,7 +82,7 @@ static void read_value(valuei& e, const bsreq* req) {
 		p = stringbuilder::read(p, e.number);
 		if(minus)
 			e.number = -e.number;
-        next();
+		next();
 	} else if(ischa(p[0])) {
 		readid();
 		if(!req) {
@@ -95,19 +95,19 @@ static void read_value(valuei& e, const bsreq* req) {
 				log::error(p, "Can't find variant `%1`", temp);
 			e.number = v1.u;
 		} else {
-            auto pk = getkey(req->type);
-            if(!pk)
-                log::error(p, "Requisit don't have key when load identifier `%1`", temp);
-            else if(!req->source)
-                log::error(p, "Invalid source array where read identifier `%1`", temp);
-            else {
-                e.number = req->source->find(temp, pk->offset);
-                if(e.number == -1) {
-                    log::error(p, "Not found identifier `%1`", temp);
-                    e.number = 0;
-                } else
-                    e.data = req->source->ptr(e.number);
-            }
+			auto pk = getkey(req->type);
+			if(!pk)
+				log::error(p, "Requisit don't have key when load identifier `%1`", temp);
+			else if(!req->source)
+				log::error(p, "Invalid source array where read identifier `%1`", temp);
+			else {
+				e.number = req->source->find(temp, pk->offset);
+				if(e.number == -1) {
+					log::error(p, "Not found identifier `%1`", temp);
+					e.number = 0;
+				} else
+					e.data = req->source->ptr(e.number);
+			}
 		}
 	}
 }
@@ -139,18 +139,20 @@ static bool compare(const void* p, const bsreq* type, const valuei* keys, int ke
 static void write_value(void* object, const bsreq* req, int index, const valuei& v) {
 	if(!req)
 		return;
-    auto p1 = req->ptr(object, index);
-    if(req->is(KindNumber) || req->type==bsmeta<variant>::meta)
-        req->set(p1, v.number);
-    else if(req->is(KindText))
-        req->set(p1, (long)szdup(v.text));
-    else if(req->is(KindReference))
-        req->set(p1, (long)v.data);
+	auto p1 = req->ptr(object, index);
+	if(req->is(KindNumber) || req->type == bsmeta<variant>::meta)
+		req->set(p1, v.number);
+	else if(req->is(KindDSet))
+		req->set(p1, v.number);
+	else if(req->is(KindText))
+		req->set(p1, (long)szdup(v.text));
+	else if(req->is(KindReference))
+		req->set(p1, (long)v.data);
 }
 
 static void fill(void* object, const bsreq* type, const valuei* keys, int key_count) {
 	for(int i = 0; i < key_count; i++)
-        write_value(object, type + i, 0, keys[i]);
+		write_value(object, type + i, 0, keys[i]);
 }
 
 static void* find_object(array* source, const bsreq* type, valuei* keys, int key_count) {
@@ -163,30 +165,30 @@ static void* find_object(array* source, const bsreq* type, valuei* keys, int key
 }
 
 static void read_dset(void* object, const bsreq* req) {
-    auto index = 0;
-    while(*p && isvalue()) {
-        valuei v;
-        readid();
-        index = req->source->find(temp, 0);
-        if(index==-1) {
-            index = 0;
-            log::error(p, "Not found field `%1` in array of requisit `%2`", temp, req->id);
-        }
-        skipsym('(');
-        read_value(v, req);
-        skipsym(')');
-        write_value(object, req, index++, v);
+	auto index = 0;
+	while(*p && isvalue()) {
+		valuei v;
+		readid();
+		index = req->source->find(temp, 0);
+		if(index == -1) {
+			index = 0;
+			log::error(p, "Not found field `%1` in array of requisit `%2`", temp, req->id);
+		}
+		skipsym('(');
+		read_value(v, req);
+		skipsym(')');
+		write_value(object, req, index++, v);
 		next();
-    }
+	}
 }
 
 static void read_array(void* object, const bsreq* req) {
-    auto index = 0;
-    while(*p && isvalue()) {
-        valuei v;
-        read_value(v, req);
-        write_value(object, req, index++, v);
-    }
+	auto index = 0;
+	while(*p && isvalue()) {
+		valuei v;
+		read_value(v, req);
+		write_value(object, req, index++, v);
+	}
 }
 
 static bool islevel(int level) {
@@ -203,90 +205,96 @@ static bool islevel(int level) {
 	return false;
 }
 
+const bsreq* find_requisit(const bsreq* type, const char* id) {
+	auto req = type->find(temp);
+	if(!req)
+		log::error(p, "Not found requisit `%1`", id);
+	return req;
+}
+
 static void read_dictionary(void* object, const bsreq* type, int level) {
-    while(ischa(*p)) {
-        readid();
-        auto req = type->find(temp);
-        if(!req)
-            log::error(p, "Not found requisit `%1`", temp);
-        skipsym('(');
-        read_array(object, req);
+	while(ischa(*p)) {
+		readid();
+		auto req = find_requisit(type, temp);
+		skipsym('(');
+		read_array(object, req);
 		skipsym(')');
-    }
-    auto pb = p;
+	}
+	auto pb = p;
 	while(islevel(level + 1)) {
 		readid();
 		auto req = type->find(temp);
 		if(!req)
 			log::error(p, "Not found requisit `%1`", temp);
-        else if(req->is(KindDSet))
-            read_dset(object, req);
+		else if(req->is(KindDSet))
+			read_dset(object, req);
 		else if(req->is(KindScalar))
 			read_dictionary(req->ptr(object), req->type, level + 1);
 		else
 			read_array(object, type);
-        if(pb==p)
-            break;
-        pb = p;
+		if(pb == p)
+			break;
+		pb = p;
 	}
 }
 
 static void* read_object(const bsreq* type, array* source, int key_count, int level) {
 	if(!key_count)
-        key_count = 1;
+		key_count = 1;
 	valuei keys[8] = {};
 	for(auto i = 0; i < key_count; i++)
 		read_value(keys[i], type + i);
 	auto object = find_object(source, type, keys, key_count);
 	if(!object) {
-        object = source->add();
-        fill(object, type, keys, key_count);
+		object = source->addz();
+		fill(object, type, keys, key_count);
 	}
 	read_dictionary(object, type, level);
 	return object;
 }
 
 static varianti* find_type(const char* id) {
-    for(auto& e : bsdata<varianti>()) {
-        if(!e.source || !e.id)
-            continue;
-        if(strcmp(e.id, id)==0)
-            return &e;
-    }
+	for(auto& e : bsdata<varianti>()) {
+		if(!e.source || !e.id)
+			continue;
+		if(strcmp(e.id, id) == 0)
+			return &e;
+	}
 	return 0;
 }
 
 static void parse() {
-    auto pb = p;
+	auto pb = p;
 	while(*p) {
 		skipsym('#');
 		readid();
 		auto pd = find_type(temp);
 		if(!pd) {
 			if(temp[0])
-			log::error(p, "Not find data type for `%1`", temp);
+				log::error(p, "Not find data type for `%1`", temp);
 			return;
 		}
 		skipsym(10);
-		while(*p && *p!='#') {
-            read_object(pd->metadata, pd->source, pd->key_count, 0);
+		while(*p && *p != '#') {
+			read_object(pd->metadata, pd->source, pd->key_count, 0);
 			nextline();
+			if(pb == p)
+				break;
+			pb = p;
 		}
-		if(pb == p)
-			break;
-        pb = p;
+		pb = p;
 	}
 }
 
 void bsreq::read(const char* url) {
-    log::seturl(url);
-    auto pb = loadt(url);
-    if(!pb) {
-        log::error(0, "Not found file `%1`", url);
-        return;
-    }
-    log::setfile(pb);
+	log::seturl(url);
+	auto pb = loadt(url);
+	if(!pb) {
+		log::error(0, "Not found file `%1`", url);
+		return;
+	}
+	log::setfile(pb);
 	p = pb;
-    parse();
-    delete pb;
+	parse();
+	delete pb;
 }

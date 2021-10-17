@@ -1,17 +1,23 @@
 #include "bsreq.h"
+#include "draw.h"
+#include "draw_simple.h"
 #include "log.h"
 #include "main.h"
 
 static bool test_data() {
     auto pr = bsdata<resourcei>::source_ptr;
-    auto pu = bsdata<uniti>::source_ptr;
-    auto& e1 = *((uniti*)pu->ptr(0)); // Speadmens
-    if(e1.stats.get(Defend)!=2)
+    if(!pr || !pr->getcount())
         return false;
+    auto pr1 = (resourcei*)pr->ptr(1);
+    auto pu = bsdata<uniti>::source_ptr;
+    if(!pu)
+        return pu;
     auto& e2 = bsdata<uniti>::get(1);
     auto& e3 = bsdata<uniti>::get(2);
     return true;
 }
+
+void initialize_png();
 
 int main() {
     bsreq::read("rules/test_data.txt");
@@ -19,5 +25,15 @@ int main() {
         return -1;
     if(!test_data())
         return -2;
+    initialize_png();
+    draw::initialize();
+    draw::setnext(draw::mainscene);
+    draw::start();
     return 0;
 }
+
+#ifdef _MSC_VER
+int __stdcall WinMain(void* ci, void* pi, char* cmd, int sw) {
+    return main();
+}
+#endif

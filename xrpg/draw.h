@@ -263,7 +263,10 @@ long					getresult();
 bool					isnext();
 void					initialize(const char* title);
 bool					ismodal();
+void					mainscene(fnevent proc);
+void					mainscene();
 void					setneedupdate();
 void					setnext(fnevent v);
+void					showscene(fnevent v);
 void					start();
 }

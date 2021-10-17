@@ -262,16 +262,6 @@ void draw::inputcamera() {
 	}
 }
 
-void draw::simpleui() {
-	while(ismodal()) {
-		if(pbackground)
-			pbackground();
-		if(pwindow)
-			pwindow();
-		domodal();
-	}
-}
-
 static int getpassedtime(unsigned long start) {
 	return getcputime() - start;
 }

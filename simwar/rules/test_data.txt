@@ -1,14 +1,9 @@
-#Resources
+#Player
 
-Ore
-Wood
-Gems
-Sulfur
-Iron
-Horses
-Leather
+Red
+Green
 
-#Units
+#Unit
 
 Spearmens
  stats Attack(1) Defend(2) Damage(3) Hits(10) Level(1)
@@ -47,6 +42,17 @@ Ogres
  cost Gold(50)
  upkeep Gold(5)
 WolfRiders
- stats Attack(2) Defend(1) Raid(1) Damage(4) Hits(10) Level(2)
+ stats Attack(2) Defend(1) Raid(1) Damage(4) Hits(12) Level(2)
  cost Gold(30)
  upkeep Gold(4)
+
+#Resource
+
+Woods
+Horses
+Iron
+Herbs
+Gems
+Sulfur
+Iron
+Leather

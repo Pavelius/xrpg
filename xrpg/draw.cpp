@@ -97,17 +97,12 @@ static bool correct(int& x1, int& y1, int& x2, int& y2, const rect& clip, bool i
 	return true;
 }
 
-static void set32(color* p, unsigned count) {
-	auto p2 = p + count;
-	while(p < p2)
-		*p++ = fore;
-}
-
 static void set32a(color* p, unsigned count) {
 	auto p2 = p + count;
-	if(draw::alpha == 255)
-		set32(p, count);
-	else if(!draw::alpha)
+	if(draw::alpha == 255) {
+		while(p < p2)
+			*p++ = fore;
+	} else if(!draw::alpha)
 		return;
 	else if(draw::alpha == 128) {
 		while(p < p2) {
@@ -885,11 +880,11 @@ void draw::line(int x1, int y1) {
 	else if(y0 == y1) {
 		if(!correct(x0, y0, x1, y1, clipping, false))
 			return;
-		set32x(canvas->ptr(x0, y0), canvas->scanline, x1 - x0 + 1, 1, (alpha == 255) ? set32 : set32a);
+		set32x(canvas->ptr(x0, y0), canvas->scanline, x1 - x0 + 1, 1, set32a);
 	} else if(x0 == x1) {
 		if(!correct(x0, y0, x1, y1, clipping, false))
 			return;
-		set32x(canvas->ptr(x0, y0), canvas->scanline, 1, y1 - y0 + 1, (alpha == 255) ? set32 : set32a);
+		set32x(canvas->ptr(x0, y0), canvas->scanline, 1, y1 - y0 + 1, set32a);
 	} else if(line_antialiasing) {
 		int dx = iabs(x1 - x0), sx = x0 < x1 ? 1 : -1;
 		int dy = iabs(y1 - y0), sy = y0 < y1 ? 1 : -1;
@@ -1150,7 +1145,7 @@ void draw::rectf(rect rc) {
 		return;
 	if(rc.x1 == rc.x2)
 		return;
-	set32x(ptr(rc.x1, rc.y1), canvas->scanline, rc.x2 - rc.x1, rc.y2 - rc.y1, (alpha == 255) ? set32 : set32a);
+	set32x(ptr(rc.x1, rc.y1), canvas->scanline, rc.x2 - rc.x1, rc.y2 - rc.y1, set32a);
 }
 
 static void rectfpt(int xc1, int yc1, int xc2, int yc2, int r) {
@@ -1230,7 +1225,7 @@ void draw::gradv(rect rc, const color c1, const color c2, int skip) {
 		fore.r = (unsigned char)(c1.r * k1 + c2.r * k2);
 		fore.g = (unsigned char)(c1.g * k1 + c2.g * k2);
 		fore.b = (unsigned char)(c1.b * k1 + c2.b * k2);
-		set32x(canvas->ptr(rc.x1, y), canvas->scanline, w1, 1, set32);
+		set32x(canvas->ptr(rc.x1, y), canvas->scanline, w1, 1, set32a);
 
 	}
 	fore = pf;
@@ -1254,7 +1249,7 @@ void draw::gradh(rect rc, const color c1, const color c2, int skip) {
 		fore.r = (unsigned char)(c1.r * k1 + c2.r * k2);
 		fore.g = (unsigned char)(c1.g * k1 + c2.g * k2);
 		fore.b = (unsigned char)(c1.b * k1 + c2.b * k2);
-		set32x(canvas->ptr(x, rc.y1), canvas->scanline, 1, h1, set32);
+		set32x(canvas->ptr(x, rc.y1), canvas->scanline, 1, h1, set32a);
 	}
 	fore = pf;
 }
@@ -1712,6 +1707,7 @@ static void raw32r(int x1, int x2, int y, unsigned char* src, int width) {
 	//auto w = x2 - x1;
 	//auto dst = (color*)canvas->ptr(x1, y);
 }
+
 static void raw_line(int x0, int y0, int x1, int x2, int y, unsigned char* src, int dy, int dx, int bpp) {
 	if(y < clipping.y1 || y > clipping.y2 || x1<clipping.x2 || x1 > clipping.x1 || x2 < clipping.x1)
 		return;
@@ -2374,4 +2370,20 @@ void draw::initialize(const char* title) {
 	draw::fore_stroke = colors::active;
 	draw::create(awindow.x, awindow.y, awindow.width, awindow.height, awindow.flags, 32);
 	draw::setcaption(title);
+}
+
+void draw::mainscene(fnevent proc) {
+	while(ismodal()) {
+		if(pbackground)
+			pbackground();
+		if(pwindow)
+			pwindow();
+		if(proc)
+			proc();
+		domodal();
+	}
+}
+
+void draw::mainscene() {
+	mainscene(0);
 }

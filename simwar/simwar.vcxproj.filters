@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="combat.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="cost.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="property.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="stat.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="province.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="troop.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="bonus.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="string.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="events.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="interface.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="errors.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="rules\test_data.txt">
+      <Filter>Data</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Logic">
+      <UniqueIdentifier>{4ffcb5e9-feff-46e1-abcc-7b799f31ebe7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{7c384333-ef2d-49a3-8d02-2c85ba66040a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -21,12 +21,6 @@ enum bstype_s : unsigned char {
 };
 // Metadata field descriptor
 struct bsreq {
-	/*struct custom {
-		const bsreq*		source = 0;
-		virtual void		create(const bsreq* type, void* object) {}
-		virtual void		read(serializer::reader* reader, const bsreq* type, serializer::node& e, const char* value) {}
-		bool				readf(const char* url);
-	};*/
 	const char*				id; // field identifier
 	unsigned				offset; // offset from begin of class or object
 	unsigned				size; // size of single element
@@ -58,21 +52,6 @@ struct bsreq {
 	bool					write(const char* url, void* object) const;
 };
 NOBSDATA(bsreq)
-/*struct bsparse {
-	enum error_s {
-		NoErrors,
-		ErrorNotFoundIdentifier1p, ErrorExpected1p, ErrorFile1pNotFound,
-		ErrorNotFoundType, ErrorNotFoundBase1p, ErrorNotFoundMember1pInBase2p,
-		ErrorExpectedIdentifier,
-	};
-	const bsreq*			metadata;
-	virtual void			error(error_s id, const char* url, int line, int column, const char* format_param) {}
-	virtual const char*		getinclude(char* result, const char* result_end, const char* name) { return 0; }
-	virtual const bsreq*	getmeta(const char* name);
-	virtual const bsreq*	getrequisit(const bsreq* type, const char* name) { return type->find(name); }
-	virtual array*			getsource(const bsreq* type);
-	virtual void			read(const char* url);
-};*/
 // Abstract metadata class
 template<typename T> struct bsmeta {
 	typedef T				data_type;
