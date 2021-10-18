@@ -70,6 +70,13 @@ const char* stringbuilder::read(const char* p, int& value) {
 	return result;
 }
 
+const char* stringbuilder::read(const char* p, short& value) {
+	long temp;
+	auto result = read(p, temp);
+	value = (short)temp;
+	return result;
+}
+
 static const char* word_end(const char* ps) {
 	while(*ps) {
 		for(auto e : spaces) {
@@ -383,6 +390,13 @@ const char* stringbuilder::readformat(const char* src, const char* vl) {
 		}
 	}
 	return src;
+}
+
+void stringbuilder::add(char sym) {
+	if(p < pe) {
+		*p++ = sym;
+		*p = 0;
+	}
 }
 
 void stringbuilder::addv(const char* src, const char* vl) {

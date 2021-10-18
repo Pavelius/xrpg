@@ -4,7 +4,11 @@
 
 using namespace draw;
 
-extern stringbuilder tooltips_sb;
+extern stringbuilder	tooltips_sb;
+const char*				dialog_image;
+static answers*			dialog_answers;
+static const char*		dialog_title;
+static const char*		dialog_description;
 
 static bool spanel(int size) {
 	rectpush push;
@@ -18,14 +22,22 @@ static void texthead(const char* string) {
 	font = metrics::h2;
 	spanel(width);
 	auto push_fore = fore;
-	fore = colors::text;
+	fore = colors::h2;
 	texta(string, AlignCenter);
 	fore = push_fore;
 	font = push_font;
 }
 
-static void picture(const char* string) {
-	swindow(false, 0);
+static void picture_image() {
+	rectpush push;
+	setoffset(-metrics::border, -metrics::border);
+	auto ps = gres(dialog_image, "art/images");
+	if(ps)
+		image(caret.x, caret.y, ps, 0, 0);
+	auto push_fore = fore;
+	fore = colors::border;
+	rectb();
+	fore = push_fore;
 	width_maximum = width;
 	height_maximum = height;
 }
@@ -47,10 +59,7 @@ static void add_status(const char* id, int value) {
 	textfs(temp);
 	auto hilite = spanel(width_maximum);
 	auto push_caret = caret;
-	auto push_fore = fore;
-	fore = colors::text;
 	textf(temp);
-	fore = push_fore;
 	caret = push_caret;
 	caret.x += width_maximum + metrics::padding + metrics::border * 2;
 	if(hilite)
@@ -84,53 +93,55 @@ static void main_background() {
 	show_status_panel();
 }
 
-static void picture_image() {
-	picture("Picture");
-}
-
 static void static_text() {
-	picture("Picture");
-}
-
-static void answer_button() {
-
+	swindow(false, 0);
+	if(dialog_description)
+		textf(dialog_description);
 }
 
 static void group(fnevent left, fnevent right) {
 	rectpush push;
 	auto x2 = caret.x + width;
 	auto sp = metrics::padding + metrics::border * 2;
-	auto dx = (push.width - sp + 2) / 3;
-	width = dx;
+	width = 160;
 	left();
-	caret.x += dx + sp;
-	width = dx * 2;
-	if(caret.x + width > x2)
-		width = x2 - caret.x;
+	caret.x += width + sp;
+	width = x2 - caret.x;
 	right();
 }
 
-static void main_window() {
+static void choose_answers_dialog() {
 	width = 500;
 	caret.x = (getwidth() - width)/2;
 	caret.y = 30;
-	texthead(getnm("RandomEvent"));
-	caret.y += height_maximum + metrics::padding + metrics::border * 2;
+	if(dialog_title) {
+		texthead(dialog_title);
+		caret.y += height_maximum + metrics::padding + metrics::border * 2;
+	}
 	height = 300;
 	group(picture_image, static_text);
 	caret.y += height + metrics::padding + metrics::border * 2;
-	auto push_fore = fore;
-	fore = colors::text;
-	button("Test 1", '1', buttonfd);
-	button("Test 2", '2', buttonfd);
-	button("Test 3", '3', buttonfd);
-	button("Test 4", '4', buttonfd);
-	fore = push_fore;
+	if(dialog_answers) {
+		for(auto& e : *dialog_answers) {
+			if(button(e.text, 0, buttonfd)) {
+
+			}
+		}
+	}
+}
+
+int draw::dialog(answers& an, const char* title, const char* description) {
+	dialog_image = "dwarf";
+	dialog_answers = &an;
+	dialog_title = title;
+	dialog_description = description;
+	mainscene(choose_answers_dialog);
+	return getresult();
 }
 
 void draw::initialize() {
-	initialize("Simwar game");
 	simpleinitialize();
+	initialize("Simwar game");
 	metrics::padding = 3;
 	metrics::border = 5;
 	image_url = "silentseas";
@@ -139,5 +150,4 @@ void draw::initialize() {
 	pbeforemodal = main_beforemodal;
 	def_background = pbackground;
 	pbackground = main_background;
-	pwindow = main_window;
 }

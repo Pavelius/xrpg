@@ -51,6 +51,9 @@
     <Text Include="locale\ru\Descriptions.txt">
       <Filter>Data</Filter>
     </Text>
+    <Text Include="rules\events.txt">
+      <Filter>Data</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Logic">

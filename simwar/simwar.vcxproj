@@ -157,6 +157,7 @@
     <Text Include="errors.txt" />
     <Text Include="locale\ru\Descriptions.txt" />
     <Text Include="locale\ru\Names.txt" />
+    <Text Include="rules\events.txt" />
     <Text Include="rules\test_data.txt" />
   </ItemGroup>
   <ItemGroup>

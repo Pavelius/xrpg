@@ -19,7 +19,7 @@ public:
 	template<unsigned N> constexpr stringbuilder(char(&result)[N]) : stringbuilder(result, result + N - 1) {}
 	constexpr operator char*() const { return pb; }
 	void				add(const char* format, ...) { addv(format, xva_start(format)); }
-	void				add(char sym) { char temp[2] = {sym, 0}; addv(temp, 0); }
+	void				add(char sym);
 	void				addby(const char* s);
 	virtual void		addidentifier(const char* identifier);
 	void				addicon(const char* id, int value);
@@ -57,6 +57,7 @@ public:
 	const char*			psstr(const char* p, char end_symbol);
 	static const char*	read(const char* p, long& result);
 	static const char*	read(const char* p, int& result);
+	static const char*	read(const char* p, short& result);
 	void				set(char* v) { p = v; p[0] = 0; }
 	static unsigned char upper(unsigned char sym);
 	void				upper();

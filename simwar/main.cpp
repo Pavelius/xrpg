@@ -25,14 +25,14 @@ int main() {
     if(!initialize_translation("ru"))
         return -1;
     bsreq::read("rules/test_data.txt");
+    eventi::read("rules/events.txt");
     if(log::geterrors())
         return -1;
     if(!test_data())
         return -2;
     initialize_png();
     draw::initialize();
-    draw::setnext(draw::mainscene);
-    draw::start();
+    eventi::find("ShamanCome")->play();
     return 0;
 }
 

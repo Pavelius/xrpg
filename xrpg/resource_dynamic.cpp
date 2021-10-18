@@ -35,6 +35,8 @@ static unsigned char* rotate(unsigned char* src, int width, int height) {
 }
 
 const sprite* draw::gres(const char* name, const char* folder, point maxsize) {
+	if(!name)
+		return 0;
 	auto p = find(name, folder);
 	if(!p) {
 		p = source.add();

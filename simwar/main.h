@@ -1,3 +1,4 @@
+#include "answers.h"
 #include "dataset.h"
 #include "flagable.h"
 #include "variant.h"
@@ -79,7 +80,23 @@ struct sitei {
 };
 struct eventi {
     const char* id;
+    constexpr explicit operator bool() const { return id != 0; }
+    static const eventi* find(const char* id);
+    void        play() const;
+    static void read(const char* url);
+};
+struct eventcasei {
+    short       parent;
+    short       id;
+    int         next;
+    const char* text;
     variants    effect;
+    constexpr explicit operator bool() const { return parent != -1; }
+    void        clear();
+    eventi*     getparent() const;
+    bool        isallow() const;
+    bool        isprompt() const { return next == -1; }
+    bool        isend() const { return !next; }
 };
 struct playeri {
     const char* id;
@@ -88,6 +105,7 @@ struct playeri {
     static playeri* getcurrent();
 };
 namespace draw {
+int             dialog(answers& an, const char* title, const char* format);
 void            initialize();
 }
 int             getfix(stringbuilder* sb, int v, variant id);
