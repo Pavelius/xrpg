@@ -130,14 +130,14 @@ bool draw::button(const rect& rc, const char* title, const char* tips, unsigned 
 	color b2 = c0.mix(colors::black);
 	if(button_pressed) {
 		if(vertical)
-			gradh(rcb, b2, b1);
+			gradh(b2, b1);
 		else
-			gradv(rcb, b2, b1);
+			gradv(b2, b1);
 	} else {
 		if(vertical)
-			gradh(rcb, b1, b2);
+			gradh(b1, b2);
 		else
-			gradv(rcb, b1, b2);
+			gradv(b1, b2);
 	}
 	if(border) {
 		auto push_fore = fore;
@@ -146,7 +146,7 @@ bool draw::button(const rect& rc, const char* title, const char* tips, unsigned 
 			fore = fore.mix(colors::black, 160);
 		else
 			fore = fore.mix(colors::white, 160);
-		rectb(rc);
+		rectb();
 		fore = push_fore;
 	}
 	auto rco = rc; rco.offset(2, 2);

@@ -6,10 +6,10 @@ using namespace draw;
 
 int draw::sheetline(rect rc, bool background) {
 	if(background)
-		gradv(rc, colors::border.lighten(), colors::border.darken());
+		gradv(colors::border.lighten(), colors::border.darken());
 	auto push_fore = fore;
 	fore = colors::active;
-	rectf({rc.x1, rc.y2 - 2, rc.x2, rc.y2});
+	rectf();
 	fore = push_fore;
 	return rc.height();
 }
@@ -30,7 +30,7 @@ static bool sheet(rect& rc, rect& rct, const char* string, bool* area_result, bo
 	auto ty = rct.y1 + 4;
 	if(checked) {
 		fore = back;
-		rectf({rct.x1 + 1, rct.y1 + 1, rct.x2, rct.y2 + 1});
+		rectf();
 		fore = colors::border;
 		//line(rct.x1, rct.y1, rct.x2, rct.y1);
 		//line(rct.x1, rct.y1, rct.x1, rct.y2);
@@ -50,7 +50,7 @@ static bool sheet(rect& rc, rect& rct, const char* string, bool* area_result, bo
 			fore = back;
 			auto push_alpha = alpha;
 			alpha = 64;
-			draw::rectf({rct.x1 + 1, rct.y1 + 1, rct.x2, rct.y2 - 2});
+			draw::rectf();
 			alpha = push_alpha;
 		}
 	}
@@ -108,9 +108,9 @@ int draw::tabv(rect ro, bool show_close, bool right_side, void** data, int start
 	rect rc = {ro.x1, ro.y1 + dy, ro.x2, ro.y2};
 	auto push_fore = fore;
 	fore = colors::form;
-	rectf(rc);
+	rectf();
 	fore = colors::border;
-	rectb(rc);
+	rectb();
 	fore = push_fore;
 	return tabs({ro.x1, ro.y1, ro.x2, ro.y1 + dy}, show_close, right_side, data, start, count, current, hilite, gtext, 0, colors::form);
 }

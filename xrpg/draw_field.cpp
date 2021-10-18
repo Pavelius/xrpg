@@ -446,9 +446,9 @@ static void fieldf(const rect& rco, unsigned flags, void* source, int size, bool
 	const unsigned edit_mask = AlignMask | TextSingleLine | TextBold | TextStroke;
 	auto push_fore = fore;
 	fore = colors::window;
-	rectf(rc);
+	rectf();
 	fore = colors::border;
-	rectb(rc);
+	rectb();
 	fore = push_fore;
 	auto focused = isfocused(rc, source);
 	if(increment) {

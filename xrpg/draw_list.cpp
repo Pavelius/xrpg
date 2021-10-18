@@ -81,7 +81,7 @@ void list::rowhilite(const rect& rc, int index) const {
 			auto push_alpha = alpha;
 			alpha = 64;
 			fore = colors::button;
-			rectf(rc);
+			rectf();
 			alpha = push_alpha;
 			fore = push_fore;
 		}
@@ -201,7 +201,7 @@ void list::paintrows(const rect& rc) const {
 			if(ix & 1) {
 				auto push_alpha = alpha;
 				alpha = 16;
-				rectf({rcm.x1, rcm.y1, rcm.x2, rcm.y2});
+				rectf();
 				alpha = push_alpha;
 			}
 		}

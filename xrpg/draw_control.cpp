@@ -115,25 +115,15 @@ void control::view(const rect& ro, bool show_border, bool show_background, bool 
 	if(show_background) {
 		auto push_fore = fore;
 		fore = colors::window;
-		rectf(rc);
+		rectf();
 		fore = push_fore;
 	}
 	if(show_border) {
 		auto push_fore = fore;
 		fore = colors::border;
-		rectb(rc);
+		rectb();
 		fore = push_fore;
 	}
 	client = rc;
 	paintnc();
-	if(show_shadow) {
-		auto push_fore = fore;
-		auto push_alpha = alpha;
-		fore = colors::form;
-		alpha = 32;
-		rectf({rc.x2 + 1, rc.y1 + 4, rc.x2 + 5, rc.y2});
-		rectf({rc.x1 + 4, rc.y2, rc.x2 + 5, rc.y2 + 5});
-		alpha = push_alpha;
-		fore = push_fore;
-	}
 }

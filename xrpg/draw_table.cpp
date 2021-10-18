@@ -178,10 +178,10 @@ int table::rowheader(const rect& rc) const {
 	color b2 = colors::button.darken();
 	if(no_change_order)
 		b1 = b1.mix(b2, 192);
-	gradv(rch, b1, b2);
+	gradv(b1, b2);
 	auto push_fore = fore;
 	fore = colors::border;
-	rectb(rch);
+	rectb();
 	fore = push_fore;
 	auto push_clip = clipping; setclip({rc.x1, rc.y1, rc.x2, rc.y2 + 1});
 	color active = colors::button.mix(colors::button, 128);
@@ -212,9 +212,9 @@ int table::rowheader(const rect& rc) const {
 		if(!no_change_order) {
 			if(a) {
 				if(hot.pressed)
-					gradv({r1.x1, r1.y1 + 1, r1.x2, r1.y2}, a2, a1);
+					gradv(a2, a1);
 				else
-					gradv({r1.x1, r1.y1 + 1, r1.x2, r1.y2}, a1, a2);
+					gradv(a1, a2);
 				if(hot.key == MouseLeft && !hot.pressed)
 					clickcolumn(i);
 			}
@@ -288,10 +288,10 @@ void table::rowtotal(const rect& rc) const {
 	rect rch = {rc.x1, rc.y1, rc.x2, rc.y1 + height};
 	color b1 = colors::button.lighten();
 	color b2 = colors::button.darken();
-	gradv(rch, b1, b2);
+	gradv(b1, b2);
 	auto push_fore = fore;
 	fore = colors::border;
-	rectb(rch);
+	rectb();
 	fore = push_fore;
 	auto push_clip = clipping; setclip({rc.x1, rc.y1, rc.x2, rc.y2 + 1});
 	rect r1;
@@ -506,7 +506,7 @@ static bool changefield(rect rc, void* row, const column& col, stringbuilder& sb
 	rc.offset(metrics::edit);
 	auto push_fore = fore;
 	fore = colors::window;
-	draw::rectf({rc.x1 - 1, rc.y1 - 1, rc.x2, rc.y2});
+	draw::rectf();
 	fore = push_fore;
 	rc.x2 -= 1;
 	return draw::edit(rc, col.value.ptr(row), col.value.size, col.align|TextSingleLine, isnumber);
@@ -540,7 +540,7 @@ void table::changeref(const rect& rc, int line, int column) {
 		return;
 	auto p = get(line);
 	auto& col = columns[column];
-	fielcd(rc, col.value.ptr(p), col.value.size, *col.source, p, col.plist, true);
+	fielcd(col.value.ptr(p), col.value.size, *col.source, p, col.plist, true);
 }
 
 void table::changecheck(const rect& rc, int line, int column) {

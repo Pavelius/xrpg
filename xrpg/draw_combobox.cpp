@@ -144,8 +144,8 @@ static void post_combolist() {
 		setsourcep(current_source, current_size, current_database, list.getvalue());
 }
 
-void draw::fielcd(const rect& rc, void* source, int size, array& database, const void* object, const fnlist& plist, bool instant) {
-	hot.focus = rc;
+void draw::fielcd(void* source, int size, array& database, const void* object, const fnlist& plist, bool instant) {
+	hot.focus = getrect();
 	current_list = plist;
 	current_object = object;
 	current_database = &database;
@@ -157,33 +157,28 @@ void draw::fielcd(const rect& rc, void* source, int size, array& database, const
 		execute(post_combolist);
 }
 
-static void fielc(const rect& rc, unsigned flags, void* source, int size, array& database, const void* object, const fnlist& plist, const char* tips) {
-	if(rc.width() <= 0)
+static void fielc(unsigned flags, void* source, int size, array& database, const void* object, const fnlist& plist, const char* tips) {
+	if(width <= 0)
 		return;
-	auto focused = isfocused(rc, source);
-	auto a = ishilite(rc);
+	auto focused = false; //isfocused(rc, source);
+	auto a = ishilite();
 	color active = colors::button.mix(colors::active, 128);
 	if(a) {
 		if(hot.pressed)
-			gradv(rc, active.darken(), active.lighten());
+			gradv(active.darken(), active.lighten());
 		else
-			gradv(rc, active.lighten(), active.darken());
+			gradv(active.lighten(), active.darken());
 	} else
-		gradv(rc, colors::button.lighten(), colors::button.darken());
+		gradv(colors::button.lighten(), colors::button.darken());
 	auto push_fore = fore;
 	fore = colors::border;
-	rectb(rc);
+	rectb();
 	fore = push_fore;
-	rect rco = rc + metrics::edit;
-	auto push_caret = caret;
-	auto push_width = width;
-	width = rco.width();
-	caret.x = rco.x1;
-	caret.y = rco.y1;
+	rectpush push_pos;
+	setoffset(metrics::edit, metrics::edit);
 	if(focused) {
-		rect r1 = rco; r1.offset(-1);
-		caret.x = rco.x1;
-		caret.y = rco.y1;
+		rectpush push_pos;
+		setoffset(1, 1);
 		rectx();
 	}
 	auto v = (void*)getsource(source, size);
@@ -193,8 +188,6 @@ static void fielc(const rect& rc, unsigned flags, void* source, int size, array&
 	auto pn = plist.getname(v, sb);
 	if(pn)
 		textc(pn, -1, 0);
-	caret = push_caret;
-	width = push_width;
 	if(tips && a && !hot.pressed)
 		tooltips(tips);
 	auto execute_drop_down = false;
@@ -203,19 +196,21 @@ static void fielc(const rect& rc, unsigned flags, void* source, int size, array&
 	if(focused && (hot.key == KeyEnter || hot.key==F2))
 		execute_drop_down = true;
 	if(execute_drop_down)
-		fielcd(rc, source, size, database, object, plist, false);
+		fielcd(source, size, database, object, plist, false);
 }
 
 void draw::field(const char* label, void* source, int size, int label_width, array& database, const fnlist& plist, const char* tips) {
 	if(!plist.getname)
 		return;
-	auto push_caret = caret;
+	auto push_height = height;
 	auto push_width = width;
+	auto push_caret = caret;
 	setposition();
 	titletext(label, label_width);
-	rect rc = {caret.x, caret.y, caret.x + width, caret.y + draw::texth() + metrics::edit * 2};
-	fielc(rc, AlignLeft | TextSingleLine, source, size, database, 0, plist, tips);
-	width = push_width;
+	height = texth() + metrics::edit * 2;
+	fielc(AlignLeft | TextSingleLine, source, size, database, 0, plist, tips);
 	caret = push_caret;
-	caret.y += rc.height() + metrics::padding;
+	caret.y += height + metrics::padding * 3;
+	width = push_width;
+	height = push_height;
 }

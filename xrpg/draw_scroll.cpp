@@ -76,7 +76,7 @@ void scroll::view(bool focused) {
 		auto push_fore = fore;
 		alpha = 128;
 		fore = colors::button;
-		rectf(work);
+		rectf();
 		alpha = push_alpha;
 		fore = push_fore;
 		button(slide, 0, 0, 0, colors::button, false, hot.pressed, false, true);
@@ -88,9 +88,9 @@ void scroll::view(bool focused) {
 			alpha = 128;
 			fore = colors::active;
 			if(horizontal)
-				rectf({slide.x1, slide.y2 - 4, slide.x2, slide.y2});
+				rectf();
 			else
-				rectf({slide.x2 - 4, slide.y1, slide.x2, slide.y2});
+				rectf();
 			alpha = push_alpha;
 			fore = push_fore;
 		}

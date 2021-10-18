@@ -22,6 +22,8 @@ static bool test_data() {
 void initialize_png();
 
 int main() {
+    if(!initialize_translation("ru"))
+        return -1;
     bsreq::read("rules/test_data.txt");
     if(log::geterrors())
         return -1;

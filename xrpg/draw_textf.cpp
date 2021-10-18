@@ -226,7 +226,7 @@ void draw::textf(const char* string, int min_height, int* cashe_height, const ch
 					break;
 				auto push_fore = fore;
 				fore = c1;
-				rectf({caret.x, caret.y, caret.x + width, caret.y + texth()});
+				//rectf({caret.x, caret.y, caret.x + width, caret.y + texth()});
 				fore = push_fore;
 				text(p, c);
 				caret.x = original_x1;
@@ -274,4 +274,15 @@ int draw::textf(rect& rc, const char* string) {
 	caret = push_caret;
 	clipping = push_clipping;
 	return rc.height();
+}
+
+int draw::textfs(const char* string) {
+	auto push_clipping = clipping;
+	clipping.clear();
+	auto push_caret = caret; caret = {};
+	draw::textf(string);
+	auto dy = caret.y;
+	caret = push_caret;
+	clipping = push_clipping;
+	return dy;
 }

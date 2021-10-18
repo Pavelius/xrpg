@@ -61,8 +61,8 @@ enum tag_s : unsigned char {
 	Scrap, Magasine, Clip, Autofire, Light, Heavy,
 };
 typedef short unsigned	indext;
-typedef dataset<attribute_s, Empathy> attributea;
-typedef dataset<skill_s, Intimidate> skilla;
+typedef dataset<Empathy> attributea;
+typedef dataset<Intimidate> skilla;
 typedef cflags<tag_s> taga;
 typedef cflags<talent_s> talenta;
 typedef cflags<mutation_s> mutaniona;
@@ -167,7 +167,7 @@ class gamei {
 	static void			update_moving();
 	static void			worldmap_input();
 public:
-	static indext		geti(point v) { return worldmap::geti(v.x / draw::scene.grid, v.y / draw::scene.grid); }
+	static indext		geti(point v) { return worldmap::geti(v.x / draw::grid, v.y / draw::grid); }
 	static point		getp(indext v);
 	static character*	getplayer();
 	static void			playworld();

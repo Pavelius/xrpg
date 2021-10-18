@@ -34,10 +34,10 @@ void draw::splitv(int x, int y, int& value, int height, int size, int minimum, i
 		alpha = 128;
 		if(hot.pressed) {
 			fore = colors::button.darken();
-			rectf(rc);
+			rectf();
 		} else {
 			fore = colors::button;
-			rectf(rc);
+			rectf();
 		}
 		alpha = push_alpha;
 		fore = push_fore;
@@ -77,7 +77,7 @@ void draw::splith(int x, int y, int width, int& value, int size, int minimum, in
 			fore = colors::button.darken();
 		else
 			fore = colors::button;
-		rectf(rc);
+		rectf();
 		alpha = push_alpha;
 		fore = push_fore;
 	}

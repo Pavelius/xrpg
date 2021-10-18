@@ -4,20 +4,49 @@
 
 using namespace draw;
 
-static fnevent		standart_beforemodal;
-static fnevent		standart_background;
+extern stringbuilder tooltips_sb;
+
+static bool spanel(int size) {
+	rectpush push;
+	width = size;
+	height = texth();
+	return swindow(false, 0);
+}
+
+static void texthead(const char* string) {
+	spanel(width);
+	auto push_fore = fore;
+	fore = colors::text;
+	texta(string, AlignCenter);
+	push_fore = fore;
+	caret.y += 4 * 2;
+}
+
+static void add_description(stringbuilder& sb, const char* id) {
+	auto p = getdescription(id);
+	if(p)
+		sb.addn(p);
+}
+
+static void get_info(const char* id) {
+	tooltips_sb.addn("###%1", getnm(id));
+	add_description(tooltips_sb, id);
+}
 
 static void add_status(const char* id, int value) {
 	char temp[512]; stringbuilder sb(temp);
-	sb.add("%1: %2i", id, value);
-	auto push_fore = fore;
+	sb.add("%1: %2i", getnm(id), value);
+	textfs(temp);
+	auto hilite = spanel(width_maximum);
 	auto push_caret = caret;
+	auto push_fore = fore;
 	fore = colors::text;
-	swindow(false);
 	textf(temp);
 	fore = push_fore;
 	caret = push_caret;
-	caret.x += width + 8 * 2;
+	caret.x += width_maximum + 4 * 3;
+	if(hilite)
+		get_info(id);
 }
 
 static void show_status_panel() {
@@ -25,37 +54,43 @@ static void show_status_panel() {
 	if(!player)
 		return;
 	static variant cost[] = {Gold, Mana, Fame};
-	auto push_caret = caret;
-	auto push_width = width;
+	setposld();
 	auto push_height = height;
-	width = 100;
 	height = texth();
-	caret.x = 8;
-	caret.y = getheight() - height - 8;
 	for(auto v : cost)
-		add_status(v.getname(), player->get(v));
-	caret = push_caret;
-	width = push_width;
+		add_status(v.getid(), player->get(v));
 	height = push_height;
 }
 
-static void event_ismodal() {
-	if(standart_beforemodal)
-		standart_beforemodal();
+static fnevent def_beforemodal;
+static void main_beforemodal() {
+	if(def_beforemodal)
+		def_beforemodal();
+	tooltipsbeforemodal();
 }
 
-static void event_background() {
-	if(standart_background)
-		standart_background();
+static fnevent def_background;
+static void main_background() {
+	if(def_background)
+		def_background();
 	show_status_panel();
+}
+
+static void main_window() {
+	width = 500;
+	caret.x = (getwidth() - width)/2;
+	caret.y = 100;
+	texthead("Random Event");
 }
 
 void draw::initialize() {
 	initialize("Simwar game");
 	simpleinitialize();
 	image_url = "silentseas";
-	standart_beforemodal = pbeforemodal;
-	pbeforemodal = event_ismodal;
-	standart_background = pbackground;
-	pbackground = event_background;
+	// Overlaod controls
+	def_beforemodal = pbeforemodal;
+	pbeforemodal = main_beforemodal;
+	def_background = pbackground;
+	pbackground = main_background;
+	pwindow = main_window;
 }

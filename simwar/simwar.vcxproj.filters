@@ -45,6 +45,12 @@
     <Text Include="rules\test_data.txt">
       <Filter>Data</Filter>
     </Text>
+    <Text Include="locale\ru\Names.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="locale\ru\Descriptions.txt">
+      <Filter>Data</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Logic">

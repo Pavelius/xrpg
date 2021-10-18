@@ -126,7 +126,7 @@ void draw::hexagon(int x, int y, int size) {
 void draw::hexagonf(short x, short y, int size) {
 	auto p1 = point{(short)(x - size * cos_30), (short)(y - size / 2)}; //points[4];
 	auto p2 = point{(short)(x + size * cos_30), (short)(y + size / 2)}; //points[1];
-	rectf({p1.x, p1.y + 1, p2.x + 1, p2.y});
+	//rectf({p1.x, p1.y + 1, p2.x + 1, p2.y});
 	triangle2({p2.x, p2.y}, {(short)x, (short)(y + size)});
 	triangle2({p2.x, p1.y}, {(short)x, (short)(y - size)});
 }

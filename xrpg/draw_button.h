@@ -31,7 +31,7 @@ void						buttonr(int& x, int y, const char* title, fnevent proc, unsigned key =
 void						checkbox(void* source, int size, unsigned bits, const char* label, const char* tips = 0);
 const char*					contextmenu(const char** commands, const void* object, fnallowid allowid, fngetcommands getcommands);
 bool						edit(const rect& rc, void* source, int size, unsigned align, bool isnumber);
-void						fielcd(const rect& rc, void* source, int size, array& database, const void* object, const fnlist& plist, bool instant);
+void						fielcd(void* source, int size, array& database, const void* object, const fnlist& plist, bool instant);
 void						fieln(const char* label, void* source, int size, int label_width, int digits);
 void						field(const char* label, char* source, unsigned size, int label_width, fnchoose choosep);
 void						field(const char* label, color& value, int header_width, const char* tips);
@@ -56,6 +56,4 @@ void						statuscolumn(int index, int width, const char* format, ...);
 int							tabs(rect rc, bool show_close, bool right_side, void** data, int start, int count, int current, int* hilite, fntext gtext, int* result_x1, color back);
 int							tabv(rect rc, bool show_close, bool right_side, void** data, int start, int count, int current, int* hilite, fntext gtext);
 void						titletext(const char* label, int label_width, const char* separator = 0);
-void						tooltips(const char* format, ...);
-void						tooltips(int x, int y, int width);
 }

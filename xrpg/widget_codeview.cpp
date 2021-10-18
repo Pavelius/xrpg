@@ -350,20 +350,24 @@ class widget_codeview : public control, vector<char> {
 		}
 		auto draw_selecton = (p1 != -1);
 		if(draw_selecton) {
+			rectpush push;
 			auto push_alpha = alpha;
 			auto p1 = getbeginpos();
 			auto p2 = getendpos();
 			alpha = 128;
 			fore = colors::active;
+			height = fontsize.y;
 			for(auto i = p1.y; i <= p2.y; i++) {
 				auto x1 = client.x1;
 				auto x2 = client.x2;
-				auto y1 = y + i * fontsize.y;
+				caret.y = y + i * fontsize.y;
 				if(i == p1.y)
-					x1 = x + p1.x * fontsize.x;
+					caret.x = x + p1.x * fontsize.x;
 				if(i == p2.y)
-					x2 = x + p2.x * fontsize.x;
-				rectf({x1, y1, x2, y1 + fontsize.y});
+					width = p2.x * fontsize.x;
+				else
+					width = client.x2 - caret.x;
+				rectf();
 			}
 			alpha = push_alpha;
 		}

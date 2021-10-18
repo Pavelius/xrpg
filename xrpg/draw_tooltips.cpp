@@ -9,53 +9,37 @@ static char		tooltips_text[4096];
 static int		px, py, pw;
 stringbuilder	tooltips_sb(tooltips_text);
 
-void tooltips_getrect(rect& rc, int border) {
+void tooltips_getrect() {
+	width = 320;
+	height = textfs(tooltips_text);
+	width = width_maximum;
 	// Calculate rect
-	auto x = px, y = py;
-	if(x == -1000 && y == -1000) {
+	caret.x = px, caret.y = py;
+	if(caret.x == -1000 && caret.y == -1000) {
 		if(hot.hilite) {
-			x = hot.hilite.x1 + border;
-			y = hot.hilite.y2 + border + 2;
+			caret.x = hot.hilite.x1;
+			caret.y = hot.hilite.y2 + 2;
 		} else {
-			x = hot.mouse.x + 32;
-			y = hot.mouse.y + 32;
+			caret.x = hot.mouse.x + 32;
+			caret.y = hot.mouse.y + 32;
 		}
 	}
-	auto w = pw;
-	if(!w)
-		w = 300;
-	rc = {x, y, x + w, y};
-	draw::textf(rc, tooltips_text);
-	rc = rc - border;
-	// Correct border
-	auto height = draw::getheight();
-	auto width = draw::getwidth();
-	if(rc.y2 >= height)
-		rc.move(0, height - 2 - rc.y2);
-	if(rc.x2 >= width)
-		rc.move(width - 2 - rc.x2, 0);
 }
 
 static void tooltips_render() {
-	// Show background
-	rect rc; tooltips_getrect(rc, metrics::padding);
 	auto push_fore = draw::fore;
-	auto push_width = width;
-	width = rc.width();
+	rectpush push;
+	tooltips_getrect();
 	fore = colors::tips::back;
-	rectf(rc);
+	setoffset(-metrics::padding, -metrics::padding);
+	rectf();
 	fore = colors::border;
-	rectb(rc);
-	rc = rc + metrics::padding;
+	rectb();
+	setoffset(metrics::padding, metrics::padding);
 	// Show text
 	fore = colors::tips::text;
-	auto push_caret = caret;
-	caret.x = rc.x1;
-	caret.y = rc.y1;
 	textf(tooltips_sb.begin());
-	caret = push_caret;
 	fore = push_fore;
-	width = push_width;
 }
 
 void draw::tooltips(const char* format, ...) {

@@ -17,7 +17,7 @@ screenshoot::screenshoot(rect rc, bool fade) : surface(rc.width(), rc.height(), 
 			setclip();
 			alpha = 128;
 			fore = colors::form;
-			rectf({0, 0, width, height});
+			//rectf({0, 0, width, height});
 			fore = push_fore;
 			alpha = push_alpha;
 			clipping = push_clip;

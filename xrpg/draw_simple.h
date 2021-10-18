@@ -21,7 +21,6 @@ inline bool			buttonfd(const char* title, unsigned key, const char* description)
 bool				buttonrd(const char* title);
 inline bool			buttonrd(const char* title, unsigned key, const char* description) { return button(title, key, buttonrd, description, 0); }
 void				customwindow();
-void				inputall();
 void				inputcamera();
 bool				ishilite(int s, const void* object);
 void				moving(point& result, point target, int velocity = 12);
@@ -31,13 +30,10 @@ void				paintall();
 void				paintclear();
 void				paintimage();
 void				paintcommands();
-void				simpleui();
 void				set(int x, int y);
-void				setposition(int x, int y);
-void				setpositionru();
-void				setpositionlu();
-void				setpositionld();
-void				sheader(const char* string);
+void				setposru();
+void				setposlu();
+void				setposld();
 void				slide(point pt, int step = 12);
 void				stext(const char* string);
 void                status(const char* format, ...);

@@ -18,34 +18,32 @@ static const void*		current_hilite;
 
 namespace metrics {
 int                     padding = 4;
-int						border = 4;
 unsigned char			opacity = 186;
-unsigned char			opacity_hilighted = 210;
+unsigned char			opacity_hilighted = 0xD8;
 }
 
 bool draw::swindow(bool hilight, int border) {
 	if(border == 0)
 		border = metrics::padding;
-	rect rc = {caret.x, caret.y, caret.x + width, caret.y + height};
-	rc.offset(-border, -border);
 	color c = colors::form;
 	color b = colors::form;
-	rect r1 = rc; r1.offset(1, 1);
-	auto rs = ishilite(r1);
+	rectpush push;
+	auto push_alpha = alpha;
+	auto push_fore = fore;
+	setoffset(-border, -border);
+	auto rs = ishilite();
 	auto op = metrics::opacity;
 	if(hilight && rs) {
 		op = metrics::opacity_hilighted;
 		if(hot.pressed)
 			op = 0xFF;
 	}
-	auto push_alpha = alpha;
-	auto push_fore = fore;
 	fore = c;
 	alpha = op;
-	rectf(rc);
+	rectf();
 	alpha = push_alpha;
 	fore = b;
-	rectb(rc);
+	rectb();
 	fore = push_fore;
 	return rs;
 }
@@ -57,37 +55,19 @@ bool draw::ishilite(int s, const void* object) {
 	return true;
 }
 
-void draw::setpositionru() {
+void draw::setposru() {
 	width = 320;
-	caret.x = getwidth() - width - metrics::border - metrics::padding;
-	caret.y = metrics::border + metrics::padding;
+	caret.x = getwidth() - width - metrics::padding*2;
+	caret.y = metrics::padding*2;
 }
 
-void draw::setpositionlu() {
-	setposition(metrics::padding * 2, metrics::padding * 2);
+void draw::setposlu() {
+	setpos(metrics::padding * 2, metrics::padding * 2);
 	width = 400;
 }
 
-void draw::setposition(int x, int y) {
-	caret.x = x;
-	caret.y = y;
-}
-
-void draw::setpositionld() {
-	setposition(metrics::padding * 2, getheight() - metrics::padding * 3 - texth());
-}
-
-void draw::sheader(const char* string) {
-	auto push_font = font;
-	auto push_fore = fore;
-	auto push_caret = caret;
-	font = metrics::h2;
-	fore = colors::h2;
-	text(string);
-	caret = push_caret;
-	caret.y += texth() + 2;
-	fore = push_fore;
-	font = push_font;
+void draw::setposld() {
+	setpos(metrics::padding * 2, getheight() - metrics::padding * 2 - texth());
 }
 
 void draw::stext(const char* string) {
@@ -129,7 +109,7 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 	height = push_height;
 	if(string)
 		stext(string);
-	caret.y += metrics::border * 2;
+	caret.y += metrics::padding * 2;
 	return rs;
 }
 
@@ -143,7 +123,7 @@ bool draw::buttonfd(const char* title) {
 	auto result = swindow(true, 0);
 	height = push_height;
 	text(rc, title, AlignCenterCenter);
-	caret.y += metrics::border * 2 + rc.height();
+	caret.y += metrics::padding * 2 + rc.height();
 	return result;
 }
 
@@ -188,7 +168,7 @@ void draw::answerbt(int i, long id, const char* title) {
 }
 
 void draw::customwindow() {
-	setpositionlu();
+	setposlu();
 	auto height = 300;
 	swindow(false, 0);
 	tooltips(caret.x + metrics::padding, caret.y + height + metrics::padding * 4, width);
@@ -198,9 +178,9 @@ void draw::paintclear() {
 	hilite_object.clear();
 	auto push_fore = fore;
 	fore = colors::window;
-	rectf({0, 0, getwidth(), getheight()});
-	tooltips(metrics::padding * 3, metrics::padding * 3, 320);
+	rectf();
 	fore = push_fore;
+	tooltips(metrics::padding * 3, metrics::padding * 3, 320);
 }
 
 void draw::paintimage() {
@@ -229,7 +209,7 @@ void draw::paintimage() {
 void draw::paintcommands() {
 	if(!input_commands)
 		return;
-	setpositionld();
+	setposld();
 	windows(input_commands);
 }
 
@@ -325,8 +305,8 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 		return 0;
 	auto push_caret = caret;
 	auto push_width = width;
-	setpositionru();
-	if(columns==-1)
+	setposru();
+	if(columns == -1)
 		columns = getcolumns(*this);
 	auto column_width = 320;
 	width = push_width;
@@ -340,7 +320,7 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 			pwindow();
 		auto push_caret = caret;
 		auto push_width = width;
-		setpositionru();
+		setposru();
 		window(false, title, resid);
 		auto index = 0;
 		auto y1 = caret.y, x1 = caret.x;
@@ -372,28 +352,24 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 }
 
 void draw::grid() {
-	auto push = fore;
+	auto push_caret = caret;
+	auto push_fore = fore;
 	auto push_alpha = alpha;
 	alpha = 64;
 	fore = colors::border;
 	auto x2 = getwidth(), y2 = getheight();
 	auto sx = grid_size, sy = grid_size;
-	for(auto x = 0; x < x2; x += sx)
-		rectf({x, 0, x + 1, y2});
-	for(auto y = 0; y < y2; y += sy)
-		rectf({0, y, x2, y + 1});
+	for(auto x = 0; x < x2; x += sx) {
+		setpos(x, 0);
+		line(x, y2);
+	}
+	for(auto y = 0; y < y2; y += sy) {
+		setpos(0, y);
+		line(x2, y);
+	}
 	alpha = push_alpha;
-	fore = push;
-}
-
-void draw::fog(int n) {
-	auto push_alpha = alpha;
-	auto push_fore = fore;
-	alpha = n;
-	fore = colors::form;
-	rectf({caret.x, caret.y, caret.x + grid_size, caret.y + grid_size});
 	fore = push_fore;
-	alpha = push_alpha;
+	caret = push_caret;
 }
 
 void draw::avatar(const char* id) {
@@ -402,26 +378,31 @@ void draw::avatar(const char* id) {
 		return;
 	image(caret.x, caret.y, p, 0, 0);
 	width = p->get(0).sx;
-	rectb({caret.x, caret.y, caret.x + width, caret.y + width});
+	rectb();
 	caret.y += p->get(0).sy + 1;
 }
 
 void draw::bar(int value, int maximum) {
 	if(!value || !maximum)
 		return;
-	rect rc = {caret.x, caret.y, caret.x + width, caret.y + 5};
-	rect r1 = rc; r1.x1++; r1.y1++;
+	int w2 = width;
 	if(value != maximum)
-		r1.x2 = r1.x1 + (rc.width() - 2) * value / maximum;
+		w2 = (width - 2) * value / maximum;
 	auto push_fore = fore;
+	auto push_width = width;
 	fore = colors::form;
-	rectf(rc);
+	rectf();
 	fore = push_fore;
-	rectf(r1);
+	width = w2;
+	auto push_caret = caret;
+	setoffset(1, 1);
+	rectf();
+	caret = push_caret;
 	fore = colors::border;
-	rectb(rc);
+	rectb();
 	fore = push_fore;
-	caret.y += rc.height();
+	width = push_width;
+	caret.y += height;
 }
 
 static void choose_window() {
@@ -439,30 +420,23 @@ void draw::windows(const command* source) {
 
 void set_dark_theme();
 
-void tooltips_getrect(rect& rc, int border);
+void tooltips_getrect();
 
 static void paintcustomtips() {
 	if(!draw::font)
 		return;
 	if(tooltips_sb && !tooltips_sb.begin()[0])
 		return;
-	// Show background
-	rect rc; tooltips_getrect(rc, 0);
+	rectpush push;
+	tooltips_getrect();
 	swindow(false, 0);
-	// Show text
 	auto push_fore = draw::fore;
-	auto push_width = width;
-	auto push_caret = caret;
 	fore = colors::tips::text;
-	width = rc.width();
-	caret.x = rc.x1; caret.y = rc.y1;
 	textf(tooltips_sb.begin());
-	caret = push_caret;
-	width = push_width;
 	fore = push_fore;
 }
 
-void draw::inputall() {
+static void inputall() {
 	inputcamera();
 	paintcustomtips();
 }

@@ -332,7 +332,7 @@ indext draw::choosemovement() {
 	auto push_show = show_movement_cost;
 	show_movement_cost = 1;
 	pwindow = choose_movement_window;
-	simpleui();
+	mainscene();
 	show_movement_cost = push_show;
 	pwindow = push_window;
 	return (indext)hot.param;

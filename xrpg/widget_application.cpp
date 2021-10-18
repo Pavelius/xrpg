@@ -293,7 +293,7 @@ static void render_element(unsigned flags, const setting::header& e) {
 	if(e.group) {
 		color c1 = colors::border.mix(colors::window, 128);
 		color c2 = c1.darken();
-		gradv({caret.x, caret.y, caret.x + width, caret.y + height}, c1, c2);
+		//gradv({caret.x, caret.y, caret.x + width, caret.y + height}, c1, c2);
 		auto push_fore = fore;
 		fore = colors::text.mix(c1, 196);
 		auto label = getnm(e.group);
@@ -303,7 +303,7 @@ static void render_element(unsigned flags, const setting::header& e) {
 		text(label);
 		caret = push_caret;
 		fore = colors::border;
-		rectb({caret.x, caret.y, caret.x + width, y2 + metrics::padding});
+		//rectb({caret.x, caret.y, caret.x + width, y2 + metrics::padding});
 		fore = push_fore;
 	}
 	caret.y = y2;
@@ -444,8 +444,8 @@ static struct widget_settings : controls::control {
 		if(true) {
 			auto push_fore = fore;
 			fore = colors::border;
-			if(metrics::show::padding)
-				rectb({rc.x1, rc.y1 + h1, rc.x2, rc.y2});
+			//if(metrics::show::padding)
+			//	rectb({rc.x1, rc.y1 + h1, rc.x2, rc.y2});
 			//else
 			//	line(rc.x1, rc.y1 + h1, rc.x2 - metrics::padding, rc.y1 + h1);
 			fore = push_fore;
@@ -760,7 +760,7 @@ bool draw::edit(control& e, fnevent heartbeat) {
 		auto tb = e.getimages();
 		rect rc = {0, 0, draw::getwidth(), draw::getheight()};
 		auto push_fore = colors::form;
-		draw::rectf(rc);
+		//draw::rectf(rc);
 		fore = push_fore;
 		if(metrics::show::statusbar)
 			draw::statusbar(rc);
@@ -803,7 +803,7 @@ void draw::application() {
 		rect rc = {0, 0, draw::getwidth(), draw::getheight()};
 		auto push_fore = fore;
 		fore = colors::form;
-		draw::rectf(rc);
+		//draw::rectf(rc);
 		fore = push_fore;
 		if(metrics::show::statusbar)
 			statusbar(rc);

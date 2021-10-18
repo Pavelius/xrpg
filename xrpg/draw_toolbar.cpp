@@ -23,14 +23,14 @@ static bool tool(const rect& rc, bool disabled, bool checked, bool press, bool f
 		auto push_fore = fore;
 		if(pressed) {
 			fore = colors::form.mix(colors::border, 128);
-			rectf(rc);
+			rectf();
 			fore = colors::border;
-			rectb(rc);
+			rectb();
 		} else {
 			fore = colors::form.mix(colors::active, 128);
-			rectf(rc);
+			rectf();
 			fore = colors::border;
-			rectb(rc);
+			rectb();
 		}
 		fore = push_fore;
 	}
@@ -43,7 +43,7 @@ struct toolbar_builder : builder {
 	constexpr toolbar_builder(int x, int y, int width, const point size) : builder(), x(x), y(y), x2(x + width), size(size) {
 	}
 	void addseparator() override {
-		gradv({x + 3, y + 4, x + 5, y + size.y - 4}, colors::border.lighten(), colors::border);
+		gradv(colors::border.lighten(), colors::border);
 		x += 7;
 	}
 	bool add(const char* id) override {

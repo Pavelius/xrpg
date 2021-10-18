@@ -165,6 +165,12 @@ extern color*			palt;
 extern int				tab_pixels;
 extern fnevent          pbackground, ptips, pwindow, pinput;
 extern fnevent          pbeforemodal, pleavemodal, psetfocus;
+struct rectpush {
+	point				caret;
+	int					width, height;
+	constexpr rectpush() : caret(draw::caret), width(draw::width), height(draw::height) {}
+	~rectpush() { draw::caret = caret; draw::width = width; draw::height = height; }
+};
 int						aligned(int x, int width, unsigned state, int string_width);
 int						alignedh(const rect& rc, const char* string, unsigned state);
 void					bezier(int x0, int y0, int x1, int y1, int x2, int y2);
@@ -177,18 +183,21 @@ void					create(int x, int y, int width, int height, unsigned flags, int bpp);
 bool					dragactive(const void* p);
 bool					dragactive();
 void					dragbegin(const void* p);
+void					dropshadow();
 void					execute(fnevent proc, long value = 0, long value2 = 0, const void* object = 0);
 int						getbpp();
+inline rect				getrect() { return {caret.x, caret.y, caret.x + width, caret.y + height}; }
 int						getheight();
 int						getwidth();
 void					getwindowpos(point& pos, point& size, unsigned* flags);
 void					glyph(int sym, unsigned flags);
-void					gradv(rect rc, const color c1, const color c2, int skip = 0);
-void					gradh(rect rc, const color c1, const color c2, int skip = 0);
+void					gradv(const color c1, const color c2, int skip = 0);
+void					gradh(const color c1, const color c2, int skip = 0);
 const sprite*			gres(const char* name, const char* folder = 0, point size = {});
 int						hittest(int x, int test_x, const char* string, int lenght);
 int						hittest(rect rc, const char* string, unsigned state, point mouse);
 bool					ishilite(const rect& rc);
+inline bool				ishilite() { return ishilite({caret.x, caret.y, caret.x + width, caret.y + height}); }
 void					image(int x, int y, const sprite* e, int id, int flags);
 void					image(int x, int y, const sprite* e, int id, int flags, color* pal);
 void					key2str(stringbuilder& sb, int key);
@@ -198,10 +207,10 @@ void					pixel(int x, int y);
 void					pixel(int x, int y, unsigned char alpha);
 unsigned char*			ptr(int x, int y);
 int						rawinput();
-void					rectb(rect rc); // Draw rectangle border
+void					rectb(); // Draw rectangle border
 void					rectb(rect rc, int radius);
-void					rectb3d(rect rc); // Draw rectangle border
-void					rectf(rect rc); // Draw rectangle area. Right and bottom side is one pixel less.
+void					rectb3d(); // Draw rectangle border
+void					rectf(); // Draw rectangle area. Right and bottom side is one pixel less.
 void					rectfe(rect rc, int radius);
 void					rectx();
 void					rectfocus();
@@ -209,19 +218,23 @@ void					setcaption(const char* string);
 void					setclip(rect rc);
 inline void				setclip() { clipping.set(0, 0, getwidth(), getheight()); }
 void					setoffset(int x, int y);
+void					setpos(int x, int y);
+void					setpos(int x, int y, int width, int height);
 void					settimer(unsigned milleseconds);
 const char*				skiptr(const char* string);
-void					spline(point* points, int n);
+//void					spline(point* points, int n);
 void					stroke(int x, int y, const sprite* e, int id, int flags, unsigned char thin = 1, unsigned char* koeff = 0);
 void					syscursor(bool enable);
 void					sysredraw();
 void					text(const char* string, int count = -1, unsigned flags = 0);
 int						text(rect rc, const char* string, unsigned state = 0, int* max_width = 0);
+void					texta(const char* string, unsigned state = 0);
 void					textc(const char* string, int count = -1, unsigned flags = 0);
 int						textbc(const char* string, int width);
 int						texte(rect rc, const char* string, unsigned flags, int i1, int i2);
 void					textf(const char* text, int min_height = 0, int* cashe_height = 0, const char** cashe_string = 0);
 int						textf(rect& rc, const char* string);
+int						textfs(const char* string);
 int						texth();
 int						texth(const char* string, int width);
 int						textw(int sym);
@@ -269,4 +282,6 @@ void					setneedupdate();
 void					setnext(fnevent v);
 void					showscene(fnevent v);
 void					start();
+void					tooltips(const char* format, ...);
+void					tooltips(int x, int y, int width);
 }
