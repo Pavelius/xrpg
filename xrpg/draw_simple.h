@@ -15,11 +15,8 @@ extern int          pausetime;
 void				answerbt(int index, long id, const char* title);
 void				avatar(const char* id);
 void				bar(int value, int maximum);
-bool				button(const char* title, unsigned key, bool(*p)(const char*), const char* description, bool* is_hilited);
 bool				buttonfd(const char* title);
-inline bool			buttonfd(const char* title, unsigned key, const char* description) { return button(title, key, buttonfd, description, 0); }
 bool				buttonrd(const char* title);
-inline bool			buttonrd(const char* title, unsigned key, const char* description) { return button(title, key, buttonrd, description, 0); }
 void				customwindow();
 void				inputcamera();
 bool				ishilite(int s, const void* object);
@@ -31,9 +28,6 @@ void				paintclear();
 void				paintimage();
 void				paintcommands();
 void				set(int x, int y);
-void				setposru();
-void				setposlu();
-void				setposld();
 void				slide(point pt, int step = 12);
 void				stext(const char* string);
 void                status(const char* format, ...);

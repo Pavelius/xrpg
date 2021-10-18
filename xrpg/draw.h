@@ -5,6 +5,7 @@
 #pragma once
 
 typedef void(*fnevent)();
+typedef bool(*fnbutton)(const char* title);
 
 enum draw_event_s : unsigned {
 	KeyBackspace = 8, KeyTab = 9, KeyEnter = 10, KeyEscape = 0x1B, KeySpace = 0x20, KeyDelete = 0x7F,
@@ -107,6 +108,7 @@ extern sprite*			small;
 extern sprite*			h1;
 extern sprite*			h2;
 extern sprite*			h3;
+extern int				border, padding;
 }
 namespace draw {
 struct hoti {
@@ -156,8 +158,8 @@ extern fnevent			domodal;
 extern point			dragmouse, caret;
 extern color			fore, fore_stroke;
 extern unsigned char    alpha;
-extern int				width, height, width_maximum;
-extern bool				text_clipped;
+extern int				width, height, width_maximum, height_maximum;
+extern bool				text_clipped, control_hilited;
 extern const sprite*	font; // Currently selected font
 extern double			linw;
 extern char				link[4096];
@@ -229,6 +231,7 @@ void					sysredraw();
 void					text(const char* string, int count = -1, unsigned flags = 0);
 int						text(rect rc, const char* string, unsigned state = 0, int* max_width = 0);
 void					texta(const char* string, unsigned state = 0);
+void					textas(const char* string);
 void					textc(const char* string, int count = -1, unsigned flags = 0);
 int						textbc(const char* string, int width);
 int						texte(rect rc, const char* string, unsigned flags, int i1, int i2);
@@ -248,40 +251,46 @@ void					write(const char* url, unsigned char* bits, int width, int height, int 
 }
 namespace draw {
 struct awindowi {
-	int					x, y, width, height;
-	int					header_width;
-	unsigned			flags;
+	int				x, y, width, height;
+	int				header_width;
+	unsigned		flags;
 };
-extern awindowi			awindow;
-void					applicationinitialize();
-void					applicationafterinitialize();
-void					fieldsetfocus();
-void					simpleinitialize();
-void					statusbeforemodal();
-void					statuspaint();
-void					tooltipsbeforemodal();
-void					tooltipspaint();
-void					loginitialize();
+extern awindowi		awindow;
+void				applicationinitialize();
+void				applicationafterinitialize();
+void				fieldsetfocus();
+void				simpleinitialize();
+void				statusbeforemodal();
+void				statuspaint();
+void				tooltipsbeforemodal();
+void				tooltipspaint();
+void				loginitialize();
 }
 namespace draw {
-void					breakmodal(long result);
-void					breakparam();
-void					buttoncancel();
-void					buttonok();
-void					cbsetsht();
-void					cbsetint();
-void					cbsetptr();
-void					doredraw();
-long					getresult();
-bool					isnext();
-void					initialize(const char* title);
-bool					ismodal();
-void					mainscene(fnevent proc);
-void					mainscene();
-void					setneedupdate();
-void					setnext(fnevent v);
-void					showscene(fnevent v);
-void					start();
-void					tooltips(const char* format, ...);
-void					tooltips(int x, int y, int width);
+void				breakmodal(long result);
+void				breakparam();
+bool				button(const char* title, unsigned key, fnbutton proc);
+void				buttoncancel();
+void				buttonok();
+void				cbsetsht();
+void				cbsetint();
+void				cbsetptr();
+void				doredraw();
+long				getresult();
+bool				isnext();
+void				initialize(const char* title);
+bool				ismodal();
+void				mainscene(fnevent proc);
+void				mainscene();
+void				setneedupdate();
+void				setnext(fnevent v);
+//void				showscene(fnevent v);
+void				start();
+void				tooltips(const char* format, ...);
+void				tooltips(int x, int y, int width);
+}
+namespace draw {
+void				setposru();
+void				setposlu();
+void				setposld();
 }

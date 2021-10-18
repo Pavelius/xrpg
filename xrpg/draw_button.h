@@ -6,7 +6,6 @@
 #pragma once
 
 namespace metrics {
-extern int					padding;
 extern int					edit;
 namespace show {
 extern bool					padding, statusbar;

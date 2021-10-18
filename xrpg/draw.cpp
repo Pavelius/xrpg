@@ -31,8 +31,8 @@ fnevent				draw::pbeforemodal, draw::pleavemodal, draw::pinput, draw::psetfocus;
 unsigned char       draw::alpha = 255;
 color				draw::fore;
 color				draw::fore_stroke;
-int					draw::width, draw::height, draw::width_maximum;
-bool				draw::text_clipped;
+int					draw::width, draw::height, draw::width_maximum, draw::height_maximum;
+bool				draw::text_clipped, draw::control_hilited;
 const sprite*		draw::font;
 double				draw::linw = 1.0;
 color*				draw::palt;
@@ -55,6 +55,7 @@ sprite*				metrics::h1 = (sprite*)loadb("art/fonts/h1.pma");
 sprite*				metrics::h2 = (sprite*)loadb("art/fonts/h2.pma");
 sprite*				metrics::h3 = (sprite*)loadb("art/fonts/h3.pma");
 sprite*				metrics::small = (sprite*)loadb("art/fonts/small.pma");
+int					metrics::padding = 2, metrics::border = 4;
 //
 static bool			break_modal;
 static long			break_result;
@@ -98,15 +99,26 @@ static bool correct(int& x1, int& y1, int& x2, int& y2, const rect& clip, bool i
 }
 
 static void set32(color* p, unsigned count) {
-	auto p2 = p + count;
+	color* p2;
 	switch(alpha) {
 	case 0:
 		break;
 	case 255:
+#ifdef _MSC_VER
+		_asm {
+			mov edi, p
+			mov eax, fore
+			mov ecx, count
+			rep stosd
+		}
+#else
+		p2 = p + count;
 		while(p < p2)
 			*p++ = fore;
+#endif
 		break;
 	case 128:
+		p2 = p + count;
 		while(p < p2) {
 			p->r = (p->r + fore.r) >> 1;
 			p->g = (p->g + fore.g) >> 1;
@@ -115,6 +127,7 @@ static void set32(color* p, unsigned count) {
 		}
 		break;
 	default:
+		p2 = p + count;
 		while(p < p2) {
 			p->r = (p->r * (255 - draw::alpha) + fore.r * draw::alpha) >> 8;
 			p->g = (p->g * (255 - draw::alpha) + fore.g * draw::alpha) >> 8;
@@ -1480,6 +1493,21 @@ int draw::textw(rect& rc, const char* string) {
 	return rc.height();
 }
 
+void draw::textas(const char* string) {
+	width_maximum = 0;
+	height_maximum = 0;
+	while(string[0]) {
+		int c = textbc(string, width);
+		if(!c)
+			break;
+		int m = textw(string, c);
+		if(width_maximum < m)
+			width_maximum = m;
+		height_maximum += texth();
+		string = skiptr(string + c);
+	}
+}
+
 int draw::texth(const char* string, int width) {
 	int dy = texth();
 	int y1 = 0;
@@ -1644,7 +1672,8 @@ void draw::texta(const char* string, unsigned state) {
 			string = skiptr(string + c);
 		}
 	}
-	caret.x = push_caret.x;
+	height_maximum = caret.y - y1;
+	caret = push_caret;
 }
 
 static void hilite_text_line(int x, int y, int width, int height, const char* string, int count, unsigned state, int i1, int i2) {
@@ -2388,6 +2417,18 @@ void draw::mainscene() {
 	mainscene(0);
 }
 
+bool draw::button(const char* title, unsigned key, fnbutton proc) {
+	height_maximum = 0;
+	width_maximum = 0;
+	control_hilited = proc(title);
+	if(height_maximum)
+		caret.y += height_maximum + metrics::padding;
+	else if(width_maximum)
+		caret.x += width_maximum + metrics::padding;
+	return (key && hot.key == key)
+		|| (hot.key == MouseLeft && control_hilited && !hot.pressed);
+}
+
 void draw::dropshadow() {
 	int size = 4;
 	rectpush push;
@@ -2401,4 +2442,19 @@ void draw::dropshadow() {
 	rectf();
 	alpha = push_alpha;
 	fore = push_fore;
+}
+
+void draw::setposru() {
+	width = 320;
+	caret.x = getwidth() - width - metrics::padding - metrics::border;
+	caret.y = metrics::padding + metrics::border;
+}
+
+void draw::setposlu() {
+	setpos(metrics::padding + metrics::border, metrics::padding + metrics::border);
+	width = 400;
+}
+
+void draw::setposld() {
+	setpos(metrics::padding + metrics::border, getheight() - metrics::padding - metrics::border - texth());
 }

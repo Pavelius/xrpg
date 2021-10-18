@@ -1,3 +1,4 @@
 ﻿Fame: Слава
 Gold: Золото
 Mana: Мана
+RandomEvent: Случайное событие

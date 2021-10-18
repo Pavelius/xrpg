@@ -17,14 +17,13 @@ static rect				board;
 static const void*		current_hilite;
 
 namespace metrics {
-int                     padding = 4;
 unsigned char			opacity = 186;
 unsigned char			opacity_hilighted = 0xD8;
 }
 
 bool draw::swindow(bool hilight, int border) {
 	if(border == 0)
-		border = metrics::padding;
+		border = metrics::border;
 	color c = colors::form;
 	color b = colors::form;
 	rectpush push;
@@ -53,21 +52,6 @@ bool draw::ishilite(int s, const void* object) {
 		return false;
 	current_hilite = object;
 	return true;
-}
-
-void draw::setposru() {
-	width = 320;
-	caret.x = getwidth() - width - metrics::padding*2;
-	caret.y = metrics::padding*2;
-}
-
-void draw::setposlu() {
-	setpos(metrics::padding * 2, metrics::padding * 2);
-	width = 400;
-}
-
-void draw::setposld() {
-	setpos(metrics::padding * 2, getheight() - metrics::padding * 2 - texth());
 }
 
 void draw::stext(const char* string) {
@@ -116,14 +100,11 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 bool draw::buttonfd(const char* title) {
 	if(!title)
 		return false;
-	rect rc = {caret.x, caret.y, caret.x + width, caret.y};
-	textw(rc, title);
-	auto push_height = height;
-	height = rc.height();
+	textas(title);
+	height = height_maximum;
 	auto result = swindow(true, 0);
-	height = push_height;
-	text(rc, title, AlignCenterCenter);
-	caret.y += metrics::padding * 2 + rc.height();
+	texta(title, AlignCenterCenter);
+	height_maximum += metrics::border * 2;
 	return result;
 }
 
@@ -142,28 +123,15 @@ bool draw::buttonrd(const char* title) {
 	return result;
 }
 
-bool draw::button(const char* title, unsigned key, bool(*p)(const char*), const char* description, bool* is_hilited) {
-	auto hilite = p(title);
-	if(hilite) {
-		if(description)
-			tooltips(description);
-	}
-	if(is_hilited)
-		*is_hilited = hilite;
-	return (key && hot.key == key)
-		|| (hot.key == MouseLeft && hilite && !hot.pressed);
-}
-
 extern stringbuilder tooltips_sb;
 
 void draw::answerbt(int i, long id, const char* title) {
 	static char answer_hotkeys[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'};
 	if(i >= (int)(sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0])))
 		i = sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]) - 1;
-	bool is_hilited = false;
-	if(button(title, answer_hotkeys[i], buttonfd, 0, &is_hilited))
+	if(button(title, answer_hotkeys[i], buttonfd))
 		execute(breakparam, id);
-	if(is_hilited)
+	if(control_hilited)
 		hilite_object = (void*)id;
 }
 
@@ -340,7 +308,7 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 		caret.x = x1; caret.y = y2;
 		width = push_width;
 		if(cancel_text) {
-			if(buttonfd(cancel_text, KeyEscape, 0))
+			if(button(cancel_text, KeyEscape, buttonfd))
 				execute(buttoncancel);
 		}
 		caret = push_caret;
@@ -413,7 +381,7 @@ void draw::windows(const command* source) {
 	for(auto p = source; *p; p++) {
 		if(pwindow == p->proc)
 			continue;
-		if(buttonrd(getnm(p->id), p->key, getdescription(p->id)))
+		if(button(getnm(p->id), p->key, buttonfd))
 			execute(choose_window, 0, 0, (void*)p->proc);
 	}
 }
