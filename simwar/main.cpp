@@ -32,6 +32,10 @@ int main() {
         return -2;
     initialize_png();
     draw::initialize();
+    game.player = bsdata<playeri>::elements;
+    game.province = bsdata<provincei>::add();
+    game.province->clear();
+    game.province->id = "ShiningForest";
     eventi::find("ShamanCome")->play();
     return 0;
 }

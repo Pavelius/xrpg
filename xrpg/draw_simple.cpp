@@ -17,8 +17,8 @@ static rect				board;
 static const void*		current_hilite;
 
 namespace metrics {
-unsigned char			opacity = 186;
-unsigned char			opacity_hilighted = 0xD8;
+unsigned char			opacity = 220;
+unsigned char			opacity_hilighted = 180;
 }
 
 bool draw::swindow(bool hilight, int border) {
@@ -130,7 +130,7 @@ void draw::answerbt(int i, long id, const char* title) {
 	if(i >= (int)(sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0])))
 		i = sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]) - 1;
 	if(button(title, answer_hotkeys[i], buttonfd))
-		execute(breakparam, id);
+		execute(buttonparam, id);
 	if(control_hilited)
 		hilite_object = (void*)id;
 }

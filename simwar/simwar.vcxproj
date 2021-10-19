@@ -144,9 +144,11 @@
     <ClCompile Include="combat.cpp" />
     <ClCompile Include="cost.cpp" />
     <ClCompile Include="events.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="prefix.cpp" />
     <ClCompile Include="property.cpp" />
     <ClCompile Include="province.cpp" />
     <ClCompile Include="stat.cpp" />

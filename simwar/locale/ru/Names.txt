@@ -2,3 +2,4 @@
 Gold: Золото
 Mana: Мана
 RandomEvent: Случайное событие
+ShiningForest: Сверкающий лес

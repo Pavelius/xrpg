@@ -122,20 +122,17 @@ static void choose_answers_dialog() {
 	group(picture_image, static_text);
 	caret.y += height + metrics::padding + metrics::border * 2;
 	if(dialog_answers) {
-		for(auto& e : *dialog_answers) {
-			if(button(e.text, 0, buttonfd)) {
-
-			}
-		}
+		for(auto& e : *dialog_answers)
+			fire(button(e.text, 0, buttonfd), buttonparam, e.id);
 	}
 }
 
-int draw::dialog(answers& an, const char* title, const char* description) {
+long draw::dialog(answers& an, const char* title, const char* description) {
 	dialog_image = "dwarf";
 	dialog_answers = &an;
 	dialog_title = title;
 	dialog_description = description;
-	mainscene(choose_answers_dialog);
+	scene(choose_answers_dialog);
 	return getresult();
 }
 

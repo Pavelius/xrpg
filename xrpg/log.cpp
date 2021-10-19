@@ -38,14 +38,14 @@ void log::errorv(const char* position, const char* format) {
 		return;
 	error_count++;
 	if(current_file && position)
-		file << "In line " << getline(current_file, position) << ": ";
+		file << "- Line " << getline(current_file, position) << ": ";
 	file << format << "\n";
 }
 
 void log::error(const char* position, const char* format, ...) {
 	char temp[4096]; stringbuilder sb(temp);
 	if(current_url) {
-        sb.add("In file %1", current_url);
+        sb.add("In file `%1`:", current_url);
         current_url = 0;
         errorv(0, temp);
         sb.clear();

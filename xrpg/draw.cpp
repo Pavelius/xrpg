@@ -2350,7 +2350,7 @@ void draw::buttonok() {
 	breakmodal(1);
 }
 
-void draw::breakparam() {
+void draw::buttonparam() {
 	breakmodal(hot.param);
 }
 
@@ -2401,7 +2401,7 @@ void draw::initialize(const char* title) {
 	draw::setcaption(title);
 }
 
-void draw::mainscene(fnevent proc) {
+void draw::scene(fnevent proc) {
 	while(ismodal()) {
 		if(pbackground)
 			pbackground();
@@ -2413,8 +2413,8 @@ void draw::mainscene(fnevent proc) {
 	}
 }
 
-void draw::mainscene() {
-	mainscene(0);
+void draw::scene() {
+	scene(0);
 }
 
 bool draw::button(const char* title, unsigned key, fnbutton proc) {
@@ -2427,6 +2427,11 @@ bool draw::button(const char* title, unsigned key, fnbutton proc) {
 		caret.x += width_maximum + metrics::padding;
 	return (key && hot.key == key)
 		|| (hot.key == MouseLeft && control_hilited && !hot.pressed);
+}
+
+void draw::fire(bool run, fnevent proc, long value, long value2, const void* object) {
+	if(run)
+		execute(proc, value, value2, object);
 }
 
 void draw::dropshadow() {

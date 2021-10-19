@@ -1,2 +1,2 @@
-﻿In file rules/events.txt
-In line 25: Expected symbol `#` and followed event identifier
+﻿ru
+ShiningForest

@@ -38,6 +38,16 @@ BSMETA(troop) = {
     BSREQ(type), BSREQ(owner),
     {}};
 BSDATAD(troop)
+BSMETA(playeri) = {
+    BSREQ(id),
+    {}};
+BSMETA(prefixi) = {
+    BSREQ(id),
+    {}};
+BSMETA(provincei) = {
+    BSREQ(id),
+    {}};
+BSDATAD(provincei)
 
 #define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr, 0
 #define VRNOM(T) 0, bsdata<T>::source_ptr
@@ -46,7 +56,8 @@ BSDATA(varianti) = {
     {"Bonus", VRSTD(bonusi), 1},
     {"Cost", VRSTD(costi), 1},
     {"Landscape", VRSTD(landscapei), 1},
-    {"Player", VRSTD(resourcei), 1},
+    {"Player", VRSTD(playeri), 1},
+    {"Prefix", VRSTD(prefixi), 1},
     {"Resource", VRSTD(resourcei), 1},
     {"Stat", VRSTD(stati), 1},
     {"Troop", VRSTD(troop), 2},

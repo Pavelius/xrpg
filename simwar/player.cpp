@@ -10,6 +10,7 @@ BSDATA(playeri) = {
 	{"Blue"},
 	{"Black"},
 };
+BSDATAF(playeri)
 
 playeri* playeri::getcurrent() {
 	return bsdata<playeri>::elements + 0;

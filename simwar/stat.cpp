@@ -8,5 +8,10 @@ BSDATA(stati) = {
 	{"Damage"},
 	{"Hits"},
 	{"Level"},
+	{"Explored"},
+	{"Population"},
+	{"Growth"},
+	{"Rebellion"},
+	{"Unrest"},
 };
-assert_enum(stati, Level)
+assert_enum(stati, Unrest)

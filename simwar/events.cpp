@@ -88,6 +88,18 @@ static const char* read_identifier(const char* p, stringbuilder& result) {
 	return result.psidf(p);
 }
 
+static const char* read_variants(const char* p, stringbuilder& result, variants& source, bool& allow_continue) {
+	while(allow_continue && ischa(*p)) {
+		p = read_identifier(p, result);
+		p = skipsp(p);
+		variant v = (const char*)result.begin();
+		if(!v)
+			log::error(p, "Can't find variant `%1`", result.begin());
+		add(source, v);
+	}
+	return p;
+}
+
 static const eventcasei* find_answer(short parent, short id, const eventcasei* first) {
 	auto pe = (const eventcasei*)bsdata<eventcasei>::source.end();
 	if(!first)
@@ -165,7 +177,9 @@ static const char* read_stage(const char* p, short parent, stringbuilder& sb, bo
 		pe->parent = parent;
 		pe->next = -1;
 		p = stringbuilder::read(skipsp(p + 1), pe->id);
+		p = read_variants(skipsp(p), sb, pe->effect, allow_continue);
 		p = read_string(skipspcr(p), sb);
+		pe->text = szdup(sb.begin());
 		p = read_answers(p, parent, pe->id, sb, allow_continue);
 	}
 	return p;
@@ -215,15 +229,26 @@ void eventi::play() const {
 	auto quest_id = bsdata<eventi>::source.indexof(this);
 	if(quest_id == -1)
 		return;
+	char temp[4095];
 	answers an;
 	auto current_id = 0;
 	while(true) {
 		auto pe = find_promt(quest_id, current_id);
 		if(!pe)
 			break;
+		game.apply(pe->effect);
+		if(!pe->text)
+			break;
+		an.clear();
 		for(auto p = find_answer(quest_id, current_id, 0); p; p = find_answer(quest_id, current_id, p))
 			an.add((long)p, p->text);
-		draw::dialog(an, getnm("RandomEvent"), pe->text);
+		stringbuilder sb(temp); game.format(sb, pe->text);
+		auto p = (eventcasei*)draw::dialog(an, getnm("RandomEvent"), temp);
+		if(!p)
+			break;
+		current_id = p->next;
+		if(!current_id)
+			break;
 	}
 }
 
