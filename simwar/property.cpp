@@ -48,6 +48,9 @@ BSMETA(provincei) = {
     BSREQ(id),
     {}};
 BSDATAD(provincei)
+BSMETA(eventi) = {
+    BSREQ(id),
+    {}};
 
 #define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr, 0
 #define VRNOM(T) 0, bsdata<T>::source_ptr
@@ -55,6 +58,7 @@ BSDATA(varianti) = {
 	{"NoVariant"},
     {"Bonus", VRSTD(bonusi), 1},
     {"Cost", VRSTD(costi), 1},
+    {"Event", VRSTD(eventi), 1},
     {"Landscape", VRSTD(landscapei), 1},
     {"Player", VRSTD(playeri), 1},
     {"Prefix", VRSTD(prefixi), 1},

@@ -195,6 +195,7 @@ void eventi::read(const char* url) {
 		return;
 	log::seturl(url);
 	auto p = p_alloc;
+	log::setfile(p);
 	variants resolves;
 	char temp[4096]; stringbuilder sb(temp);
 	auto allow_continue = true;

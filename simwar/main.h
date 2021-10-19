@@ -15,7 +15,7 @@ enum prefix_s : unsigned char {
     Minus, Income,
 };
 enum variant_s : unsigned char {
-    NoVariant, Bonus, Cost, Landscape, Player, Prefix, Resource, Stat, Troop, Unit
+    NoVariant, Bonus, Cost, Event, Landscape, Player, Prefix, Resource, Stat, Troop, Unit
 };
 enum labdscape_s : unsigned char {
     Plains, Forest, Hills, Swamp, Desert, Waste, Sea,
@@ -102,7 +102,6 @@ struct eventcasei {
     variants    effect;
     constexpr explicit operator bool() const { return parent != -1; }
     void        clear();
-    eventi*     getparent() const;
     bool        isallow() const;
     bool        isprompt() const { return next == -1; }
     bool        isend() const { return !next; }

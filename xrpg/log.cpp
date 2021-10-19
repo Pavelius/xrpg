@@ -24,7 +24,7 @@ const char* endline(const char* p) {
 int getline(const char* pb, const char* pc) {
 	auto p = pb;
 	auto r = 0;
-	while(p < pc) {
+	while(*p && p < pc) {
 		p = endline(p);
 		p = skipcr(p);
 		r++;

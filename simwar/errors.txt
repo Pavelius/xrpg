@@ -1,2 +1,2 @@
-﻿ru
-ShiningForest
+﻿In file `rules/events.txt`:
+- Line 20: Can't find variant `DarkOmen`
