@@ -14,8 +14,6 @@ static bool test_data() {
         return pu;
     auto& e2 = bsdata<uniti>::get(1);
     auto& e3 = bsdata<uniti>::get(2);
-    auto player = playeri::getcurrent();
-    player->total.set(Gold, 1000);
     return true;
 }
 
@@ -33,10 +31,12 @@ int main() {
     initialize_png();
     draw::initialize();
     game.player = bsdata<playeri>::elements;
+    game.player->initialize();
     game.province = bsdata<provincei>::add();
     game.province->clear();
     game.province->id = "ShiningForest";
-    eventi::find("ShamanCome")->play();
+    eventi* pe = variant("ShamanCome");
+    game.play(pe);
     return 0;
 }
 

@@ -143,6 +143,7 @@
     <ClCompile Include="bonus.cpp" />
     <ClCompile Include="combat.cpp" />
     <ClCompile Include="cost.cpp" />
+    <ClCompile Include="deck.cpp" />
     <ClCompile Include="events.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="interface.cpp" />

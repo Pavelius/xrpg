@@ -43,6 +43,9 @@
     <ClCompile Include="prefix.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="deck.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="errors.txt">

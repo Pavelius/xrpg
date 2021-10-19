@@ -54,35 +54,6 @@ static void add(variants& e, variant v) {
 	e.count++;
 }
 
-//static const char* read_block(const char* p, const char* p_alloc, int& v, const char*& text, variants& consequences) {
-//	char temp[8192];
-//	v = 0; text = 0; temp[0] = 0; consequences.clear();
-//	if(!isnum(p[0])) {
-//		log::error(p, "Expected number");
-//		return p;
-//	}
-//	p = stringbuilder::read(p, v);
-//	p = skipsp(p);
-//	while(*p && !(*p == '\n' || *p == '\r')) {
-//		if(!ischa(*p)) {
-//			return p;
-//		}
-//		stringbuilder sb(temp);
-//		p = sb.psidf(p);
-//		p = skipsp(p);
-//		variant v = (const char*)temp;
-//		if(!v) {
-//			log::error(p, "Can't find variant `%1`", temp);
-//			return p;
-//		}
-//		add(consequences, v);
-//	}
-//	p = skipspcr(p);
-//	p = read_string(p, temp, temp + sizeof(temp) - 1);
-//	text = szdup(temp);
-//	return p;
-//}
-
 static const char* read_identifier(const char* p, stringbuilder& result) {
 	result.clear();
 	return result.psidf(p);
@@ -98,40 +69,6 @@ static const char* read_variants(const char* p, stringbuilder& result, variants&
 		add(source, v);
 	}
 	return p;
-}
-
-static const eventcasei* find_answer(short parent, short id, const eventcasei* first) {
-	auto pe = (const eventcasei*)bsdata<eventcasei>::source.end();
-	if(!first)
-		first = (const eventcasei*)bsdata<eventcasei>::source.begin() - 1;
-	for(auto p = first + 1; p < pe; p++) {
-		if(p->parent != parent)
-			continue;
-		if(p->id != id)
-			continue;
-		if(p->isprompt())
-			continue;
-		if(!p->isallow())
-			continue;
-		return p;
-	}
-	return 0;
-}
-
-static const eventcasei* find_promt(short parent, short id) {
-	auto pe = (const eventcasei*)bsdata<eventcasei>::source.end();
-	for(auto p = (const eventcasei*)bsdata<eventcasei>::source.begin(); p < pe; p++) {
-		if(p->parent != parent)
-			continue;
-		if(p->id != id)
-			continue;
-		if(!p->isprompt())
-			continue;
-		if(!p->isallow())
-			continue;
-		return p;
-	}
-	return 0;
 }
 
 static short add_event(const char* p, const char* uid) {
@@ -226,41 +163,10 @@ void eventi::read(const char* url) {
 	delete p_alloc;
 }
 
-void eventi::play() const {
-	auto quest_id = bsdata<eventi>::source.indexof(this);
-	if(quest_id == -1)
-		return;
-	char temp[4095];
-	answers an;
-	auto current_id = 0;
-	while(true) {
-		auto pe = find_promt(quest_id, current_id);
-		if(!pe)
-			break;
-		game.apply(pe->effect);
-		if(!pe->text)
-			break;
-		an.clear();
-		for(auto p = find_answer(quest_id, current_id, 0); p; p = find_answer(quest_id, current_id, p))
-			an.add((long)p, p->text);
-		stringbuilder sb(temp); game.format(sb, pe->text);
-		auto p = (eventcasei*)draw::dialog(an, getnm("RandomEvent"), temp);
-		if(!p)
-			break;
-		current_id = p->next;
-		if(!current_id)
-			break;
-	}
-}
-
 const eventi* eventi::find(const char* id) {
 	for(auto& e : bsdata<eventi>()) {
 		if(strcmp(e.id, id) == 0)
 			return &e;
 	}
 	return 0;
-}
-
-bool eventcasei::isallow() const {
-	return true;
 }

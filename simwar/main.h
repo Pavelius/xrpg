@@ -2,6 +2,7 @@
 #include "dataset.h"
 #include "flagable.h"
 #include "variant.h"
+#include "varianta.h"
 
 enum stat_s : unsigned char {
     Attack, Defend, Raid, Move, Damage, Hits,
@@ -35,6 +36,7 @@ struct stati {
 };
 struct costi {
     const char* id;
+    bool        visible;
 };
 struct resourcei {
     const char* id;
@@ -87,11 +89,14 @@ struct sitei {
     variant     owner;
     char        conceal; // Percent chance of conceal site. Visible only if lower that `explored` province.
 };
+struct decki : varianta {
+    void        addrandom(variant v);
+    void        insert(int i, variant v);
+};
 struct eventi {
     const char* id;
     constexpr explicit operator bool() const { return id != 0; }
     static const eventi* find(const char* id);
-    void        play() const;
     static void read(const char* url);
 };
 struct eventcasei {
@@ -102,15 +107,15 @@ struct eventcasei {
     variants    effect;
     constexpr explicit operator bool() const { return parent != -1; }
     void        clear();
-    bool        isallow() const;
     bool        isprompt() const { return next == -1; }
     bool        isend() const { return !next; }
 };
 struct playeri {
     const char* id;
     costa       total;
+    decki       events;
     int         get(variant v) const;
-    static playeri* getcurrent();
+    void        initialize();
 };
 struct prefixi {
     const char* id;
@@ -118,10 +123,12 @@ struct prefixi {
 struct gamei {
     playeri*    player;
     provincei*  province;
-    void        apply(const variants& source);
+    bool        apply(const variants& source, bool test_required = false);
+    static int  get(variant v, const variants& source);
     static variant getaction(variant v);
     static int  getbonus(variant v);
     static void format(stringbuilder& sb, const char* string, ...);
+    void        play(const eventi* event);
 };
 extern gamei    game;
 namespace draw {
@@ -131,6 +138,7 @@ void            initialize();
 int             getfix(stringbuilder* sb, int v, variant id);
 VKIND(bonusi, Bonus)
 VKIND(cost_s, Cost)
+VKIND(eventi, Event)
 VKIND(stat_s, Stat)
 VKIND(troop, Troop)
 VKIND(uniti, Unit)

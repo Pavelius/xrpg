@@ -12,14 +12,15 @@ BSDATA(playeri) = {
 };
 BSDATAF(playeri)
 
-playeri* playeri::getcurrent() {
-	return bsdata<playeri>::elements + 0;
-}
-
 int playeri::get(variant v) const {
 	switch(v.type) {
 	case Cost: return total.get(v.value);
 	default: return 0;
 	}
 	return 0;
+}
+
+void playeri::initialize() {
+	total.set(Gold, 1000);
+	total.set(Mana, 20);
 }
