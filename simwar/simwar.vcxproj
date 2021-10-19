@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="action.cpp" />
     <ClCompile Include="bonus.cpp" />
     <ClCompile Include="combat.cpp" />
     <ClCompile Include="cost.cpp" />

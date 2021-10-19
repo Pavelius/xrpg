@@ -32,9 +32,7 @@ int main() {
     draw::initialize();
     game.player = bsdata<playeri>::elements;
     game.player->initialize();
-    game.province = bsdata<provincei>::add();
-    game.province->clear();
-    game.province->id = "ShiningForest";
+    game.province = (provincei*)bsdata<provincei>::source.ptr(0);
     eventi* pe = variant("ShamanCome");
     provincei* p1 = variant("EastForest");
     game.play(pe);

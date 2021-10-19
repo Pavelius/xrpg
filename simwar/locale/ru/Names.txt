@@ -1,4 +1,5 @@
-﻿EastForest: Восточный лес
+﻿Artefacts: Реликвии
+EastForest: Восточный лес
 Fame: Слава
 FarForest: Дальний лес
 ForestTooth: Лес с зубом

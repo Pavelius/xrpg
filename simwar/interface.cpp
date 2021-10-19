@@ -77,10 +77,10 @@ static void add_status(const char* id, int value) {
 }
 
 static void show_status_panel() {
+	static variant cost[] = {Gold, Mana, Artefacts, Fame};
 	auto player = game.player;
 	if(!player)
 		return;
-	static variant cost[] = {Gold, Mana, Fame};
 	setposld();
 	auto push_height = height;
 	height = texth();

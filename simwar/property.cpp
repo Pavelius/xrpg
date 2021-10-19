@@ -58,11 +58,15 @@ BSMETA(eventi) = {
 BSMETA(point) = {
     BSREQ(x), BSREQ(y),
     {}};
+BSMETA(actioni) = {
+    BSREQ(id),
+    {}};
 
 #define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr, 0
 #define VRNOM(T) 0, bsdata<T>::source_ptr
 BSDATA(varianti) = {
 	{"NoVariant"},
+    {"Action", VRSTD(actioni), 1},
     {"Bonus", VRSTD(bonusi), 1},
     {"Cost", VRSTD(costi), 1},
     {"Event", VRSTD(eventi), 1},

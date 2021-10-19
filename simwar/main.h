@@ -5,19 +5,23 @@
 #include "variant.h"
 #include "varianta.h"
 
+enum action_s : unsigned char {
+    Discard,
+};
 enum stat_s : unsigned char {
     Attack, Defend, Raid, Move, Damage, Hits,
     Level,
     Explored, Population, Growth, Rebellion, Unrest
 };
 enum cost_s : unsigned char {
-    Gold, Mana, Fame
+    Gold, Mana, Artefacts, Fame
 };
 enum prefix_s : unsigned char {
     Minus, Income,
 };
 enum variant_s : unsigned char {
-    NoVariant, Bonus, Cost, Event, Landscape, Player, Province, Prefix, Resource, Stat, Troop, Unit
+    NoVariant,
+    Action, Bonus, Cost, Event, Landscape, Player, Prefix, Province, Resource, Stat, Troop, Unit
 };
 enum labdscape_s : unsigned char {
     Plains, Forest, Hills, Swamp, Desert, Waste, Sea,
@@ -121,13 +125,16 @@ struct playeri {
     int         get(variant v) const;
     void        initialize();
 };
+struct actioni {
+    const char* id;
+};
 struct prefixi {
     const char* id;
 };
 struct gamei {
     playeri*    player;
     provincei*  province;
-    bool        apply(const variants& source, bool test_required = false);
+    bool        apply(const variants& source, bool allow_test, bool allow_apply);
     static int  get(variant v, const variants& source);
     static variant getaction(variant v);
     static int  getbonus(variant v);
@@ -140,6 +147,7 @@ long            dialog(answers& an, const char* title, const char* format);
 void            initialize();
 }
 int             getfix(stringbuilder* sb, int v, variant id);
+VKIND(actioni, Action)
 VKIND(bonusi, Bonus)
 VKIND(cost_s, Cost)
 VKIND(eventi, Event)

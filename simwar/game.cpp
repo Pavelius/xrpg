@@ -31,7 +31,7 @@ void gamei::format(stringbuilder& sbr, const char* string, ...) {
 	sbr = sb;
 }
 
-bool gamei::apply(const variants& source, bool test_required) {
+bool gamei::apply(const variants& source, bool allow_test, bool allow_apply) {
 	prefixa prefixes;
 	for(auto v : source) {
 		if(v.type == Prefix) {
@@ -40,36 +40,30 @@ bool gamei::apply(const variants& source, bool test_required) {
 		}
 		auto a = getaction(v);
 		auto b = getbonus(v);
-		auto t = false;
+		auto need_test = false;
 		if(v.type == Bonus)
-			t = bsdata<bonusi>::get(v.value).isrequired();
+			need_test = allow_test && bsdata<bonusi>::get(v.value).isrequired();
 		if(prefixes.is(Minus))
 			b = -b;
 		switch(a.type) {
 		case Cost:
 			if(prefixes.is(Income)) {
 				if(province) {
-					if(test_required) {
-						if(t) {
-							if((province->income.get(a.value) + b) < 0)
-								return false;
-						}
-					} else
+					if(need_test && (province->income.get(a.value) + b) < 0)
+						return false;
+					if(allow_apply)
 						province->income.add(a.value, b);
 				}
 			} else if(player) {
-				if(test_required) {
-					if(t) {
-						if((player->total.get(a.value) + b) < 0)
-							return false;
-					}
-				} else
+				if(need_test && (player->total.get(a.value) + b) < 0)
+					return false;
+				if(allow_apply)
 					player->total.add(a.value, b);
 			}
 			break;
 		case Event:
 			if(player) {
-				if(!test_required)
+				if(allow_apply)
 					player->events.addrandom(a);
 			}
 			break;
@@ -77,6 +71,25 @@ bool gamei::apply(const variants& source, bool test_required) {
 		prefixes.clear();
 	}
 	return true;
+}
+
+int gamei::get(variant id, const variants& source) {
+	prefixa prefixes;
+	int result = 0;
+	for(auto v : source) {
+		if(v.type == Prefix) {
+			prefixes.set(v.value);
+			continue;
+		}
+		auto a = getaction(v);
+		auto b = getbonus(v);
+		if(prefixes.is(Minus))
+			b = -b;
+		if(a == id && !prefixes.is(Income))
+			result += b;
+		prefixes.clear();
+	}
+	return result;
 }
 
 variant gamei::getaction(variant v) {
@@ -106,7 +119,7 @@ static const eventcasei* find_eventcase(short parent, short id, const eventcasei
 			continue;
 		if(p->isprompt()) {
 			if(p->effect) {
-				if(!game.apply(p->effect, true))
+				if(!game.apply(p->effect, true, false))
 					continue;
 			}
 		} else if(p->next > 0) {
@@ -122,25 +135,6 @@ static const eventcasei* getnext(const eventcasei* p) {
 	if(p->next <= 0)
 		return 0;
 	return find_eventcase(p->parent, p->next, 0, true);
-}
-
-int gamei::get(variant id, const variants& source) {
-	prefixa prefixes;
-	int result = 0;
-	for(auto v : source) {
-		if(v.type == Prefix) {
-			prefixes.set(v.value);
-			continue;
-		}
-		auto a = getaction(v);
-		auto b = getbonus(v);
-		if(prefixes.is(Minus))
-			b = -b;
-		if(a == id && !prefixes.is(Income))
-			result += b;
-		prefixes.clear();
-	}
-	return result;
 }
 
 static void add_possible_lost(const eventcasei* p, stringbuilder& sbo) {
@@ -174,7 +168,7 @@ void gamei::play(const eventi* event) {
 		auto pe = find_eventcase(quest_id, current_id, 0, true);
 		if(!pe)
 			break;
-		apply(pe->effect);
+		apply(pe->effect, false, true);
 		if(!pe->text)
 			break;
 		an.clear();
