@@ -29,6 +29,8 @@ static bool iseventstage(const char* p) {
 
 static const char* read_string(const char* p, stringbuilder& result) {
 	result.clear();
+	if(p[0] == '#')
+		return p;
 	while(*p) {
 		char sym;
 		if(*p == '\n' || *p == '\r') {
@@ -93,6 +95,13 @@ static const char* skipcr(const char* p, bool& allow_continue) {
 	return p;
 }
 
+static const char* getstring(stringbuilder& sb) {
+	auto p = sb.begin();
+	if(!p[0])
+		return 0;
+	return szdup(p);
+}
+
 static const char* read_answers(const char* p, short parent, short id, stringbuilder& sb, bool& allow_continue) {
 	while(allow_continue && isanswer(p)) {
 		auto pe = bsdata<eventcasei>::add();
@@ -102,7 +111,7 @@ static const char* read_answers(const char* p, short parent, short id, stringbui
 		p = stringbuilder::read(p, pe->next);
 		p = skipsp(p + 1);
 		p = read_string(p, sb);
-		pe->text = szdup(sb.begin());
+		pe->text = getstring(sb);
 	}
 	return p;
 }
@@ -116,7 +125,7 @@ static const char* read_stage(const char* p, short parent, stringbuilder& sb, bo
 		p = stringbuilder::read(skipsp(p + 1), pe->id);
 		p = read_variants(skipsp(p), sb, pe->effect, allow_continue);
 		p = read_string(skipspcr(p), sb);
-		pe->text = szdup(sb.begin());
+		pe->text = getstring(sb);
 		p = read_answers(p, parent, pe->id, sb, allow_continue);
 	}
 	return p;

@@ -1,2 +1,2 @@
 ﻿In file `rules/events.txt`:
-- Line 20: Can't find variant `DarkOmen`
+- Line 8: Can't find variant `DarkOmen`

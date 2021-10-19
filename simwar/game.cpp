@@ -84,6 +84,8 @@ int gamei::getbonus(variant v) {
 	return 1;
 }
 
+static const eventcasei* getnext(const eventcasei* p);
+
 static const eventcasei* find_eventcase(short parent, short id, const eventcasei* first, bool need_prompt) {
 	auto pe = (const eventcasei*)bsdata<eventcasei>::source.end();
 	if(!first)
@@ -99,12 +101,18 @@ static const eventcasei* find_eventcase(short parent, short id, const eventcasei
 			if(p->effect && !game.apply(p->effect, true))
 				continue;
 		} else if(p->next > 0) {
-			if(!find_eventcase(parent, p->next, 0, true))
+			if(!getnext(p))
 				continue;
 		}
 		return p;
 	}
 	return 0;
+}
+
+static const eventcasei* getnext(const eventcasei* p) {
+	if(p->next <= 0)
+		return 0;
+	return find_eventcase(p->parent, p->next, 0, true);
 }
 
 int gamei::get(variant id, const variants& source) {
@@ -126,6 +134,26 @@ int gamei::get(variant id, const variants& source) {
 	return result;
 }
 
+static void add_possible_lost(const eventcasei* p, stringbuilder& sbo) {
+	auto pe = getnext(p);
+	if(!pe)
+		return;
+	char temp[500]; temp[0] = 0; stringbuilder sb(temp);
+	for(auto& e : bsdata<costi>()) {
+		if(!e.visible)
+			continue;
+		auto r = game.get(variant(&e), pe->effect);
+		if(!r)
+		continue;
+		if(temp[0])
+			sb.add(", ");
+		sb.add(getnm(e.id));
+		sb.add("%+1i", r);
+	}
+	if(temp[0])
+		sbo.add(" (%1)", temp);
+}
+
 void gamei::play(const eventi* event) {
 	auto quest_id = bsdata<eventi>::source.indexof(event);
 	if(quest_id == -1)
@@ -144,11 +172,7 @@ void gamei::play(const eventi* event) {
 		stringbuilder sb(temp);
 		for(auto p = find_eventcase(quest_id, current_id, 0, false); p; p = find_eventcase(quest_id, current_id, p, false)) {
 			sb.clear(); game.format(sb, p->text);
-			char tem1[500]; stringbuilder s1(tem1);
-			for(auto& e : bsdata<costi>()) {
-				if(!e.visible)
-					continue;
-			}
+			add_possible_lost(p, sb);
 			an.add((long)p, temp);
 		}
 		sb.clear(); game.format(sb, pe->text);
