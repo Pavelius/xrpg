@@ -40,6 +40,9 @@ bool gamei::apply(const variants& source, bool test_required) {
 		}
 		auto a = getaction(v);
 		auto b = getbonus(v);
+		auto t = false;
+		if(v.type == Bonus)
+			t = bsdata<bonusi>::get(v.value).isrequired();
 		if(prefixes.is(Minus))
 			b = -b;
 		switch(a.type) {
@@ -47,15 +50,19 @@ bool gamei::apply(const variants& source, bool test_required) {
 			if(prefixes.is(Income)) {
 				if(province) {
 					if(test_required) {
-						if((province->income.get(a.value) + b) < 0)
-							return false;
+						if(t) {
+							if((province->income.get(a.value) + b) < 0)
+								return false;
+						}
 					} else
 						province->income.add(a.value, b);
 				}
 			} else if(player) {
 				if(test_required) {
-					if((player->total.get(a.value) + b) < 0)
-						return false;
+					if(t) {
+						if((player->total.get(a.value) + b) < 0)
+							return false;
+					}
 				} else
 					player->total.add(a.value, b);
 			}
@@ -98,8 +105,10 @@ static const eventcasei* find_eventcase(short parent, short id, const eventcasei
 		if(p->isprompt() != need_prompt)
 			continue;
 		if(p->isprompt()) {
-			if(p->effect && !game.apply(p->effect, true))
-				continue;
+			if(p->effect) {
+				if(!game.apply(p->effect, true))
+					continue;
+			}
 		} else if(p->next > 0) {
 			if(!getnext(p))
 				continue;

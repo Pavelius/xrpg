@@ -21,12 +21,18 @@ enum variant_s : unsigned char {
 enum labdscape_s : unsigned char {
     Plains, Forest, Hills, Swamp, Desert, Waste, Sea,
 };
+struct costa : dataset<8, short> {
+};
 struct bonusi {
     const char* id;
     variant     type;
     int         bonus;
+    bool        isrequired() const;
 };
-struct costa : dataset<8, short> {
+struct landscapei {
+    const char* id;
+    const char* image;
+    costa       income; // Base income from landscape
 };
 struct nameable {
     const char* id;
@@ -67,9 +73,6 @@ struct army : adat<variant, 18> {
 struct hero : uniti {
     army        troops;
 };
-struct landscapei : nameable {
-    costa       income; // Base income from landscape
-};
 struct landscapea : flagable<2> {
 };
 struct provincei : nameable {
@@ -96,7 +99,6 @@ struct decki : varianta {
 struct eventi {
     const char* id;
     constexpr explicit operator bool() const { return id != 0; }
-    static const eventi* find(const char* id);
     static void read(const char* url);
 };
 struct eventcasei {
@@ -104,11 +106,11 @@ struct eventcasei {
     short       id;
     int         next;
     const char* text;
+    const char* image; // Possible event image. If none get from landscape.
     variants    effect;
     constexpr explicit operator bool() const { return parent != -1; }
     void        clear();
     bool        isprompt() const { return next == -1; }
-    bool        isend() const { return !next; }
 };
 struct playeri {
     const char* id;

@@ -122,3 +122,9 @@ BSDATA(bonusi) = {
 	{"Shame5", Fame, -5},
 };
 BSDATAF(bonusi)
+
+bool bonusi::isrequired() const {
+	return bonus < 0
+		&& (type.type == Cost)
+		&& bsdata<costi>::get(type.value).visible;
+}

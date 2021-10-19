@@ -171,11 +171,3 @@ void eventi::read(const char* url) {
 	}
 	delete p_alloc;
 }
-
-const eventi* eventi::find(const char* id) {
-	for(auto& e : bsdata<eventi>()) {
-		if(strcmp(e.id, id) == 0)
-			return &e;
-	}
-	return 0;
-}
