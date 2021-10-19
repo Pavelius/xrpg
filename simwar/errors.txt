@@ -1,2 +1,2 @@
-﻿In file `rules/events.txt`:
-- Line 8: Can't find variant `DarkOmen`
+﻿In file `rules/test_data.txt`:
+- Line 62: Not found requisit `position`

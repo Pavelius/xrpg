@@ -1,3 +1,11 @@
+#Province
+
+WhiteTower position(205 1080)
+SouthHills position(158 971)
+ForestTooth position(272 962)
+EastForest position(344 1034)
+FarForest position(436 976)
+
 #Player
 
 Red

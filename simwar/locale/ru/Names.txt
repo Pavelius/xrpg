@@ -1,5 +1,10 @@
-﻿Fame: Слава
+﻿EastForest: Восточный лес
+Fame: Слава
+FarForest: Дальний лес
+ForestTooth: Лес с зубом
 Gold: Золото
 Mana: Мана
 RandomEvent: Случайное событие
 ShiningForest: Сверкающий лес
+SouthHills: Южные холмы
+WhiteTower: Белая башня

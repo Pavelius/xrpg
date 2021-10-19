@@ -12,8 +12,8 @@ static bool test_data() {
     auto pu = bsdata<uniti>::source_ptr;
     if(!pu)
         return pu;
-    auto& e2 = bsdata<uniti>::get(1);
-    auto& e3 = bsdata<uniti>::get(2);
+    auto& e2 = bsdata<provincei>::get(1);
+    auto& e3 = bsdata<provincei>::get(2);
     return true;
 }
 
@@ -36,6 +36,7 @@ int main() {
     game.province->clear();
     game.province->id = "ShiningForest";
     eventi* pe = variant("ShamanCome");
+    provincei* p1 = variant("EastForest");
     game.play(pe);
     return 0;
 }

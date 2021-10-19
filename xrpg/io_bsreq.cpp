@@ -5,6 +5,7 @@
 
 static char			temp[512];
 static const char*	p;
+static bool			allow_continue;
 
 struct valuei {
 	const char*		text;
@@ -28,6 +29,8 @@ static bool iscr() {
 }
 
 static void skipsym(char sym) {
+	if(!allow_continue)
+		return;
 	if(sym == 10) {
 		if(iscr()) {
 			while(iscr())
@@ -35,6 +38,7 @@ static void skipsym(char sym) {
 			return;
 		}
 		log::error(p, "Expected line feed");
+		allow_continue = false;
 	} else {
 		if(*p == sym) {
 			p = p + 1;
@@ -43,6 +47,7 @@ static void skipsym(char sym) {
 		}
 		char temp[2] = {sym, 0};
 		log::error(p, "Expected symbol `%1`", temp);
+		allow_continue = false;
 	}
 }
 
@@ -52,9 +57,10 @@ static const bsreq* getkey(const bsreq* type) {
 
 static void readid() {
 	stringbuilder sb(temp); temp[0] = 0;
-	if(!ischa(*p))
+	if(!ischa(*p)) {
 		log::error(p, "Expected identifier");
-	else
+		allow_continue = false;
+	} else
 		p = sb.psidf(p);
 	next();
 }
@@ -142,10 +148,12 @@ static void write_value(void* object, const bsreq* req, int index, const valuei&
 	auto p1 = req->ptr(object, index);
 	if(req->is(KindNumber) || req->type == bsmeta<variant>::meta)
 		req->set(p1, v.number);
-	else if(req->is(KindDSet))
-		req->set(p1, v.number);
 	else if(req->is(KindText))
 		req->set(p1, (long)szdup(v.text));
+	else if(req->is(KindScalar))
+		write_value(req->ptr(object), req->type + index, 0, v);
+	else if(req->is(KindDSet))
+		req->set(p1, v.number);
 	else if(req->is(KindReference))
 		req->set(p1, (long)v.data);
 }
@@ -264,8 +272,7 @@ static varianti* find_type(const char* id) {
 }
 
 static void parse() {
-	auto pb = p;
-	while(*p) {
+	while(*p && allow_continue) {
 		skipsym('#');
 		readid();
 		auto pd = find_type(temp);
@@ -275,14 +282,10 @@ static void parse() {
 			return;
 		}
 		skipsym(10);
-		while(*p && *p != '#') {
+		while(*p && *p != '#' && allow_continue) {
 			read_object(pd->metadata, pd->source, pd->key_count, 0);
 			nextline();
-			if(pb == p)
-				break;
-			pb = p;
 		}
-		pb = p;
 	}
 }
 
@@ -295,6 +298,7 @@ void bsreq::read(const char* url) {
 	}
 	log::setfile(pb);
 	p = pb;
+	allow_continue = true;
 	parse();
 	delete pb;
 }

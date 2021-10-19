@@ -4,6 +4,9 @@
 #define LNK(V, T) template<> struct bsmeta<V> : bsmeta<T> {};
 
 LNK(stat_s, stati)
+
+NOBSDATA(point)
+
 BSMETA(variant) = {{}};
 BSMETA(varianti) = {BSREQ(id), {}};
 BSDATAD(variant)
@@ -46,10 +49,14 @@ BSMETA(prefixi) = {
     {}};
 BSMETA(provincei) = {
     BSREQ(id),
+    BSREQ(position),
     {}};
 BSDATAD(provincei)
 BSMETA(eventi) = {
     BSREQ(id),
+    {}};
+BSMETA(point) = {
+    BSREQ(x), BSREQ(y),
     {}};
 
 #define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr, 0
@@ -62,6 +69,7 @@ BSDATA(varianti) = {
     {"Landscape", VRSTD(landscapei), 1},
     {"Player", VRSTD(playeri), 1},
     {"Prefix", VRSTD(prefixi), 1},
+    {"Province", VRSTD(provincei), 1},
     {"Resource", VRSTD(resourcei), 1},
     {"Stat", VRSTD(stati), 1},
     {"Troop", VRSTD(troop), 2},

@@ -188,8 +188,8 @@ void draw::paintall() {
 }
 
 void draw::set(int x, int y) {
-	caret.x = x - camera.x + getwidth() / 2;
-	caret.y = y - camera.y + getheight() / 2;
+	caret.x = x - camera.x;
+	caret.y = y - camera.y;
 }
 
 void draw::inputcamera() {

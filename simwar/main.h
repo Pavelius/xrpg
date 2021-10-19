@@ -1,6 +1,7 @@
 #include "answers.h"
 #include "dataset.h"
 #include "flagable.h"
+#include "point.h"
 #include "variant.h"
 #include "varianta.h"
 
@@ -16,7 +17,7 @@ enum prefix_s : unsigned char {
     Minus, Income,
 };
 enum variant_s : unsigned char {
-    NoVariant, Bonus, Cost, Event, Landscape, Player, Prefix, Resource, Stat, Troop, Unit
+    NoVariant, Bonus, Cost, Event, Landscape, Player, Province, Prefix, Resource, Stat, Troop, Unit
 };
 enum labdscape_s : unsigned char {
     Plains, Forest, Hills, Swamp, Desert, Waste, Sea,
@@ -76,6 +77,7 @@ struct hero : uniti {
 struct landscapea : flagable<2> {
 };
 struct provincei : nameable {
+    point       position;
     costa       income; // Additional income
     resourcea   resources; // Known province resource
     variant     garnsison; // Contract on province garnison units.
@@ -142,5 +144,6 @@ VKIND(bonusi, Bonus)
 VKIND(cost_s, Cost)
 VKIND(eventi, Event)
 VKIND(stat_s, Stat)
+VKIND(provincei, Province)
 VKIND(troop, Troop)
 VKIND(uniti, Unit)

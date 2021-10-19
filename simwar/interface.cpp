@@ -28,6 +28,16 @@ static void texthead(const char* string) {
 	font = push_font;
 }
 
+static void textjc(const char* string) {
+	auto push_caret = caret;
+	auto w = textw(string);
+	auto h = texth();
+	caret.x -= w / 2;
+	caret.y -= h / 2;
+	text(string);
+	caret = push_caret;
+}
+
 static void picture_image() {
 	rectpush push;
 	setoffset(-metrics::border, -metrics::border);
@@ -86,10 +96,24 @@ static void main_beforemodal() {
 	tooltipsbeforemodal();
 }
 
-static fnevent def_background;
+static void paintprovinces() {
+	auto push_fore = fore;
+	auto push_font = font;
+	font = metrics::h2;
+	fore = colors::black;
+	for(auto& e : bsdata<provincei>()) {
+		set(e.position.x, e.position.y);
+		textjc(getnm(e.id));
+	}
+	font = push_font;
+	fore = push_fore;
+}
+
 static void main_background() {
-	if(def_background)
-		def_background();
+	paintclear();
+	paintimage();
+	paintprovinces();
+	paintcommands();
 	show_status_panel();
 }
 
@@ -145,6 +169,5 @@ void draw::initialize() {
 	// Overlaod controls
 	def_beforemodal = pbeforemodal;
 	pbeforemodal = main_beforemodal;
-	def_background = pbackground;
 	pbackground = main_background;
 }
