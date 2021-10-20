@@ -1,2 +1,3 @@
-﻿ru
-Artefacts
+﻿In file `rules/test_data.txt`:
+- Line 20: Not found field `Gold70` in dataset `cost`
+- Line 20: Expected symbol `(`

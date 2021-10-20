@@ -49,6 +49,12 @@
     <ClCompile Include="action.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="landscape.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="unit.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="errors.txt">

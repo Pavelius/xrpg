@@ -148,6 +148,7 @@
     <ClCompile Include="events.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="interface.cpp" />
+    <ClCompile Include="landscape.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="prefix.cpp" />
@@ -156,6 +157,7 @@
     <ClCompile Include="stat.cpp" />
     <ClCompile Include="string.cpp" />
     <ClCompile Include="troop.cpp" />
+    <ClCompile Include="unit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="errors.txt" />

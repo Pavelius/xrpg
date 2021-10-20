@@ -14,7 +14,7 @@ enum stat_s : unsigned char {
     Explored, Population, Growth, Rebellion, Unrest
 };
 enum cost_s : unsigned char {
-    Gold, Mana, Artefacts, Fame
+    Gold, Mana, Artefacts, Faith, Fame
 };
 enum prefix_s : unsigned char {
     Minus, Income,
@@ -23,8 +23,8 @@ enum variant_s : unsigned char {
     NoVariant,
     Action, Bonus, Cost, Event, Landscape, Player, Prefix, Province, Resource, Stat, Troop, Unit
 };
-enum labdscape_s : unsigned char {
-    Plains, Forest, Hills, Swamp, Desert, Waste, Sea,
+enum landscape_s : unsigned char {
+    Plains, Forest, Hills, Swamp, Desert, Sea,
 };
 struct costa : dataset<8, short> {
 };
@@ -56,11 +56,18 @@ struct prefixa : flagable<2> {
 };
 struct resourcea : flagable<2> {
 };
+struct producea : adat<char, 12> {
+};
+struct landscapea : flagable<2> {
+};
 struct stata : dataset<Unrest> {
 };
 struct uniti : nameable {
     variants    stats;
     costa       cost, upkeep;
+    landscapea  encounter;
+    producea    need;
+    int         get(variant v) const;
 };
 struct troop {
     variant     type;
@@ -78,15 +85,14 @@ struct army : adat<variant, 18> {
 struct hero : uniti {
     army        troops;
 };
-struct landscapea : flagable<2> {
-};
 struct provincei : nameable {
+    landscape_s landscape;
     point       position;
+    stata       stats; // Common province and unit stats
     costa       income; // Additional income
     resourcea   resources; // Known province resource
-    variant     garnsison; // Contract on province garnison units.
-    stata       stats; // Common province and unit stats
-    void        clear();
+    variant     garnison; // Contract on province garnison units.
+    void        initialize();
 };
 struct sitetypei : nameable {
     landscapea  landscape; // Landscape types where site might generate. 0 - for all sites.
@@ -145,6 +151,7 @@ extern gamei    game;
 namespace draw {
 long            dialog(answers& an, const char* title, const char* format);
 void            initialize();
+void            makemove();
 }
 int             getfix(stringbuilder* sb, int v, variant id);
 VKIND(actioni, Action)

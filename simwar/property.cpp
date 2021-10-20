@@ -1,9 +1,11 @@
 #include "bsreq.h"
 #include "main.h"
 
-#define LNK(V, T) template<> struct bsmeta<V> : bsmeta<T> {};
+#define LNK(V, T) template<> struct bsmeta<V> : bsmeta<T> {};\
+template<> struct bsdata<V> : bsdata<T> {};
 
 LNK(stat_s, stati)
+LNK(landscape_s, landscapei)
 
 NOBSDATA(point)
 
@@ -23,15 +25,16 @@ BSMETA(resourcei) = {
 BSDATAD(resourcei)
 BSMETA(landscapei) = {
     BSREQ(id),
-    BSARR(income, KindDSet, char, bsdata<costi>::source_ptr),
+    BSDST(income, costi),
     {}};
 BSDATAD(landscapei)
 BSMETA(uniti) = {
     BSREQ(id),
-    BSARR(stats, KindDSet, char, bsdata<stati>::source_ptr),
-    BSARR(cost, KindDSet, char, bsdata<costi>::source_ptr),
-    BSARR(upkeep, KindDSet, char, bsdata<costi>::source_ptr),
-{}};
+    BSREQ(stats),
+    BSDST(cost, costi),
+    BSDST(upkeep, costi),
+    BSFLG(encounter, landscapei),
+    {}};
 BSDATAD(uniti)
 BSMETA(bonusi) = {
     BSREQ(id),
@@ -50,6 +53,9 @@ BSMETA(prefixi) = {
 BSMETA(provincei) = {
     BSREQ(id),
     BSREQ(position),
+    BSDST(income, costi),
+    BSDST(stats, stati),
+    BSREQ(landscape),
     {}};
 BSDATAD(provincei)
 BSMETA(eventi) = {

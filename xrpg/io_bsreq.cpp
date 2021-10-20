@@ -7,12 +7,14 @@ static char			temp[512];
 static const char*	p;
 static bool			allow_continue;
 
+namespace {
 struct valuei {
 	const char*		text;
 	long			number;
 	void*			data;
 	void clear() { memset(this, 0, sizeof(*this)); }
 };
+}
 
 static void next() {
 	while(*p == ' ' || *p == 9)
@@ -146,7 +148,15 @@ static void write_value(void* object, const bsreq* req, int index, const valuei&
 	if(!req)
 		return;
 	auto p1 = req->ptr(object, index);
-	if(req->is(KindNumber) || req->type == bsmeta<variant>::meta)
+	if(req->is(KindSlice)) {
+		auto ps = (sliceu<int>*)req->ptr(object);
+		auto ci = req->source->getcount();
+		req->source->add();
+		if(!ps->count)
+			ps->start = ci;
+		p1 = (char*)req->source->ptr(ps->start + (ps->count++));
+		req->set(p1, v.number);
+	} else if(req->is(KindNumber) || req->is(KindEnum) || req->type == bsmeta<variant>::meta)
 		req->set(p1, v.number);
 	else if(req->is(KindText))
 		req->set(p1, (long)szdup(v.text));
@@ -154,8 +164,13 @@ static void write_value(void* object, const bsreq* req, int index, const valuei&
 		write_value(req->ptr(object), req->type + index, 0, v);
 	else if(req->is(KindDSet))
 		req->set(p1, v.number);
-	else if(req->is(KindReference))
+	else if(req->is(KindFlags)) {
+		auto data = (unsigned char*)req->ptr(object);
+		data[v.number / 8] |= 1 << (v.number % 8);
+	} else if(req->is(KindReference))
 		req->set(p1, (long)v.data);
+	else
+		log::error(p, "Unknown type when in requisit `%1`", req->id);
 }
 
 static void fill(void* object, const bsreq* type, const valuei* keys, int key_count) {
@@ -174,13 +189,13 @@ static void* find_object(array* source, const bsreq* type, valuei* keys, int key
 
 static void read_dset(void* object, const bsreq* req) {
 	auto index = 0;
-	while(*p && isvalue()) {
+	while(allow_continue && isvalue()) {
 		valuei v;
 		readid();
 		index = req->source->find(temp, 0);
 		if(index == -1) {
 			index = 0;
-			log::error(p, "Not found field `%1` in array of requisit `%2`", temp, req->id);
+			log::error(p, "Not found field `%1` in dataset `%2`", temp, req->id);
 		}
 		skipsym('(');
 		read_value(v, req);
@@ -192,7 +207,7 @@ static void read_dset(void* object, const bsreq* req) {
 
 static void read_array(void* object, const bsreq* req) {
 	auto index = 0;
-	while(*p && isvalue()) {
+	while(allow_continue && isvalue()) {
 		valuei v;
 		read_value(v, req);
 		write_value(object, req, index++, v);
@@ -221,32 +236,40 @@ const bsreq* find_requisit(const bsreq* type, const char* id) {
 }
 
 static void read_dictionary(void* object, const bsreq* type, int level) {
-	while(ischa(*p)) {
+	while(allow_continue && ischa(*p)) {
 		readid();
 		auto req = find_requisit(type, temp);
 		skipsym('(');
 		read_array(object, req);
 		skipsym(')');
 	}
-	auto pb = p;
-	while(islevel(level + 1)) {
+	while(allow_continue && islevel(level + 1)) {
 		readid();
 		auto req = type->find(temp);
-		if(!req)
+		if(!req) {
 			log::error(p, "Not found requisit `%1`", temp);
-		else if(req->is(KindDSet))
+			allow_continue = false;
+		} else if(req->is(KindDSet))
 			read_dset(object, req);
 		else if(req->is(KindScalar))
 			read_dictionary(req->ptr(object), req->type, level + 1);
 		else
-			read_array(object, type);
-		if(pb == p)
-			break;
-		pb = p;
+			read_array(object, req);
+	}
+}
+
+static void clear_object(void* object, const bsreq* type) {
+	for(auto req = type; *req; req++) {
+		auto p = req->ptr(object);
+		memset(p, 0, req->lenght);
 	}
 }
 
 static void* read_object(const bsreq* type, array* source, int key_count, int level) {
+	if(!isvalue()) {
+		log::error(p, "Expected value");
+		allow_continue = false;
+	}
 	if(!key_count)
 		key_count = 1;
 	valuei keys[8] = {};
@@ -254,7 +277,8 @@ static void* read_object(const bsreq* type, array* source, int key_count, int le
 		read_value(keys[i], type + i);
 	auto object = find_object(source, type, keys, key_count);
 	if(!object) {
-		object = source->addz();
+		object = source->add();
+		clear_object(object, type);
 		fill(object, type, keys, key_count);
 	}
 	read_dictionary(object, type, level);

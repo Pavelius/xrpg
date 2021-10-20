@@ -9,7 +9,9 @@ meta_count<decltype(data_type::fn)>::value,\
 bsmeta<meta_decoy<decltype(data_type::fn)>::value>::meta,\
 meta_kind<decltype(data_type::fn)>::value,\
 bsdata<meta_decoy<decltype(data_type::fn)>::value>::source_ptr}
-#define	BSARR(fn, K, T, S) {#fn, FO(data_type, fn), sizeof(T), sizeof(data_type::fn), 1, bsmeta<T>::meta, K, S}
+#define	BSCST(fn, K, TM, TE, C) {#fn, FO(data_type, fn), sizeof(TM), sizeof(data_type::fn), C, bsmeta<TM>::meta, K, bsdata<TE>::source_ptr}
+#define	BSDST(fn, TE) BSCST(fn, KindDSet, decltype(data_type::fn)::data_type, TE, 1)
+#define	BSFLG(fn, T) {#fn, FO(data_type, fn), sizeof(data_type::fn), sizeof(data_type::fn), 1, bsmeta<T>::meta, KindFlags, bsdata<T>::source_ptr}
 #define BSMETA(e) template<> const bsreq bsmeta<e>::meta[]
 #define BSINF(N, T) {#N, 0, sizeof(T), sizeof(T), 1, bsmeta<T>::meta, KindScalar, bsdata<T>::source_ptr}
 
@@ -17,7 +19,7 @@ bsdata<meta_decoy<decltype(data_type::fn)>::value>::source_ptr}
 enum bstype_s : unsigned char {
 	KindNoType,
 	KindNumber, KindText, KindScalar, KindEnum, KindReference,
-	KindADat, KindSlice, KindList, KindARem, KindCFlags, KindDSet
+	KindADat, KindSlice, KindFlags, KindDSet
 };
 // Metadata field descriptor
 struct bsreq {

@@ -12,6 +12,9 @@ static bool test_data() {
     auto pu = bsdata<uniti>::source_ptr;
     if(!pu)
         return pu;
+    auto& u1 = bsdata<uniti>::get(1);
+    auto at = u1.get(Attack);
+    auto rd = u1.get(Raid);
     auto& e2 = bsdata<provincei>::get(1);
     auto& e3 = bsdata<provincei>::get(2);
     return true;
@@ -36,6 +39,7 @@ int main() {
     eventi* pe = variant("ShamanCome");
     provincei* p1 = variant("EastForest");
     game.play(pe);
+    draw::makemove();
     return 0;
 }
 

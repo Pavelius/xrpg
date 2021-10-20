@@ -160,6 +160,10 @@ long draw::dialog(answers& an, const char* title, const char* description) {
 	return getresult();
 }
 
+void draw::makemove() {
+	scene();
+}
+
 void draw::initialize() {
 	simpleinitialize();
 	initialize("Simwar game");

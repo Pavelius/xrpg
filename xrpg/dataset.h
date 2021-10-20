@@ -4,6 +4,7 @@ template<unsigned N, class DT = char>
 class dataset {
 	DT				data[N + 1];
 public:
+	typedef DT		data_type;
 	constexpr dataset() : data() {}
 	void			add(int i) { data[i] += 1; }
 	void			add(int i, int v) { data[i] += v; }
