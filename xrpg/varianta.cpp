@@ -38,3 +38,7 @@ void varianta::distinct() {
 	}
 	count = ps - data;
 }
+
+void varianta::shuffle() {
+	zshuffle(data, count);
+}

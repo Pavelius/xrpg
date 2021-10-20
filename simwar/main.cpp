@@ -33,13 +33,14 @@ int main() {
         return -2;
     initialize_png();
     draw::initialize();
+    game.initialize();
     game.player = bsdata<playeri>::elements;
     game.player->initialize();
     game.province = (provincei*)bsdata<provincei>::source.ptr(0);
     eventi* pe = variant("ShamanCome");
-    provincei* p1 = variant("EastForest");
     game.play(pe);
-    draw::makemove();
+    draw::setnext(draw::maketurn);
+    draw::start();
     return 0;
 }
 

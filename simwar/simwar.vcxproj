@@ -154,6 +154,7 @@
     <ClCompile Include="prefix.cpp" />
     <ClCompile Include="property.cpp" />
     <ClCompile Include="province.cpp" />
+    <ClCompile Include="selector.cpp" />
     <ClCompile Include="stat.cpp" />
     <ClCompile Include="string.cpp" />
     <ClCompile Include="troop.cpp" />

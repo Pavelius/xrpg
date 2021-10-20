@@ -1,6 +1,7 @@
 #include "main.h"
 
-gamei game;
+static unsigned	current_uid;
+gamei			game;
 
 struct game_string : stringbuilder {
 	void addtag(const char* id) {
@@ -186,4 +187,36 @@ void gamei::play(const eventi* event) {
 		if(!current_id)
 			break;
 	}
+}
+
+unsigned gamei::adduid() {
+	return (uid_base << 24) | (++uid);
+}
+
+void gamei::addtroop(variant type, variant owner) {
+	auto p = bsdata<troop>::addz();
+	p->clear();
+	p->uid = adduid();
+	p->type = type;
+	p->owner = owner;
+}
+
+void gamei::passturn() {
+	turn++;
+}
+
+void gamei::maketurn() {
+	passturn();
+	while(true) {
+		varianta an;
+		an.add(EndTurn);
+		auto result = an.choose(0, 0, true, 0);
+		if(result.type==Action && result.value==EndTurn)
+			break;
+	}
+}
+
+void gamei::initialize() {
+	for(auto& e : bsdata<provincei>())
+		e.initialize();
 }

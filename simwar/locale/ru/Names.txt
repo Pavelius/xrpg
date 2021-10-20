@@ -10,4 +10,5 @@ Mana: Мана
 RandomEvent: Случайное событие
 ShiningForest: Сверкающий лес
 SouthHills: Южные холмы
+Turn: Ход
 WhiteTower: Белая башня

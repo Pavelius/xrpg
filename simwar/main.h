@@ -68,10 +68,14 @@ struct uniti : nameable {
     landscapea  encounter;
     producea    need;
     int         get(variant v) const;
+    bool        match(variant v) const;
 };
 struct troop {
+    unsigned    uid;
     variant     type;
     variant     owner;
+    variant     moveto;
+    constexpr explicit operator bool() const { return uid != 0; }
     void        clear();
     int         get(variant id, stringbuilder* sb = 0) const;
     static int  getbonus(variant id, const variants& source);
@@ -138,21 +142,37 @@ struct actioni {
 struct prefixi {
     const char* id;
 };
-struct gamei {
+struct selector : varianta {
+    void        match(landscape_s v, bool keep);
+    void        querry(const provincei* p);
+};
+class gamei {
+    unsigned char uid_base;
+    unsigned    uid;
+    int         turn;
+public:
     playeri*    player;
     provincei*  province;
+    void        addtroop(variant type, variant owner);
+    unsigned    adduid();
     bool        apply(const variants& source, bool allow_test, bool allow_apply);
+    static void format(stringbuilder& sb, const char* string, ...);
     static int  get(variant v, const variants& source);
     static variant getaction(variant v);
     static int  getbonus(variant v);
-    static void format(stringbuilder& sb, const char* string, ...);
+    int         getturn() const { return turn; }
+    void        initialize();
+    void        maketurn();
+    static void maketurnproc();
+    void        passturn();
     void        play(const eventi* event);
+    void        setuidbase(unsigned char v) { uid_base = v; }
 };
 extern gamei    game;
 namespace draw {
 long            dialog(answers& an, const char* title, const char* format);
 void            initialize();
-void            makemove();
+void            maketurn();
 }
 int             getfix(stringbuilder* sb, int v, variant id);
 VKIND(actioni, Action)

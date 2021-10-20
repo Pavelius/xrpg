@@ -17,31 +17,27 @@ static rect				board;
 static const void*		current_hilite;
 
 namespace metrics {
-unsigned char			opacity = 220;
-unsigned char			opacity_hilighted = 180;
+unsigned char			opacity = 230;
 }
 
 bool draw::swindow(bool hilight, int border) {
 	if(border == 0)
 		border = metrics::border;
-	color c = colors::form;
-	color b = colors::form;
 	rectpush push;
 	auto push_alpha = alpha;
 	auto push_fore = fore;
 	setoffset(-border, -border);
 	auto rs = ishilite();
-	auto op = metrics::opacity;
+	alpha = metrics::opacity;
+	fore = colors::form;
 	if(hilight && rs) {
-		op = metrics::opacity_hilighted;
+		fore = colors::button.mix(fore);
 		if(hot.pressed)
-			op = 0xFF;
+			alpha = 0xFF;
 	}
-	fore = c;
-	alpha = op;
 	rectf();
 	alpha = push_alpha;
-	fore = b;
+	fore = colors::border;
 	rectb();
 	fore = push_fore;
 	return rs;

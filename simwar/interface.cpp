@@ -85,6 +85,7 @@ static void show_status_panel() {
 	height = texth();
 	for(auto& e : bsdata<costi>())
 		add_status(e.id, player->get(variant(&e)));
+	add_status("Turn", game.getturn());
 	height = push_height;
 }
 
@@ -159,12 +160,6 @@ long draw::dialog(answers& an, const char* title, const char* description) {
 	return getresult();
 }
 
-void draw::makemove() {
-	varianta an;
-	an.add(EndTurn);
-	an.choose(0, 0, true, 0);
-}
-
 void draw::initialize() {
 	simpleinitialize();
 	initialize("Simwar game");
@@ -175,4 +170,10 @@ void draw::initialize() {
 	def_beforemodal = pbeforemodal;
 	pbeforemodal = main_beforemodal;
 	pbackground = main_background;
+}
+
+void draw::maketurn() {
+	game.maketurn();
+	if(!isnext())
+		setnext(draw::maketurn);
 }

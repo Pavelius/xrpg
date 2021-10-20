@@ -42,6 +42,7 @@ BSMETA(bonusi) = {
     BSREQ(type), BSREQ(bonus),
     {}};
 BSMETA(troop) = {
+    BSREQ(uid),
     BSREQ(type), BSREQ(owner),
     {}};
 BSDATAD(troop)
@@ -70,21 +71,21 @@ BSMETA(actioni) = {
     BSREQ(id),
     {}};
 
-#define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr, 0
+#define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr, 0, 1
 #define VRNOM(T) 0, bsdata<T>::source_ptr
 BSDATA(varianti) = {
 	{"NoVariant"},
-    {"Action", VRSTD(actioni), 1},
-    {"Bonus", VRSTD(bonusi), 1},
-    {"Cost", VRSTD(costi), 1},
-    {"Event", VRSTD(eventi), 1},
-    {"Landscape", VRSTD(landscapei), 1},
-    {"Player", VRSTD(playeri), 1},
-    {"Prefix", VRSTD(prefixi), 1},
-    {"Province", VRSTD(provincei), 1},
-    {"Resource", VRSTD(resourcei), 1},
-    {"Stat", VRSTD(stati), 1},
-    {"Troop", VRSTD(troop), 2},
-    {"Unit", VRSTD(uniti), 1},
+    {"Action", VRSTD(actioni)},
+    {"Bonus", VRSTD(bonusi)},
+    {"Cost", VRSTD(costi)},
+    {"Event", VRSTD(eventi)},
+    {"Landscape", VRSTD(landscapei)},
+    {"Player", VRSTD(playeri)},
+    {"Prefix", VRSTD(prefixi)},
+    {"Province", VRSTD(provincei)},
+    {"Resource", VRSTD(resourcei)},
+    {"Stat", VRSTD(stati)},
+    {"Troop", VRSTD(troop)},
+    {"Unit", VRSTD(uniti)},
 };
 assert_enum(varianti, Unit)
