@@ -1,30 +1,52 @@
+#Resource
+
+Woods
+Horses
+Iron
+Herbs
+Gems
+Sulfur
+Iron
+Leather
+
 #Unit
 
 Spearmens
  stats Attack(1) Defend(2) Damage(3) Hits(10) Level(1)
  cost Gold(25)
  upkeep Gold(3)
- encounter Plains 
+ encounter Plains
+ need Iron Woods
 Archers
  stats Attack(2) Defend(1) Damage(3) Hits(8) Level(1)
  cost Gold(30)
  upkeep Gold(3)
  encounter Plains
+ need Woods
 Swordmens
  stats Attack(2) Defend(2) Damage(3) Hits(12) Level(2)
  cost Gold(40)
  upkeep Gold(4)
  encounter Plains
+ need Iron Iron
+Riders
+ stats Attack(2) Defend(1) Raid(1) Damage(3) Hits(10) Move(2) Level(2)
+ cost Gold(35)
+ upkeep Gold(3)
+ encounter Plains
+ need Horses
 Cavalry
  stats Attack(3) Defend(2) Raid(1) Damage(4) Hits(14) Move(2) Level(3)
  cost Gold(70)
  upkeep Gold(6)
  encounter Plains
+ need Iron Horses
 Knights
  stats Attack(2) Defend(3) Damage(4) Hits(18) Level(3)
  cost Gold(60)
  upkeep Gold(6)
  encounter Plains
+ need Iron Iron
 Barbarians
  stats Attack(1) Defend(1) Damage(3) Hits(10) Level(1)
  cost Gold(20)
@@ -40,32 +62,25 @@ Orks
  cost Gold(30)
  upkeep Gold(2)
  encounter Plains Hills
+ need Iron
 BlackOrks
  stats Attack(2) Defend(2) Raid(1) Damage(4) Hits(13) Level(2)
  cost Gold(35)
  upkeep Gold(4)
  encounter Plains Hills
+ need Iron Iron
 WolfRiders
  stats Attack(2) Defend(1) Raid(1) Damage(4) Move(2) Hits(12) Level(2)
  cost Gold(30)
  upkeep Gold(4)
  encounter Plains Hills Forest
+ need Horses
 Ogres
  stats Attack(2) Defend(2) Damage(6) Hits(18) Level(3)
  cost Gold(45)
  upkeep Gold(5)
  encounter Plains Hills
-
-#Resource
-
-Woods
-Horses
-Iron
-Herbs
-Gems
-Sulfur
-Iron
-Leather
+ need Iron Woods
 
 #Province
 

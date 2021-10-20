@@ -119,13 +119,14 @@ static void read_value(valuei& e, const bsreq* req) {
 				log::error(p, "Can't find variant `%1`", temp);
 			e.number = v1.u;
 		} else {
+			auto offset = 0;
 			auto pk = getkey(req->type);
-			if(!pk)
-				log::error(p, "Requisit don't have key when load identifier `%1`", temp);
-			else if(!req->source)
+			if(pk)
+				offset = pk->offset;
+			if(!req->source)
 				log::error(p, "Invalid source array where read identifier `%1`", temp);
 			else {
-				e.number = req->source->find(temp, pk->offset);
+				e.number = req->source->find(temp, offset);
 				if(e.number == -1) {
 					log::error(p, "Not found identifier `%1`", temp);
 					e.number = 0;
@@ -179,7 +180,16 @@ static void write_value(void* object, const bsreq* req, int index, const valuei&
 		req->set(p1, (long)szdup(v.text));
 	else if(req->is(KindScalar))
 		write_value(req->ptr(object), req->type + index, 0, v);
-	else if(req->is(KindDSet))
+	else if(req->is(KindADat)) {
+		auto p2 = (char*)req->ptr(object);
+		auto pc = (int*)(p2 + FO(adat<char>, count));
+		auto pd = p2 + FO(adat<char>, data);
+		if(index > (int)req->count)
+			index = 0;
+		req->set(pd + index * req->count * req->size, v.number);
+		if(index > *pc)
+			*pc = index;
+	} else if(req->is(KindDSet))
 		req->set(p1, v.number);
 	else if(req->is(KindFlags)) {
 		auto data = (unsigned char*)req->ptr(object);
@@ -187,7 +197,7 @@ static void write_value(void* object, const bsreq* req, int index, const valuei&
 	} else if(req->is(KindReference))
 		req->set(p1, (long)v.data);
 	else
-		log::error(p, "Unknown type when in requisit `%1`", req->id);
+		log::error(p, "Unknown type in requisit `%1`", req->id);
 }
 
 static void fill(void* object, const bsreq* type, const valuei* keys, int key_count) {

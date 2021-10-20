@@ -10,6 +10,7 @@ bsmeta<meta_decoy<decltype(data_type::fn)>::value>::meta,\
 meta_kind<decltype(data_type::fn)>::value,\
 bsdata<meta_decoy<decltype(data_type::fn)>::value>::source_ptr}
 #define	BSCST(fn, K, TM, TE, C) {#fn, FO(data_type, fn), sizeof(TM), sizeof(data_type::fn), C, bsmeta<TM>::meta, K, bsdata<TE>::source_ptr}
+#define	BSADT(fn, TE) BSCST(fn, KindADat, decltype(data_type::fn)::data_type, TE, sizeof(decltype(data_type::fn)::data)/sizeof(decltype(data_type::fn)::data[0]))
 #define	BSDST(fn, TE) BSCST(fn, KindDSet, decltype(data_type::fn)::data_type, TE, 1)
 #define	BSFLG(fn, T) {#fn, FO(data_type, fn), sizeof(data_type::fn), sizeof(data_type::fn), 1, bsmeta<T>::meta, KindFlags, bsdata<T>::source_ptr}
 #define BSMETA(e) template<> const bsreq bsmeta<e>::meta[]
@@ -79,6 +80,7 @@ template<class T> struct meta_size<T*> { typedef T* value; };
 template<class T> struct meta_size<const T*> { typedef T* value; };
 template<class T, unsigned N> struct meta_size<T[N]> : meta_size<T> {};
 template<class T> struct meta_size<T[]> : meta_size<T> {};
+template<class T, unsigned N> struct meta_size<adat<T, N>> : meta_size<T> {};
 template<class T> struct meta_size<sliceu<T>> : meta_size<T> {};
 // Get kind
 template<class T> struct meta_kind : static_value<bstype_s, __is_enum(T) ? KindEnum : KindScalar> {};

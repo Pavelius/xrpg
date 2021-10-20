@@ -34,6 +34,7 @@ BSMETA(uniti) = {
     BSDST(cost, costi),
     BSDST(upkeep, costi),
     BSFLG(encounter, landscapei),
+    BSADT(need, resourcei),
     {}};
 BSDATAD(uniti)
 BSMETA(bonusi) = {

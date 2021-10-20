@@ -68,12 +68,13 @@ template<class T> inline void		zshuffle(T* p, int count) { for(int i = 0; i < co
 // Storge like vector
 template<class T, int count_max = 128>
 struct adat {
-	T								data[count_max];
 	size_t							count;
+	T								data[count_max];
 	constexpr adat() : data{}, count(0) {}
 	constexpr const T& operator[](unsigned index) const { return data[index]; }
 	constexpr T& operator[](unsigned index) { return data[index]; }
 	explicit operator bool() const { return count != 0; }
+	typedef T data_type;
 	T*								add() { if(count < count_max) return data + (count++); return data; }
 	void							add(const T& e) { if(count < count_max) data[count++] = e; }
 	T*								begin() { return data; }
@@ -96,6 +97,7 @@ class slice {
 	T*								data;
 	size_t							count;
 public:
+	typedef T data_type;
 	constexpr slice() : data(0), count(0) {}
 	template<size_t N> constexpr slice(T(&v)[N]) : data(v), count(N) {}
 	template<int N> constexpr slice(adat<T, N>& v) : data(v), count(v.count) {}
