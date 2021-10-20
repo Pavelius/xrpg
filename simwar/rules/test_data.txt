@@ -89,3 +89,8 @@ SouthHills position(158 971) landscape(Hills)
 ForestTooth position(272 962) landscape(Forest)
 EastForest position(344 1034) landscape(Forest)
 FarForest position(436 976) landscape(Forest)
+
+WhiteTower neightboards(SouthHills EastForest ForestTooth)
+SouthHills neightboards(WhiteTower ForestTooth)
+ForestTooth neightboards(WhiteTower SouthHills EastForest FarForest)
+FarForest neightboards(ForestTooth EastForest)

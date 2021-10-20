@@ -6,7 +6,7 @@
 #include "varianta.h"
 
 enum action_s : unsigned char {
-    Discard,
+    Discard, EndTurn,
 };
 enum stat_s : unsigned char {
     Attack, Defend, Raid, Move, Damage, Hits,
@@ -83,7 +83,7 @@ struct army : adat<variant, 18> {
     int         get(variant v, stringbuilder* sb = 0) const;
 };
 struct hero : uniti {
-    army        troops;
+    int         golds;
 };
 struct provincei : nameable {
     landscape_s landscape;
@@ -92,6 +92,7 @@ struct provincei : nameable {
     costa       income; // Additional income
     resourcea   resources; // Known province resource
     variant     garnison; // Contract on province garnison units.
+    variants    neightboards;
     void        initialize();
 };
 struct sitetypei : nameable {
@@ -155,6 +156,7 @@ void            makemove();
 }
 int             getfix(stringbuilder* sb, int v, variant id);
 VKIND(actioni, Action)
+VKIND(action_s, Action)
 VKIND(bonusi, Bonus)
 VKIND(cost_s, Cost)
 VKIND(eventi, Event)

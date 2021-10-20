@@ -1,4 +1,2 @@
-﻿In file `rules/test_data.txt`:
-- Line 19: Not found identifier `Wood`
-- Line 25: Not found identifier `Wood`
-- Line 77: Not found identifier `Wood`
+﻿ru
+EndTurn

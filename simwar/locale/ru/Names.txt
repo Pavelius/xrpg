@@ -1,5 +1,7 @@
 ﻿Artefacts: Реликвии
 EastForest: Восточный лес
+EndTurn: Закончить ход
+Faith: Вера
 Fame: Слава
 FarForest: Дальний лес
 ForestTooth: Лес с зубом

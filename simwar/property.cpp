@@ -57,6 +57,7 @@ BSMETA(provincei) = {
     BSDST(income, costi),
     BSDST(stats, stati),
     BSREQ(landscape),
+    BSREQ(neightboards),
     {}};
 BSDATAD(provincei)
 BSMETA(eventi) = {

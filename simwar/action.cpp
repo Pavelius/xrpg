@@ -2,5 +2,6 @@
 
 BSDATA(actioni) = {
 	{"Discard"},
+	{"EndTurn"},
 };
-assert_enum(actioni, Discard)
+assert_enum(actioni, EndTurn)

@@ -77,15 +77,14 @@ static void add_status(const char* id, int value) {
 }
 
 static void show_status_panel() {
-	static variant cost[] = {Gold, Mana, Artefacts, Fame};
 	auto player = game.player;
 	if(!player)
 		return;
 	setposld();
 	auto push_height = height;
 	height = texth();
-	for(auto v : cost)
-		add_status(v.getid(), player->get(v));
+	for(auto& e : bsdata<costi>())
+		add_status(e.id, player->get(variant(&e)));
 	height = push_height;
 }
 
@@ -161,7 +160,9 @@ long draw::dialog(answers& an, const char* title, const char* description) {
 }
 
 void draw::makemove() {
-	scene();
+	varianta an;
+	an.add(EndTurn);
+	an.choose(0, 0, true, 0);
 }
 
 void draw::initialize() {
