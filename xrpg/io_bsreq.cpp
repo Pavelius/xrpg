@@ -17,13 +17,36 @@ struct valuei {
 }
 
 static void next() {
-	while(*p == ' ' || *p == 9)
-		p++;
+	while(true) {
+		if(p[0] == '/' && p[1] == '*') {
+			p += 2;
+			while(*p) {
+				if(p[0] == '*' && p[1] == '/') {
+					p += 2;
+					break;
+				} else
+					p++;
+			}
+		} else if(p[0] == '/' && p[1] == '/') {
+			p += 2;
+			while(*p) {
+				if(*p == 10 || *p == 13)
+					break;
+				else
+					p++;
+			}
+		} else if(*p == ' ' || *p == 9) {
+			while(*p == ' ' || *p == 9)
+				p++;
+		} else
+			break;
+	}
 }
 
 static void skipsymcr() {
 	if(!allow_continue)
 		return;
+	next();
 	if(*p == 0)
 		return;
 	if(p[0] == 10 || p[0] == 13) {
