@@ -1,57 +1,57 @@
 #Unit
 
 Spearmens
- stats Attack1 Defend2 Damage3 Hits10 Level1
+ stats Attack(1) Defend(2) Damage(3) Hits(10) Level(1)
  cost Gold(25)
  upkeep Gold(3)
  encounter Plains 
 Archers
- stats Attack2 Defend1 Damage3 Hits8 Level1
+ stats Attack(2) Defend(1) Damage(3) Hits(8) Level(1)
  cost Gold(30)
  upkeep Gold(3)
  encounter Plains
 Swordmens
- stats Attack2 Defend2 Damage3 Hits12 Level2
+ stats Attack(2) Defend(2) Damage(3) Hits(12) Level(2)
  cost Gold(40)
  upkeep Gold(4)
  encounter Plains
 Cavalry
- stats Attack3 Defend2 Raid1 Damage4 Hits14 Move2 Level3
+ stats Attack(3) Defend(2) Raid(1) Damage(4) Hits(14) Move(2) Level(3)
  cost Gold(70)
  upkeep Gold(6)
  encounter Plains
 Knights
- stats Attack2 Defend3 Damage4 Hits18 Level3
+ stats Attack(2) Defend(3) Damage(4) Hits(18) Level(3)
  cost Gold(60)
  upkeep Gold(6)
  encounter Plains
 Barbarians
- stats Attack1 Defend1 Damage3 Hits10 Level1
+ stats Attack(1) Defend(1) Damage(3) Hits(10) Level(1)
  cost Gold(20)
  upkeep Gold(2)
  encounter Plains Hills
 Goblins
- stats Attack1 Defend1 Damage2 Hits6 Level1
+ stats Attack(1) Defend(1) Damage(2) Hits(6) Level(1)
  cost Gold(10)
  upkeep Gold(1)
  encounter Plains Hills Forest Swamp
 Orks
- stats Attack1 Defend1 Raid1 Damage4 Hits11 Level1
+ stats Attack(1) Defend(1) Raid(1) Damage(4) Hits(11) Level(1)
  cost Gold(30)
  upkeep Gold(2)
  encounter Plains Hills
 BlackOrks
- stats Attack2 Defend2 Raid1 Damage4 Hits13 Level2
+ stats Attack(2) Defend(2) Raid(1) Damage(4) Hits(13) Level(2)
  cost Gold(35)
  upkeep Gold(4)
  encounter Plains Hills
 WolfRiders
- stats Attack2 Defend1 Raid1 Damage4 Move2 Hits12 Level2
+ stats Attack(2) Defend(1) Raid(1) Damage(4) Move(2) Hits(12) Level(2)
  cost Gold(30)
  upkeep Gold(4)
  encounter Plains Hills Forest
 Ogres
- stats Attack2 Defend2 Damage6 Hits18 Level3
+ stats Attack(2) Defend(2) Damage(6) Hits(18) Level(3)
  cost Gold(45)
  upkeep Gold(5)
  encounter Plains Hills

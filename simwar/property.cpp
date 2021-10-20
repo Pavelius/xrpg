@@ -30,7 +30,7 @@ BSMETA(landscapei) = {
 BSDATAD(landscapei)
 BSMETA(uniti) = {
     BSREQ(id),
-    BSREQ(stats),
+    BSDST(stats, stati),
     BSDST(cost, costi),
     BSDST(upkeep, costi),
     BSFLG(encounter, landscapei),

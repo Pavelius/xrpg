@@ -21,36 +21,31 @@ static void next() {
 		p++;
 }
 
-static void nextline() {
-	while(*p == 10 || *p == 13)
-		p++;
-}
-
-static bool iscr() {
-	return p[0] == 10 || p[0] == 13;
+static void skipsymcr() {
+	if(!allow_continue)
+		return;
+	if(*p == 0)
+		return;
+	if(p[0] == 10 || p[0] == 13) {
+		while(*p == 10 || *p == 13)
+			p++;
+		return;
+	}
+	log::error(p, "Expected line feed");
+	allow_continue = false;
 }
 
 static void skipsym(char sym) {
 	if(!allow_continue)
 		return;
-	if(sym == 10) {
-		if(iscr()) {
-			while(iscr())
-				p = skipcr(p);
-			return;
-		}
-		log::error(p, "Expected line feed");
-		allow_continue = false;
-	} else {
-		if(*p == sym) {
-			p = p + 1;
-			next();
-			return;
-		}
-		char temp[2] = {sym, 0};
-		log::error(p, "Expected symbol `%1`", temp);
-		allow_continue = false;
+	if(*p == sym) {
+		p = p + 1;
+		next();
+		return;
 	}
+	char temp[2] = {sym, 0};
+	log::error(p, "Expected symbol `%1`", temp);
+	allow_continue = false;
 }
 
 static const bsreq* getkey(const bsreq* type) {
@@ -80,7 +75,6 @@ static void read_value(valuei& e, const bsreq* req) {
 		stringbuilder sb(temp);
 		p = sb.psstr(p + 1, *p);
 		e.text = szdup(temp);
-		next();
 	} else if(*p == '-' || isnum(*p)) {
 		auto minus = false;
 		if(*p == '-') {
@@ -90,7 +84,6 @@ static void read_value(valuei& e, const bsreq* req) {
 		p = stringbuilder::read(p, e.number);
 		if(minus)
 			e.number = -e.number;
-		next();
 	} else if(ischa(p[0])) {
 		readid();
 		if(!req) {
@@ -118,6 +111,7 @@ static void read_value(valuei& e, const bsreq* req) {
 			}
 		}
 	}
+	next();
 }
 
 static bool compare(const void* p, const bsreq* requisit, const valuei& value) {
@@ -201,7 +195,6 @@ static void read_dset(void* object, const bsreq* req) {
 		read_value(v, req);
 		skipsym(')');
 		write_value(object, req, index++, v);
-		next();
 	}
 }
 
@@ -215,13 +208,9 @@ static void read_array(void* object, const bsreq* req) {
 }
 
 static bool islevel(int level) {
-	if(!iscr())
-		return false;
 	auto push_p = p;
-	p = skipcr(p);
-	auto pb = p;
 	p = skipsp(p);
-	auto i = p - pb;
+	auto i = p - push_p;
 	if(i == level && ischa(*p))
 		return true;
 	p = push_p;
@@ -243,6 +232,7 @@ static void read_dictionary(void* object, const bsreq* type, int level) {
 		read_array(object, req);
 		skipsym(')');
 	}
+	skipsymcr();
 	while(allow_continue && islevel(level + 1)) {
 		readid();
 		auto req = type->find(temp);
@@ -255,6 +245,7 @@ static void read_dictionary(void* object, const bsreq* type, int level) {
 			read_dictionary(req->ptr(object), req->type, level + 1);
 		else
 			read_array(object, req);
+		skipsymcr();
 	}
 }
 
@@ -305,11 +296,9 @@ static void parse() {
 				log::error(p, "Not find data type for `%1`", temp);
 			return;
 		}
-		skipsym(10);
-		while(*p && *p != '#' && allow_continue) {
+		skipsymcr();
+		while(allow_continue && isvalue())
 			read_object(pd->metadata, pd->source, pd->key_count, 0);
-			nextline();
-		}
 	}
 }
 

@@ -1,3 +1,4 @@
 ﻿In file `rules/test_data.txt`:
-- Line 20: Not found field `Gold70` in dataset `cost`
-- Line 20: Expected symbol `(`
+- Line 4: Not found field `stats` in dataset `stats`
+- Line 4: Expected symbol `(`
+- Line 4: Requisit don't have key when load identifier `Attack`

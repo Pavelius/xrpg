@@ -63,7 +63,7 @@ struct landscapea : flagable<2> {
 struct stata : dataset<Unrest> {
 };
 struct uniti : nameable {
-    variants    stats;
+    stata       stats;
     costa       cost, upkeep;
     landscapea  encounter;
     producea    need;
