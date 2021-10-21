@@ -1,8 +1,9 @@
 #include "answers.h"
+#include "calendar.h"
 #include "dataset.h"
+#include "event.h"
 #include "flagable.h"
 #include "point.h"
-#include "variant.h"
 #include "varianta.h"
 
 enum action_s : unsigned char {
@@ -52,7 +53,7 @@ struct costi {
 struct resourcei {
     const char* id;
 };
-struct prefixa : flagable<2> {
+struct prefixa : flagable<4> {
 };
 struct resourcea : flagable<2> {
 };
@@ -113,22 +114,6 @@ struct decki : varianta {
     void        addrandom(variant v);
     void        insert(int i, variant v);
 };
-struct eventi {
-    const char* id;
-    constexpr explicit operator bool() const { return id != 0; }
-    static void read(const char* url);
-};
-struct eventcasei {
-    short       parent;
-    short       id;
-    int         next;
-    const char* text;
-    const char* image; // Possible event image. If none get from landscape.
-    variants    effect;
-    constexpr explicit operator bool() const { return parent != -1; }
-    void        clear();
-    bool        isprompt() const { return next == -1; }
-};
 struct playeri {
     const char* id;
     costa       total;
@@ -150,6 +135,7 @@ class gamei {
     unsigned char uid_base;
     unsigned    uid;
     int         turn;
+    int         start_year;
 public:
     playeri*    player;
     provincei*  province;
@@ -160,10 +146,13 @@ public:
     static int  get(variant v, const variants& source);
     static variant getaction(variant v);
     static int  getbonus(variant v);
+    void        getdate(stringbuilder& sb) const;
+    int         getmonth() const { return (turn / 3) % 12; }
+    int         getmonthpart() const { return turn % 3; }
+    int         getyear() const { return start_year + turn / (3 * 12); }
     int         getturn() const { return turn; }
     void        initialize();
     void        maketurn();
-    static void maketurnproc();
     void        passturn();
     void        play(const eventi* event);
     void        setuidbase(unsigned char v) { uid_base = v; }

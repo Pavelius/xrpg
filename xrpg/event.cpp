@@ -1,5 +1,5 @@
+#include "event.h"
 #include "log.h"
-#include "main.h"
 
 BSDATAD(eventi)
 BSDATAD(eventcasei)

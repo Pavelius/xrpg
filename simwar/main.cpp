@@ -23,8 +23,8 @@ static bool test_data() {
 void initialize_png();
 
 int main() {
-    if(!initialize_translation("ru"))
-        return -1;
+    initialize_translation("ru");
+    check_translation();
     bsreq::read("rules/test_data.txt");
     eventi::read("rules/events.txt");
     if(log::geterrors())

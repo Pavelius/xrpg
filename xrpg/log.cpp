@@ -37,8 +37,8 @@ void log::errorv(const char* position, const char* format) {
 	if(!file)
 		return;
 	error_count++;
-	if(current_file && position)
-		file << "- Line " << getline(current_file, position) << ": ";
+	if(position)
+		file << " Line " << getline(current_file, position) << ": ";
 	file << format << "\n";
 }
 

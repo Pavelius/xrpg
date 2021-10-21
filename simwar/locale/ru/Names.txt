@@ -1,14 +1,20 @@
 ﻿Artefacts: Реликвии
+Date: Текущая дата
 EastForest: Восточный лес
+EndMonth: Конец
 EndTurn: Закончить ход
 Faith: Вера
 Fame: Слава
 FarForest: Дальний лес
 ForestTooth: Лес с зубом
 Gold: Золото
+June: Июнь
 Mana: Мана
+MiddleMonth: Средина
 RandomEvent: Случайное событие
 ShiningForest: Сверкающий лес
 SouthHills: Южные холмы
+StartMonth: Начало
 Turn: Ход
 WhiteTower: Белая башня
+YearOf: Года

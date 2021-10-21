@@ -1,2 +1,3 @@
-﻿ru
-Turn
+﻿In file `Names.txt`:
+ Define translate for `EndMonth`
+ Define translate for `StartMonth`

@@ -22,12 +22,11 @@ BSMETA(costi) = {
 BSMETA(resourcei) = {
     BSREQ(id),
 {}};
-BSDATAD(resourcei)
+BSDATAC(resourcei, 16)
 BSMETA(landscapei) = {
     BSREQ(id),
     BSDST(income, costi),
     {}};
-BSDATAD(landscapei)
 BSMETA(uniti) = {
     BSREQ(id),
     BSDST(stats, stati),
@@ -36,7 +35,7 @@ BSMETA(uniti) = {
     BSFLG(encounter, landscapei),
     BSADT(need, resourcei),
     {}};
-BSDATAD(uniti)
+BSDATAC(uniti, 128)
 BSMETA(bonusi) = {
     BSREQ(id),
     BSREQ(type), BSREQ(bonus),
@@ -45,7 +44,7 @@ BSMETA(troop) = {
     BSREQ(uid),
     BSREQ(type), BSREQ(owner),
     {}};
-BSDATAD(troop)
+BSDATAC(troop, 2048)
 BSMETA(playeri) = {
     BSREQ(id),
     {}};
@@ -60,7 +59,7 @@ BSMETA(provincei) = {
     BSREQ(landscape),
     BSREQ(neightboards),
     {}};
-BSDATAD(provincei)
+BSDATAC(provincei, 256)
 BSMETA(eventi) = {
     BSREQ(id),
     {}};

@@ -28,9 +28,6 @@
     <ClCompile Include="string.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="events.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="interface.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
@@ -58,6 +55,9 @@
     <ClCompile Include="selector.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="calendar.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="errors.txt">
@@ -75,6 +75,9 @@
     <Text Include="rules\events.txt">
       <Filter>Data</Filter>
     </Text>
+    <Text Include="locale\ru\NamesOf.txt">
+      <Filter>Data</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Logic">
@@ -83,10 +86,21 @@
     <Filter Include="Data">
       <UniqueIdentifier>{7c384333-ef2d-49a3-8d02-2c85ba66040a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Service">
+      <UniqueIdentifier>{3845c73d-aa7e-4225-b56a-0320cb4d5f82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
       <Filter>Logic</Filter>
     </ClInclude>
+    <ClInclude Include="calendar.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint">
+      <Filter>Service</Filter>
+    </None>
   </ItemGroup>
 </Project>

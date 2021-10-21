@@ -148,7 +148,7 @@ static void add_possible_lost(const eventcasei* p, stringbuilder& sbo) {
 			continue;
 		auto r = game.get(variant(&e), pe->effect);
 		if(!r)
-		continue;
+			continue;
 		if(temp[0])
 			sb.add(", ");
 		sb.add(getnm(e.id));
@@ -211,12 +211,21 @@ void gamei::maketurn() {
 		varianta an;
 		an.add(EndTurn);
 		auto result = an.choose(0, 0, true, 0);
-		if(result.type==Action && result.value==EndTurn)
+		if(result.type == Action && result.value == EndTurn)
 			break;
 	}
 }
 
 void gamei::initialize() {
+	turn = xrand(10, 16);
+	start_year = 943;
 	for(auto& e : bsdata<provincei>())
 		e.initialize();
+}
+
+void gamei::getdate(stringbuilder& sb) const {
+	sb.add("%1 %-2 %3i %-YearOf",
+		getnm(bsdata<monthparti>::get(getmonthpart()).id),
+		getnmof(bsdata<calendari>::get(getmonth()).id),
+		getyear());
 }

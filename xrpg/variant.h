@@ -17,7 +17,7 @@ struct varianti {
 	fnfind				pfind;
 	int                 key_count;
 };
-union variant{
+union variant {
 	unsigned char		uc[4];
 	unsigned			u;
 	struct {

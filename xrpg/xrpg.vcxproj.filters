@@ -180,6 +180,9 @@
     <ClInclude Include="draw_hexagon.h">
       <Filter>Interface</Filter>
     </ClInclude>
+    <ClInclude Include="event.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -414,6 +417,9 @@
       <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="io_bsreq.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="event.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>

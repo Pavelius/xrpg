@@ -54,8 +54,12 @@ static void picture_image() {
 
 static void add_description(stringbuilder& sb, const char* id) {
 	auto p = getdescription(id);
-	if(p)
-		sb.addn(p);
+	if(p) {
+		if(equal(id, "Date"))
+			sb.addn(p, game.getyear(), game.getturn());
+		else
+			sb.addn(p);
+	}
 }
 
 static void get_info(const char* id) {
@@ -65,7 +69,10 @@ static void get_info(const char* id) {
 
 static void add_status(const char* id, int value) {
 	char temp[512]; stringbuilder sb(temp);
-	sb.add("%1: %2i", getnm(id), value);
+	if(equal(id, "Date"))
+		game.getdate(sb);
+	else
+		sb.add("%1: %2i", getnm(id), value);
 	textfs(temp);
 	auto hilite = spanel(width_maximum);
 	auto push_caret = caret;
@@ -83,9 +90,9 @@ static void show_status_panel() {
 	setposld();
 	auto push_height = height;
 	height = texth();
+	add_status("Date", 0);
 	for(auto& e : bsdata<costi>())
 		add_status(e.id, player->get(variant(&e)));
-	add_status("Turn", game.getturn());
 	height = push_height;
 }
 

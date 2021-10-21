@@ -142,10 +142,10 @@
   <ItemGroup>
     <ClCompile Include="action.cpp" />
     <ClCompile Include="bonus.cpp" />
+    <ClCompile Include="calendar.cpp" />
     <ClCompile Include="combat.cpp" />
     <ClCompile Include="cost.cpp" />
     <ClCompile Include="deck.cpp" />
-    <ClCompile Include="events.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="landscape.cpp" />
@@ -164,16 +164,21 @@
     <Text Include="errors.txt" />
     <Text Include="locale\ru\Descriptions.txt" />
     <Text Include="locale\ru\Names.txt" />
+    <Text Include="locale\ru\NamesOf.txt" />
     <Text Include="rules\events.txt" />
     <Text Include="rules\test_data.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="calendar.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\xrpg\xrpg.vcxproj">
       <Project>{47f9fa45-33f1-4469-b93b-fb468f13eec3}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

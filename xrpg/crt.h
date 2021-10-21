@@ -218,12 +218,14 @@ typedef void(*fnsource)(const void* object, array& source);
 // Callback function of draw custom draw object.
 typedef int(*fndraw)(int x, int y, int width, const void* object);
 // Common functions
+void								check_translation();
 bool								equal(const char* s1, const char* s2);
 const char*							getdescription(const char* id);
 fnevent								getcommand(const char* id);
 int									getdigitscount(unsigned number); // Get digits count of number. For example if number=100, result be 3.
 const char*							getnm(const char* id);
-bool								initialize_translation(const char* locale);
+const char*							getnmof(const char* id);
+void								initialize_translation(const char* locale);
 bool								ischa(unsigned u); // is alphabetical character?
 inline bool							isnum(unsigned u) { return u >= '0' && u <= '9'; } // is numeric character?
 int									isqrt(const int x); // Return aquare root of 'x'

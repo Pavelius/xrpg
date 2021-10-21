@@ -70,10 +70,13 @@ static void apply_value(array& source, const char* id, const char* name) {
 	p->name = name;
 }
 
-static bool readl(const char* url, array& source) {
+static void readl(const char* url, array& source, bool required) {
 	auto p_alloc = (const char*)loadt(url);
-	if(!p_alloc)
-		return false;
+	if(!p_alloc) {
+		log::seturl(0);
+		log::error(0, "Can't find file `%1`", url);
+		return;
+	}
 	auto p = p_alloc;
 	char name[128], value[8192];
 	auto records_read = 0;
@@ -88,13 +91,12 @@ static bool readl(const char* url, array& source) {
 	}
 	delete p_alloc;
 	update_elements(source);
-	return true;
 }
 
-static bool savel(const char* url, array& source) {
+static void savel(const char* url, array& source) {
 	io::file file(url, StreamText | StreamWrite);
 	if(!file)
-		return false;
+		return;
 	auto records_write = 0;
 	for(auto& e : source.records<translate>()) {
 		file << e.id << ": ";
@@ -104,51 +106,42 @@ static bool savel(const char* url, array& source) {
 		}
 		file << "\r\n";
 	}
-	return true;
 }
 
-static bool setfile(array& source, const char* id, const char* locale, bool write_mode) {
+static void setfile(array& source, const char* id, const char* locale, bool write_mode, bool required) {
 	char temp[260]; stringbuilder sb(temp);
 	sb.clear(); sb.add("locale/%1/%2.txt", locale, id);
 	if(write_mode)
-		return savel(temp, source);
+		savel(temp, source);
 	else
-		return readl(temp, source);
+		readl(temp, source, required);
 }
 
 static void deinitialize() {
-	setfile(source_name, "Names", main_locale, true);
+	setfile(source_name, "Names", main_locale, true, false);
 }
 
-static bool check(array& source, const char* locale, const char* url) {
+static void check(array& source, const char* locale, const char* url) {
+	log::seturl(url);
 	for(auto& e : source.records<translate>()) {
 		if(e.name && e.name[0])
 			continue;
-		if(url) {
-			log::error("Errors occurs in locale/%1/%2.txt", locale, url);
-			url = 0;
-		}
-		log::error("Define translate for '%1'", e.id);
+		log::error(0, " Define translate for `%1`", e.id);
 	}
-	return log::geterrors() == 0;
 }
 
-bool initialize_translation(const char* locale) {
-	if(main_locale)
-		return true;
-	main_locale = szdup(locale);
-	if(!setfile(source_name, "Names", main_locale, false))
-		return false;
-	if(!setfile(source_text, "Descriptions", main_locale, false))
-		return false;
-	setfile(source_name, "NamesOf", main_locale, false);
-#ifdef _DEBUG
-	// Only in debug mode store previously collected string into locale
+void check_translation() {
 	atexit(deinitialize);
-	// Check if all names is valid
-	return check(source_name, main_locale, "Names.txt");
-#endif
-	return true;
+	check(source_name, main_locale, "Names.txt");
+}
+
+void initialize_translation(const char* locale) {
+	if(main_locale)
+		return;
+	main_locale = szdup(locale);
+	setfile(source_name, "Names", main_locale, false, true);
+	setfile(source_text, "Descriptions", main_locale, false, false);
+	setfile(source_nameof, "NamesOf", main_locale, false, false);
 }
 
 const char* getnm(const char* id) {
@@ -175,17 +168,7 @@ const char* getnmof(const char* id) {
 	if(!id || id[0] == 0)
 		return "";
 	translate key = {id, 0};
-	auto p = (translate*)bsearch(&key, source_name.data, source_name.getcount(), source_name.getsize(), compare);
-	if(!p || !p->name || !p->name[0])
-		return id;
-	return p->name;
-}
-
-const char* getunm(const char* id) {
-	if(!id || id[0] == 0)
-		return "";
-	translate key = {id, 0};
-	auto p = (translate*)bsearch(&key, source_name.data, source_name.getcount(), source_name.getsize(), compare);
+	auto p = (translate*)bsearch(&key, source_nameof.data, source_nameof.getcount(), source_nameof.getsize(), compare);
 	if(!p || !p->name || !p->name[0])
 		return id;
 	return p->name;
