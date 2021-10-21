@@ -10,3 +10,8 @@ September: Сентября
 October: Октября
 November: Ноября
 December: Декабря
+
+Spring: Весны
+Summer: Лета
+Autumn: Осени
+Winter: Зимы

@@ -183,6 +183,9 @@
     <ClInclude Include="event.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="calendar.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -420,6 +423,9 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="event.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="calendar.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>

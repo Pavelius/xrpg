@@ -22,6 +22,10 @@ static bool test_data() {
 
 void initialize_png();
 
+#ifdef _DEBUG
+void util_main();
+#endif // _DEBUG
+
 int main() {
     initialize_translation("ru");
     check_translation();
@@ -32,6 +36,9 @@ int main() {
     if(!test_data())
         return -2;
     initialize_png();
+#ifdef _DEBUG
+    util_main();
+#endif // _DEBUG
     draw::initialize();
     game.initialize();
     game.player = bsdata<playeri>::elements;

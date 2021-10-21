@@ -140,9 +140,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\xrpg\sprite_util.cpp" />
     <ClCompile Include="action.cpp" />
     <ClCompile Include="bonus.cpp" />
-    <ClCompile Include="calendar.cpp" />
     <ClCompile Include="combat.cpp" />
     <ClCompile Include="cost.cpp" />
     <ClCompile Include="deck.cpp" />
@@ -150,6 +150,7 @@
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="landscape.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="main_util.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="prefix.cpp" />
     <ClCompile Include="property.cpp" />
@@ -169,7 +170,7 @@
     <Text Include="rules\test_data.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="calendar.h" />
+    <ClInclude Include="..\xrpg\sprite_util.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>

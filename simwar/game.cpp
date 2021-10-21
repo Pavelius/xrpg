@@ -217,15 +217,17 @@ void gamei::maketurn() {
 }
 
 void gamei::initialize() {
-	turn = xrand(10, 16);
 	start_year = 943;
 	for(auto& e : bsdata<provincei>())
 		e.initialize();
 }
 
 void gamei::getdate(stringbuilder& sb) const {
+	auto month = getmonth();
+	auto season = bsdata<calendari>::get(month).season;
+	auto season_part = bsdata<calendari>::get(month).season_part;
 	sb.add("%1 %-2 %3i %-YearOf",
-		getnm(bsdata<monthparti>::get(getmonthpart()).id),
-		getnmof(bsdata<calendari>::get(getmonth()).id),
+		getnm(bsdata<monthparti>::get(season_part).id),
+		getnmof(bsdata<seasoni>::get(season).id),
 		getyear());
 }

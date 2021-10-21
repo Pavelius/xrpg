@@ -291,6 +291,7 @@ void				tooltips(const char* format, ...);
 void				tooltips(int x, int y, int width);
 }
 namespace draw {
+bool				isclipped(int size);
 void				setposru();
 void				setposlu();
 void				setposld();

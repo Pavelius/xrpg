@@ -2463,3 +2463,8 @@ void draw::setposlu() {
 void draw::setposld() {
 	setpos(metrics::padding + metrics::border, getheight() - metrics::padding - metrics::border - texth());
 }
+
+bool draw::isclipped(int size) {
+	rect rc = {caret.x - size, caret.y - size, caret.x + size, caret.y + size};
+	return !rc.intersect(clipping);
+}

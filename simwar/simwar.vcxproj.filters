@@ -55,8 +55,11 @@
     <ClCompile Include="selector.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="calendar.cpp">
-      <Filter>Logic</Filter>
+    <ClCompile Include="..\xrpg\sprite_util.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="main_util.cpp">
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -89,13 +92,16 @@
     <Filter Include="Service">
       <UniqueIdentifier>{3845c73d-aa7e-4225-b56a-0320cb4d5f82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{ad2457d2-8f41-4f56-93fc-371941d64da8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
       <Filter>Logic</Filter>
     </ClInclude>
-    <ClInclude Include="calendar.h">
-      <Filter>Logic</Filter>
+    <ClInclude Include="..\xrpg\sprite_util.h">
+      <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

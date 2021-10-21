@@ -40,6 +40,10 @@ struct landscapei {
     const char* image;
     costa       income; // Base income from landscape
 };
+struct nationi {
+    const char* id;
+    int         alignment; // Negative tend to be evil, positive good
+};
 struct nameable {
     const char* id;
 };
@@ -99,6 +103,7 @@ struct provincei : nameable {
     variant     garnison; // Contract on province garnison units.
     variants    neightboards;
     void        initialize();
+    void        paint() const;
 };
 struct sitetypei : nameable {
     landscapea  landscape; // Landscape types where site might generate. 0 - for all sites.

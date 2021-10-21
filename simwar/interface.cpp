@@ -9,6 +9,7 @@ const char*				dialog_image;
 static answers*			dialog_answers;
 static const char*		dialog_title;
 static const char*		dialog_description;
+static auto				res_shields = (sprite*)gres("shields", "art/objects");
 
 static bool spanel(int size) {
 	rectpush push;
@@ -103,6 +104,11 @@ static void main_beforemodal() {
 	tooltipsbeforemodal();
 }
 
+void provincei::paint() const {
+	image(caret.x, caret.y, res_shields, 0, 0);
+	textjc(getnm(id));
+}
+
 static void paintprovinces() {
 	auto push_fore = fore;
 	auto push_font = font;
@@ -110,7 +116,9 @@ static void paintprovinces() {
 	fore = colors::black;
 	for(auto& e : bsdata<provincei>()) {
 		set(e.position.x, e.position.y);
-		textjc(getnm(e.id));
+		if(isclipped(64))
+			continue;
+		e.paint();
 	}
 	font = push_font;
 	fore = push_fore;
