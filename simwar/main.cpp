@@ -27,6 +27,7 @@ void util_main();
 #endif // _DEBUG
 
 int main() {
+    srand(randomseed());
     initialize_translation("ru");
     check_translation();
     bsreq::read("rules/test_data.txt");

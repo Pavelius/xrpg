@@ -30,7 +30,7 @@ void draw::glyph(int sym, unsigned flags) {
 			stroke(caret.x, caret.y + font->ascend, font, id, flags, 2, koeff);
 			fore = push_fore;
 		}
-		image(caret.x, caret.y + font->ascend, font, id, flags, 0);
+		image(caret.x, caret.y + font->ascend, font, id, flags);
 	}
 }
 

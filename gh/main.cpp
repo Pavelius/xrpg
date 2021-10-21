@@ -25,8 +25,8 @@ int main() {
     srand(randomseed());
 	initialize_json();
 	initialize_png();
-	if(!initialize_translation("ru"))
-		return -1;
+	initialize_translation("ru");
+	check_translation();
     //bsreq::read("rules/test_cards.txt");
     //if(!test_bsreq())
     //    return -1;

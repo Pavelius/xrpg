@@ -11,6 +11,11 @@ Leather
 
 #Unit
 
+Thugs
+ stats Attack(1) Defend(1) Raid(1) Damage(3) Hits(8) Level(1)
+ cost Gold(15)
+ upkeep Gold(2)
+ encounter Plains Forest
 Spearmens
  stats Attack(1) Defend(2) Damage(3) Hits(10) Level(1)
  cost Gold(25)
@@ -84,13 +89,18 @@ Ogres
 
 #Province
 
-WhiteTower position(205 1080) landscape(Hills)
-SouthHills position(158 971) landscape(Hills)
+WhiteTower position(205 1080) landscape(Hills) owner(Red)
+SouthHills position(158 971) landscape(Hills) owner(Red)
 ForestTooth position(272 962) landscape(Forest)
 EastForest position(344 1034) landscape(Forest)
-FarForest position(436 976) landscape(Forest)
+FarForest position(436 976) landscape(Forest) owner(Green)
 
 WhiteTower neightboards(SouthHills EastForest ForestTooth)
 SouthHills neightboards(WhiteTower ForestTooth)
 ForestTooth neightboards(WhiteTower SouthHills EastForest FarForest)
 FarForest neightboards(ForestTooth EastForest)
+
+#Player
+
+Red avatar(0)
+Green avatar(1)

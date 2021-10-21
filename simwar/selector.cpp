@@ -15,9 +15,8 @@ void selector::match(landscape_s v, bool keep) {
 }
 
 void selector::querry(const provincei* p) {
-	variant owner = p;
 	for(auto& e : bsdata<troop>()) {
-		if(e.owner == owner)
+		if(e.province == p)
 			add(variant(Troop, bsdata<troop>::source.indexof(&e)));
 	}
 }

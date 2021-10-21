@@ -29,28 +29,34 @@ static void texthead(const char* string) {
 	font = push_font;
 }
 
+static void textblock(const char* string) {
+	spanel(width);
+	texta(string, AlignCenterCenter);
+}
+
 static void textjc(const char* string) {
 	auto push_caret = caret;
 	auto w = textw(string);
 	auto h = texth();
 	caret.x -= w / 2;
 	caret.y -= h / 2;
-	text(string);
+	text(string, -1, TextStroke);
 	caret = push_caret;
 }
 
 static void picture_image() {
-	rectpush push;
-	setoffset(-metrics::border, -metrics::border);
 	auto ps = gres(dialog_image, "art/images");
-	if(ps)
-		image(caret.x, caret.y, ps, 0, 0);
+	if(!ps)
+		return;
+	setoffset(-metrics::border, -metrics::border);
+	image(caret.x, caret.y, ps, 0, 0);
+	width = ps->get(0).sx;
+	height = ps->get(0).sy;
 	auto push_fore = fore;
 	fore = colors::border;
 	rectb();
 	fore = push_fore;
-	width_maximum = width;
-	height_maximum = height;
+	setoffset(metrics::border, metrics::border);
 }
 
 static void add_description(stringbuilder& sb, const char* id) {
@@ -104,24 +110,49 @@ static void main_beforemodal() {
 	tooltipsbeforemodal();
 }
 
+static void paint_troops(const provincei* province) {
+	auto push_stroke = fore_stroke;
+	auto push_fore = fore;
+	selector source;
+	source.querry(province);
+	fore = colors::black;
+	fore_stroke = colors::white;
+	for(auto v : source) {
+		troop* p = v;
+		if(!p)
+			continue;
+		textjc(getnm(p->type->id));
+		caret.y += texth();
+	}
+	fore = push_fore;
+	fore_stroke = push_stroke;
+}
+
 void provincei::paint() const {
-	image(caret.x, caret.y, res_shields, 0, 0);
+	if(owner)
+		image(caret.x, caret.y, res_shields, owner->avatar, 0);
+	auto push_font = font;
+	font = metrics::h2;
+	auto push_stroke = fore_stroke;
+	auto push_fore = fore;
+	fore = colors::black;
+	fore_stroke = colors::white;
 	textjc(getnm(id));
+	caret.y += texth();
+	fore = push_fore;
+	fore_stroke = push_stroke;
+	font = push_font;
+	caret.y -= texth()/2;
+	paint_troops(this);
 }
 
 static void paintprovinces() {
-	auto push_fore = fore;
-	auto push_font = font;
-	font = metrics::h2;
-	fore = colors::black;
 	for(auto& e : bsdata<provincei>()) {
 		set(e.position.x, e.position.y);
 		if(isclipped(64))
 			continue;
 		e.paint();
 	}
-	font = push_font;
-	fore = push_fore;
 }
 
 static void main_background() {
@@ -138,15 +169,36 @@ static void static_text() {
 		textf(dialog_description);
 }
 
+static void description_text() {
+	if(!dialog_description)
+		return;
+	height = textfs(dialog_description);
+	swindow(false, 0);
+	textf(dialog_description);
+}
+
 static void group(fnevent left, fnevent right) {
 	rectpush push;
 	auto x2 = caret.x + width;
 	auto sp = metrics::padding + metrics::border * 2;
-	width = 160;
 	left();
 	caret.x += width + sp;
 	width = x2 - caret.x;
 	right();
+}
+
+static void choose_action_dialog() {
+	setposru();
+	if(dialog_title) {
+		texthead(dialog_title);
+		caret.y += height_maximum + metrics::border * 2 + metrics::padding;
+	}
+	description_text();
+	caret.y += metrics::border * 2 + metrics::padding;
+	if(dialog_answers) {
+		for(auto& e : *dialog_answers)
+			fire(button(e.text, 0, buttonfd), buttonparam, e.id);
+	}
 }
 
 static void choose_answers_dialog() {
@@ -171,8 +223,16 @@ long draw::dialog(answers& an, const char* title, const char* description) {
 	dialog_answers = &an;
 	dialog_title = title;
 	dialog_description = description;
-	scene(choose_answers_dialog);
-	return getresult();
+	return scene(choose_answers_dialog);
+}
+
+static void choose_province() {
+	answers an;
+	an.add(0, getnm("Continue"));
+	dialog_answers = &an;
+	dialog_title = getnm(game.province->id);
+	dialog_description = "Test string for long visualisation model and some description can be on next line.";
+	scene(choose_action_dialog);
 }
 
 void draw::initialize() {
@@ -188,6 +248,7 @@ void draw::initialize() {
 }
 
 void draw::maketurn() {
+	choose_province();
 	game.maketurn();
 	if(!isnext())
 		setnext(draw::maketurn);

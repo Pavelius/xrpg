@@ -1944,11 +1944,19 @@ void draw::image(int x, int y, const sprite* e, int id, int flags) {
 	}
 }
 
-void draw::image(int x, int y, const sprite* e, int id, int flags, color* pal) {
+void draw::image(const sprite* e, int id, int flags, color* pal) {
 	auto pal_push = draw::palt;
 	draw::palt = pal;
-	image(x, y, e, id, flags | ImagePallette);
+	image(caret.x, caret.y, e, id, flags | ImagePallette);
 	draw::palt = pal_push;
+}
+
+static void rectfall() {
+	rectpush push;
+	caret.x = caret.y = 0;
+	width = getwidth();
+	height = getheight();
+	rectf();
 }
 
 void draw::stroke(int x, int y, const sprite* e, int id, int flags, unsigned char thin, unsigned char* koeff) {
@@ -1966,11 +1974,11 @@ void draw::stroke(int x, int y, const sprite* e, int id, int flags, unsigned cha
 	setclip();
 	auto push_fore = fore;
 	fore = tr;
-	//rectf({0, 0, sf.width, sf.height});
-	fore = push_fore;
+	rectfall();
 	image(1, 1, e, id, ImageNoOffset);
 	canvas = push_canvas;
 	clipping = push_clip;
+	fore = fore_stroke;
 	for(int y1 = 0; y1 < sf.height; y1++) {
 		bool inside = false;
 		for(int x1 = 0; x1 < sf.width; x1++) {
@@ -2033,6 +2041,7 @@ void draw::stroke(int x, int y, const sprite* e, int id, int flags, unsigned cha
 			}
 		}
 	}
+	fore = push_fore;
 }
 
 void draw::blit(surface& ds, int x1, int y1, int w, int h, unsigned flags, const surface& ss, int xs, int ys) {
@@ -2401,7 +2410,7 @@ void draw::initialize(const char* title) {
 	draw::setcaption(title);
 }
 
-void draw::scene(fnevent proc) {
+long draw::scene(fnevent proc) {
 	while(ismodal()) {
 		if(pbackground)
 			pbackground();
@@ -2411,6 +2420,7 @@ void draw::scene(fnevent proc) {
 			proc();
 		domodal();
 	}
+	return getresult();
 }
 
 void draw::scene() {

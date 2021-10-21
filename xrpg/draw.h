@@ -201,7 +201,8 @@ int						hittest(rect rc, const char* string, unsigned state, point mouse);
 bool					ishilite(const rect& rc);
 inline bool				ishilite() { return ishilite({caret.x, caret.y, caret.x + width, caret.y + height}); }
 void					image(int x, int y, const sprite* e, int id, int flags);
-void					image(int x, int y, const sprite* e, int id, int flags, color* pal);
+inline void				image(const sprite* e, int id, int flags) { image(caret.x, caret.y, e, id, flags); }
+void					image(const sprite* e, int id, int flags, color* pal);
 void					key2str(stringbuilder& sb, int key);
 void					line(int x, int y); // Draw line
 void					linet(int x, int y);
@@ -281,7 +282,7 @@ long				getresult();
 bool				isnext();
 void				initialize(const char* title);
 bool				ismodal();
-void				scene(fnevent proc);
+long				scene(fnevent proc);
 void				scene();
 void				setneedupdate();
 void				setnext(fnevent v);

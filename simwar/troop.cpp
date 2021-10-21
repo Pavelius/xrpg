@@ -15,13 +15,9 @@ int troop::getbonus(variant id, const variants& source) {
 }
 
 int troop::get(variant v, stringbuilder* sb) const {
-	auto r = 0;
-	uniti* pu = type;
-	if(pu) {
-		r += pu->get(v);
-		if(v==variant(Raid))
-			r += get(Attack);
-	}
+	auto r = type->get(v);
+	if(v==variant(Raid))
+		r += type->get(Attack);
 	return r;
 }
 

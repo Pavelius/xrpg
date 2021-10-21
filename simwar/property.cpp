@@ -42,11 +42,12 @@ BSMETA(bonusi) = {
     {}};
 BSMETA(troop) = {
     BSREQ(uid),
-    BSREQ(type), BSREQ(owner),
+    BSREQ(type), BSREQ(province),
     {}};
 BSDATAC(troop, 2048)
 BSMETA(playeri) = {
     BSREQ(id),
+    BSREQ(avatar),
     {}};
 BSMETA(prefixi) = {
     BSREQ(id),
@@ -54,6 +55,7 @@ BSMETA(prefixi) = {
 BSMETA(provincei) = {
     BSREQ(id),
     BSREQ(position),
+    BSREQ(owner),
     BSDST(income, costi),
     BSDST(stats, stati),
     BSREQ(landscape),

@@ -27,6 +27,7 @@ enum variant_s : unsigned char {
 enum landscape_s : unsigned char {
     Plains, Forest, Hills, Swamp, Desert, Sea,
 };
+struct playeri;
 struct costa : dataset<8, short> {
 };
 struct bonusi {
@@ -73,26 +74,11 @@ struct uniti : nameable {
     landscapea  encounter;
     producea    need;
     int         get(variant v) const;
-    bool        match(variant v) const;
-};
-struct troop {
-    unsigned    uid;
-    variant     type;
-    variant     owner;
-    variant     moveto;
-    constexpr explicit operator bool() const { return uid != 0; }
-    void        clear();
-    int         get(variant id, stringbuilder* sb = 0) const;
-    static int  getbonus(variant id, const variants& source);
-    void        kill();
 };
 struct army : adat<variant, 18> {
     bool        conquer(army& enemy, stringbuilder* psb, stat_s attacker_stat, stat_s defender_stat);
     void        damage(int hits, stringbuilder* sb = 0);
     int         get(variant v, stringbuilder* sb = 0) const;
-};
-struct hero : uniti {
-    int         golds;
 };
 struct provincei : nameable {
     landscape_s landscape;
@@ -102,8 +88,24 @@ struct provincei : nameable {
     resourcea   resources; // Known province resource
     variant     garnison; // Contract on province garnison units.
     variants    neightboards;
+    playeri*    owner;
     void        initialize();
     void        paint() const;
+};
+struct hero : uniti {
+    provincei*  province;
+    int         golds;
+};
+struct troop {
+    unsigned    uid;
+    uniti*      type;
+    provincei*  province;
+    provincei*  moveto;
+    constexpr explicit operator bool() const { return uid != 0; }
+    void        clear();
+    int         get(variant id, stringbuilder* sb = 0) const;
+    static int  getbonus(variant id, const variants& source);
+    void        kill();
 };
 struct sitetypei : nameable {
     landscapea  landscape; // Landscape types where site might generate. 0 - for all sites.
@@ -111,8 +113,8 @@ struct sitetypei : nameable {
     variant     dialog;
 };
 struct sitei {
-    variant     type;
-    variant     owner;
+    sitetypei*  type;
+    provincei*  province;
     char        conceal; // Percent chance of conceal site. Visible only if lower that `explored` province.
 };
 struct decki : varianta {
@@ -121,6 +123,7 @@ struct decki : varianta {
 };
 struct playeri {
     const char* id;
+    int         avatar;
     costa       total;
     decki       events;
     int         get(variant v) const;
@@ -144,7 +147,7 @@ class gamei {
 public:
     playeri*    player;
     provincei*  province;
-    void        addtroop(variant type, variant owner);
+    void        addtroop(variant type, provincei* province);
     unsigned    adduid();
     bool        apply(const variants& source, bool allow_test, bool allow_apply);
     static void format(stringbuilder& sb, const char* string, ...);

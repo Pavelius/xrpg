@@ -1,7 +1,6 @@
 #include "main.h"
 
 BSDATA(playeri) = {
-	{"Neutral"},
 	{"Red"},
 	{"Green"},
 	{"Yellow"},

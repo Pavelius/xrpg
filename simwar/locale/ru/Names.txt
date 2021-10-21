@@ -1,4 +1,7 @@
 ﻿Artefacts: Реликвии
+Barbarians: Варвары
+BlackOrks: Черные орки
+Continue: Продолжить
 Date: Текущая дата
 EastForest: Восточный лес
 EndMonth: Конец
@@ -7,14 +10,19 @@ Faith: Вера
 Fame: Слава
 FarForest: Дальний лес
 ForestTooth: Лес с зубом
+Goblins: Гоблины
 Gold: Золото
 June: Июнь
 Mana: Мана
 MiddleMonth: Средина
+Ogres: Огры
+Orks: Орки
 RandomEvent: Случайное событие
 ShiningForest: Сверкающий лес
 SouthHills: Южные холмы
 StartMonth: Начало
+Thugs: Бандиты
 Turn: Ход
 WhiteTower: Белая башня
+WolfRiders: Наездники на волках
 YearOf: Года

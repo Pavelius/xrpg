@@ -5,7 +5,10 @@ void provincei::initialize() {
 	source.select(bsdata<uniti>::source);
 	source.match(landscape, true);
 	source.shuffle();
-	auto level = 2;
-	for(auto v : source)
+	auto level = xrand(1,3);
+	for(auto v : source) {
 		game.addtroop(v, this);
+		if(--level <= 0)
+			break;
+	}
 }

@@ -193,12 +193,12 @@ unsigned gamei::adduid() {
 	return (uid_base << 24) | (++uid);
 }
 
-void gamei::addtroop(variant type, variant owner) {
+void gamei::addtroop(variant type, provincei* province) {
 	auto p = bsdata<troop>::addz();
 	p->clear();
 	p->uid = adduid();
 	p->type = type;
-	p->owner = owner;
+	p->province = province;
 }
 
 void gamei::passturn() {
