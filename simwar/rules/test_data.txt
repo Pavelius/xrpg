@@ -11,7 +11,21 @@ Leather
 
 #Unit
 
+Archers
+Barbarians
+BlackOrks
+Cavalry
+Goblins
+Knights
+Ogres
+Orks
+Riders
+Spearmens
+Swordmens
 Thugs
+WolfRiders
+
+Thugs avatar(3)
  stats Attack(1) Defend(1) Raid(1) Damage(3) Hits(8) Level(1)
  cost Gold(15)
  upkeep Gold(2)
@@ -21,6 +35,7 @@ Spearmens
  cost Gold(25)
  upkeep Gold(3)
  encounter Plains
+ encounter_tought Swordmens
  need Iron Woods
 Archers
  stats Attack(2) Defend(1) Damage(3) Hits(8) Level(1)
@@ -39,6 +54,7 @@ Riders
  cost Gold(35)
  upkeep Gold(3)
  encounter Plains
+ encounter_tought Cavalry
  need Horses
 Cavalry
  stats Attack(3) Defend(2) Raid(1) Damage(4) Hits(14) Move(2) Level(3)
@@ -52,7 +68,7 @@ Knights
  upkeep Gold(6)
  encounter Plains
  need Iron Iron
-Barbarians
+Barbarians avatar(2)
  stats Attack(1) Defend(1) Damage(3) Hits(10) Level(1)
  cost Gold(20)
  upkeep Gold(2)
@@ -62,17 +78,20 @@ Goblins
  cost Gold(10)
  upkeep Gold(1)
  encounter Plains Hills Forest Swamp
+ encounter_tought Orks WolfRiders
 Orks
  stats Attack(1) Defend(1) Raid(1) Damage(4) Hits(11) Level(1)
  cost Gold(30)
  upkeep Gold(2)
  encounter Plains Hills
+ encounter_tought BlackOrks
  need Iron
 BlackOrks
  stats Attack(2) Defend(2) Raid(1) Damage(4) Hits(13) Level(2)
  cost Gold(35)
  upkeep Gold(4)
  encounter Plains Hills
+ encounter_tought Ogres
  need Iron Iron
 WolfRiders avatar(1)
  stats Attack(2) Defend(1) Raid(1) Damage(4) Move(2) Hits(12) Level(2)

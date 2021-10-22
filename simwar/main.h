@@ -74,6 +74,8 @@ struct uniti : nameable {
     landscapea  encounter;
     producea    need;
     int         avatar;
+    uniti*      encounter_tought[4];
+    uniti*      encounter_monster[4];
     int         get(variant v) const;
 };
 struct army : adat<variant, 18> {
@@ -139,6 +141,7 @@ struct prefixi {
 struct selector : varianta {
     void        match(landscape_s v, bool keep);
     void        querry(const provincei* p);
+    void        sortunits();
 };
 class gamei {
     unsigned char uid_base;
@@ -148,7 +151,7 @@ class gamei {
 public:
     playeri*    player;
     provincei*  province;
-    void        addtroop(variant type, provincei* province);
+    void        addtroop(uniti* type, provincei* province);
     unsigned    adduid();
     bool        apply(const variants& source, bool allow_test, bool allow_apply);
     static void format(stringbuilder& sb, const char* string, ...);
@@ -172,6 +175,7 @@ long            dialog(answers& an, const char* title, const char* format);
 void            initialize();
 void            maketurn();
 }
+inline bool     chance(int value) { return (rand() % 100) < value; }
 int             getfix(stringbuilder* sb, int v, variant id);
 VKIND(actioni, Action)
 VKIND(action_s, Action)

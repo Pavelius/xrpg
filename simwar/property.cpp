@@ -33,7 +33,7 @@ BSMETA(uniti) = {
     BSDST(stats, stati),
     BSDST(cost, costi),
     BSDST(upkeep, costi),
-    BSFLG(encounter, landscapei),
+    BSFLG(encounter, landscapei), BSREQ(encounter_tought), BSREQ(encounter_monster),
     BSADT(need, resourcei),
     {}};
 BSDATAC(uniti, 128)

@@ -130,9 +130,29 @@ static void paint_troops(const provincei* province) {
 	fore_stroke = push_stroke;
 }
 
+static void paint_troops_icons(const provincei* province) {
+	selector source;
+	source.querry(province);
+	if(!source)
+		return;
+	const auto dx = 16;
+	auto count = source.getcount();
+	auto push_caret = caret;
+	caret.x -= (count - 1) * dx / 2;
+	for(auto v : source) {
+		troop* p = v;
+		if(!p)
+			continue;
+		image(res_units, p->type->avatar, 0);
+		caret.x += dx;
+	}
+	caret = push_caret;
+}
+
 void provincei::paint() const {
 	if(owner)
 		image(caret.x, caret.y, res_shields, owner->avatar, 0);
+	//paint_troops_icons(this);
 	auto push_font = font;
 	font = metrics::h2;
 	auto push_stroke = fore_stroke;
@@ -144,7 +164,7 @@ void provincei::paint() const {
 	fore = push_fore;
 	fore_stroke = push_stroke;
 	font = push_font;
-	caret.y -= texth()/2;
+	caret.y -= texth() / 2;
 	paint_troops(this);
 }
 
@@ -205,7 +225,7 @@ static void choose_action_dialog() {
 
 static void choose_answers_dialog() {
 	width = 500;
-	caret.x = (getwidth() - width)/2;
+	caret.x = (getwidth() - width) / 2;
 	caret.y = 30;
 	if(dialog_title) {
 		texthead(dialog_title);

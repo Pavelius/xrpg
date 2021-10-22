@@ -1,2 +1,2 @@
 ﻿In file `rules/test_data.txt`:
- Line 77: Not found requisit `avatar`
+ Line 79: Not found identifier `Orcs`

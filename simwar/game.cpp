@@ -193,7 +193,7 @@ unsigned gamei::adduid() {
 	return (uid_base << 24) | (++uid);
 }
 
-void gamei::addtroop(variant type, provincei* province) {
+void gamei::addtroop(uniti* type, provincei* province) {
 	auto p = bsdata<troop>::addz();
 	p->clear();
 	p->uid = adduid();
