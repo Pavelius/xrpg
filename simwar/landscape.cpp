@@ -1,11 +1,11 @@
 #include "main.h"
 
 BSDATA(landscapei) = {
-	{"Plains"},
-	{"Forest"},
-	{"Hills"},
-	{"Swamp"},
-	{"Desert"},
-	{"Sea"},
+	{"Plains", "plains"},
+	{"Forest", "forest"},
+	{"Hills", "hills"},
+	{"Swamp", "swamp"},
+	{"Desert", "desert"},
+	{"Sea", "sea"},
 };
 assert_enum(landscapei, Sea)

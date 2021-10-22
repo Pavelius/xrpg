@@ -45,8 +45,8 @@ int main() {
     game.player = bsdata<playeri>::elements;
     game.player->initialize();
     game.province = (provincei*)bsdata<provincei>::source.ptr(0);
-    eventi* pe = variant("ShamanCome");
-    game.play(pe);
+    //eventi* pe = variant("ShamanCome");
+    //game.play(pe);
     draw::setnext(draw::maketurn);
     draw::start();
     return 0;

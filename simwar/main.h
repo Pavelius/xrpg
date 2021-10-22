@@ -84,7 +84,7 @@ struct army : adat<variant, 18> {
     int         get(variant v, stringbuilder* sb = 0) const;
 };
 struct provincei : nameable {
-    landscape_s landscape;
+    landscapei* landscape;
     point       position;
     stata       stats; // Common province and unit stats
     costa       income; // Additional income
@@ -92,6 +92,7 @@ struct provincei : nameable {
     variant     garnison; // Contract on province garnison units.
     variants    neightboards;
     playeri*    owner;
+    static void choose_action();
     void        initialize();
     void        paint() const;
 };
@@ -139,7 +140,7 @@ struct prefixi {
     const char* id;
 };
 struct selector : varianta {
-    void        match(landscape_s v, bool keep);
+    void        match(const landscapei* p, bool keep);
     void        querry(const provincei* p);
     void        sortunits();
 };
@@ -164,7 +165,6 @@ public:
     int         getyear() const { return start_year + turn / (3 * 12); }
     int         getturn() const { return turn; }
     void        initialize();
-    void        maketurn();
     void        passturn();
     void        play(const eventi* event);
     void        setuidbase(unsigned char v) { uid_base = v; }

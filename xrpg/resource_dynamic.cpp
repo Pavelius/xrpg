@@ -16,8 +16,11 @@ static vector<resei> source;
 
 static resei* find(const char* name, const char* folder) {
 	for(auto& e : source) {
-		if(strcmp(e.name, name) == 0 && strcmp(e.folder, folder) == 0)
-			return &e;
+		if(strcmp(e.name, name))
+			continue;
+		if(folder && strcmp(e.folder, folder))
+			continue;
+		return &e;
 	}
 	return 0;
 }

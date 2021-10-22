@@ -205,17 +205,6 @@ void gamei::passturn() {
 	turn++;
 }
 
-void gamei::maketurn() {
-	passturn();
-	while(true) {
-		varianta an;
-		an.add(EndTurn);
-		auto result = an.choose(0, 0, true, 0);
-		if(result.type == Action && result.value == EndTurn)
-			break;
-	}
-}
-
 void gamei::initialize() {
 	start_year = 943;
 	for(auto& e : bsdata<provincei>())

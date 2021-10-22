@@ -11,6 +11,7 @@ static const char*		dialog_title;
 static const char*		dialog_description;
 static auto				res_shields = (sprite*)gres("shields", "art/objects");
 static auto				res_units = (sprite*)gres("units", "art/objects");
+static bool				can_choose_province;
 
 static bool spanel(int size) {
 	rectpush push;
@@ -152,6 +153,11 @@ static void paint_troops_icons(const provincei* province) {
 void provincei::paint() const {
 	if(owner)
 		image(caret.x, caret.y, res_shields, owner->avatar, 0);
+	if(ishilite(24)) {
+		hot.cursor = cursor::Hand;
+		if(hot.key == MouseLeft && hot.pressed)
+			execute(cbsetptr, (long)this, 0, &game.province);
+	}
 	//paint_troops_icons(this);
 	auto push_font = font;
 	font = metrics::h2;
@@ -191,12 +197,18 @@ static void static_text() {
 		textf(dialog_description);
 }
 
+static void description_text_raw() {
+	if(!dialog_description)
+		return;
+	textf(dialog_description);
+}
+
 static void description_text() {
 	if(!dialog_description)
 		return;
 	height = textfs(dialog_description);
 	swindow(false, 0);
-	textf(dialog_description);
+	description_text_raw();
 }
 
 static void group(fnevent left, fnevent right) {
@@ -209,18 +221,38 @@ static void group(fnevent left, fnevent right) {
 	right();
 }
 
+static void group(const char* image, fnevent right) {
+	rectpush push;
+	auto ps = gres(image, "art/images");
+	if(!ps)
+		return;
+	height = ps->get(0).sy;
+	swindow(false, 0);
+	draw::image(ps, 0, 0);
+	caret.x += ps->get(0).sx + metrics::padding;
+	width = width - ps->get(0).sx - metrics::border * 2 - metrics::padding;
+	right();
+	height_maximum = height;
+}
+
+static void answers_block() {
+	if(dialog_answers) {
+		for(auto& e : *dialog_answers)
+			fire(button(e.text, 0, buttonfd), buttonparam, e.id);
+	}
+}
+
 static void choose_action_dialog() {
 	setposru();
 	if(dialog_title) {
 		texthead(dialog_title);
 		caret.y += height_maximum + metrics::border * 2 + metrics::padding;
 	}
-	description_text();
-	caret.y += metrics::border * 2 + metrics::padding;
-	if(dialog_answers) {
-		for(auto& e : *dialog_answers)
-			fire(button(e.text, 0, buttonfd), buttonparam, e.id);
+	if(dialog_image) {
+		group(dialog_image, description_text_raw);
+		caret.y += height_maximum + metrics::border * 2 + metrics::padding;
 	}
+	answers_block();
 }
 
 static void choose_answers_dialog() {
@@ -234,10 +266,7 @@ static void choose_answers_dialog() {
 	height = 300;
 	group(picture_image, static_text);
 	caret.y += height + metrics::padding + metrics::border * 2;
-	if(dialog_answers) {
-		for(auto& e : *dialog_answers)
-			fire(button(e.text, 0, buttonfd), buttonparam, e.id);
-	}
+	answers_block();
 }
 
 long draw::dialog(answers& an, const char* title, const char* description) {
@@ -248,13 +277,21 @@ long draw::dialog(answers& an, const char* title, const char* description) {
 	return scene(choose_answers_dialog);
 }
 
-static void choose_province() {
+static void choose_province_scene() {
+	setposru();
+	texthead(getnm(game.province->id));
+	caret.y += height_maximum + metrics::border * 2 + metrics::padding;
+	group(game.province->landscape->id, description_text_raw);
+	caret.y += height_maximum + metrics::border * 2 + metrics::padding;
+	answers_block();
+}
+
+void choose_province_action() {
 	answers an;
 	an.add(0, getnm("Continue"));
 	dialog_answers = &an;
-	dialog_title = getnm(game.province->id);
 	dialog_description = "Test string for long visualisation model and some description can be on next line.";
-	scene(choose_action_dialog);
+	scene(choose_province_scene);
 }
 
 void draw::initialize() {
@@ -270,8 +307,5 @@ void draw::initialize() {
 }
 
 void draw::maketurn() {
-	choose_province();
-	game.maketurn();
-	if(!isnext())
-		setnext(draw::maketurn);
+	choose_province_action();
 }

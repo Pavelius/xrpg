@@ -200,6 +200,7 @@ int						hittest(int x, int test_x, const char* string, int lenght);
 int						hittest(rect rc, const char* string, unsigned state, point mouse);
 bool					ishilite(const rect& rc);
 inline bool				ishilite() { return ishilite({caret.x, caret.y, caret.x + width, caret.y + height}); }
+inline bool				ishilite(int size) { return ishilite({caret.x-size, caret.y - size, caret.x + size, caret.y + size}); }
 void					image(int x, int y, const sprite* e, int id, int flags);
 inline void				image(const sprite* e, int id, int flags) { image(caret.x, caret.y, e, id, flags); }
 void					image(const sprite* e, int id, int flags, color* pal);
