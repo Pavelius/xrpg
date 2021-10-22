@@ -11,12 +11,15 @@ Fame: Слава
 FarForest: Дальний лес
 ForestTooth: Лес с зубом
 Goblins: Гоблины
+GoblinsMilita: Гоблины
 Gold: Золото
+Humans: Люди
 June: Июнь
 Mana: Мана
 MiddleMonth: Средина
 Ogres: Огры
 Orks: Орки
+OrksMilita: Орки
 RandomEvent: Случайное событие
 ShiningForest: Сверкающий лес
 SouthHills: Южные холмы

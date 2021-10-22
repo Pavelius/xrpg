@@ -24,9 +24,6 @@ enum variant_s : unsigned char {
     NoVariant,
     Action, Bonus, Cost, Event, Landscape, Player, Prefix, Province, Resource, Stat, Troop, Unit
 };
-enum landscape_s : unsigned char {
-    Plains, Forest, Hills, Swamp, Desert, Sea,
-};
 struct playeri;
 struct costa : dataset<8, short> {
 };
@@ -40,10 +37,6 @@ struct landscapei {
     const char* id;
     const char* image;
     costa       income; // Base income from landscape
-};
-struct nationi {
-    const char* id;
-    int         alignment; // Negative tend to be evil, positive good
 };
 struct nameable {
     const char* id;
@@ -69,11 +62,12 @@ struct landscapea : flagable<2> {
 struct stata : dataset<Unrest> {
 };
 struct uniti : nameable {
+    uniti*      nation;
     stata       stats;
     costa       cost, upkeep;
     landscapea  encounter;
     producea    need;
-    int         avatar;
+    const char* avatar;
     uniti*      encounter_tought[4];
     uniti*      encounter_monster[4];
     int         get(variant v) const;
@@ -84,6 +78,7 @@ struct army : adat<variant, 18> {
     int         get(variant v, stringbuilder* sb = 0) const;
 };
 struct provincei : nameable {
+    uniti*      dwellers;
     landscapei* landscape;
     point       position;
     stata       stats; // Common province and unit stats

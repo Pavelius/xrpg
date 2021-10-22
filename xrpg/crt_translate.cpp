@@ -73,8 +73,10 @@ static void apply_value(array& source, const char* id, const char* name) {
 static void readl(const char* url, array& source, bool required) {
 	auto p_alloc = (const char*)loadt(url);
 	if(!p_alloc) {
-		log::seturl(0);
-		log::error(0, "Can't find file `%1`", url);
+		if(required) {
+			log::seturl(0);
+			log::error(0, "Can't find file `%1`", url);
+		}
 		return;
 	}
 	auto p = p_alloc;

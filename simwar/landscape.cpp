@@ -8,4 +8,4 @@ BSDATA(landscapei) = {
 	{"Desert", "desert"},
 	{"Sea", "sea"},
 };
-assert_enum(landscapei, Sea)
+BSDATAF(landscapei)

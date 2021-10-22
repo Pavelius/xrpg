@@ -313,7 +313,7 @@ static void choose_movement_window() {
 	switch(hot.key) {
 	case MouseLeft:
 		if(hot.pressed)
-			execute(breakparam, current_index);
+			execute(buttonparam, current_index);
 		break;
 	}
 }
@@ -332,7 +332,7 @@ indext draw::choosemovement() {
 	auto push_show = show_movement_cost;
 	show_movement_cost = 1;
 	pwindow = choose_movement_window;
-	mainscene();
+	scene();
 	show_movement_cost = push_show;
 	pwindow = push_window;
 	return (indext)hot.param;

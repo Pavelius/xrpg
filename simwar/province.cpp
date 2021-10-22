@@ -19,6 +19,7 @@ void provincei::initialize() {
 	uniti* p = source.data[0];
 	if(!p)
 		return;
+	dwellers = p;
 	for(auto count = xrand(1, 4); count > 0; count--) {
 		if(chance(75) || count==1)
 			game.addtroop(p, this);

@@ -25,81 +25,83 @@ Swordmens
 Thugs
 WolfRiders
 
-Thugs avatar(3)
+Humans nation(Humans) avatar("humans")
+ encounter_tought Spearmens Archers Riders
+Thugs avatar(3) nation(Humans)
  stats Attack(1) Defend(1) Raid(1) Damage(3) Hits(8) Level(1)
  cost Gold(15)
  upkeep Gold(2)
  encounter Plains Forest
-Spearmens
+Spearmens nation(Humans)
  stats Attack(1) Defend(2) Damage(3) Hits(10) Level(1)
  cost Gold(25)
  upkeep Gold(3)
  need Iron Woods
  encounter Plains
  encounter_tought Swordmens
-Archers
+Archers nation(Humans)
  stats Attack(2) Defend(1) Damage(3) Hits(8) Level(1)
  cost Gold(30)
  upkeep Gold(3)
  need Woods
  encounter Plains
-Swordmens
+Swordmens nation(Humans)
  stats Attack(2) Defend(2) Damage(3) Hits(12) Level(2)
  cost Gold(40)
  upkeep Gold(4)
  need Iron Iron
  encounter Plains
-Riders
+Riders nation(Humans)
  stats Attack(2) Defend(1) Raid(1) Damage(3) Hits(10) Move(2) Level(2)
  cost Gold(35)
  upkeep Gold(3)
  need Horses
  encounter Plains
  encounter_tought Cavalry
-Cavalry
+Cavalry nation(Humans)
  stats Attack(3) Defend(2) Raid(1) Damage(4) Hits(14) Move(2) Level(3)
  cost Gold(70)
  upkeep Gold(6)
  need Iron Horses
  encounter Plains
-Knights
+Knights nation(Humans)
  stats Attack(2) Defend(3) Damage(4) Hits(18) Level(3)
  cost Gold(60)
  upkeep Gold(6)
  need Iron Iron
  encounter Plains
-Barbarians avatar(2)
+Barbarians avatar(2) nation(Humans)
  stats Attack(1) Defend(1) Damage(3) Hits(10) Level(1)
  cost Gold(20)
  upkeep Gold(2)
  encounter Plains Hills
-Goblins
+Goblins nation(Goblins)
  stats Attack(1) Defend(1) Damage(2) Hits(6) Level(1)
  cost Gold(10)
  upkeep Gold(1)
  encounter Plains Hills Forest Swamp
  encounter_tought Orks WolfRiders
-Orks
+Orks nation(Orks)
  stats Attack(1) Defend(1) Raid(1) Damage(4) Hits(11) Level(1)
  cost Gold(30)
  upkeep Gold(2)
  need Iron
  encounter Plains Hills
  encounter_tought BlackOrks
-BlackOrks
+BlackOrks nation(Orks)
  stats Attack(2) Defend(2) Raid(1) Damage(4) Hits(13) Level(2)
  cost Gold(35)
  upkeep Gold(4)
  need Iron Iron
  encounter Plains Hills
  encounter_tought Ogres
-WolfRiders avatar(1)
+WolfRiders avatar(1) nation(Orks)
  stats Attack(2) Defend(1) Raid(1) Damage(4) Move(2) Hits(12) Level(2)
  cost Gold(30)
  upkeep Gold(4)
  need Horses
  encounter Plains Hills Forest
-Ogres
+Ogres nation(Ogres)
  stats Attack(2) Defend(2) Damage(6) Hits(18) Level(3)
  cost Gold(45)
  upkeep Gold(5)

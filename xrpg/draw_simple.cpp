@@ -400,7 +400,7 @@ static void paintcustomtips() {
 	fore = push_fore;
 }
 
-static void inputall() {
+void draw::inputall() {
 	inputcamera();
 	paintcustomtips();
 }

@@ -1,1 +1,1 @@
-﻿In line 4: Expected line feed
+﻿Can't find file `locale/ru/NamesOf.txt`

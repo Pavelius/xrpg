@@ -5,8 +5,6 @@
 template<> struct bsdata<V> : bsdata<T> {};
 
 LNK(stat_s, stati)
-LNK(landscape_s, landscapei)
-
 NOBSDATA(point)
 
 BSMETA(variant) = {{}};
@@ -30,6 +28,7 @@ BSMETA(landscapei) = {
 BSMETA(uniti) = {
     BSREQ(id),
     BSREQ(avatar),
+    BSREQ(nation),
     BSDST(stats, stati),
     BSDST(cost, costi),
     BSDST(upkeep, costi),

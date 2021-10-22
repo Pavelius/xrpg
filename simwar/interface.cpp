@@ -131,24 +131,24 @@ static void paint_troops(const provincei* province) {
 	fore_stroke = push_stroke;
 }
 
-static void paint_troops_icons(const provincei* province) {
-	selector source;
-	source.querry(province);
-	if(!source)
-		return;
-	const auto dx = 16;
-	auto count = source.getcount();
-	auto push_caret = caret;
-	caret.x -= (count - 1) * dx / 2;
-	for(auto v : source) {
-		troop* p = v;
-		if(!p)
-			continue;
-		image(res_units, p->type->avatar, 0);
-		caret.x += dx;
-	}
-	caret = push_caret;
-}
+//static void paint_troops_icons(const provincei* province) {
+//	selector source;
+//	source.querry(province);
+//	if(!source)
+//		return;
+//	const auto dx = 16;
+//	auto count = source.getcount();
+//	auto push_caret = caret;
+//	caret.x -= (count - 1) * dx / 2;
+//	for(auto v : source) {
+//		troop* p = v;
+//		if(!p)
+//			continue;
+//		image(res_units, p->type->avatar, 0);
+//		caret.x += dx;
+//	}
+//	caret = push_caret;
+//}
 
 void provincei::paint() const {
 	if(owner)
