@@ -29,6 +29,7 @@ BSMETA(landscapei) = {
     {}};
 BSMETA(uniti) = {
     BSREQ(id),
+    BSREQ(avatar),
     BSDST(stats, stati),
     BSDST(cost, costi),
     BSDST(upkeep, costi),

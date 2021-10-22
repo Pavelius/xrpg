@@ -73,6 +73,7 @@ struct uniti : nameable {
     costa       cost, upkeep;
     landscapea  encounter;
     producea    need;
+    int         avatar;
     int         get(variant v) const;
 };
 struct army : adat<variant, 18> {

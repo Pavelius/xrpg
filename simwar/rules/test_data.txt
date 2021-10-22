@@ -74,7 +74,7 @@ BlackOrks
  upkeep Gold(4)
  encounter Plains Hills
  need Iron Iron
-WolfRiders
+WolfRiders avatar(1)
  stats Attack(2) Defend(1) Raid(1) Damage(4) Move(2) Hits(12) Level(2)
  cost Gold(30)
  upkeep Gold(4)

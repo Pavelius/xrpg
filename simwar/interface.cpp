@@ -10,6 +10,7 @@ static answers*			dialog_answers;
 static const char*		dialog_title;
 static const char*		dialog_description;
 static auto				res_shields = (sprite*)gres("shields", "art/objects");
+static auto				res_units = (sprite*)gres("units", "art/objects");
 
 static bool spanel(int size) {
 	rectpush push;
@@ -123,6 +124,7 @@ static void paint_troops(const provincei* province) {
 			continue;
 		textjc(getnm(p->type->id));
 		caret.y += texth();
+		break;
 	}
 	fore = push_fore;
 	fore_stroke = push_stroke;
