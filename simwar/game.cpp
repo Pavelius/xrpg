@@ -48,7 +48,7 @@ bool gamei::apply(const variants& source, bool allow_test, bool allow_apply) {
 			b = -b;
 		switch(a.type) {
 		case Cost:
-			if(prefixes.is(Income)) {
+			if(prefixes.is(Permanent)) {
 				if(province) {
 					if(need_test && (province->income.get(a.value) + b) < 0)
 						return false;
@@ -86,7 +86,7 @@ int gamei::get(variant id, const variants& source) {
 		auto b = getbonus(v);
 		if(prefixes.is(Minus))
 			b = -b;
-		if(a == id && !prefixes.is(Income))
+		if(a == id && !prefixes.is(Permanent))
 			result += b;
 		prefixes.clear();
 	}

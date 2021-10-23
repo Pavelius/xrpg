@@ -14,6 +14,7 @@ typedef decltype(sizeof(0)) size_t;
 #define	BSDATATMPL template<>
 #endif
 
+#define FG(V) (1<<V)
 #define maptbl(t, id) (t[imax((unsigned long)0, imin((unsigned long)id, (unsigned long)(sizeof(t)/sizeof(t[0])-1)))])
 #define maprnd(t) t[rand()%(sizeof(t)/sizeof(t[0]))]
 #define	FO(T,R) ((size_t)&((T*)0)->R)

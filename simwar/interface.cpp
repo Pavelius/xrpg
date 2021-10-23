@@ -12,6 +12,7 @@ static const char*		dialog_description;
 static auto				res_shields = (sprite*)gres("shields", "art/objects");
 static auto				res_units = (sprite*)gres("units", "art/objects");
 static bool				can_choose_province;
+static bool				element_hilited;
 
 static bool spanel(int size) {
 	rectpush push;
@@ -20,7 +21,7 @@ static bool spanel(int size) {
 	return swindow(false, 0);
 }
 
-static void texthead(const char* string) {
+static void texthsp(const char* string) {
 	auto push_font = font;
 	font = metrics::h2;
 	spanel(width);
@@ -28,6 +29,7 @@ static void texthead(const char* string) {
 	fore = colors::h2;
 	texta(string, AlignCenter);
 	fore = push_fore;
+	caret.y += texth() + metrics::border * 2 + metrics::padding;
 	font = push_font;
 }
 
@@ -221,18 +223,39 @@ static void group(fnevent left, fnevent right) {
 	right();
 }
 
-static void group(const char* image, fnevent right) {
-	rectpush push;
+static void texth3a(const char* string, unsigned flags) {
+	auto push_font = font;
+	auto push_height = height;
+	font = metrics::h3;
+	texta(string, flags);
+	height = push_height;
+	font = push_font;
+	caret.y += height_maximum;
+}
+
+static void image_block(const char* image, const char* title, fnevent right) {
 	auto ps = gres(image, "art/images");
 	if(!ps)
 		return;
-	height = ps->get(0).sy;
+	auto push_width = width;
+	auto push_caret = caret;
+	auto height = ps->get(0).sy;
+	draw::height = height;
 	swindow(false, 0);
 	draw::image(ps, 0, 0);
-	caret.x += ps->get(0).sx + metrics::padding;
-	width = width - ps->get(0).sx - metrics::border * 2 - metrics::padding;
-	right();
-	height_maximum = height;
+	caret.x += ps->get(0).sx + metrics::padding * 2 + metrics::border;
+	width = width - ps->get(0).sx - metrics::border - metrics::padding * 2;
+	if(title)
+		texth3a(title, AlignCenter);
+	if(right)
+		right();
+	caret = push_caret;
+	width = push_width;
+	caret.y += height + metrics::border * 2 + metrics::padding;
+}
+
+static void button_flat(const char* string, fnevent proc, long param = 0) {
+	fire(button(string, 0, buttonfd), proc, param);
 }
 
 static void answers_block() {
@@ -244,12 +267,10 @@ static void answers_block() {
 
 static void choose_action_dialog() {
 	setposru();
-	if(dialog_title) {
-		texthead(dialog_title);
-		caret.y += height_maximum + metrics::border * 2 + metrics::padding;
-	}
+	if(dialog_title)
+		texthsp(dialog_title);
 	if(dialog_image) {
-		group(dialog_image, description_text_raw);
+		image_block(dialog_image, 0, description_text_raw);
 		caret.y += height_maximum + metrics::border * 2 + metrics::padding;
 	}
 	answers_block();
@@ -259,10 +280,8 @@ static void choose_answers_dialog() {
 	width = 500;
 	caret.x = (getwidth() - width) / 2;
 	caret.y = 30;
-	if(dialog_title) {
-		texthead(dialog_title);
-		caret.y += height_maximum + metrics::padding + metrics::border * 2;
-	}
+	if(dialog_title)
+		texthsp(dialog_title);
 	height = 300;
 	group(picture_image, static_text);
 	caret.y += height + metrics::padding + metrics::border * 2;
@@ -277,21 +296,72 @@ long draw::dialog(answers& an, const char* title, const char* description) {
 	return scene(choose_answers_dialog);
 }
 
-static void choose_province_scene() {
-	setposru();
-	texthead(getnm(game.province->id));
-	caret.y += height_maximum + metrics::border * 2 + metrics::padding;
-	group(game.province->landscape->id, description_text_raw);
-	caret.y += height_maximum + metrics::border * 2 + metrics::padding;
-	answers_block();
+static void progressbar(int minimal, int maximum, int current) {
+	rectpush push;
+	element_hilited = ishilite();
+	auto push_fore = fore;
+	fore = colors::red;
+	width = width * (current - minimal) / (maximum - minimal);
+	auto push_alpha = alpha;
+	alpha = 64;
+	rectf();
+	alpha = push_alpha;
+	width = push.width;
+	fore = colors::border;
+	rectb();
+	fore = push_fore;
 }
 
-void choose_province_action() {
-	answers an;
-	an.add(0, getnm("Continue"));
-	dialog_answers = &an;
-	dialog_description = "Test string for long visualisation model and some description can be on next line.";
-	scene(choose_province_scene);
+static void progress(const char* string, int minimal, int maximum, int current, const char* tips = 0) {
+	auto push_fore_stroke = fore_stroke;
+	auto push_fore = fore;
+	auto push_font = font;
+	font = metrics::h2;
+	height = texth();
+	progressbar(minimal, maximum, current);
+	if(tips && element_hilited)
+		get_info(tips);
+	texta(string, AlignCenterCenter);
+	font = push_font;
+	fore = push_fore;
+	fore_stroke = push_fore_stroke;
+	caret.y += height;
+}
+
+static void set_default_view() {
+}
+
+static void province_info() {
+	char temp[260]; stringbuilder sb(temp);
+	sb.clear(); sb.add("%Explored %1i%%", game.province->get(Explored));
+	progress(temp, 0, 100, game.province->get(Explored), "Explored");
+	auto population = game.province->get(Population);
+	auto pp = populationi::findbypopulation(population);
+	auto range = pp->getrange();
+	progress(getnm(pp->id), range.min, range.max, population, "Population");
+}
+
+static void province_header() {
+	char temp[260]; stringbuilder sb(temp);
+	sb.add(getnm(game.province->id));
+	texthsp(temp);
+}
+
+static void province_info_window() {
+	setposru();
+	//char temp[260]; stringbuilder sb(temp);
+	//sb.add("%Province %1", getnm(game.province->id));
+	province_header();
+	auto push_padding = metrics::padding;
+	metrics::padding = 0;
+	image_block(game.province->landscape->id, 0, province_info);
+	//image_block("killburn", "Lord Killburn", 0);
+	for(auto& e : bsdata<actioni>()) {
+		if(e.is(UseOnProvince))
+			button_flat(getnm(e.id), set_default_view);
+	}
+	button_flat(getnm("Continue"), set_default_view);
+	metrics::padding = push_padding;
 }
 
 void draw::initialize() {
@@ -307,5 +377,6 @@ void draw::initialize() {
 }
 
 void draw::maketurn() {
-	choose_province_action();
+	pwindow = province_info_window;
+	scene();
 }

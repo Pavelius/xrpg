@@ -4,4 +4,4 @@ BSDATA(prefixi) = {
 	{"Minus"},
 	{"Income"},
 };
-assert_enum(prefixi, Income)
+assert_enum(prefixi, Permanent)

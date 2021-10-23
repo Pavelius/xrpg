@@ -1,11 +1,16 @@
 ﻿Artefacts: Реликвии
 Barbarians: Варвары
 BlackOrks: Черные орки
+BuildCapital: Улучшить родовую провинцию
+BuildProvince: Построить здание
 Continue: Продолжить
+CursedLands: Проклятая земля
 Date: Текущая дата
+DeadLands: Мертвая земля
 EastForest: Восточный лес
 EndMonth: Конец
 EndTurn: Закончить ход
+Explored: Исследовано
 Faith: Вера
 Fame: Слава
 FarForest: Дальний лес
@@ -14,18 +19,25 @@ Goblins: Гоблины
 GoblinsMilita: Гоблины
 Gold: Золото
 Humans: Люди
+ImproveDefence: Улучшить защиту
 June: Июнь
 Mana: Мана
 MiddleMonth: Средина
+NoPopulated: Не заселена
 Ogres: Огры
 Orks: Орки
 OrksMilita: Орки
+Population: Население
+Province: Провинция
 RandomEvent: Случайное событие
 ShiningForest: Сверкающий лес
+SmallHamlet: Небольшое поселение
+SmallVillage: Деревня
 SouthHills: Южные холмы
 StartMonth: Начало
 Thugs: Бандиты
 Turn: Ход
+Village: Большая деревня
 WhiteTower: Белая башня
 WolfRiders: Наездники на волках
 YearOf: Года

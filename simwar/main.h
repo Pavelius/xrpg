@@ -7,24 +7,47 @@
 #include "varianta.h"
 
 enum action_s : unsigned char {
-    Discard, EndTurn,
+    BuildCapital, BuildProvince, ImproveDefence,
+};
+enum action_flag_s : unsigned char {
+    UseOnProvince, UseOnPlayer, UseOnHero
 };
 enum stat_s : unsigned char {
-    Attack, Defend, Raid, Move, Damage, Hits,
-    Level,
+    Attack, Defend, Raid, Move, Damage, Hits, Level,
     Explored, Population, Growth, Rebellion, Unrest
 };
 enum cost_s : unsigned char {
     Gold, Mana, Artefacts, Faith, Fame
 };
 enum prefix_s : unsigned char {
-    Minus, Income,
+    Minus, Permanent,
 };
 enum variant_s : unsigned char {
     NoVariant,
-    Action, Bonus, Cost, Event, Landscape, Player, Prefix, Province, Resource, Stat, Troop, Unit
+    Action, Bonus, Cost, Event, Hero, Landscape, Nation, Player, Prefix, Province, Resource, Stat, Troop, Unit
 };
 struct playeri;
+struct prefixa : flagable<4> {
+};
+struct resourcea : flagable<2> {
+};
+struct producea : adat<char, 12> {
+};
+struct landscapea : flagable<2> {
+};
+struct stata : dataset<Unrest, short> {
+};
+struct nameable {
+    const char* id;
+};
+struct nationi : nameable {
+    int         alignment;
+};
+struct range {
+    int         min, max;
+    explicit constexpr operator bool() const { return max != 0; }
+    int         random() const { return xrand(min, max); }
+};
 struct costa : dataset<8, short> {
 };
 struct bonusi {
@@ -36,10 +59,8 @@ struct bonusi {
 struct landscapei {
     const char* id;
     const char* image;
+    range       explored, population;
     costa       income; // Base income from landscape
-};
-struct nameable {
-    const char* id;
 };
 struct stati {
     const char* id;
@@ -48,21 +69,17 @@ struct costi {
     const char* id;
     bool        visible;
 };
-struct resourcei {
+struct resourcei : nameable {
+};
+struct populationi {
     const char* id;
-};
-struct prefixa : flagable<4> {
-};
-struct resourcea : flagable<2> {
-};
-struct producea : adat<char, 12> {
-};
-struct landscapea : flagable<2> {
-};
-struct stata : dataset<Unrest> {
+    int         population;
+    int         level;
+    range       getrange() const;
+    static const populationi* findbypopulation(int value);
 };
 struct uniti : nameable {
-    uniti*      nation;
+    nationi*    nation;
     stata       stats;
     costa       cost, upkeep;
     landscapea  encounter;
@@ -87,11 +104,16 @@ struct provincei : nameable {
     variant     garnison; // Contract on province garnison units.
     variants    neightboards;
     playeri*    owner;
-    static void choose_action();
+    void        generate_explored();
+    void        generate_population();
+    void        generate_units();
+    int         get(stat_s v) const { return stats.get(v); }
     void        initialize();
     void        paint() const;
+    void        set(stat_s i, int v) { stats.set(i, v); }
 };
 struct hero : uniti {
+    const char* avatar;
     provincei*  province;
     int         golds;
 };
@@ -130,6 +152,8 @@ struct playeri {
 };
 struct actioni {
     const char* id;
+    unsigned    flags;
+    bool        is(action_flag_s v) const { return (flags & FG(v)) != 0; }
 };
 struct prefixi {
     const char* id;

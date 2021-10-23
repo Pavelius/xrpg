@@ -149,6 +149,7 @@
     <ClInclude Include="draw_color.h" />
     <ClInclude Include="draw_hexagon.h" />
     <ClInclude Include="event.h" />
+    <ClInclude Include="initialize_list_ex.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="command.h" />

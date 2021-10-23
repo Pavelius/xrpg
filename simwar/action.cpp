@@ -1,7 +1,8 @@
 #include "main.h"
 
 BSDATA(actioni) = {
-	{"Discard"},
-	{"EndTurn"},
+	{"BuildCapital"},
+	{"BuildProvince", FG(UseOnProvince)},
+	{"ImproveDefence", FG(UseOnProvince)},
 };
-assert_enum(actioni, EndTurn)
+assert_enum(actioni, ImproveDefence)

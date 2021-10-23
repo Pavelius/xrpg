@@ -6,6 +6,7 @@ template<> struct bsdata<V> : bsdata<T> {};
 
 LNK(stat_s, stati)
 NOBSDATA(point)
+NOBSDATA(range)
 
 BSMETA(variant) = {{}};
 BSMETA(varianti) = {BSREQ(id), {}};
@@ -21,8 +22,14 @@ BSMETA(resourcei) = {
     BSREQ(id),
 {}};
 BSDATAC(resourcei, 16)
+BSMETA(populationi) = {
+    BSREQ(id),
+    BSREQ(level),
+    {}};
+BSDATAC(populationi, 16)
 BSMETA(landscapei) = {
     BSREQ(id),
+    BSREQ(explored),
     BSDST(income, costi),
     {}};
 BSMETA(uniti) = {
@@ -71,6 +78,24 @@ BSMETA(point) = {
 BSMETA(actioni) = {
     BSREQ(id),
     {}};
+BSMETA(range) = {
+    BSREQ(min), BSREQ(max),
+    {}};
+BSMETA(nationi) = {
+    BSREQ(id),
+    {}};
+BSDATAC(nationi, 32)
+BSMETA(hero) = {
+    BSREQ(id),
+    BSREQ(avatar),
+    BSREQ(nation),
+    BSDST(stats, stati),
+    BSDST(cost, costi),
+    BSDST(upkeep, costi),
+    BSFLG(encounter, landscapei), BSREQ(encounter_tought), BSREQ(encounter_monster),
+    BSREQ(province),
+    {}};
+BSDATAC(hero, 128)
 
 #define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr, 0, 1
 #define VRNOM(T) 0, bsdata<T>::source_ptr
@@ -80,7 +105,9 @@ BSDATA(varianti) = {
     {"Bonus", VRSTD(bonusi)},
     {"Cost", VRSTD(costi)},
     {"Event", VRSTD(eventi)},
+    {"Hero", VRSTD(hero)},
     {"Landscape", VRSTD(landscapei)},
+    {"Nation", VRSTD(nationi)},
     {"Player", VRSTD(playeri)},
     {"Prefix", VRSTD(prefixi)},
     {"Province", VRSTD(provincei)},

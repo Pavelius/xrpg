@@ -186,6 +186,9 @@
     <ClInclude Include="calendar.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="initialize_list_ex.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">

@@ -152,6 +152,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_util.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="population.cpp" />
     <ClCompile Include="prefix.cpp" />
     <ClCompile Include="property.cpp" />
     <ClCompile Include="province.cpp" />
