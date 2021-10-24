@@ -8,7 +8,7 @@ using namespace draw;
 
 point					draw::camera;
 int                     draw::grid_size = 32;
-variant                 draw::hilite_object;
+const void*				draw::hilite_object;
 command*                draw::input_commands;
 const char*             draw::image_url;
 int                     draw::pausetime;
@@ -89,7 +89,7 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 	height = push_height;
 	if(string)
 		stext(string);
-	caret.y += metrics::padding * 2;
+	caret.y += metrics::border * 2;
 	return rs;
 }
 
@@ -139,7 +139,7 @@ void draw::customwindow() {
 }
 
 void draw::paintclear() {
-	hilite_object.clear();
+	hilite_object = 0;
 	auto push_fore = fore;
 	fore = colors::window;
 	rectf();
@@ -291,6 +291,8 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 		auto y2 = caret.y;
 		auto next_column = (elements.getcount() + columns - 1) / columns;
 		width = column_width;
+		auto push_padding = metrics::padding;
+		metrics::padding = 0;
 		for(auto& e : *this) {
 			answerbt(index, e.id, e.text);
 			if(caret.y > y2)
@@ -301,6 +303,7 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 			}
 			index++;
 		}
+		metrics::padding = push_padding;
 		caret.x = x1; caret.y = y2;
 		width = push_width;
 		if(cancel_text) {

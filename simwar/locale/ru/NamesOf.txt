@@ -15,3 +15,11 @@ Spring: Весны
 Summer: Лета
 Autumn: Осени
 Winter: Зимы
+
+Gold: Золота
+Mana: Маны
+
+Forest: В лесу
+Hills: На холмах
+Plains: На равнине
+Swamp: В болотах

@@ -220,3 +220,39 @@ void gamei::getdate(stringbuilder& sb) const {
 		getnmof(bsdata<seasoni>::get(season).id),
 		getyear());
 }
+
+provincei* gamei::choose_province() {
+	answers an;
+	for(auto& e : bsdata<provincei>()) {
+		if(e.owner != game.player)
+			continue;
+		an.add((long)&e, getnm(e.id));
+	}
+	return (provincei*)an.choose(0, getnm("Cancel"), true, 0, 1);
+}
+
+void gamei::playerturn() {
+	while(true) {
+		game.province = choose_province();
+		if(!game.province)
+			break;
+		choose_province_action();
+	}
+}
+
+void gamei::build() {
+	answers an; game.province->canbuild(an);
+	auto p = (buildingi*)an.choose(getnm("ChooseBuildingToBuild"), getnm("Cancel"), true, 0, 1);
+	if(!p)
+		return;
+	game.province->build(p, true);
+}
+
+void gamei::apply(variant v, stata& stat, costa& cost) {
+	auto a = getaction(v);
+	auto b = getbonus(v);
+	switch(a.type) {
+	case Cost: cost.add(a.value, b); break;
+	case Stat: stat.add(a.value, b); break;
+	}
+}

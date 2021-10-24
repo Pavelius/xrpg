@@ -34,7 +34,6 @@ BSMETA(landscapei) = {
     {}};
 BSMETA(uniti) = {
     BSREQ(id),
-    BSREQ(avatar),
     BSREQ(nation),
     BSDST(stats, stati),
     BSDST(cost, costi),
@@ -67,22 +66,26 @@ BSMETA(provincei) = {
     BSDST(stats, stati),
     BSREQ(landscape),
     BSREQ(neightboards),
+    BSFLG(buildings, buildingi),
     {}};
 BSDATAC(provincei, 256)
 BSMETA(eventi) = {
     BSREQ(id),
     {}};
+BSMETA(buildingi) = {
+    BSREQ(id),
+    BSREQ(base), BSREQ(effect), BSREQ(condition),
+    {}};
+BSDATAC(buildingi, 64)
 BSMETA(point) = {
     BSREQ(x), BSREQ(y),
-    {}};
-BSMETA(actioni) = {
-    BSREQ(id),
     {}};
 BSMETA(range) = {
     BSREQ(min), BSREQ(max),
     {}};
 BSMETA(nationi) = {
     BSREQ(id),
+    BSREQ(avatar), BSREQ(alignment),
     {}};
 BSDATAC(nationi, 32)
 BSMETA(hero) = {
@@ -101,8 +104,8 @@ BSDATAC(hero, 128)
 #define VRNOM(T) 0, bsdata<T>::source_ptr
 BSDATA(varianti) = {
 	{"NoVariant"},
-    {"Action", VRSTD(actioni)},
     {"Bonus", VRSTD(bonusi)},
+    {"Building", VRSTD(buildingi)},
     {"Cost", VRSTD(costi)},
     {"Event", VRSTD(eventi)},
     {"Hero", VRSTD(hero)},

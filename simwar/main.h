@@ -7,14 +7,11 @@
 #include "varianta.h"
 
 enum action_s : unsigned char {
-    BuildCapital, BuildProvince, ImproveDefence,
-};
-enum action_flag_s : unsigned char {
-    UseOnProvince, UseOnPlayer, UseOnHero
+    BuildProvince, DestroyProvince, BuildCapital,
 };
 enum stat_s : unsigned char {
     Attack, Defend, Raid, Move, Damage, Hits, Level,
-    Explored, Population, Growth, Rebellion, Unrest
+    Explored, Population, PopulationGrowth, Rebellion, Happiness
 };
 enum cost_s : unsigned char {
     Gold, Mana, Artefacts, Faith, Fame
@@ -24,10 +21,12 @@ enum prefix_s : unsigned char {
 };
 enum variant_s : unsigned char {
     NoVariant,
-    Action, Bonus, Cost, Event, Hero, Landscape, Nation, Player, Prefix, Province, Resource, Stat, Troop, Unit
+    Bonus, Building, Cost, Event, Hero, Landscape, Nation, Player, Prefix, Province, Resource, Stat, Troop, Unit
 };
 struct playeri;
 struct prefixa : flagable<4> {
+};
+struct buildinga : flagable<8> {
 };
 struct resourcea : flagable<2> {
 };
@@ -35,13 +34,17 @@ struct producea : adat<char, 12> {
 };
 struct landscapea : flagable<2> {
 };
-struct stata : dataset<Unrest, short> {
+struct stata : dataset<Happiness, short> {
 };
 struct nameable {
     const char* id;
 };
+struct actioni {
+    const char* id;
+};
 struct nationi : nameable {
     int         alignment;
+    const char* avatar;
 };
 struct range {
     int         min, max;
@@ -49,6 +52,7 @@ struct range {
     int         random() const { return xrand(min, max); }
 };
 struct costa : dataset<8, short> {
+    void        apply(variant v, const prefixa& flags);
 };
 struct bonusi {
     const char* id;
@@ -84,7 +88,6 @@ struct uniti : nameable {
     costa       cost, upkeep;
     landscapea  encounter;
     producea    need;
-    const char* avatar;
     uniti*      encounter_tought[4];
     uniti*      encounter_monster[4];
     int         get(variant v) const;
@@ -93,6 +96,13 @@ struct army : adat<variant, 18> {
     bool        conquer(army& enemy, stringbuilder* psb, stat_s attacker_stat, stat_s defender_stat);
     void        damage(int hits, stringbuilder* sb = 0);
     int         get(variant v, stringbuilder* sb = 0) const;
+};
+struct buildingi : nameable {
+    buildingi*  base;
+    variants    effect;
+    variant     condition;
+    void        apply(stata& stats, costa& cost) const;
+    void        getinfo(stringbuilder& sb) const;
 };
 struct provincei : nameable {
     uniti*      dwellers;
@@ -104,13 +114,22 @@ struct provincei : nameable {
     variant     garnison; // Contract on province garnison units.
     variants    neightboards;
     playeri*    owner;
+    buildinga   buildings;
+    bool        build(const buildingi* p, bool run);
+    void        canbuild(answers& an);
+    void        initialize();
+    bool        isbuilded(const buildingi* p) const;
+    bool        ismatch(variant v) const;
+    bool        isupgraded(const buildingi* p) const;
     void        generate_explored();
     void        generate_population();
     void        generate_units();
     int         get(stat_s v) const { return stats.get(v); }
-    void        initialize();
+    void        getbuildings(answers& an);
+    int         getbuildcount() const;
     void        paint() const;
     void        set(stat_s i, int v) { stats.set(i, v); }
+    void        update();
 };
 struct hero : uniti {
     const char* avatar;
@@ -150,11 +169,6 @@ struct playeri {
     int         get(variant v) const;
     void        initialize();
 };
-struct actioni {
-    const char* id;
-    unsigned    flags;
-    bool        is(action_flag_s v) const { return (flags & FG(v)) != 0; }
-};
 struct prefixi {
     const char* id;
 };
@@ -171,14 +185,22 @@ class gamei {
 public:
     playeri*    player;
     provincei*  province;
+    buildingi*  building;
     void        addtroop(uniti* type, provincei* province);
     unsigned    adduid();
     bool        apply(const variants& source, bool allow_test, bool allow_apply);
+    static void apply(variant v, stata& stat, costa& cost);
+    static void build();
+    static const buildingi* choose_building();
+    static provincei* choose_province();
+    static void choose_province_action();
     static void format(stringbuilder& sb, const char* string, ...);
     static int  get(variant v, const variants& source);
     static variant getaction(variant v);
     static int  getbonus(variant v);
     void        getdate(stringbuilder& sb) const;
+    static void getinfo(stringbuilder& sb, const char* id);
+    static void getinfov(stringbuilder& sb, variant v);
     int         getmonth() const { return (turn / 3) % 12; }
     int         getmonthpart() const { return turn % 3; }
     int         getyear() const { return start_year + turn / (3 * 12); }
@@ -186,6 +208,7 @@ public:
     void        initialize();
     void        passturn();
     void        play(const eventi* event);
+    static void playerturn();
     void        setuidbase(unsigned char v) { uid_base = v; }
 };
 extern gamei    game;
@@ -196,9 +219,8 @@ void            maketurn();
 }
 inline bool     chance(int value) { return (rand() % 100) < value; }
 int             getfix(stringbuilder* sb, int v, variant id);
-VKIND(actioni, Action)
-VKIND(action_s, Action)
 VKIND(bonusi, Bonus)
+VKIND(buildingi, Building)
 VKIND(cost_s, Cost)
 VKIND(eventi, Event)
 VKIND(stat_s, Stat)

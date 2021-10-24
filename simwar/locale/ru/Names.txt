@@ -1,12 +1,19 @@
 ﻿Artefacts: Реликвии
 Barbarians: Варвары
+Barn: Амбар
 BlackOrks: Черные орки
 BuildCapital: Улучшить родовую провинцию
 BuildProvince: Построить здание
+Builded: Построено
+Buildings: Постройки
+CanBuildOnlyIn: Можно строить только %-1.
+Cancel: Отменить
+ChooseBuildingToBuild: Выбирайте постройку, которую хотите построить.
 Continue: Продолжить
 CursedLands: Проклятая земля
 Date: Текущая дата
 DeadLands: Мертвая земля
+DestroyProvince: Разрушить здание
 EastForest: Восточный лес
 EndMonth: Конец
 EndTurn: Закончить ход
@@ -14,30 +21,44 @@ Explored: Исследовано
 Faith: Вера
 Fame: Слава
 FarForest: Дальний лес
+Forest: Лес
 ForestTooth: Лес с зубом
 Goblins: Гоблины
-GoblinsMilita: Гоблины
+GoblinsNation: Гоблины
 Gold: Золото
+Hills: Холмы
+Hotel: Гостиница
 Humans: Люди
+HumansNation: Люди
 ImproveDefence: Улучшить защиту
 June: Июнь
+Locations: Интересные места
+LumberMill: Лесопилка
 Mana: Мана
 MiddleMonth: Средина
+Mine: Шахта
 NoPopulated: Не заселена
 Ogres: Огры
+OgresNation: Огры
 Orks: Орки
-OrksMilita: Орки
+OrksNation: Орки
 Population: Население
+PopulationGrowth: Прирост населения
 Province: Провинция
+Pub: Трактир
+RaiseInProvince: Повышает %-1 на [%2i].
+RaiseIncomeInProvince: Повышает приход %-1 на [%2i].
 RandomEvent: Случайное событие
 ShiningForest: Сверкающий лес
 SmallHamlet: Небольшое поселение
 SmallVillage: Деревня
 SouthHills: Южные холмы
 StartMonth: Начало
+Tavern: Таверна
 Thugs: Бандиты
 Turn: Ход
 Village: Большая деревня
 WhiteTower: Белая башня
+Windmill: Мельница
 WolfRiders: Наездники на волках
 YearOf: Года

@@ -1,5 +1,20 @@
 #include "main.h"
 
+bool provincei::isbuilded(const buildingi* p) const {
+	auto i = bsdata<buildingi>::source.indexof(p);
+	if(i == -1)
+		return false;
+	return buildings.is(i);
+}
+
+bool provincei::isupgraded(const buildingi* p) const {
+	for(auto& e : bsdata<buildingi>()) {
+		if(e.base == p && isbuilded(&e))
+			return true;
+	}
+	return false;
+}
+
 static uniti* random(uniti** source4, uniti* def) {
 	if(!source4[0])
 		return def;
@@ -43,4 +58,67 @@ void provincei::initialize() {
 	generate_population();
 	generate_explored();
 	generate_units();
+}
+
+int provincei::getbuildcount() const {
+	auto r = 0;
+	for(auto& e : bsdata<buildingi>()) {
+		if(!game.province->isbuilded(&e))
+			continue;
+		if(game.province->isupgraded(&e))
+			continue;
+		r++;
+	}
+	return r;
+}
+
+bool provincei::build(const buildingi* p, bool run) {
+	if(!owner)
+		return false;
+	auto i = bsdata<buildingi>::source.indexof(p);
+	if(i == -1)
+		return false;
+	if(isbuilded(p))
+		return false;
+	if(p->base && !isbuilded(p->base))
+		return false;
+	if(!ismatch(p->condition))
+		return false;
+	if(run)
+		buildings.set(i);
+	return true;
+}
+
+void provincei::canbuild(answers& an) {
+	for(auto& e : bsdata<buildingi>()) {
+		if(!build(&e, false))
+			continue;
+		an.add((long)&e, getnm(e.id));
+	}
+}
+
+void provincei::getbuildings(answers& an) {
+	for(auto& e : bsdata<buildingi>()) {
+		if(!isbuilded(&e))
+			continue;
+		if(isupgraded(&e))
+			continue;
+		an.add((long)&e, getnm(e.id));
+	}
+}
+
+void provincei::update() {
+	for(auto& e : bsdata<buildingi>()) {
+		if(!isbuilded(&e))
+			continue;
+		for(auto v : e.effect)
+			game.apply(v, stats, income);
+	}
+}
+
+bool provincei::ismatch(variant v) const {
+	switch(v.type) {
+	case Landscape: return landscape == v.getpointer();
+	default: return true;
+	}
 }

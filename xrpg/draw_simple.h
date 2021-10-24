@@ -7,7 +7,7 @@
 namespace draw {
 extern point		camera;
 extern int			grid_size;
-extern variant		hilite_object;
+extern const void*	hilite_object;
 extern const char*	image_url;
 extern command*	    input_commands;
 extern const char*  input_status;

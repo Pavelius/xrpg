@@ -143,10 +143,12 @@
     <ClCompile Include="..\xrpg\sprite_util.cpp" />
     <ClCompile Include="action.cpp" />
     <ClCompile Include="bonus.cpp" />
+    <ClCompile Include="building.cpp" />
     <ClCompile Include="combat.cpp" />
     <ClCompile Include="cost.cpp" />
     <ClCompile Include="deck.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="information.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="landscape.cpp" />
     <ClCompile Include="main.cpp" />

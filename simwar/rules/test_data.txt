@@ -9,12 +9,44 @@ Sulfur
 Iron
 Leather
 
+#Building
+
+Tavern
+ effect Gold1
+Pub base(Tavern)
+ effect Gold1
+Hotel base(Pub)
+ effect Gold2
+Barn
+ effect PopulationGrowth1
+Windmill condition(Plains)
+ effect Gold5
+LumberMill condition(Forest)
+ effect Gold5
+Mine condition(Hills)
+ effect Gold5
+
+#Landscape
+
+Plains
+ income Gold(5)
+Forest
+ income Gold(3)
+
+#Hero
+
+Gordek 
+ stats Attack(1) Raid(1) Hits(20) Level(1)
+
+Mistra 
+ stats Defend(1) Hits(12) Level(1)
+
 #Nation
 
-HumansNation
-OrksNation
-GoblinsNation
-OgresNation
+HumansNation avatar("Humans")
+OrksNation avatar("Orks")
+GoblinsNation avatar("Goblins")
+OgresNation avatar("Ogres")
 
 #Unit
 
@@ -32,9 +64,7 @@ Swordmens
 Thugs
 WolfRiders
 
-Humans nation(HumansNation) avatar("humans")
- encounter_tought Spearmens Archers Riders
-Thugs avatar(3) nation(HumansNation)
+Thugs nation(HumansNation)
  stats Attack(1) Defend(1) Raid(1) Damage(3) Hits(8) Level(1)
  cost Gold(15)
  upkeep Gold(2)
@@ -77,7 +107,7 @@ Knights nation(HumansNation)
  upkeep Gold(6)
  need Iron Iron
  encounter Plains
-Barbarians avatar(2) nation(HumansNation)
+Barbarians nation(HumansNation)
  stats Attack(1) Defend(1) Damage(3) Hits(10) Level(1)
  cost Gold(20)
  upkeep Gold(2)
@@ -102,7 +132,7 @@ BlackOrks nation(OrksNation)
  need Iron Iron
  encounter Plains Hills
  encounter_tought Ogres
-WolfRiders avatar(1) nation(GoblinsNation)
+WolfRiders nation(GoblinsNation)
  stats Attack(2) Defend(1) Raid(1) Damage(4) Move(2) Hits(12) Level(2)
  cost Gold(30)
  upkeep Gold(4)
@@ -119,6 +149,7 @@ Ogres nation(OgresNation)
 
 WhiteTower position(205 1080) landscape(Hills) owner(Red)
 SouthHills position(158 971) landscape(Hills) owner(Red)
+ buildings Tavern Pub
 ForestTooth position(272 962) landscape(Forest)
 EastForest position(344 1034) landscape(Forest)
 FarForest position(436 976) landscape(Forest) owner(Green)
