@@ -9,6 +9,20 @@ Sulfur
 Iron
 Leather
 
+#Tactic
+
+LightingAttack
+ bonus Attack2
+MessyFight
+ bonus Damage10
+CarefullyDefence
+ bonus Shield10
+ShieldWall
+ bonus Attack1
+ disable MessyFight LightingAttack
+HitAndRun
+ bonus Shield15 AttackM1
+
 #Building
 
 Tavern

@@ -6,6 +6,7 @@ BSDATA(stati) = {
 	{"Raid"},
 	{"Move"},
 	{"Damage"},
+	{"Shield"},
 	{"Hits"},
 	{"Level"},
 	{"Explored"},

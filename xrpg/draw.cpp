@@ -1307,8 +1307,7 @@ void draw::circle(int r) {
 		if(x == 0)
 			break;
 		e2 = err; x2 = x; // remember values
-		if(err > y) {
-			/* x step */
+		if(err > y) { // x step
 			int i = 255 * (err + 2 * x - 1) / r; // outward pixel
 			if(i < 255) {
 				pixel(xm + x, ym - y + 1, i);
@@ -1318,8 +1317,7 @@ void draw::circle(int r) {
 			}
 			err -= --x * 2 - 1;
 		}
-		if(e2 <= x2--) {
-			/* y step */
+		if(e2 <= x2--) { // y step
 			int i = 255 * (1 - 2 * y - e2) / r;
 			if(i < 255) {
 				pixel(xm + x2, ym - y, i);
@@ -2316,7 +2314,6 @@ static void standart_domodal() {
 }
 
 void draw::doredraw() {
-	//before_input->execute();
 	draw::sysredraw();
 	if(pinput)
 		pinput();

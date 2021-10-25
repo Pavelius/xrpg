@@ -37,7 +37,8 @@ static void add_bonuses(stringbuilder& sb, const char* id, const stata& source) 
 void tactici::getinfo(stringbuilder& sb) const {
 	add_header(sb, id);
 	stata stat; costa cost;
-	game.apply(bonus, stat, cost);
+	for(auto v : bonus)
+		game.apply(v, stat, cost);
 	//add_bonuses(sb, "RaiseIncomeInProvince", cost);
 	add_bonuses(sb, "RaiseInProvince", stat);
 }
@@ -58,7 +59,7 @@ void buildingi::getinfo(stringbuilder& sb) const {
 
 void landscapei::getinfo(stringbuilder& sb) const {
 	add_header(sb, id);
-	stata stat;
+	add_bonuses(sb, "RaiseIncomeInProvince", income);
 }
 
 void gamei::getinfo(stringbuilder& sb, const char* id) {

@@ -1,2 +1,2 @@
 ﻿In file `rules/test_data.txt`:
- Line 32: Not found field `PopulationGrowth` in dataset `income`
+ Line 23: Can't find variant `AttackM1`

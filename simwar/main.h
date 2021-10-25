@@ -10,7 +10,7 @@ enum action_s : unsigned char {
     BuildProvince, DestroyProvince, BuildCapital,
 };
 enum stat_s : unsigned char {
-    Attack, Defend, Raid, Move, Damage, Hits, Level,
+    Attack, Defend, Raid, Move, Damage, Shield, Hits, Level,
     Explored, Population, PopulationGrowth, Rebellion, Happiness
 };
 enum cost_s : unsigned char {
@@ -86,7 +86,7 @@ struct populationi {
     static const populationi* findbypopulation(int value);
 };
 struct tactici : nameable {
-    variant     bonus;
+    variants    bonus;
     tactica     disable;
     void        getinfo(stringbuilder& sb) const;
 };
