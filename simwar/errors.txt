@@ -1,2 +1,2 @@
-﻿In file `Names.txt`:
- Define translate for `Mine`
+﻿In file `rules/test_data.txt`:
+ Line 32: Not found field `PopulationGrowth` in dataset `income`

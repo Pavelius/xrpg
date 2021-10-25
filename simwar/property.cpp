@@ -88,6 +88,12 @@ BSMETA(nationi) = {
     BSREQ(avatar), BSREQ(alignment),
     {}};
 BSDATAC(nationi, 32)
+BSMETA(tactici) = {
+    BSREQ(id),
+    BSREQ(bonus),
+    BSFLG(disable, tactici),
+    {}};
+BSDATAC(tactici, 32)
 BSMETA(hero) = {
     BSREQ(id),
     BSREQ(avatar),
@@ -116,6 +122,7 @@ BSDATA(varianti) = {
     {"Province", VRSTD(provincei)},
     {"Resource", VRSTD(resourcei)},
     {"Stat", VRSTD(stati)},
+    {"Tactic", VRSTD(tactici)},
     {"Troop", VRSTD(troop)},
     {"Unit", VRSTD(uniti)},
 };

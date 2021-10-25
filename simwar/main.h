@@ -21,7 +21,7 @@ enum prefix_s : unsigned char {
 };
 enum variant_s : unsigned char {
     NoVariant,
-    Bonus, Building, Cost, Event, Hero, Landscape, Nation, Player, Prefix, Province, Resource, Stat, Troop, Unit
+    Bonus, Building, Cost, Event, Hero, Landscape, Nation, Player, Prefix, Province, Resource, Stat, Tactic, Troop, Unit
 };
 struct playeri;
 struct prefixa : flagable<4> {
@@ -33,6 +33,8 @@ struct resourcea : flagable<2> {
 struct producea : adat<char, 12> {
 };
 struct landscapea : flagable<2> {
+};
+struct tactica : flagable<4> {
 };
 struct stata : dataset<Happiness, short> {
 };
@@ -65,6 +67,7 @@ struct landscapei {
     const char* image;
     range       explored, population;
     costa       income; // Base income from landscape
+    void        getinfo(stringbuilder& sb) const;
 };
 struct stati {
     const char* id;
@@ -81,6 +84,11 @@ struct populationi {
     int         level;
     range       getrange() const;
     static const populationi* findbypopulation(int value);
+};
+struct tactici : nameable {
+    variant     bonus;
+    tactica     disable;
+    void        getinfo(stringbuilder& sb) const;
 };
 struct uniti : nameable {
     nationi*    nation;
@@ -223,7 +231,9 @@ VKIND(bonusi, Bonus)
 VKIND(buildingi, Building)
 VKIND(cost_s, Cost)
 VKIND(eventi, Event)
-VKIND(stat_s, Stat)
+VKIND(landscapei, Landscape)
 VKIND(provincei, Province)
+VKIND(stat_s, Stat)
+VKIND(tactici, Tactic)
 VKIND(troop, Troop)
 VKIND(uniti, Unit)
