@@ -27,18 +27,25 @@ HitAndRun
 
 Tavern
  effect Gold1
+ cost Gold(25)
 Pub base(Tavern)
  effect Gold1
+ cost Gold(30)
 Hotel base(Pub)
  effect Gold2
+ cost Gold(50)
 Barn
  effect PopulationGrowth1
+ cost Gold(20)
 Windmill condition(Plains)
  effect Gold5
+ cost Gold(80)
 LumberMill condition(Forest)
  effect Gold5
+ cost Gold(80)
 Mine condition(Hills)
  effect Gold5
+ cost Gold(80)
 
 #Landscape
 

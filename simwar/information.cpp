@@ -14,6 +14,21 @@ static void add_description(stringbuilder& sb, const char* id) {
 		sb.addn(p);
 }
 
+static void add_cost(stringbuilder& sb, const costa& source) {
+	auto m = bsdata<costi>::source.getcount();
+	auto p = sb.get();
+	for(unsigned i = 0; i < m; i++) {
+		auto v = source.get(i);
+		if(!v)
+			continue;
+		if(p == sb.get())
+			sb.addn("%Price: ");
+		else
+			sb.add(", ");
+		sb.add("%2i %-1", getnm(bsdata<costi>::elements[i].id), v);
+	}
+}
+
 static void add_bonuses(stringbuilder& sb, const char* id, const costa& source) {
 	auto m = bsdata<costi>::source.getcount();
 	for(unsigned i = 0; i < m; i++) {
@@ -43,7 +58,7 @@ void tactici::getinfo(stringbuilder& sb) const {
 	add_bonuses(sb, "RaiseInProvince", stat);
 }
 
-void buildingi::getinfo(stringbuilder& sb) const {
+void buildingi::getinfo(stringbuilder& sb, bool show_cost) const {
 	add_header(sb, id);
 	stata stat; costa cost;
 	for(auto p = this; p; p = p->base)
@@ -55,6 +70,8 @@ void buildingi::getinfo(stringbuilder& sb) const {
 		sb.addn(getnm("CanBuildOnlyIn"), getnmof(bsdata<landscapei>::elements[condition.value].id));
 		break;
 	}
+	if(show_cost)
+		add_cost(sb, this->cost);
 }
 
 void landscapei::getinfo(stringbuilder& sb) const {
@@ -77,7 +94,7 @@ void gamei::getinfov(stringbuilder& sb, variant v) {
 		return;
 	buildingi* pb = v;
 	if(pb) {
-		pb->getinfo(sb);
+		pb->getinfo(sb, true);
 		return;
 	}
 	tactici* pt = v;

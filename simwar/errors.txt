@@ -1,2 +1,2 @@
-﻿In file `rules/test_data.txt`:
- Line 23: Can't find variant `AttackM1`
+﻿In file `Names.txt`:
+ Define translate for `Price`

@@ -382,7 +382,7 @@ static void textds(const char* id, int bonus) {
 static void building_info() {
 	//texth3a(getnm(game.building->id), AlignLeft);
 	char temp[4096]; stringbuilder sb(temp);
-	game.getinfov(sb, game.building);
+	game.building->getinfo(sb, false);
 	textf(temp);
 }
 
@@ -402,11 +402,11 @@ static void choose_building_info() {
 	for(auto& e : an) {
 		game.building = (buildingi*)e.id;
 		group(true, game.building->id, 0, building_info, 0, 0);
-		//button_flat(getnm(game.building->id), destroy_province);
 		if(control_hilited)
-			game.getinfov(tooltips_sb, game.building);
+			game.building->getinfo(tooltips_sb, true);
 	}
-	caret.y += push_padding;
+	if(an)
+		caret.y += push_padding;
 	an.clear(); game.province->canbuild(an);
 	if(an)
 		action(BuildProvince, game.build);

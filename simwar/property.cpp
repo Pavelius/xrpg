@@ -75,6 +75,7 @@ BSMETA(eventi) = {
 BSMETA(buildingi) = {
     BSREQ(id),
     BSREQ(base), BSREQ(effect), BSREQ(condition),
+    BSDST(cost, costi),
     {}};
 BSDATAC(buildingi, 64)
 BSMETA(point) = {
@@ -123,7 +124,7 @@ BSDATA(varianti) = {
     {"Resource", VRSTD(resourcei)},
     {"Stat", VRSTD(stati)},
     {"Tactic", VRSTD(tactici)},
-    {"Troop", VRSTD(troop)},
+    {"Troop", VRSTD(troop), FG(variant::NotFoundByName)},
     {"Unit", VRSTD(uniti)},
 };
 assert_enum(varianti, Unit)

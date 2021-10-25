@@ -109,8 +109,9 @@ struct buildingi : nameable {
     buildingi*  base;
     variants    effect;
     variant     condition;
+    costa       cost;
     void        apply(stata& stats, costa& cost) const;
-    void        getinfo(stringbuilder& sb) const;
+    void        getinfo(stringbuilder& sb, bool show_cost) const;
 };
 struct provincei : nameable {
     uniti*      dwellers;

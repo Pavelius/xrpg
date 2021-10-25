@@ -16,8 +16,11 @@ struct varianti {
 	array*				source;
 	fnfind				pfind;
 	int                 key_count;
+	unsigned			flags;
+	constexpr bool		is(unsigned v) const { return (flags & FG(v))!=0; }
 };
 union variant {
+	enum { NotFoundByName };
 	unsigned char		uc[4];
 	unsigned			u;
 	struct {
