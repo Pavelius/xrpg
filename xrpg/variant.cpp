@@ -1,5 +1,13 @@
 #include "variant.h"
 
+static const char* match(const char* text, const char* name) {
+	while(*name) {
+		if(*name++ != *text++)
+			return 0;
+	}
+	return text;
+}
+
 template<> variant::variant(const void* v) : u(0) {
 	for(auto& e : bsdata<varianti>()) {
 		if(!e.source)
@@ -16,11 +24,16 @@ template<> variant::variant(const void* v) : u(0) {
 template<> variant::variant(const char* v) : u(0) {
 	if(v) {
 		for(auto& e : bsdata<varianti>()) {
-			if(e.pfind && e.pfind(*this, e, v))
-				break;
-			if(!e.source || !e.metadata || e.is(variant::NotFoundByName))
+			if(!e.source || !e.metadata)
 				continue;
-			auto i = e.source->find(v, 0);
+			int i = -1;
+			if(e.isnamed())
+				i = e.source->find(v, 0);
+			else if(e.is(varianti::FoundByIndex)) {
+				auto p = match(v, e.id);
+				if(p)
+					stringbuilder::read(p, i);
+			}
 			if(i != -1) {
 				value = i;
 				type = (variant_s)(&e - bsdata<varianti>::elements);

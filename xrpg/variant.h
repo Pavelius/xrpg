@@ -10,17 +10,16 @@ union variant;
 enum variant_s : unsigned char;
 
 struct varianti {
-	typedef bool (*fnfind)(variant& result, const varianti& context, const char* name);
+	enum { NotFoundByName, FoundByIndex };
 	const char*			id;
 	const bsreq*		metadata;
 	array*				source;
-	fnfind				pfind;
 	int                 key_count;
 	unsigned			flags;
 	constexpr bool		is(unsigned v) const { return (flags & FG(v))!=0; }
+	constexpr bool		isnamed() const { return !is(NotFoundByName); }
 };
 union variant {
-	enum { NotFoundByName };
 	unsigned char		uc[4];
 	unsigned			u;
 	struct {

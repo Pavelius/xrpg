@@ -107,7 +107,7 @@ BSMETA(hero) = {
     {}};
 BSDATAC(hero, 128)
 
-#define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr, 0, 1
+#define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr, 1
 #define VRNOM(T) 0, bsdata<T>::source_ptr
 BSDATA(varianti) = {
 	{"NoVariant"},
@@ -124,7 +124,7 @@ BSDATA(varianti) = {
     {"Resource", VRSTD(resourcei)},
     {"Stat", VRSTD(stati)},
     {"Tactic", VRSTD(tactici)},
-    {"Troop", VRSTD(troop), FG(variant::NotFoundByName)},
+    {"Troop", VRSTD(troop), FG(varianti::NotFoundByName)},
     {"Unit", VRSTD(uniti)},
 };
 assert_enum(varianti, Unit)
