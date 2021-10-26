@@ -231,7 +231,14 @@ provincei* gamei::choose_province() {
 	return (provincei*)an.choose(0, getnm("Cancel"), true, 0, 1);
 }
 
+void gamei::message(const char* string) {
+	answers an;
+	an.add(1, getnm("Continue"));
+	an.choose(string, 0, true, 0);
+}
+
 void gamei::playerturn() {
+	message("$image plains 0 \"art/images\" \"@Plains\"\nTest string for accept.");
 	while(true) {
 		game.province = choose_province();
 		if(!game.province)

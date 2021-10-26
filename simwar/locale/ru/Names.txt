@@ -43,6 +43,7 @@ Ogres: Огры
 OgresNation: Огры
 Orks: Орки
 OrksNation: Орки
+Plains: Равнины
 Population: Население
 PopulationGrowth: Прирост населения
 Price: Стоимость

@@ -16,6 +16,7 @@ int                 draw::pausetime;
 static point		camera_drag;
 static rect			board;
 static const void*	current_hilite;
+extern stringbuilder tooltips_sb;
 
 namespace metrics {
 unsigned char			opacity = 230;
@@ -54,8 +55,14 @@ bool draw::ishilite(int s, const void* object) {
 void draw::stext(const char* string) {
 	draw::link[0] = 0;
 	textf(string);
-	if(draw::link[0])
-		tooltips(draw::link);
+	if(draw::link[0]) {
+		if(draw::link[0] == '@') {
+			variant v = (const char*)draw::link + 1;
+			if(v)
+				v.getinfo(tooltips_sb);
+		} else
+			tooltips(draw::link);
+	}
 }
 
 bool draw::window(bool hilite, const char* string, const char* resid) {
@@ -64,14 +71,8 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 	auto text_height = 0;
 	auto image_height = 0;
 	const sprite* image_surface = 0;
-	if(string) {
-		auto push_clipping = clipping; clipping.clear();
-		auto push_caret = caret; caret = {0, 0};
-		draw::textf(string);
-		text_height = caret.y;
-		caret = push_caret;
-		clipping = push_clipping;
-	}
+	if(string)
+		text_height = textfs(string);
 	if(resid) {
 		image_surface = gres(resid, "art/images");
 		if(image_surface)
@@ -119,8 +120,6 @@ bool draw::buttonrd(const char* title) {
 	caret.x += rc.width() + metrics::padding * 3;
 	return result;
 }
-
-extern stringbuilder tooltips_sb;
 
 void draw::answerbt(int i, long id, const char* title) {
 	static char answer_hotkeys[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'};

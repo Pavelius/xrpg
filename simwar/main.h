@@ -209,12 +209,12 @@ public:
     static int  getbonus(variant v);
     void        getdate(stringbuilder& sb) const;
     static void getinfo(stringbuilder& sb, const char* id);
-    static void getinfov(stringbuilder& sb, variant v);
     int         getmonth() const { return (turn / 3) % 12; }
     int         getmonthpart() const { return turn % 3; }
     int         getyear() const { return start_year + turn / (3 * 12); }
     int         getturn() const { return turn; }
     void        initialize();
+    static void message(const char* string);
     void        passturn();
     void        play(const eventi* event);
     static void playerturn();

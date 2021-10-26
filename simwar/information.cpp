@@ -82,32 +82,32 @@ void landscapei::getinfo(stringbuilder& sb) const {
 void gamei::getinfo(stringbuilder& sb, const char* id) {
 	variant v = id;
 	if(v)
-		getinfov(sb, v);
+		v.getinfo(sb);
 	else {
 		add_header(sb, id);
 		add_description(sb, id);
 	}
 }
 
-void gamei::getinfov(stringbuilder& sb, variant v) {
-	if(!v)
+void variant::getinfo(stringbuilder& sb) const {
+	if(type==NoVariant)
 		return;
-	buildingi* pb = v;
+	buildingi* pb = *this;
 	if(pb) {
 		pb->getinfo(sb, true);
 		return;
 	}
-	tactici* pt = v;
+	tactici* pt = *this;
 	if(pt) {
 		pt->getinfo(sb);
 		return;
 	}
-	landscapei* pl = v;
+	landscapei* pl = *this;
 	if(pl) {
 		pl->getinfo(sb);
 		return;
 	}
-	auto id = v.getid();
+	auto id = getid();
 	add_header(sb, id);
 	add_description(sb, id);
 }

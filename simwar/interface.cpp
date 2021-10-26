@@ -106,7 +106,8 @@ static void tooltipshilite() {
 	if(hilite_object) {
 		if(tooltips_sb.begin()[0])
 			return;
-		game.getinfov(tooltips_sb, hilite_object);
+		variant v = hilite_object;
+		v.getinfo(tooltips_sb);
 	}
 }
 

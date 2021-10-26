@@ -164,6 +164,7 @@ extern bool				text_clipped, control_hilited;
 extern const sprite*	font; // Currently selected font
 extern double			linw;
 extern char				link[4096];
+extern long				text_params[16];
 extern color*			palt;
 extern int				tab_pixels;
 extern fnevent          pbackground, ptips, pwindow, pinput;
@@ -234,8 +235,7 @@ void					textas(const char* string);
 void					textc(const char* string, int count = -1, unsigned flags = 0);
 int						textbc(const char* string, int width);
 int						texte(rect rc, const char* string, unsigned flags, int i1, int i2);
-void					textf(const char* text, int min_height = 0, int* cashe_height = 0, const char** cashe_string = 0);
-int						textf(rect& rc, const char* string);
+void					textf(const char* text);
 int						textfs(const char* string);
 int						texth();
 int						texth(const char* string, int width);
