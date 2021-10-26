@@ -159,7 +159,7 @@ extern fnevent			domodal;
 extern point			dragmouse, caret;
 extern color			fore, fore_stroke;
 extern unsigned char    alpha;
-extern int				width, height, width_maximum, height_maximum;
+extern int				width, height;
 extern bool				text_clipped, control_hilited;
 extern const sprite*	font; // Currently selected font
 extern double			linw;
@@ -235,8 +235,8 @@ void					textas(const char* string);
 void					textc(const char* string, int count = -1, unsigned flags = 0);
 int						textbc(const char* string, int width);
 int						texte(rect rc, const char* string, unsigned flags, int i1, int i2);
-void					textf(const char* text);
-int						textfs(const char* string);
+void					textf(const char* string);
+void					textfs(const char* string);
 int						texth();
 int						texth(const char* string, int width);
 int						textw(int sym);
@@ -265,7 +265,7 @@ void loginitialize();
 }
 namespace draw {
 void breakmodal(long result);
-bool button(const char* title, unsigned key, fnbutton proc);
+bool button(const char* title, unsigned key, fnbutton proc, bool vertical = true);
 void buttoncancel();
 void buttonok();
 void buttonparam();

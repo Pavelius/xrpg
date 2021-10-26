@@ -31,7 +31,7 @@ fnevent				draw::pbeforemodal, draw::pleavemodal, draw::pinput, draw::psetfocus;
 unsigned char       draw::alpha = 255;
 color				draw::fore;
 color				draw::fore_stroke;
-int					draw::width, draw::height, draw::width_maximum, draw::height_maximum;
+int					draw::width, draw::height;
 bool				draw::text_clipped, draw::control_hilited;
 const sprite*		draw::font;
 double				draw::linw = 1.0;
@@ -1336,18 +1336,19 @@ int draw::textw(rect& rc, const char* string) {
 }
 
 void draw::textas(const char* string) {
-	width_maximum = 0;
-	height_maximum = 0;
+	int mx = 0, my = 0;
 	while(string[0]) {
 		int c = textbc(string, width);
 		if(!c)
 			break;
 		int m = textw(string, c);
-		if(width_maximum < m)
-			width_maximum = m;
-		height_maximum += texth();
+		if(mx < m)
+			mx = m;
+		my += texth();
 		string = skiptr(string + c);
 	}
+	width = mx;
+	height = my;
 }
 
 int draw::texth(const char* string, int width) {
@@ -1492,7 +1493,6 @@ void draw::texta(const char* string, unsigned state) {
 	auto y2 = caret.y + height;
 	caret.y += alignedh1(string, state);
 	auto y1 = caret.y;
-	width_maximum = 0;
 	if(state & TextSingleLine) {
 		auto push_clip = clipping; setclip(getrect());
 		caret.x = aligned(caret.x, width, state, draw::textw(string));
@@ -1506,15 +1506,12 @@ void draw::texta(const char* string, unsigned state) {
 			if(!c)
 				break;
 			int w = textw(string, c);
-			if(width_maximum < w)
-				width_maximum = w;
 			caret.x = aligned(push_caret.x, width, state, w);
 			text(string, c, state);
 			caret.y += dy;
 			string = skiptr(string + c);
 		}
 	}
-	height_maximum = caret.y - y1;
 	caret = push_caret;
 }
 
@@ -2268,14 +2265,21 @@ void draw::scene() {
 	scene(0);
 }
 
-bool draw::button(const char* title, unsigned key, fnbutton proc) {
-	height_maximum = 0;
-	width_maximum = 0;
+bool draw::button(const char* title, unsigned key, fnbutton proc, bool vertical) {
+	auto push_width = width;
+	auto push_height = height;
 	control_hilited = proc(title);
-	if(height_maximum)
-		caret.y += height_maximum + metrics::padding;
-	else if(width_maximum)
-		caret.x += width_maximum + metrics::padding;
+	if(vertical) {
+		width = push_width;
+		if(!height)
+			return false;
+		caret.y += height + metrics::padding;
+	} else {
+		height = push_height;
+		if(!width)
+			return false;
+		caret.x += width + metrics::padding;
+	}
 	return (key && hot.key == key)
 		|| (hot.key == MouseLeft && control_hilited && !hot.pressed);
 }

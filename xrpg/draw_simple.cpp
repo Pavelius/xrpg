@@ -71,8 +71,12 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 	auto text_height = 0;
 	auto image_height = 0;
 	const sprite* image_surface = 0;
-	if(string)
-		text_height = textfs(string);
+	if(string) {
+		auto push_width = width;
+		textfs(string);
+		width = push_width;
+		text_height = height;
+	}
 	if(resid) {
 		image_surface = gres(resid, "art/images");
 		if(image_surface)
@@ -98,11 +102,13 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 bool draw::buttonfd(const char* title) {
 	if(!title)
 		return false;
+	auto push_width = width;
 	textas(title);
-	height = height_maximum;
+	width = push_width;
 	auto result = swindow(true, 0);
 	texta(title, AlignCenterCenter);
-	height_maximum += metrics::border * 2;
+	width = push_width;
+	height += metrics::border * 2;
 	return result;
 }
 

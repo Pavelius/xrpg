@@ -11,8 +11,7 @@ stringbuilder	tooltips_sb(tooltips_text);
 
 void tooltips_getrect() {
 	width = 320;
-	height = textfs(tooltips_text);
-	width = width_maximum;
+	textfs(tooltips_text);
 	// Calculate rect
 	caret.x = px, caret.y = py;
 	if(caret.x == -1000 && caret.y == -1000) {

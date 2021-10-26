@@ -73,11 +73,11 @@ static void add_status(const char* id, int value) {
 			sb.add("%1: %2i", getnm(id), value);
 	}
 	textfs(temp);
-	auto hilite = spanel(width_maximum);
+	auto hilite = spanel(width);
 	auto push_caret = caret;
 	textf(temp);
 	caret = push_caret;
-	caret.x += width_maximum + metrics::padding + metrics::border * 2;
+	caret.x += width + metrics::padding + metrics::border * 2;
 	if(hilite)
 		game.getinfo(tooltips_sb, id);
 }
@@ -189,7 +189,7 @@ static void description_text_raw() {
 static void description_text() {
 	if(!dialog_description)
 		return;
-	height = textfs(dialog_description);
+	textfs(dialog_description);
 	swindow(false, 0);
 	description_text_raw();
 }
@@ -211,7 +211,7 @@ static void texth3a(const char* string, unsigned flags) {
 	texta(string, flags);
 	height = push_height;
 	font = push_font;
-	caret.y += height_maximum;
+	caret.y += height;
 }
 
 static void texth2a(const char* string, unsigned flags) {
@@ -224,7 +224,7 @@ static void texth2a(const char* string, unsigned flags) {
 	height = push_height;
 	font = push_font;
 	fore = push_fore;
-	caret.y += height_maximum;
+	caret.y += height;
 }
 
 static void group(const sprite* ps, const char* tips, bool right_align = false) {

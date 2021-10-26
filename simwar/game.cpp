@@ -237,19 +237,6 @@ void gamei::message(const char* string) {
 	an.choose(string, 0, true, 0);
 }
 
-void gamei::playerturn() {
-	static auto test_string = "$image plains 0 \"art/images\" \"@Plains\"\n"\
-		"$image hills 0 \"art/images\" \"@Plains\" right\n"\
-		"Test string for accept.";
-	message(test_string);
-	while(true) {
-		game.province = choose_province();
-		if(!game.province)
-			break;
-		choose_province_action();
-	}
-}
-
 void gamei::build() {
 	answers an; game.province->canbuild(an);
 	auto p = (buildingi*)an.choose(getnm("ChooseBuildingToBuild"), getnm("Cancel"), true, 0, 1);
@@ -264,5 +251,17 @@ void gamei::apply(variant v, stata& stat, costa& cost) {
 	switch(a.type) {
 	case Cost: cost.add(a.value, b); break;
 	case Stat: stat.add(a.value, b); break;
+	}
+}
+
+void gamei::playerturn() {
+	static auto test_string = "$image plains 0 \"art/images\" \"@Plains\"\n"\
+		"Test string for accept.";
+	message(test_string);
+	while(true) {
+		game.province = choose_province();
+		if(!game.province)
+			break;
+		choose_province_action();
 	}
 }

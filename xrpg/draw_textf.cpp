@@ -3,12 +3,12 @@
 
 using namespace draw;
 
+static char text_params_data[4096];
 int draw::tab_pixels = 0;
 long draw::text_params[16];
 static const char* text_start_string;
 static int text_start_horiz;
-static int original_x1;
-static int original_x2;
+static point maxcaret;
 
 static bool match(const char** string, const char* name) {
 	int n = zlen(name);
@@ -43,7 +43,7 @@ static int gettabwidth() {
 	return tab_pixels ? tab_pixels : textw(' ') * 4;
 }
 
-static const char* textspc(const char* p) {
+static const char* textspc(const char* p, int x1) {
 	int tb;
 	while(true) {
 		switch(p[0]) {
@@ -54,7 +54,7 @@ static const char* textspc(const char* p) {
 		case '\t':
 			p++;
 			tb = gettabwidth();
-			caret.x = original_x1 + ((caret.x - original_x1 + tb) / tb) * tb;
+			caret.x = x1 + ((caret.x - x1 + tb) / tb) * tb;
 			continue;
 		}
 		break;
@@ -70,14 +70,16 @@ static const char* word(const char* text) {
 	return text;
 }
 
-static void apply_line_feed(int x1) {
-	if(width_maximum < caret.x - original_x1)
-		width_maximum = caret.x - original_x1;
+static void apply_line_feed(int x1, int dy) {
+	if(maxcaret.x < caret.x)
+		maxcaret.x = caret.x;
 	caret.x = x1;
-	caret.y += texth();
+	caret.y += dy;
+	if(maxcaret.y < caret.y)
+		maxcaret.y = caret.y;
 }
 
-static const char* textfln(const char* p, int x1, color new_fore, const sprite* new_font) {
+static const char* textfln(const char* p, int x1, int x2, color new_fore, const sprite* new_font) {
 	auto push_fore = fore;
 	auto push_font = font;
 	char temp[4096]; temp[0] = 0;
@@ -139,10 +141,11 @@ static const char* textfln(const char* p, int x1, color new_fore, const sprite* 
 			p++;
 			temp[0] = 0;
 			flags &= ~TextUscope;
+			fore = new_fore;
 		}
 		// ќбработаем пробелы и табул€цию
-		p = textspc(p);
-		int w = 0;
+		p = textspc(p, x1);
+		auto w = 0;
 		if(p[0] == ':' && p[1] >= '0' && p[1] <= '9') {
 			auto index = 0;
 			p = stringbuilder::read(p + 1, index);
@@ -156,114 +159,39 @@ static const char* textfln(const char* p, int x1, color new_fore, const sprite* 
 		} else {
 			const char* p2 = word(p);
 			w = textw(p, p2 - p);
-			if(caret.x + w > original_x2)
-				apply_line_feed(x1);
+			if(caret.x + w > x2)
+				apply_line_feed(x1, texth());
 			text(p, p2 - p, flags);
 			p = p2;
 		}
-		int x4 = caret.x;
 		caret.x += w;
-		p = textspc(p);
-		if(temp[0] || (flags & TextUscope) != 0) {
-			auto x3 = imin(original_x2, original_x1);
-			auto y2 = caret.y + texth();
-			//if(flags & TextUscope)
-			//	line(x4, y2, x3, y2);
-			rect rc = {x4, caret.y, x3, y2};
-			if(ishilite(rc)) {
-				if(flags & TextUscope) {
-					hot.cursor = cursor::Hand;
-					if(temp[0] && hot.key == MouseLeft && !hot.pressed)
-						zcpy(link, temp, sizeof(link) - 1);
-				} else
-					zcpy(link, temp, sizeof(link) - 1);
-			}
-		}
+		p = textspc(p, x1);
 		if(p[0] == 0 || p[0] == 10 || p[0] == 13) {
 			p = skipcr(p);
-			apply_line_feed(x1);
+			apply_line_feed(x1, texth());
 			break;
 		}
 	}
-	if(width_maximum < caret.x - original_x1)
-		width_maximum = caret.x - original_x1;
+	apply_line_feed(caret.x, 0);
 	fore = push_fore;
 	font = push_font;
 	return p;
 }
 
-static void imageb(int x, int y, const sprite* ps, int id, unsigned flags, const char* tips) {
-	image(x, y, ps, id, flags|ImageNoOffset);
-	rectpush push;
-	auto push_fore = fore;
-	caret.x = x; caret.y = y;
-	width = ps->get(id).sx;
-	height = ps->get(id).sy;
-	fore = colors::border;
-	rectb();
-	fore = push_fore;
-	if(tips && ishilite()) {
-		stringbuilder sb(link);
-		sb.add(tips);
-	}
-}
+static const char* text_block(const char* p, int original_x1, int original_x2);
 
-static const char* text_block(const char* p);
-
-static const char* richimage(const char* p) {
-	auto name = (const char*)text_params[0];
-	auto id = text_params[1];
-	auto folder = (const char*)text_params[2];
-	auto tips = (const char*)text_params[3];
-	auto align = (const char*)text_params[4];
-	auto flags = 0;
-	if(!folder)
-		folder = "art/pictures";
-	auto ps = gres(name, folder);
-	if(!ps)
-		return p;
-	auto w = ps->get(id).sx;
-	auto h = ps->get(id).sy;
-	if(!align) {
-		align = "center";
-		if(w < ((original_x2 - caret.x) / 3))
-			align = "left";
-	}
-	auto y2 = caret.y + h;
-	if(equal(align, "right")) {
-		imageb(original_x2 - w, caret.y, ps, id, flags, tips);
-		auto push_x2 = original_x2;
-		original_x2 = original_x2 - w;
-		p = text_block(p);
-		original_x2 = push_x2;
-	} else if(equal(align, "left")) {
-		imageb(caret.x, caret.y, ps, id, flags, tips);
-		auto push_x1 = original_x1;
-		caret.x = original_x1 + w + metrics::border;
-		original_x1 = caret.x;
-		p = text_block(p);
-		caret.x = push_x1;
-		original_x1 = push_x1;
-	} else {
-		imageb(caret.x, caret.y, ps, id, flags, tips);
-		caret.y += h + font->descend;
-	}
-	if(caret.y < y2)
-		caret.y = y2;
-	return p;
-}
-
-static const char* parse_command(const char* p) {
-	char temp[512]; stringbuilder sb(temp);
+static const char* parse_parameters(const char* p, const char*& id, unsigned& align) {
 	memset(text_params, 0, sizeof(text_params));
-	long count = 0;
-	p = sb.psidf(p); sb.addsz();
-	p = skipsp(p);
+	stringbuilder sb(text_params_data);
+	auto count = 0; id = 0; align = AlignCenter;
 	while(*p && !(*p == 13 || *p == 10)) {
 		auto p1 = p;
-		p = stringbuilder::read(p, text_params[count]);
+		auto is_text = false;
+		long value = 0;
+		p = stringbuilder::read(p, value);
 		if(p == p1) {
-			text_params[count] = (long)sb.get();
+			is_text = true;
+			value = (long)sb.get();
 			if(p[0] == '\"' || p[0] == '\'')
 				p = sb.psstr(p + 1, p[0]);
 			else
@@ -273,34 +201,131 @@ static const char* parse_command(const char* p) {
 		p = skipsp(p);
 		if(p == p1)
 			break;
-		count++;
+		if(is_text) {
+			auto pid = (const char*)value;
+			if(!count) {
+				if(equal(pid, "left")) {
+					align = AlignLeftCenter;
+					continue;
+				} else if(equal(pid, "right")) {
+					align = AlignRightCenter;
+					continue;
+				}
+			}
+			if(!id) {
+				id = pid;
+				continue;
+			}
+		}
+		text_params[count++] = value;
 	}
-	p = skipspcr(p);
-	if(equal(temp, "image"))
-		p = richimage(p);
+	return skipspcr(p);
+}
+
+static void execute_image() {
+	auto name = (const char*)text_params[0];
+	auto id = text_params[1];
+	auto folder = (const char*)text_params[2];
+	auto tips = (const char*)text_params[3];
+	if(!folder)
+		folder = "art/pictures";
+	auto ps = gres(name, folder);
+	if(!ps)
+		return;
+	width = ps->get(id).sx;
+	height = ps->get(id).sy;
+	if(!clipping)
+		return;
+	image(ps, id, ImageNoOffset);
+	auto push_fore = fore;
+	fore = colors::border;
+	rectb();
+	fore = push_fore;
+	if(tips && ishilite()) {
+		stringbuilder sb(link);
+		sb.add(tips);
+	}
+}
+
+static void execute_command(const char* id) {
+	if(equal(id, "image"))
+		execute_image();
+}
+
+static const char* parse_command(const char* p, int x1, int x2) {
+	unsigned align; const char* id;
+	p = parse_parameters(p, id, align);
+	if(!id)
+		return p;
+	auto push_width = width;
+	auto push_height = height;
+	auto push_clipping = clipping;
+	width = x2 - x1; height = 0;
+	switch(align) {
+	case AlignLeftCenter:
+		execute_command(id);
+		if(height) {
+			auto y2 = caret.y + height;
+			caret.x += width + metrics::border;
+			p = text_block(p, caret.x, x2);
+			if(caret.y < y2)
+				caret.y = y2;
+			apply_line_feed(x1, 0);
+		}
+		break;
+	case AlignRightCenter:
+		clipping.clear();
+		execute_command(id);
+		clipping = push_clipping;
+		if(height && width) {
+			auto w = width;
+			caret.x = x2 - width;
+			execute_command(id);
+			caret.x = x1;
+			auto y2 = caret.y + height;
+			p = text_block(p, x1, x2 - w - metrics::border);
+			if(caret.y < y2)
+				caret.y = y2;
+			apply_line_feed(x1, 0);
+		}
+		break;
+	default:
+		execute_command(id);
+		if(height)
+			caret.y += height + metrics::border;
+		apply_line_feed(x1, 0);
+		height = push_height;
+		width = push_width;
+		break;
+	}
+	clipping = push_clipping;
 	return p;
 }
 
-static const char* text_block(const char* p) {
+static const char* text_block(const char* p, int x1, int x2) {
 	while(p[0]) {
+		caret.x = x1; width = x2 - x1;
 		if(caret.y < clipping.y1) {
 			text_start_string = p;
 			text_start_horiz = caret.y - clipping.y1;
 		}
-		if(match(&p, "#--")) // Header small
-			p = textfln(skipsp(p), original_x1, colors::h3, metrics::small);
+		if(match(&p, "$end\n")) {
+			p = skipspcr(p);
+			break;
+		} else if(match(&p, "#--")) // Header small
+			p = textfln(skipsp(p), x1, x2, colors::h3, metrics::small);
 		else if(match(&p, "###")) // Header 3
-			p = textfln(skipsp(p), original_x1, colors::h3, metrics::h3);
+			p = textfln(skipsp(p), x1, x2, colors::h3, metrics::h3);
 		else if(match(&p, "##")) // Header 2
-			p = textfln(skipsp(p), original_x1, colors::h2, metrics::h2);
+			p = textfln(skipsp(p), x1, x2, colors::h2, metrics::h2);
 		else if(match(&p, "#")) // Header 1
-			p = textfln(skipsp(p), original_x1, colors::h1, metrics::h1);
+			p = textfln(skipsp(p), x1, x2, colors::h1, metrics::h1);
 		else if(match(&p, "---")) { // Line
 			p = skipspcr(p);
 			auto push_x = caret.x;
 			caret.y += 2;
-			caret.x = original_x1 - metrics::border;
-			line(original_x2 + metrics::border, caret.y);
+			caret.x = x1 - metrics::border;
+			line(x2 + metrics::border, caret.y);
 			caret.x = push_x;
 			caret.y += 2;
 		} else if(match(&p, "* ")) {
@@ -314,34 +339,36 @@ static const char* text_block(const char* p) {
 			circle(rd);
 			caret = push_caret;
 			caret.x += texth();
-			p = textfln(p, caret.x, fore, font);
+			p = textfln(p, caret.x, x2, fore, font);
 			caret.x = push_caret.x;
 		} else if(match(&p, "$"))
-			p = parse_command(p);
+			p = parse_command(p, x1, x2);
 		else
-			p = textfln(p, original_x1, fore, font);
+			p = textfln(p, x1, x2, fore, font);
 	}
 	return p;
 }
 
 void draw::textf(const char* p) {
-	width_maximum = height_maximum = 0;
+	auto push_width = width;
+	auto push_height = height;
+	maxcaret.clear();
 	text_start_string = 0;
 	text_start_horiz = 0;
-	original_x1 = caret.x;
-	original_x2 = original_x1 + width;
-	auto y0 = caret.y;
-	p = text_block(p);
-	if(height_maximum < caret.y - y0)
-		height_maximum = caret.y - y0;
+	auto x0 = caret.x; auto y0 = caret.y;
+	p = text_block(p, x0, x0 + width);
+	maxcaret.x -= x0; maxcaret.y -= y0;
+	width = push_width;
+	height = push_height;
 }
 
-int draw::textfs(const char* string) {
+void draw::textfs(const char* string) {
+	auto push_caret = caret;
 	auto push_clipping = clipping;
-	clipping.clear();
-	auto push_caret = caret; caret = {};
+	clipping.clear(); caret = {};
 	textf(string);
-	caret = push_caret;
 	clipping = push_clipping;
-	return height_maximum;
+	caret = push_caret;
+	width = maxcaret.x;
+	height = maxcaret.y;
 }
