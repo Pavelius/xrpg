@@ -65,8 +65,13 @@ static void add_status(const char* id, int value) {
 	char temp[512]; stringbuilder sb(temp);
 	if(equal(id, "Date"))
 		game.getdate(sb);
-	else
-		sb.add("%1: %2i", getnm(id), value);
+	else {
+		variant v = id;
+		if(v.type==Cost)
+			sb.add(":%1i:%2i", v.value, value);
+		else
+			sb.add("%1: %2i", getnm(id), value);
+	}
 	textfs(temp);
 	auto hilite = spanel(width_maximum);
 	auto push_caret = caret;

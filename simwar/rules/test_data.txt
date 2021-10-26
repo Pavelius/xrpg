@@ -46,6 +46,9 @@ LumberMill condition(Forest)
 Mine condition(Hills)
  effect Gold5
  cost Gold(80)
+CrystalGarden
+ effect Mana1
+ cost Gold(100) Mana(20)
 
 #Landscape
 

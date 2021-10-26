@@ -10,6 +10,7 @@ CanBuildOnlyIn: Можно строить только %-1.
 Cancel: Отменить
 ChooseBuildingToBuild: Выбирайте постройку, которую хотите построить.
 Continue: Продолжить
+CrystalGarden: Кристальный сад
 CursedLands: Проклятая земля
 Date: Текущая дата
 DeadLands: Мертвая земля

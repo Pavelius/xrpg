@@ -60,7 +60,9 @@ static const char* textspc(const char* p) {
 }
 
 static const char* word(const char* text) {
-	while(((unsigned char)*text) > 0x20 && *text != '*' && *text != '[' && *text != ']')
+	if(text[0] == ':')
+		return text + 1;
+	while(((unsigned char)*text) > 0x20 && *text != '*' && *text != '[' && *text != ']' && *text != ':')
 		text++;
 	return text;
 }
@@ -136,14 +138,16 @@ static const char* textfln(const char* p, int x1, color c1) {
 		// ќбработаем пробелы и табул€цию
 		p = textspc(p);
 		int w;
-		if(metrics::icons && p[0] == ':' && p[1] >= '0' && p[1] <= '1') {
+		if(p[0] == ':' && p[1] >= '0' && p[1] <= '9') {
 			auto index = 0;
 			p = stringbuilder::read(p + 1, index);
 			if(*p == ':')
 				p++;
-			auto h = metrics::icons->get(0).sy;
-			image(caret.x, caret.y + (font->height - h + 1) / 2, metrics::icons, index, ImageNoOffset);
-			w = metrics::icons->get(0).sx + 1;
+			if(metrics::icons) {
+				auto h = metrics::icons->get(0).sy;
+				image(caret.x + 1, caret.y + (font->ascend - h) / 2 + 1, metrics::icons, index, ImageNoOffset);
+				w = metrics::icons->get(0).sx + 2;
+			}
 		} else {
 			const char* p2 = word(p);
 			w = textw(p, p2 - p);
