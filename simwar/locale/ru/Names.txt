@@ -1,4 +1,5 @@
 ﻿Artifacts: Реликвии
+Attack: Атака
 Barbarians: Варвары
 Barn: Амбар
 BlackOrks: Черные орки
@@ -14,6 +15,7 @@ CrystalGarden: Кристальный сад
 CursedLands: Проклятая земля
 Date: Текущая дата
 DeadLands: Мертвая земля
+Defend: Защита
 DestroyProvince: Разрушить здание
 EastForest: Восточный лес
 EndMonth: Конец
@@ -29,11 +31,13 @@ GoblinsNation: Гоблины
 Gold: Золото
 Gordek: Гордек
 Hills: Холмы
+Hits: Хиты
 Hotel: Гостиница
 Humans: Люди
 HumansNation: Люди
 ImproveDefence: Улучшить защиту
 June: Июнь
+Level: Уровень
 Locations: Интересные места
 LumberMill: Лесопилка
 Mana: Мана
@@ -51,6 +55,7 @@ PopulationGrowth: Прирост населения
 Price: Стоимость
 Province: Провинция
 Pub: Трактир
+Raid: Рейд
 RaiseInProvince: Повышает %-1 на [%2i].
 RaiseIncomeInProvince: Повышает приход %-1 на [%2i].
 RandomEvent: Случайное событие

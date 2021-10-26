@@ -49,9 +49,25 @@ static void add_bonuses(stringbuilder& sb, const char* id, const stata& source) 
 	}
 }
 
+static void add_bonuses(stringbuilder& sb, const stata& source) {
+	auto m = bsdata<stati>::source.getcount();
+	auto p = sb.get();
+	for(unsigned i = 0; i < m; i++) {
+		auto v = source.get(i);
+		if(!v)
+			continue;
+		if(p != sb.get())
+			sb.add(", ");
+		else
+			sb.add("\n");
+		sb.add("%1 %2i", getnm(bsdata<stati>::elements[i].id), v);
+	}
+}
+
 void hero::getinfo(stringbuilder& sb) const {
 	sb.addn("$left image %1 0 \"art/images\" \"@%2\"", id, id);
 	sb.addn("###%1", getnm(id));
+	add_bonuses(sb, stats);
 }
 
 void tactici::getinfo(stringbuilder& sb) const {
