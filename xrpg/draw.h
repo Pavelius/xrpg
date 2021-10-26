@@ -166,7 +166,6 @@ extern double			linw;
 extern char				link[4096];
 extern color*			palt;
 extern int				tab_pixels;
-extern bool				block_mode;
 extern fnevent          pbackground, ptips, pwindow, pinput;
 extern fnevent          pbeforemodal, pleavemodal, psetfocus;
 struct rectpush {
@@ -177,8 +176,6 @@ struct rectpush {
 };
 int						aligned(int x, int width, unsigned state, int string_width);
 int						alignedh(const rect& rc, const char* string, unsigned state);
-void					bezier(int x0, int y0, int x1, int y1, int x2, int y2);
-void					bezierseg(int x0, int y0, int x1, int y1, int x2, int y2);
 void					blit(surface& dest, int x, int y, int width, int height, unsigned flags, const surface& source, int x_source, int y_source);
 void					blit(surface& dest, int x, int y, int width, int height, unsigned flags, const surface& source, int x_source, int y_source, int width_source, int height_source);
 void					circle(int size);
@@ -214,7 +211,6 @@ void					pixel(int x, int y, unsigned char alpha);
 unsigned char*			ptr(int x, int y);
 int						rawinput();
 void					rectb(); // Draw rectangle border
-void					rectb(rect rc, int radius);
 void					rectb3d(); // Draw rectangle border
 void					rectf(); // Draw rectangle area. Right and bottom side is one pixel less.
 void					rectfe(rect rc, int radius);
@@ -228,7 +224,6 @@ void					setpos(int x, int y);
 void					setpos(int x, int y, int width, int height);
 void					settimer(unsigned milleseconds);
 const char*				skiptr(const char* string);
-//void					spline(point* points, int n);
 void					stroke(int x, int y, const sprite* e, int id, int flags, unsigned char thin = 1, unsigned char* koeff = 0);
 void					syscursor(bool enable);
 void					sysredraw();
@@ -248,57 +243,52 @@ int						textw(int sym);
 int						textw(const char* string, int count = -1);
 int						textw(rect& rc, const char* string);
 int						textw(const sprite* font);
-void					triangle(point v1, point v2, point v3);
-void					triangle(point v1, point v2, point v3, color c1);
 void					updatewindow();
 void					write(const char* url, unsigned char* bits, int width, int height, int bpp, int scanline, color* pallette);
 }
 namespace draw {
 struct awindowi {
-	int				x, y, width, height;
-	int				header_width;
-	unsigned		flags;
+	int			x, y, width, height;
+	int			header_width;
+	unsigned	flags;
 };
-extern awindowi		awindow;
-void				applicationinitialize();
-void				applicationafterinitialize();
-void				fieldsetfocus();
-void				simpleinitialize();
-void				statusbeforemodal();
-void				statuspaint();
-void				tooltipsbeforemodal();
-void				tooltipspaint();
-void				loginitialize();
+extern awindowi awindow;
+void applicationinitialize();
+void applicationafterinitialize();
+void fieldsetfocus();
+void simpleinitialize();
+void statusbeforemodal();
+void statuspaint();
+void tooltipsbeforemodal();
+void tooltipspaint();
+void loginitialize();
 }
 namespace draw {
-void				breakmodal(long result);
-bool				button(const char* title, unsigned key, fnbutton proc);
-void				buttoncancel();
-void				buttonok();
-void				buttonparam();
-void				cbsetsht();
-void				cbsetint();
-void				cbsetptr();
-void				doredraw();
-void				fire(bool run, fnevent proc, long value = 0, long value2 = 0, const void* object = 0);
-long				getresult();
-bool				isblocking();
-bool				isnext();
-void				initialize(const char* title);
-bool				ismodal();
-long				scene(fnevent proc);
-long				sceneblocking(fnevent proc);
-void				scene();
-void				setneedupdate();
-void				setnext(fnevent v);
-//void				showscene(fnevent v);
-void				start();
-void				tooltips(const char* format, ...);
-void				tooltips(int x, int y, int width);
+void breakmodal(long result);
+bool button(const char* title, unsigned key, fnbutton proc);
+void buttoncancel();
+void buttonok();
+void buttonparam();
+void cbsetsht();
+void cbsetint();
+void cbsetptr();
+void doredraw();
+void fire(bool run, fnevent proc, long value = 0, long value2 = 0, const void* object = 0);
+long getresult();
+bool isnext();
+void initialize(const char* title);
+bool ismodal();
+long scene(fnevent proc);
+void scene();
+void setneedupdate();
+void setnext(fnevent v);
+void start();
+void tooltips(const char* format, ...);
+void tooltips(int x, int y, int width);
 }
 namespace draw {
-bool				isclipped(int size);
-void				setposru();
-void				setposlu();
-void				setposld();
+bool isclipped(int size);
+void setposru();
+void setposlu();
+void setposld();
 }

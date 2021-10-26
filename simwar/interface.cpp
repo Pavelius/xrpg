@@ -447,7 +447,7 @@ void gamei::choose_province_action() {
 void provincei::paint() const {
 	if(owner)
 		image(caret.x, caret.y, res_shields, owner->avatar, 0);
-	if(!isblocking() && ishilite(24)) {
+	if(!block_mode && ishilite(24)) {
 		hot.cursor = cursor::Hand;
 		if(hot.key == MouseLeft && hot.pressed)
 			execute(cbsetptr, (long)this, 0, &game.province);

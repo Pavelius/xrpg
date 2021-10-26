@@ -195,6 +195,9 @@
     <ClInclude Include="sprite_util.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="draw_geometry.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -439,6 +442,9 @@
     </ClCompile>
     <ClCompile Include="sprite_util.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_geometry.cpp">
+      <Filter>Interface</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

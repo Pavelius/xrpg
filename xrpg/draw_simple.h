@@ -6,6 +6,7 @@
 
 namespace draw {
 extern point		camera;
+extern bool			block_mode;
 extern int			grid_size;
 extern const void*	hilite_object;
 extern const char*	image_url;

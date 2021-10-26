@@ -6,15 +6,16 @@
 
 using namespace draw;
 
-point					draw::camera;
-int                     draw::grid_size = 32;
-const void*				draw::hilite_object;
-command*                draw::input_commands;
-const char*             draw::image_url;
-int                     draw::pausetime;
-static point			camera_drag;
-static rect				board;
-static const void*		current_hilite;
+point				draw::camera;
+int                 draw::grid_size = 32;
+const void*			draw::hilite_object;
+command*            draw::input_commands;
+const char*         draw::image_url;
+bool				draw::block_mode;
+int                 draw::pausetime;
+static point		camera_drag;
+static rect			board;
+static const void*	current_hilite;
 
 namespace metrics {
 unsigned char			opacity = 230;
