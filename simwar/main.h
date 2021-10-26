@@ -144,6 +144,7 @@ struct hero : uniti {
     const char* avatar;
     provincei*  province;
     int         golds;
+    void        getinfo(stringbuilder& sb) const;
 };
 struct troop {
     unsigned    uid;
@@ -201,6 +202,7 @@ public:
     static void apply(variant v, stata& stat, costa& cost);
     static void build();
     static const buildingi* choose_building();
+    static hero* choose_hero();
     static provincei* choose_province();
     static void choose_province_action();
     static void format(stringbuilder& sb, const char* string, ...);
@@ -232,6 +234,7 @@ VKIND(bonusi, Bonus)
 VKIND(buildingi, Building)
 VKIND(cost_s, Cost)
 VKIND(eventi, Event)
+VKIND(hero, Hero)
 VKIND(landscapei, Landscape)
 VKIND(provincei, Province)
 VKIND(stat_s, Stat)

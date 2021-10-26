@@ -43,7 +43,7 @@ const sprite* draw::gres(const char* name, const char* folder, point maxsize) {
 	auto p = find(name, folder);
 	if(!p) {
 		p = source.add();
-		p->name = name;
+		p->name = szdup(name);
 		p->folder = folder;
 		p->data = 0;
 		p->notfound = false;

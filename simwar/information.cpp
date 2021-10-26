@@ -49,6 +49,11 @@ static void add_bonuses(stringbuilder& sb, const char* id, const stata& source) 
 	}
 }
 
+void hero::getinfo(stringbuilder& sb) const {
+	sb.addn("$left image %1 0 \"art/images\" \"@%2\"", id, id);
+	sb.addn("###%1", getnm(id));
+}
+
 void tactici::getinfo(stringbuilder& sb) const {
 	add_header(sb, id);
 	stata stat; costa cost;
@@ -105,6 +110,11 @@ void variant::getinfo(stringbuilder& sb) const {
 	landscapei* pl = *this;
 	if(pl) {
 		pl->getinfo(sb);
+		return;
+	}
+	hero* ph = *this;
+	if(ph) {
+		ph->getinfo(sb);
 		return;
 	}
 	auto id = getid();

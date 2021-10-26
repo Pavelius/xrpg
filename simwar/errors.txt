@@ -1,2 +1,3 @@
 ﻿In file `Names.txt`:
- Define translate for `CrystalGarden`
+ Define translate for `Gordek`
+ Define translate for `Mistra`

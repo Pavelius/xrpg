@@ -231,6 +231,16 @@ provincei* gamei::choose_province() {
 	return (provincei*)an.choose(0, getnm("Cancel"), true, 0, 1);
 }
 
+hero* gamei::choose_hero() {
+	answers an;
+	for(auto& e : bsdata<hero>()) {
+		//if(e.owner != game.player)
+		//	continue;
+		an.add((long)&e, getnm(e.id));
+	}
+	return (hero*)an.choose(0, getnm("Cancel"), true, 0, 1);
+}
+
 void gamei::message(const char* string) {
 	answers an;
 	an.add(1, getnm("Continue"));
@@ -255,11 +265,12 @@ void gamei::apply(variant v, stata& stat, costa& cost) {
 }
 
 void gamei::playerturn() {
-	static auto test_string = "$image plains 0 \"art/images\" \"@Plains\"\n"\
-		"Test string for accept.";
-	message(test_string);
+	//static auto test_string = "$image plains 0 \"art/images\" \"@Plains\"\n"\
+	//	"Test string for accept.";
+	//message(test_string);
 	while(true) {
-		game.province = choose_province();
+		//game.province = choose_hero();
+		choose_hero();
 		if(!game.province)
 			break;
 		choose_province_action();

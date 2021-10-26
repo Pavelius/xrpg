@@ -114,7 +114,7 @@ BSMETA(genderi) = {BSREQ(id), {}};
 BSMETA(statei) = {BSREQ(id), {}};
 BSMETA(tilei) = {BSREQ(id), {}};
 BSMETA(varianti) = {BSREQ(id), {}};
-#define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr
+#define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr, 1
 #define VRNOM(T) 0, bsdata<T>::source_ptr
 BSDATA(varianti) = {
 	{"NoVariant"},
@@ -124,7 +124,7 @@ BSDATA(varianti) = {
 	{"Card", VRSTD(cardi)},
 	{"CardType", VRSTD(cardtypei)},
 	{"CombatCard", VRSTD(combatcardi)},
-	{"City", 0, &city_events, find_by_index},
+	{"City", 0, &city_events, 1, FG(varianti::NotFoundByName)},
 	{"Duration", VRSTD(durationi)},
 	{"Element", VRSTD(elementi)},
 	{"Feat", VRSTD(feati)},

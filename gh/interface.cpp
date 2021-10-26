@@ -268,8 +268,10 @@ static void paintgame() {
 
 extern stringbuilder tooltips_sb;
 static void infotops() {
-	if(hilite_object)
-		hilite_object.getinfo(tooltips_sb);
+	if(hilite_object) {
+		variant v = hilite_object;
+		v.getinfo(tooltips_sb);
+	}
 }
 
 static void inputgame() {

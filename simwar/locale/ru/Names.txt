@@ -27,6 +27,7 @@ ForestTooth: Лес с зубом
 Goblins: Гоблины
 GoblinsNation: Гоблины
 Gold: Золото
+Gordek: Гордек
 Hills: Холмы
 Hotel: Гостиница
 Humans: Люди
@@ -38,6 +39,7 @@ LumberMill: Лесопилка
 Mana: Мана
 MiddleMonth: Средина
 Mine: Шахта
+Mistra: Мистра
 NoPopulated: Не заселена
 Ogres: Огры
 OgresNation: Огры
