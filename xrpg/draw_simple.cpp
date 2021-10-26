@@ -277,6 +277,8 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 	caret = push_caret;
 	if(columns > 1)
 		column_width = column_width / columns - metrics::padding;
+	auto push_block = block_mode;
+	block_mode = true;
 	while(ismodal()) {
 		if(pbackground)
 			pbackground();
@@ -311,10 +313,9 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 				execute(buttoncancel);
 		}
 		caret = push_caret;
-		//if(scene.doinput)
-		//	scene.doinput();
 		domodal();
 	}
+	block_mode = push_block;
 	return getresult();
 }
 
@@ -372,16 +373,12 @@ void draw::bar(int value, int maximum) {
 	caret.y += height;
 }
 
-static void choose_window() {
-	pwindow = (fnevent)hot.object;
-}
-
 void draw::windows(const command* source) {
 	for(auto p = source; *p; p++) {
 		if(pwindow == p->proc)
 			continue;
 		if(button(getnm(p->id), p->key, buttonfd))
-			execute(choose_window, 0, 0, (void*)p->proc);
+			execute(cbsetptr, (long)p->proc, 0, &pwindow);
 	}
 }
 

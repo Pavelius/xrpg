@@ -108,6 +108,7 @@ extern sprite*			small;
 extern sprite*			h1;
 extern sprite*			h2;
 extern sprite*			h3;
+extern sprite*			icons;
 extern int				border, padding;
 }
 namespace draw {
@@ -165,6 +166,7 @@ extern double			linw;
 extern char				link[4096];
 extern color*			palt;
 extern int				tab_pixels;
+extern bool				block_mode;
 extern fnevent          pbackground, ptips, pwindow, pinput;
 extern fnevent          pbeforemodal, pleavemodal, psetfocus;
 struct rectpush {
@@ -280,10 +282,12 @@ void				cbsetptr();
 void				doredraw();
 void				fire(bool run, fnevent proc, long value = 0, long value2 = 0, const void* object = 0);
 long				getresult();
+bool				isblocking();
 bool				isnext();
 void				initialize(const char* title);
 bool				ismodal();
 long				scene(fnevent proc);
+long				sceneblocking(fnevent proc);
 void				scene();
 void				setneedupdate();
 void				setnext(fnevent v);

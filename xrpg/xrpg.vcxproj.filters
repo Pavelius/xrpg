@@ -16,6 +16,9 @@
     <Filter Include="Format">
       <UniqueIdentifier>{eea7a22c-bfae-45e9-b662-14ca5e665019}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{7cfae352-e239-4e9c-a1f9-cfc97b93648a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="win.h">
@@ -188,6 +191,9 @@
     </ClInclude>
     <ClInclude Include="initialize_list_ex.h">
       <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite_util.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -430,6 +436,9 @@
     </ClCompile>
     <ClCompile Include="calendar.cpp">
       <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite_util.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

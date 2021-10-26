@@ -189,6 +189,7 @@
     <ClInclude Include="screenshoot.h" />
     <ClInclude Include="serializer.h" />
     <ClInclude Include="setting.h" />
+    <ClInclude Include="sprite_util.h" />
     <ClInclude Include="string.h" />
     <ClInclude Include="stringact.h" />
     <ClInclude Include="stringbuilder.h" />
@@ -219,6 +220,7 @@
     <ClCompile Include="png.cpp" />
     <ClCompile Include="requisit.cpp" />
     <ClCompile Include="serializer.cpp" />
+    <ClCompile Include="sprite_util.cpp" />
     <ClCompile Include="string.cpp" />
     <ClCompile Include="stringact.cpp" />
     <ClCompile Include="tablecsv.cpp" />

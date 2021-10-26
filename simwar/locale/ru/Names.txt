@@ -1,4 +1,4 @@
-﻿Artefacts: Реликвии
+﻿Artifacts: Реликвии
 Barbarians: Варвары
 Barn: Амбар
 BlackOrks: Черные орки

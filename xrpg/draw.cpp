@@ -38,6 +38,7 @@ double				draw::linw = 1.0;
 color*				draw::palt;
 rect				draw::clipping;
 char				draw::link[4096];
+bool				draw::block_mode;
 hoti				draw::hot;
 // Hot keys and menus
 rect				sys_static_area;
@@ -55,6 +56,7 @@ sprite*				metrics::h1 = (sprite*)loadb("art/fonts/h1.pma");
 sprite*				metrics::h2 = (sprite*)loadb("art/fonts/h2.pma");
 sprite*				metrics::h3 = (sprite*)loadb("art/fonts/h3.pma");
 sprite*				metrics::small = (sprite*)loadb("art/fonts/small.pma");
+sprite*				metrics::icons = (sprite*)loadb("art/fonts/icons.pma");
 int					metrics::padding = 2, metrics::border = 4;
 //
 static bool			break_modal;
@@ -2422,6 +2424,18 @@ long draw::scene(fnevent proc) {
 
 void draw::scene() {
 	scene(0);
+}
+
+long draw::sceneblocking(fnevent proc) {
+	auto push_block = block_mode;
+	block_mode = true;
+	auto result = scene(proc);
+	block_mode = push_block;
+	return result;
+}
+
+bool draw::isblocking() {
+	return block_mode;
 }
 
 bool draw::button(const char* title, unsigned key, fnbutton proc) {

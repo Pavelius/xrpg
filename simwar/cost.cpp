@@ -3,7 +3,7 @@
 BSDATA(costi) = {
 	{"Gold", true},
 	{"Mana", true},
-	{"Artefacts", true},
+	{"Artifacts", true},
 	{"Faith"},
 	{"Fame"},
 };

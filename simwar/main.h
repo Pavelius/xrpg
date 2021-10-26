@@ -14,7 +14,7 @@ enum stat_s : unsigned char {
     Explored, Population, PopulationGrowth, Rebellion, Happiness
 };
 enum cost_s : unsigned char {
-    Gold, Mana, Artefacts, Faith, Fame
+    Gold, Mana, Artifacts, Faith, Fame
 };
 enum prefix_s : unsigned char {
     Minus, Permanent,

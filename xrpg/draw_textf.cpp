@@ -136,13 +136,14 @@ static const char* textfln(const char* p, int x1, color c1) {
 		// ќбработаем пробелы и табул€цию
 		p = textspc(p);
 		int w;
-		if(p[0] == ':' && p[1] >= 'a' && p[1] <= 'z') {
-			p++;
-			char temp[128]; stringbuilder sb(temp);
-			p = sb.psidf(p);
+		if(metrics::icons && p[0] == ':' && p[1] >= '0' && p[1] <= '1') {
+			auto index = 0;
+			p = stringbuilder::read(p + 1, index);
 			if(*p == ':')
 				p++;
-			w = 0;
+			auto h = metrics::icons->get(0).sy;
+			image(caret.x, caret.y + (font->height - h + 1) / 2, metrics::icons, index, ImageNoOffset);
+			w = metrics::icons->get(0).sx + 1;
 		} else {
 			const char* p2 = word(p);
 			w = textw(p, p2 - p);

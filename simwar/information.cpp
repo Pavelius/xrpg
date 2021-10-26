@@ -25,7 +25,7 @@ static void add_cost(stringbuilder& sb, const costa& source) {
 			sb.addn("%Price: ");
 		else
 			sb.add(", ");
-		sb.add("%2i %-1", getnm(bsdata<costi>::elements[i].id), v);
+		sb.add(":%1i:%2i", i, v);
 	}
 }
 

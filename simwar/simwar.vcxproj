@@ -140,7 +140,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\xrpg\sprite_util.cpp" />
     <ClCompile Include="action.cpp" />
     <ClCompile Include="bonus.cpp" />
     <ClCompile Include="building.cpp" />
@@ -173,7 +172,6 @@
     <Text Include="rules\test_data.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\xrpg\sprite_util.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>

@@ -11,7 +11,6 @@ static const char*		dialog_title;
 static const char*		dialog_description;
 static auto				res_shields = (sprite*)gres("shields", "art/objects");
 static auto				res_units = (sprite*)gres("units", "art/objects");
-static bool				can_choose_province;
 
 static bool spanel(int size) {
 	rectpush push;
@@ -442,15 +441,13 @@ static void province_info_window() {
 }
 
 void gamei::choose_province_action() {
-	can_choose_province = true;
 	scene(province_info_window);
-	can_choose_province = false;
 }
 
 void provincei::paint() const {
 	if(owner)
 		image(caret.x, caret.y, res_shields, owner->avatar, 0);
-	if(can_choose_province && ishilite(24)) {
+	if(!isblocking() && ishilite(24)) {
 		hot.cursor = cursor::Hand;
 		if(hot.key == MouseLeft && hot.pressed)
 			execute(cbsetptr, (long)this, 0, &game.province);
