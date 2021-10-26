@@ -238,7 +238,10 @@ void gamei::message(const char* string) {
 }
 
 void gamei::playerturn() {
-	message("$image plains 0 \"art/images\" \"@Plains\"\nTest string for accept.");
+	static auto test_string = "$image plains 0 \"art/images\" \"@Plains\"\n"\
+		"$image hills 0 \"art/images\" \"@Plains\" right\n"\
+		"Test string for accept.";
+	message(test_string);
 	while(true) {
 		game.province = choose_province();
 		if(!game.province)

@@ -71,7 +71,8 @@ static const char* word(const char* text) {
 }
 
 static void apply_line_feed(int x1) {
-	width_maximum = imax(width_maximum, caret.x - original_x1);
+	if(width_maximum < caret.x - original_x1)
+		width_maximum = caret.x - original_x1;
 	caret.x = x1;
 	caret.y += texth();
 }
@@ -191,42 +192,65 @@ static const char* textfln(const char* p, int x1, color new_fore, const sprite* 
 	return p;
 }
 
-static void richimage() {
+static void imageb(int x, int y, const sprite* ps, int id, unsigned flags, const char* tips) {
+	image(x, y, ps, id, flags|ImageNoOffset);
+	rectpush push;
+	auto push_fore = fore;
+	caret.x = x; caret.y = y;
+	width = ps->get(id).sx;
+	height = ps->get(id).sy;
+	fore = colors::border;
+	rectb();
+	fore = push_fore;
+	if(tips && ishilite()) {
+		stringbuilder sb(link);
+		sb.add(tips);
+	}
+}
+
+static const char* text_block(const char* p);
+
+static const char* richimage(const char* p) {
 	auto name = (const char*)text_params[0];
 	auto id = text_params[1];
 	auto folder = (const char*)text_params[2];
 	auto tips = (const char*)text_params[3];
 	auto align = (const char*)text_params[4];
+	auto flags = 0;
 	if(!folder)
 		folder = "art/pictures";
-	if(!align)
-		align = "left";
 	auto ps = gres(name, folder);
 	if(!ps)
-		return;
-	rect rc = ps->get(id).getrect(caret.x, caret.y, 0);
-	auto w = rc.width();
-	auto h = rc.height();
-	//if(height_maximum < h)
-	//	height_maximum = h;
-	//if(equal(align, "right")) {
-	//	rc.x1 = caret.x + width - w;
-	//	rc.x2 = caret.x + width;
-	//}
-	if(tips && ishilite(rc)) {
-		stringbuilder sb(link);
-		sb.add(tips);
+		return p;
+	auto w = ps->get(id).sx;
+	auto h = ps->get(id).sy;
+	if(!align) {
+		align = "center";
+		if(w < ((original_x2 - caret.x) / 3))
+			align = "left";
 	}
-	//auto need_skip = (w >= (width / 3));
-	image(ps, id, 0);
-	//if(need_skip)
-	caret.y += rc.height() + font->descend;
-	//else if(equal(align, "right"))
-	//	width -= w;
-	//else {
-	//	width -= w;
-	//	caret.x += w;
-	//}
+	auto y2 = caret.y + h;
+	if(equal(align, "right")) {
+		imageb(original_x2 - w, caret.y, ps, id, flags, tips);
+		auto push_x2 = original_x2;
+		original_x2 = original_x2 - w;
+		p = text_block(p);
+		original_x2 = push_x2;
+	} else if(equal(align, "left")) {
+		imageb(caret.x, caret.y, ps, id, flags, tips);
+		auto push_x1 = original_x1;
+		caret.x = original_x1 + w + metrics::border;
+		original_x1 = caret.x;
+		p = text_block(p);
+		caret.x = push_x1;
+		original_x1 = push_x1;
+	} else {
+		imageb(caret.x, caret.y, ps, id, flags, tips);
+		caret.y += h + font->descend;
+	}
+	if(caret.y < y2)
+		caret.y = y2;
+	return p;
 }
 
 static const char* parse_command(const char* p) {
@@ -253,7 +277,7 @@ static const char* parse_command(const char* p) {
 	}
 	p = skipspcr(p);
 	if(equal(temp, "image"))
-		richimage();
+		p = richimage(p);
 	return p;
 }
 
@@ -263,7 +287,7 @@ static const char* text_block(const char* p) {
 			text_start_string = p;
 			text_start_horiz = caret.y - clipping.y1;
 		}
-		if(match(&p, "#--")) // Header 3
+		if(match(&p, "#--")) // Header small
 			p = textfln(skipsp(p), original_x1, colors::h3, metrics::small);
 		else if(match(&p, "###")) // Header 3
 			p = textfln(skipsp(p), original_x1, colors::h3, metrics::h3);
@@ -275,36 +299,14 @@ static const char* text_block(const char* p) {
 			p = skipspcr(p);
 			auto push_x = caret.x;
 			caret.y += 2;
-			caret.x -= metrics::border;
-			line(caret.x + width + metrics::border * 2, caret.y);
+			caret.x = original_x1 - metrics::border;
+			line(original_x2 + metrics::border, caret.y);
 			caret.x = push_x;
 			caret.y += 2;
-		} else if(match(&p, "...")) { // Без форматирования
-			p = skipcr(p);
-			font = metrics::font;
-			color c1 = colors::window.mix(colors::border, 256 - 32);
-			caret.y += texth() / 2;
-			while(p[0]) {
-				int c = textbc(p, width);
-				if(!c)
-					break;
-				auto push_fore = fore;
-				fore = c1;
-				fore = push_fore;
-				text(p, c);
-				caret.x = original_x1;
-				caret.y += texth();
-				p += c;
-				if(match(&p, "...")) {
-					p = skipcr(p);
-					caret.y += texth() / 2;
-					break;
-				}
-			}
 		} else if(match(&p, "* ")) {
 			// Список
-			int dx = texth() / 2;
-			int rd = texth() / 6;
+			auto dx = texth() / 2;
+			auto rd = texth() / 6;
 			auto push_caret = caret;
 			caret.x += dx + 2;
 			caret.y += dx;
@@ -323,26 +325,22 @@ static const char* text_block(const char* p) {
 }
 
 void draw::textf(const char* p) {
-	auto push_fore = fore;
-	auto push_font = font;
-	int y0 = caret.y;
 	width_maximum = height_maximum = 0;
 	text_start_string = 0;
 	text_start_horiz = 0;
 	original_x1 = caret.x;
 	original_x2 = original_x1 + width;
+	auto y0 = caret.y;
 	p = text_block(p);
 	if(height_maximum < caret.y - y0)
 		height_maximum = caret.y - y0;
-	fore = push_fore;
-	font = push_font;
 }
 
 int draw::textfs(const char* string) {
 	auto push_clipping = clipping;
 	clipping.clear();
 	auto push_caret = caret; caret = {};
-	draw::textf(string);
+	textf(string);
 	caret = push_caret;
 	clipping = push_clipping;
 	return height_maximum;
