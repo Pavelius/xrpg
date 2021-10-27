@@ -112,6 +112,21 @@ bool draw::buttonfd(const char* title) {
 	return result;
 }
 
+bool draw::buttonft(const char* title) {
+	if(!title)
+		return false;
+	auto push_caret = caret;
+	auto push_width = width;
+	textfs(title);
+	width = push_width;
+	auto result = swindow(true, 0);
+	textf(title);
+	width = push_width;
+	height += metrics::border * 2;
+	caret = push_caret;
+	return result;
+}
+
 bool draw::buttonrd(const char* title) {
 	if(!title)
 		return false;
@@ -131,7 +146,12 @@ void draw::answerbt(int i, long id, const char* title) {
 	static char answer_hotkeys[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'};
 	if(i >= (int)(sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0])))
 		i = sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]) - 1;
-	if(button(title, answer_hotkeys[i], buttonfd))
+	auto proc = buttonfd;
+	if(title[0] == '#') {
+		title++;
+		proc = buttonft;
+	}
+	if(button(title, answer_hotkeys[i], proc))
 		execute(buttonparam, id);
 	if(control_hilited)
 		hilite_object = (void*)id;

@@ -14,6 +14,21 @@ static void add_description(stringbuilder& sb, const char* id) {
 		sb.addn(p);
 }
 
+static void add_line(stringbuilder& sb, const stata& source) {
+	auto m = bsdata<stati>::source.getcount();
+	for(unsigned i = 0; i < m; i++) {
+		if(i == Hits || i==Level)
+			continue;
+		auto v = source.get(i);
+		if(!v)
+			continue;
+		if(v>0)
+			sb.addn("[+%+2i]\t%1", getnm(bsdata<stati>::get(i).id), v);
+		else
+			sb.addn("[-%+2i]\t%1", getnm(bsdata<stati>::get(i).id), v);
+	}
+}
+
 static void add_cost(stringbuilder& sb, const costa& source) {
 	auto m = bsdata<costi>::source.getcount();
 	auto p = sb.get();
@@ -23,8 +38,6 @@ static void add_cost(stringbuilder& sb, const costa& source) {
 			continue;
 		if(p == sb.get())
 			sb.addn("%Price: ");
-		/*else
-			sb.add(" ");*/
 		sb.add("%2i:%1i:", i, v);
 	}
 }
@@ -65,9 +78,9 @@ static void add_bonuses(stringbuilder& sb, const stata& source) {
 }
 
 void hero::getinfo(stringbuilder& sb) const {
-	sb.addn("$left image %1 0 \"art/images\" \"@%2\"", id, id);
+	//sb.addn("$left image %1 0 \"art/images\" \"@%2\"", id, id);
 	sb.addn("###%1", getnm(id));
-	add_bonuses(sb, stats);
+	add_line(sb, stats);
 }
 
 void tactici::getinfo(stringbuilder& sb) const {
@@ -75,7 +88,6 @@ void tactici::getinfo(stringbuilder& sb) const {
 	stata stat; costa cost;
 	for(auto v : bonus)
 		game.apply(v, stat, cost);
-	//add_bonuses(sb, "RaiseIncomeInProvince", cost);
 	add_bonuses(sb, "RaiseInProvince", stat);
 }
 

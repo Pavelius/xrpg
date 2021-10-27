@@ -8,6 +8,7 @@
 
 enum action_s : unsigned char {
     BuildProvince, DestroyProvince, BuildCapital,
+    AttackProvince, RaidProvince,
 };
 enum stat_s : unsigned char {
     Attack, Defend, Raid, Move, Damage, Shield, Hits, Level,

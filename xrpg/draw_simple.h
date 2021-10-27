@@ -17,6 +17,7 @@ void				answerbt(int index, long id, const char* title);
 void				avatar(const char* id);
 void				bar(int value, int maximum);
 bool				buttonfd(const char* title);
+bool				buttonft(const char* title);
 bool				buttonrd(const char* title);
 void				customwindow();
 void				inputcamera();

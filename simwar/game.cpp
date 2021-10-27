@@ -236,7 +236,7 @@ hero* gamei::choose_hero() {
 	for(auto& e : bsdata<hero>()) {
 		//if(e.owner != game.player)
 		//	continue;
-		an.add((long)&e, getnm(e.id));
+		an.add((long)&e, "#$left image %1 0 \"art/portraits\" \"@%1\"\n###%2", e.id, getnm(e.id));
 	}
 	return (hero*)an.choose(0, getnm("Cancel"), true, 0, 1);
 }
