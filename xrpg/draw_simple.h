@@ -6,12 +6,11 @@
 
 namespace draw {
 extern point		camera;
-extern bool			block_mode;
 extern int			grid_size;
 extern const void*	hilite_object;
 extern const char*	image_url;
 extern command*	    input_commands;
-extern const char*  input_status;
+//extern const char*  input_status;
 extern int          pausetime;
 void				answerbt(int index, long id, const char* title);
 void				avatar(const char* id);
@@ -34,7 +33,8 @@ void				set(int x, int y);
 void				slide(point pt, int step = 12);
 void				stext(const char* string);
 void                status(const char* format, ...);
-bool				swindow(bool hilight, int border = 0);
+bool				swindow(bool hilight);
+void				texth2w(const char* string);
 bool				window(bool hilite, const char* string, const char* resid);
 void				windows(const command* source);
 }

@@ -198,6 +198,9 @@
     <ClInclude Include="draw_geometry.h">
       <Filter>Interface</Filter>
     </ClInclude>
+    <ClInclude Include="pushvalue.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">

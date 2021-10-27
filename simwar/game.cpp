@@ -227,7 +227,9 @@ provincei* gamei::choose_province() {
 		if(e.owner != game.player)
 			continue;
 		an.add((long)&e, getnm(e.id));
+		//an.add((long)&e, "#$left image %1 0 \"art/portraits\" \"@%1\"\n###%2", e.id, getnm(e.id));
 	}
+	pushvalue<bool> push(draw::can_choose_province, false);
 	return (provincei*)an.choose(0, getnm("Cancel"), true, 0, 1);
 }
 
@@ -238,6 +240,7 @@ hero* gamei::choose_hero() {
 		//	continue;
 		an.add((long)&e, "#$left image %1 0 \"art/portraits\" \"@%1\"\n###%2", e.id, getnm(e.id));
 	}
+	pushvalue<bool> push(draw::can_choose_province, false);
 	return (hero*)an.choose(0, getnm("Cancel"), true, 0, 1);
 }
 
@@ -249,10 +252,20 @@ void gamei::message(const char* string) {
 
 void gamei::build() {
 	answers an; game.province->canbuild(an);
-	auto p = (buildingi*)an.choose(getnm("ChooseBuildingToBuild"), getnm("Cancel"), true, 0, 1);
+	pushvalue<bool> push(draw::can_choose_province, false);
+	auto p = (buildingi*)an.choose(getnm("ChooseBuildingToBuild"), getnm("Cancel"), true, 0, 1, getnm(game.province->id));
 	if(!p)
 		return;
 	game.province->build(p, true);
+}
+
+void gamei::demontage() {
+	answers an; game.province->getbuildings(&an, 0);
+	pushvalue<bool> push(draw::can_choose_province, false);
+	auto p = (buildingi*)an.choose(getnm("ChooseBuildingToDemontage"), getnm("Cancel"), true, 0, 1, getnm(game.province->id));
+	if(!p)
+		return;
+	game.province->demontage(p, true);
 }
 
 void gamei::apply(variant v, stata& stat, costa& cost) {

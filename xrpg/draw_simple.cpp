@@ -11,7 +11,6 @@ int                 draw::grid_size = 32;
 const void*			draw::hilite_object;
 command*            draw::input_commands;
 const char*         draw::image_url;
-bool				draw::block_mode;
 int                 draw::pausetime;
 static point		camera_drag;
 static rect			board;
@@ -22,13 +21,11 @@ namespace metrics {
 unsigned char			opacity = 230;
 }
 
-bool draw::swindow(bool hilight, int border) {
-	if(border == 0)
-		border = metrics::border;
+bool draw::swindow(bool hilight) {
 	rectpush push;
 	auto push_alpha = alpha;
 	auto push_fore = fore;
-	setoffset(-border, -border);
+	setoffset(-metrics::border, -metrics::border);
 	auto rs = ishilite();
 	alpha = metrics::opacity;
 	fore = colors::form;
@@ -55,14 +52,8 @@ bool draw::ishilite(int s, const void* object) {
 void draw::stext(const char* string) {
 	draw::link[0] = 0;
 	textf(string);
-	if(draw::link[0]) {
-		if(draw::link[0] == '@') {
-			variant v = (const char*)draw::link + 1;
-			if(v)
-				v.getinfo(tooltips_sb);
-		} else
-			tooltips(draw::link);
-	}
+	if(draw::link[0])
+		tooltips(draw::link);
 }
 
 bool draw::window(bool hilite, const char* string, const char* resid) {
@@ -87,7 +78,7 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 		padding_height = metrics::padding;
 	auto push_height = height;
 	height = image_height + text_height + padding_height;
-	auto rs = swindow(hilite, 0);
+	auto rs = swindow(hilite);
 	if(image_surface) {
 		image(caret.x, caret.y, image_surface, 0, 0);
 		caret.y += image_height + padding_height;
@@ -105,7 +96,7 @@ bool draw::buttonfd(const char* title) {
 	auto push_width = width;
 	textas(title);
 	width = push_width;
-	auto result = swindow(true, 0);
+	auto result = swindow(true);
 	texta(title, AlignCenterCenter);
 	width = push_width;
 	height += metrics::border * 2;
@@ -119,7 +110,7 @@ bool draw::buttonft(const char* title) {
 	auto push_width = width;
 	textfs(title);
 	width = push_width;
-	auto result = swindow(true, 0);
+	auto result = swindow(true);
 	textf(title);
 	width = push_width;
 	height += metrics::border * 2;
@@ -135,11 +126,26 @@ bool draw::buttonrd(const char* title) {
 	rc.y2 = rc.y2 + metrics::padding;
 	auto push_height = height;
 	height = rc.height();
-	auto result = swindow(true, 0);
+	auto result = swindow(true);
 	height = push_height;
 	text(rc, title, AlignCenterCenter);
 	caret.x += rc.width() + metrics::padding * 3;
 	return result;
+}
+
+void draw::texth2w(const char* string) {
+	auto push_font = font;
+	auto push_height = height;
+	font = metrics::h2;
+	height = texth();
+	swindow(false);
+	auto push_fore = fore;
+	fore = colors::h2;
+	texta(string, AlignCenter);
+	fore = push_fore;
+	caret.y += texth() + metrics::border * 2 + metrics::padding;
+	height = push_height;
+	font = push_font;
 }
 
 void draw::answerbt(int i, long id, const char* title) {
@@ -160,7 +166,7 @@ void draw::answerbt(int i, long id, const char* title) {
 void draw::customwindow() {
 	setposlu();
 	auto height = 300;
-	swindow(false, 0);
+	swindow(false);
 	tooltips(caret.x + metrics::padding, caret.y + height + metrics::padding * 4, width);
 }
 
@@ -288,7 +294,7 @@ static int getcolumns(const answers& an) {
 	return 2;
 }
 
-long answers::choose(const char* title, const char* cancel_text, bool interactive, const char* resid, int columns) const {
+long answers::choose(const char* title, const char* cancel_text, bool interactive, const char* resid, int columns, const char* header) const {
 	if(!interactive)
 		return random();
 	if(!elements)
@@ -303,8 +309,6 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 	caret = push_caret;
 	if(columns > 1)
 		column_width = column_width / columns - metrics::padding;
-	auto push_block = block_mode;
-	block_mode = true;
 	while(ismodal()) {
 		if(pbackground)
 			pbackground();
@@ -313,6 +317,8 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 		auto push_caret = caret;
 		auto push_width = width;
 		setposru();
+		if(header)
+			texth2w(header);
 		window(false, title, resid);
 		auto index = 0;
 		auto y1 = caret.y, x1 = caret.x;
@@ -341,7 +347,6 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 		caret = push_caret;
 		domodal();
 	}
-	block_mode = push_block;
 	return getresult();
 }
 
@@ -419,7 +424,7 @@ static void paintcustomtips() {
 		return;
 	rectpush push;
 	tooltips_getrect();
-	swindow(false, 0);
+	swindow(false);
 	auto push_fore = draw::fore;
 	fore = colors::tips::text;
 	textf(tooltips_sb.begin());

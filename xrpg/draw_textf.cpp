@@ -1,5 +1,6 @@
 #include "crt.h"
 #include "draw.h"
+#include "command.h"
 
 using namespace draw;
 
@@ -9,6 +10,7 @@ long draw::text_params[16];
 static const char* text_start_string;
 static int text_start_horiz;
 static point maxcaret;
+command* text_formats;
 
 static bool match(const char** string, const char* name) {
 	int n = zlen(name);
@@ -250,6 +252,13 @@ static void execute_image() {
 static void execute_command(const char* id) {
 	if(equal(id, "image"))
 		execute_image();
+	if(text_formats) {
+		auto p = text_formats->find(id);
+		if(p) {
+			assert(p->proc);
+			p->proc();
+		}
+	}
 }
 
 static const char* parse_command(const char* p, int x1, int x2) {

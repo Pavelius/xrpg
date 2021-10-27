@@ -6,10 +6,6 @@
 using namespace draw;
 
 const int size = 50;
-static const point states_pos[] = {{-16, 16}, {-16, -16}, {16, 16}, {16, -16}};
-static int show_hex_coor = 0;
-static int show_hex_grid = 0;
-int show_movement_cost = 0;
 static indext current_index;
 static point mouse_difference;
 const object* draw::focused_object;

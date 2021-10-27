@@ -9,26 +9,16 @@ const char*				dialog_image;
 static answers*			dialog_answers;
 static const char*		dialog_title;
 static const char*		dialog_description;
+bool					draw::can_choose_province = true;
 static auto				res_shields = (sprite*)gres("shields", "art/objects");
 static auto				res_units = (sprite*)gres("units", "art/objects");
+extern command*			text_formats;
 
 static bool spanel(int size) {
 	rectpush push;
 	width = size;
 	height = texth();
-	return swindow(false, 0);
-}
-
-static void texthsp(const char* string) {
-	auto push_font = font;
-	font = metrics::h2;
-	spanel(width);
-	auto push_fore = fore;
-	fore = colors::h2;
-	texta(string, AlignCenter);
-	fore = push_fore;
-	caret.y += texth() + metrics::border * 2 + metrics::padding;
-	font = push_font;
+	return swindow(false);
 }
 
 static void textblock(const char* string) {
@@ -175,23 +165,23 @@ static void main_background() {
 }
 
 static void static_text() {
-	swindow(false, 0);
+	swindow(false);
 	if(dialog_description)
 		textf(dialog_description);
 }
 
-static void description_text_raw() {
-	if(!dialog_description)
+static void textfw(const char* p) {
+	if(!p || p[0]==0)
 		return;
-	textf(dialog_description);
-}
-
-static void description_text() {
-	if(!dialog_description)
-		return;
-	textfs(dialog_description);
-	swindow(false, 0);
-	description_text_raw();
+	auto push_width = width;
+	textfs(p);
+	width = push_width;
+	swindow(false);
+	link[0] = 0;
+	textf(p);
+	if(link[0])
+		game.getinfo(tooltips_sb, link);
+	caret.y += metrics::border * 2;
 }
 
 static void group(fnevent left, fnevent right) {
@@ -266,7 +256,7 @@ static void group(bool hilite, const char* left, const char* left_tips, fnevent 
 	auto push_width = width;
 	auto push_caret = caret;
 	height = p1->get(0).sy;
-	swindow(hilite, 0);
+	swindow(hilite);
 	group(p1, left_tips);
 	auto p2 = gres(right, "art/images");
 	if(p2)
@@ -296,7 +286,7 @@ static void choose_answers_dialog() {
 	caret.x = (getwidth() - width) / 2;
 	caret.y = 30;
 	if(dialog_title)
-		texthsp(dialog_title);
+		texth2w(dialog_title);
 	height = 300;
 	group(picture_image, static_text);
 	caret.y += height + metrics::padding + metrics::border * 2;
@@ -340,55 +330,21 @@ static void progress(const char* string, int minimal, int maximum, int current, 
 	font = push_font;
 	fore = push_fore;
 	fore_stroke = push_fore_stroke;
-	caret.y += height;
 }
 
-static void hero_info(hero& e) {
-	group(true, e.id, 0,
-		0,
-		0, 0);
-}
-
-static void default_info_window() {
-	for(auto& e : bsdata<hero>())
-		hero_info(e);
-	button_flat(getnm("EndTurn"), buttonok);
-}
-
-static void activate_default() {
-	pwindow = default_info_window;
-}
-
-static void province_info() {
-	char temp[260]; stringbuilder sb(temp);
-	sb.clear(); sb.add("%Explored %1i%%", game.province->get(Explored));
-	progress(temp, 0, 100, game.province->get(Explored), "Explored");
-	auto population = game.province->get(Population);
-	auto pp = populationi::findbypopulation(population);
-	auto range = pp->getrange();
-	progress(getnm(pp->id), range.min, range.max, population, "Population");
+static void progress_format() {
+	auto string = (const char*)text_params[0];
+	auto minimal = text_params[1];
+	auto maximum = text_params[2];
+	auto current = text_params[3];
+	auto tips = (const char*)text_params[4];
+	progress(string, minimal, maximum, current, tips);
 }
 
 static void province_header() {
 	char temp[260]; stringbuilder sb(temp);
 	sb.add(getnm(game.province->id));
-	texthsp(temp);
-}
-
-static void textds(const char* id, int bonus) {
-	auto p = getdescription(game.building->id);
-	if(p) {
-		char temp[4096]; stringbuilder sb(temp);
-		sb.add(p, bonus);
-		textf(temp);
-	}
-}
-
-static void building_info() {
-	//texth3a(getnm(game.building->id), AlignLeft);
-	char temp[4096]; stringbuilder sb(temp);
-	game.building->getinfo(sb, false);
-	textf(temp);
+	texth2w(temp);
 }
 
 static void destroy_province() {
@@ -399,28 +355,26 @@ static void action(action_s v, fnevent proc) {
 	button_flat(getnm(p), proc);
 }
 
-static void choose_building_info() {
+static void buildings_info() {
+	char temp[4096]; temp[0] = 0; stringbuilder sb(temp);
+	game.province->getbuildings(0, &sb);
+	textfw(temp);
+}
+
+static void buildings_info_window() {
 	province_header();
-	auto push_padding = metrics::padding;
-	metrics::padding = 0;
-	answers an; game.province->getbuildings(an);
-	for(auto& e : an) {
-		game.building = (buildingi*)e.id;
-		group(true, game.building->id, 0, building_info, 0, 0);
-		if(control_hilited)
-			game.building->getinfo(tooltips_sb, true);
-	}
-	if(an)
-		caret.y += push_padding;
-	an.clear(); game.province->canbuild(an);
+	pushvalue<int> push(metrics::padding, 0);
+	buildings_info();
+	answers an; game.province->canbuild(an);
 	if(an)
 		action(BuildProvince, game.build);
+	if(game.province->getbuildcount())
+		action(DestroyProvince, game.demontage);
 	button_flat(getnm("Cancel"), buttoncancel);
-	metrics::padding = push_padding;
 }
 
 static void choose_building() {
-	scene(choose_building_info);
+	scene(buildings_info_window);
 }
 
 static void button_buildings() {
@@ -432,14 +386,17 @@ static void button_buildings() {
 	button_flat(temp, choose_building);
 }
 
+static void province_info() {
+	char temp[4096]; stringbuilder sb(temp);
+	game.province->getpresent(sb);
+	textfw(temp);
+}
+
 static void province_info_window() {
 	province_header();
 	auto push_padding = metrics::padding;
 	metrics::padding = 0;
-	group(false,
-		game.province->landscape->id, game.province->landscape->id,
-		province_info,
-		game.province->dwellers->nation->avatar, game.province->dwellers->nation->id);
+	province_info();
 	button_buildings();
 	button_flat(getnm("Locations"), buttoncancel);
 	button_flat(getnm("Cancel"), buttoncancel);
@@ -453,7 +410,7 @@ void gamei::choose_province_action() {
 void provincei::paint() const {
 	if(owner)
 		image(caret.x, caret.y, res_shields, owner->avatar, 0);
-	if(!block_mode && ishilite(24)) {
+	if(can_choose_province && ishilite(24)) {
 		hot.cursor = cursor::Hand;
 		if(hot.key == MouseLeft && hot.pressed)
 			execute(cbsetptr, (long)this, 0, &game.province);
@@ -474,6 +431,10 @@ void provincei::paint() const {
 }
 
 void draw::initialize() {
+	static command text_formats_commads[] = {
+		{"progress", progress_format},
+		{},
+	};
 	simpleinitialize();
 	initialize("Simwar game");
 	metrics::padding = 3;
@@ -485,4 +446,5 @@ void draw::initialize() {
 	pbackground = main_background;
 	def_ptips = ptips;
 	ptips = main_ptips;
+	text_formats = text_formats_commads;
 }

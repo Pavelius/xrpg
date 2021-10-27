@@ -77,6 +77,22 @@ static void add_bonuses(stringbuilder& sb, const stata& source) {
 	}
 }
 
+void provincei::getpresent(stringbuilder& sb) const {
+	sb.add("$left image %1 0 \"art/images\" \"%1\"\n", landscape->id);
+	sb.add("$right image %1 0 \"art/images\" \"%1\"\n", dwellers->nation->id);
+	sb.add("$progress \"%Explored %1i%%\" 0 100 %1i \"Explored\"\n", get(Explored));
+	auto population = get(Population);
+	auto pp = populationi::findbypopulation(population);
+	auto range = pp->getrange();
+	auto percent = range.percent(population);
+	sb.add("$progress \"%4\" %2i %3i %1i \"Population\"\n", population, range.min, range.max, getnm(pp->id));
+	sb.add("$end\n");
+}
+
+void buildingi::getpresent(stringbuilder& sb) const {
+	sb.add("$left image %1 0 \"art/images\" \"%1\"\n", id);
+}
+
 void hero::getinfo(stringbuilder& sb) const {
 	//sb.addn("$left image %1 0 \"art/images\" \"@%2\"", id, id);
 	sb.addn("###%1", getnm(id));
@@ -92,6 +108,7 @@ void tactici::getinfo(stringbuilder& sb) const {
 }
 
 void buildingi::getinfo(stringbuilder& sb, bool show_cost) const {
+	getpresent(sb);
 	add_header(sb, id);
 	stata stat; costa cost;
 	for(auto p = this; p; p = p->base)
@@ -113,7 +130,7 @@ void landscapei::getinfo(stringbuilder& sb) const {
 }
 
 void gamei::getinfo(stringbuilder& sb, const char* id) {
-	variant v = id;
+	variant v = (const char*)(id);
 	if(v)
 		v.getinfo(sb);
 	else {

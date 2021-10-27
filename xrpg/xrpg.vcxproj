@@ -185,6 +185,7 @@
     <ClInclude Include="point.h" />
     <ClInclude Include="pointl.h" />
     <ClInclude Include="posable.h" />
+    <ClInclude Include="pushvalue.h" />
     <ClInclude Include="rect.h" />
     <ClInclude Include="requisit.h" />
     <ClInclude Include="screenshoot.h" />

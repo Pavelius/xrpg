@@ -9,7 +9,6 @@ Buildings: Постройки
 CanBuildOnlyIn: Строиться только [%-1].
 Cancel: Отмена
 ChooseBuildingToBuild: Выбирайте постройку, которую хотите соорудить. Список органичен постройками только доступными для строительства в этой провинции.
-ChooseBuildingToDemontage: Выбирайте постройку, которую хотите снести.
 CrystalGarden: Кристальный сад
 Date: Дата
 Defend: Защита
@@ -33,7 +32,6 @@ LumberMill: ЛЕсопилка
 Mana: Мана
 Mine: Шахта
 Mistra: Мистра
-NoPopulated: Не заселена
 Ogres: Огры
 OgresNation: Огры
 Orks: Орки

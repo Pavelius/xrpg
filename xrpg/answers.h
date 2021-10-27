@@ -17,7 +17,7 @@ public:
 	void				add(long id, const char* name, ...) { addv(id, name, xva_start(name)); }
 	void				addv(long id, const char* name, const char* format);
 	const element*		begin() const { return elements.data; }
-	long				choose(const char* title, const char* cancel_text, bool interactive, const char* resid, int column_count = -1) const;
+	long				choose(const char* title, const char* cancel_text, bool interactive, const char* resid, int column_count = -1, const char* header = 0) const;
 	void				clear();
 	static int			compare(const void* v1, const void* v2);
 	const element*		end() const { return elements.end(); }

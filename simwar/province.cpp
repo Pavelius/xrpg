@@ -80,13 +80,42 @@ bool provincei::build(const buildingi* p, bool run) {
 		return false;
 	if(isbuilded(p))
 		return false;
-	if(p->base && !isbuilded(p->base))
-		return false;
 	if(!ismatch(p->condition))
 		return false;
+	if(p->base) {
+		if(!isbuilded(p->base))
+			return false;
+	} else {
+		auto count = getbuildcount();
+		auto count_limit = getbuildlimit();
+		if(count >= count_limit)
+			return false;
+	}
 	if(run)
 		buildings.set(i);
 	return true;
+}
+
+bool provincei::demontage(const buildingi* p, bool run) {
+	auto i = bsdata<buildingi>::source.indexof(p);
+	if(i == -1)
+		return false;
+	if(!isbuilded(p))
+		return false;
+	if(isupgraded(p))
+		return false;
+	if(run)
+		buildings.remove(i);
+	return true;
+}
+
+void provincei::addto(answers& an) const {
+	an.add((long)this,
+		"#$left image %1 0 \"art/images\" \"@%1\"\n"
+		"$right image %1 0 \"art/images\" \"@%1\"\n",
+		landscape->id,
+		dwellers->id,
+		id, getnm(id));
 }
 
 void provincei::canbuild(answers& an) {
@@ -97,13 +126,16 @@ void provincei::canbuild(answers& an) {
 	}
 }
 
-void provincei::getbuildings(answers& an) {
+void provincei::getbuildings(answers* an, stringbuilder* sb) {
 	for(auto& e : bsdata<buildingi>()) {
 		if(!isbuilded(&e))
 			continue;
 		if(isupgraded(&e))
 			continue;
-		an.add((long)&e, getnm(e.id));
+		if(an)
+			an->add((long)&e, getnm(e.id));
+		if(sb)
+			e.getpresent(*sb);
 	}
 }
 
