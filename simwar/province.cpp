@@ -75,6 +75,8 @@ int provincei::getbuildcount() const {
 bool provincei::build(const buildingi* p, bool run) {
 	if(!owner)
 		return false;
+	if(!owner->isallow(BuildProvince))
+		return false;
 	auto i = bsdata<buildingi>::source.indexof(p);
 	if(i == -1)
 		return false;
@@ -91,12 +93,18 @@ bool provincei::build(const buildingi* p, bool run) {
 		if(count >= count_limit)
 			return false;
 	}
-	if(run)
+	if(run) {
 		buildings.set(i);
+		owner->actions.add(BuildProvince, -1);
+	}
 	return true;
 }
 
 bool provincei::demontage(const buildingi* p, bool run) {
+	if(!owner)
+		return false;
+	if(!owner->isallow(DestroyProvince))
+		return false;
 	auto i = bsdata<buildingi>::source.indexof(p);
 	if(i == -1)
 		return false;
@@ -104,18 +112,11 @@ bool provincei::demontage(const buildingi* p, bool run) {
 		return false;
 	if(isupgraded(p))
 		return false;
-	if(run)
+	if(run) {
 		buildings.remove(i);
+		owner->actions.add(DestroyProvince, -1);
+	}
 	return true;
-}
-
-void provincei::addto(answers& an) const {
-	an.add((long)this,
-		"#$left image %1 0 \"art/images\" \"@%1\"\n"
-		"$right image %1 0 \"art/images\" \"@%1\"\n",
-		landscape->id,
-		dwellers->id,
-		id, getnm(id));
 }
 
 void provincei::canbuild(answers& an) {

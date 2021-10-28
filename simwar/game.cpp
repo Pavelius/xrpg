@@ -221,29 +221,6 @@ void gamei::getdate(stringbuilder& sb) const {
 		getyear());
 }
 
-provincei* gamei::choose_province() {
-	answers an;
-	for(auto& e : bsdata<provincei>()) {
-		if(e.owner != game.player)
-			continue;
-		an.add((long)&e, getnm(e.id));
-		//an.add((long)&e, "#$left image %1 0 \"art/portraits\" \"@%1\"\n###%2", e.id, getnm(e.id));
-	}
-	pushvalue<bool> push(draw::can_choose_province, false);
-	return (provincei*)an.choose(0, getnm("Cancel"), true, 0, 1);
-}
-
-hero* gamei::choose_hero() {
-	answers an;
-	for(auto& e : bsdata<hero>()) {
-		//if(e.owner != game.player)
-		//	continue;
-		an.add((long)&e, "#$left image %1 0 \"art/portraits\" \"@%1\"\n###%2", e.id, getnm(e.id));
-	}
-	pushvalue<bool> push(draw::can_choose_province, false);
-	return (hero*)an.choose(0, getnm("Cancel"), true, 0, 1);
-}
-
 void gamei::message(const char* string) {
 	answers an;
 	an.add(1, getnm("Continue"));
@@ -253,7 +230,7 @@ void gamei::message(const char* string) {
 void gamei::build() {
 	answers an; game.province->canbuild(an);
 	pushvalue<bool> push(draw::can_choose_province, false);
-	auto p = (buildingi*)an.choose(getnm("ChooseBuildingToBuild"), getnm("Cancel"), true, 0, 1, getnm(game.province->id));
+	auto p = (buildingi*)an.choose(0, getnm("Cancel"), true, 0, 1, getnm(game.province->id));
 	if(!p)
 		return;
 	game.province->build(p, true);
@@ -277,15 +254,112 @@ void gamei::apply(variant v, stata& stat, costa& cost) {
 	}
 }
 
+void gamei::addaction(answers& an, action_s v) {
+	int n;
+	if(v <= actiona::maximal_element) {
+		if(player) {
+			if(!player->actions.get(v))
+				return;
+		}
+	}
+	if(!execute(v, false))
+		return;
+	switch(v) {
+	case ShowBuildings:
+		n = province->getbuildcount();
+		if(n)
+			an.add(ShowBuildings, "%ShowBuildings (%Builded %1i)", n);
+		else
+			an.add(v, getnm(bsdata<actioni>::get(v).id));
+		break;
+	default:
+		an.add(v, getnm(bsdata<actioni>::get(v).id));
+		break;
+	}
+}
+
+provincei* gamei::choose_province() {
+	answers an;
+	for(auto& e : bsdata<provincei>()) {
+		if(e.owner != game.player)
+			continue;
+		an.add((long)&e, getnm(e.id));
+	}
+	pushvalue<bool> push(draw::can_choose_province, false);
+	return (provincei*)an.choose(0, getnm("Cancel"), true, 0, 1);
+}
+
+hero* gamei::choose_hero() {
+	answers an;
+	for(auto& e : bsdata<hero>()) {
+		//if(e.owner != game.player)
+		//	continue;
+		an.add((long)&e, "#$left image %1 0 \"art/portraits\" \"@%1\"\n###%2", e.id, getnm(e.id));
+	}
+	pushvalue<bool> push(draw::can_choose_province, false);
+	return (hero*)an.choose(0, getnm("Cancel"), true, 0, 1);
+}
+
+action_s gamei::choose_building_action() {
+	char temp[4096]; stringbuilder sb(temp); answers an;
+	while(province) {
+		sb.clear(); an.clear();
+		province->getbuildings(0, &sb);
+		addaction(an, BuildProvince);
+		addaction(an, DestroyProvince);
+		addaction(an, CancelAction);
+		auto result = an.choose(temp, 0, true, 0, 1, getnm(game.province->id));
+		if(result == -1)
+			continue;
+		return (action_s)result;
+	}
+	return CancelAction;
+}
+
+action_s gamei::choose_province_action() {
+	char temp[4096]; stringbuilder sb(temp); answers an;
+	while(province) {
+		sb.clear(); an.clear();
+		province->getpresent(sb);
+		addaction(an, ShowBuildings);
+		addaction(an, ShowSites);
+		addaction(an, EndTurn);
+		auto result = an.choose(temp, 0, true, 0, 1, getnm(game.province->id));
+		if(result == -1)
+			continue;
+		return (action_s)result;
+	}
+	return CancelAction;
+}
+
+bool gamei::execute(action_s id, bool run) {
+	if(id <= actiona::maximal_element) {
+		if(!player)
+			return false;
+		if(!player->actions.get(id))
+			return false;
+	}
+	int n;
+	switch(id) {
+	case DestroyProvince:
+		n = province->getbuildcount();
+		if(!n)
+			return false;
+		break;
+	}
+	return true;
+}
+
 void gamei::playerturn() {
-	//static auto test_string = "$image plains 0 \"art/images\" \"@Plains\"\n"\
-	//	"Test string for accept.";
-	//message(test_string);
 	while(true) {
-		//game.province = choose_hero();
-		choose_hero();
-		if(!game.province)
+		auto a = game.choose_province_action();
+		if(a == ShowBuildings)
+			a = game.choose_building_action();
+		if(a == EndTurn)
 			break;
-		choose_province_action();
+		switch(a) {
+		case BuildProvince: game.build(); break;
+		case DestroyProvince: game.demontage(); break;
+		}
 	}
 }

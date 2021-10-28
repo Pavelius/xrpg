@@ -44,6 +44,7 @@ int main() {
     game.initialize();
     game.player = bsdata<playeri>::elements;
     game.player->initialize();
+    game.player->refresh();
     game.province = (provincei*)bsdata<provincei>::source.ptr(0);
     //eventi* pe = variant("ShamanCome");
     //game.play(pe);

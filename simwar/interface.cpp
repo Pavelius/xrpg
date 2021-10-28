@@ -217,6 +217,18 @@ static void texth2a(const char* string, unsigned flags) {
 	caret.y += height;
 }
 
+static void textfc(const char* string) {
+	auto push_width = width;
+	auto push_caret = caret;
+	textfs(string);
+	if(clipping) {
+		caret.x = aligned(caret.x, push_width, AlignCenterCenter, width);
+		textf(string);
+	}
+	caret = push_caret;
+	width = push_width;
+}
+
 static void group(const sprite* ps, const char* tips, bool right_align = false) {
 	auto push_width = width;
 	auto push_fore = fore;
@@ -341,70 +353,9 @@ static void progress_format() {
 	progress(string, minimal, maximum, current, tips);
 }
 
-static void province_header() {
-	char temp[260]; stringbuilder sb(temp);
-	sb.add(getnm(game.province->id));
-	texth2w(temp);
-}
-
-static void destroy_province() {
-}
-
-static void action(action_s v, fnevent proc) {
-	auto p = bsdata<actioni>::elements[v].id;
-	button_flat(getnm(p), proc);
-}
-
-static void buildings_info() {
-	char temp[4096]; temp[0] = 0; stringbuilder sb(temp);
-	game.province->getbuildings(0, &sb);
-	textfw(temp);
-}
-
-static void buildings_info_window() {
-	province_header();
-	pushvalue<int> push(metrics::padding, 0);
-	buildings_info();
-	answers an; game.province->canbuild(an);
-	if(an)
-		action(BuildProvince, game.build);
-	if(game.province->getbuildcount())
-		action(DestroyProvince, game.demontage);
-	button_flat(getnm("Cancel"), buttoncancel);
-}
-
-static void choose_building() {
-	scene(buildings_info_window);
-}
-
-static void button_buildings() {
-	char temp[260]; stringbuilder sb(temp);
-	sb.add(getnm("Buildings"));
-	auto count = game.province->getbuildcount();
-	if(count)
-		sb.adds("(%Builded %1i)", count);
-	button_flat(temp, choose_building);
-}
-
-static void province_info() {
-	char temp[4096]; stringbuilder sb(temp);
-	game.province->getpresent(sb);
-	textfw(temp);
-}
-
-static void province_info_window() {
-	province_header();
-	auto push_padding = metrics::padding;
-	metrics::padding = 0;
-	province_info();
-	button_buildings();
-	button_flat(getnm("Locations"), buttoncancel);
-	button_flat(getnm("Cancel"), buttoncancel);
-	metrics::padding = push_padding;
-}
-
-void gamei::choose_province_action() {
-	scene(province_info_window);
+static void choose_game_province() {
+	game.province = (provincei*)hot.param;
+	breakmodal(-1);
 }
 
 void provincei::paint() const {
@@ -413,7 +364,7 @@ void provincei::paint() const {
 	if(can_choose_province && ishilite(24)) {
 		hot.cursor = cursor::Hand;
 		if(hot.key == MouseLeft && hot.pressed)
-			execute(cbsetptr, (long)this, 0, &game.province);
+			execute(choose_game_province, (long)this, 0, &game.province);
 	}
 	auto push_font = font;
 	font = metrics::h2;

@@ -10,6 +10,7 @@
 enum action_s : unsigned char {
 	BuildProvince, DestroyProvince, BuildCapital,
 	AttackProvince, RaidProvince,
+	ShowBuildings, ShowSites, EndTurn, CancelAction
 };
 enum stat_s : unsigned char {
 	Attack, Defend, Raid, Move, Damage, Shield, Hits, Level,
@@ -39,6 +40,8 @@ struct landscapea : flagable<2> {
 struct tactica : flagable<4> {
 };
 struct stata : dataset<Happiness, short> {
+};
+struct actiona : dataset<RaidProvince, char> {
 };
 struct nameable {
 	const char* id;
@@ -128,7 +131,6 @@ struct provincei : nameable {
 	variants    neightboards;
 	playeri*    owner;
 	buildinga   buildings;
-	void        addto(answers& an) const;
 	bool        build(const buildingi* p, bool run);
 	void        canbuild(answers& an);
 	bool		demontage(const buildingi* p, bool run);
@@ -140,10 +142,10 @@ struct provincei : nameable {
 	void        generate_population();
 	void        generate_units();
 	int         get(stat_s v) const { return stats.get(v); }
-	int			getbuildlimit() const { return 3; }
-	void		getbuildings(answers* an, stringbuilder* sb);
-	void        getpresent(stringbuilder& sb) const;
 	int         getbuildcount() const;
+	void		getbuildings(answers* an, stringbuilder* sb);
+	int			getbuildlimit() const { return 3; }
+	void        getpresent(stringbuilder& sb) const;
 	void        paint() const;
 	void        set(stat_s i, int v) { stats.set(i, v); }
 	void        update();
@@ -184,8 +186,11 @@ struct playeri {
 	int         avatar;
 	costa       total;
 	decki       events;
+	actiona		actions; // Total count of each action per turn
 	int         get(variant v) const;
+	bool		isallow(action_s v) const { return actions.get(v) != 0; }
 	void        initialize();
+	void		refresh();
 };
 struct prefixi {
 	const char* id;
@@ -204,6 +209,7 @@ public:
 	playeri*    player;
 	provincei*  province;
 	buildingi*  building;
+	void		addaction(answers& an, action_s v);
 	void        addtroop(uniti* type, provincei* province);
 	unsigned    adduid();
 	bool        apply(const variants& source, bool allow_test, bool allow_apply);
@@ -211,9 +217,11 @@ public:
 	static void build();
 	static void demontage();
 	static const buildingi* choose_building();
+	action_s	choose_building_action();
 	static hero* choose_hero();
 	static provincei* choose_province();
-	static void choose_province_action();
+	action_s	choose_province_action();
+	bool		execute(action_s id, bool run);
 	static void format(stringbuilder& sb, const char* string, ...);
 	static int  get(variant v, const variants& source);
 	static variant getaction(variant v);

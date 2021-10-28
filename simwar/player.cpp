@@ -23,3 +23,10 @@ void playeri::initialize() {
 	total.set(Gold, 1000);
 	total.set(Mana, 20);
 }
+
+void playeri::refresh() {
+	actions.set(BuildProvince, 1);
+	actions.set(DestroyProvince, 1);
+	actions.set(AttackProvince, 2);
+	actions.set(RaidProvince, 1);
+}

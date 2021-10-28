@@ -57,7 +57,7 @@ void draw::stext(const char* string) {
 }
 
 bool draw::window(bool hilite, const char* string, const char* resid) {
-	if(!string && !resid)
+	if((!string || string[0]==0) && !resid)
 		return false;
 	auto text_height = 0;
 	auto image_height = 0;

@@ -6,5 +6,9 @@ BSDATA(actioni) = {
 	{"BuildCapital"},
 	{"AttackProvince"},
 	{"RaidProvince"},
+	{"ShowBuildings"},
+	{"ShowSites"},
+	{"EndTurn"},
+	{"CancelAction"},
 };
-assert_enum(actioni, RaidProvince)
+assert_enum(actioni, CancelAction)
