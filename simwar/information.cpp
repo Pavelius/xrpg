@@ -29,7 +29,7 @@ static void add_line(stringbuilder& sb, const stata& source) {
 	}
 }
 
-static void add_cost(stringbuilder& sb, const costa& source) {
+static void add_cost(stringbuilder& sb, const costa& source, const char* promt) {
 	auto m = bsdata<costi>::source.getcount();
 	auto p = sb.get();
 	for(unsigned i = 0; i < m; i++) {
@@ -37,8 +37,8 @@ static void add_cost(stringbuilder& sb, const costa& source) {
 		if(!v)
 			continue;
 		if(p == sb.get())
-			sb.addn("%Price: ");
-		sb.add("%2i:%1i:", i, v);
+			sb.addn(promt);
+		sb.add(":%1i:%2i", i, v);
 	}
 }
 
@@ -62,7 +62,7 @@ static void add_bonuses(stringbuilder& sb, const char* id, const stata& source) 
 	}
 }
 
-static void add_bonuses(stringbuilder& sb, const stata& source) {
+static void add_bonuses(stringbuilder& sb, const stata& source, const char* promt) {
 	auto m = bsdata<stati>::source.getcount();
 	auto p = sb.get();
 	for(unsigned i = 0; i < m; i++) {
@@ -71,8 +71,8 @@ static void add_bonuses(stringbuilder& sb, const stata& source) {
 			continue;
 		if(p != sb.get())
 			sb.add(", ");
-		else
-			sb.add("\n");
+		else if(promt)
+			sb.add(promt);
 		sb.add("%1 %2i", getnm(bsdata<stati>::elements[i].id), v);
 	}
 }
@@ -86,6 +86,7 @@ void provincei::getpresent(stringbuilder& sb) const {
 	auto range = pp->getrange();
 	auto percent = range.percent(population);
 	sb.add("$progress \"%4\" %2i %3i %1i \"Population\"\n", population, range.min, range.max, getnm(pp->id));
+	sb.add("$center ${"); add_cost(sb, income_cur, "%Income "); sb.add("}$\n");
 	sb.add("$end\n");
 }
 
@@ -121,7 +122,7 @@ void buildingi::getinfo(stringbuilder& sb, bool show_cost) const {
 		break;
 	}
 	if(show_cost)
-		add_cost(sb, this->cost);
+		add_cost(sb, this->cost, "%Price: ");
 }
 
 void landscapei::getinfo(stringbuilder& sb) const {

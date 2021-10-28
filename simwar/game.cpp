@@ -363,3 +363,9 @@ void gamei::playerturn() {
 		}
 	}
 }
+
+void gamei::maketurn() {
+	for(auto& e : bsdata<provincei>())
+		e.update();
+	playerturn();
+}

@@ -581,6 +581,20 @@ const char* stringbuilder::psidf(const char* pb) {
 	return pb;
 }
 
+const char* stringbuilder::psline(const char* pb) {
+	while(*pb) {
+		if(pb[0] == '}' && pb[1] == '$') {
+			pb = skipsp(pb + 2);
+			break;
+		}
+		if(p < pe)
+			*p++ = *pb;
+		pb++;
+	}
+	*p = 0;
+	return pb;
+}
+
 const char* stringbuilder::psstr(const char* pb, char end_symbol) {
 	p[0] = 0;
 	if(!pb)

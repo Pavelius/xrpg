@@ -194,7 +194,9 @@ static const char* parse_parameters(const char* p, const char*& id, unsigned& al
 		if(p == p1) {
 			is_text = true;
 			value = (long)sb.get();
-			if(p[0] == '\"' || p[0] == '\'')
+			if(p[0] == '$' && p[1] == '{')
+				p = sb.psline(skipspcr(p+2));
+			else if(p[0] == '\"' || p[0] == '\'')
 				p = sb.psstr(p + 1, p[0]);
 			else
 				p = sb.psidf(p);
@@ -249,10 +251,17 @@ static void execute_image() {
 	}
 }
 
+static void execute_center() {
+	auto name = (const char*)text_params[0];
+	auto tips = (const char*)text_params[1];
+}
+
 static void execute_command(const char* id) {
 	if(equal(id, "image"))
 		execute_image();
-	if(text_formats) {
+	else if(equal(id, "center"))
+		execute_center();
+	else if(text_formats) {
 		auto p = text_formats->find(id);
 		if(p) {
 			assert(p->proc);

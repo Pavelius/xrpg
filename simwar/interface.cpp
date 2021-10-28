@@ -333,7 +333,7 @@ static void progress(const char* string, int minimal, int maximum, int current, 
 	auto push_fore_stroke = fore_stroke;
 	auto push_fore = fore;
 	auto push_font = font;
-	font = metrics::h2;
+	font = metrics::h3;
 	height = texth();
 	progressbar(minimal, maximum, current);
 	if(tips && control_hilited)

@@ -314,7 +314,7 @@ struct gamei : public mapi {
 	static int			getinitiative(variant v);
 	int					getlevel() const;
 	void				makeround();
-	void				maketurn();
+	static void			maketurn();
 	static void			playtactic();
 	static void			selectkind(varianta& source);
 	static void			sort(varianta& source);

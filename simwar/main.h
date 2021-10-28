@@ -124,8 +124,8 @@ struct provincei : nameable {
 	uniti*      dwellers;
 	landscapei* landscape;
 	point       position;
-	stata       stats; // Common province and unit stats
-	costa       income; // Additional income
+	stata       stats_cur, stats; // Common province and unit stats
+	costa       income_cur, income; // Additional income
 	resourcea   resources; // Known province resource
 	variant     garnison; // Contract on province garnison units.
 	variants    neightboards;
@@ -141,13 +141,14 @@ struct provincei : nameable {
 	void        generate_explored();
 	void        generate_population();
 	void        generate_units();
-	int         get(stat_s v) const { return stats.get(v); }
+	int         get(stat_s v) const { return stats_cur.get(v); }
+	int         get(cost_s v) const { return income_cur.get(v); }
 	int         getbuildcount() const;
 	void		getbuildings(answers* an, stringbuilder* sb);
 	int			getbuildlimit() const { return 3; }
 	void        getpresent(stringbuilder& sb) const;
 	void        paint() const;
-	void        set(stat_s i, int v) { stats.set(i, v); }
+//	void        set(stat_s i, int v) { stats_cur.set(i, v); }
 	void        update();
 };
 struct hero : uniti {
@@ -233,6 +234,7 @@ public:
 	int         getyear() const { return start_year + turn / (3 * 12); }
 	int         getturn() const { return turn; }
 	void        initialize();
+	static void	maketurn();
 	static void message(const char* string);
 	void        passturn();
 	void        play(const eventi* event);

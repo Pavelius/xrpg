@@ -96,6 +96,7 @@ bool provincei::build(const buildingi* p, bool run) {
 	if(run) {
 		buildings.set(i);
 		owner->actions.add(BuildProvince, -1);
+		update();
 	}
 	return true;
 }
@@ -115,6 +116,7 @@ bool provincei::demontage(const buildingi* p, bool run) {
 	if(run) {
 		buildings.remove(i);
 		owner->actions.add(DestroyProvince, -1);
+		update();
 	}
 	return true;
 }
@@ -141,11 +143,13 @@ void provincei::getbuildings(answers* an, stringbuilder* sb) {
 }
 
 void provincei::update() {
+	income_cur = income;
+	stats_cur = stats;
 	for(auto& e : bsdata<buildingi>()) {
 		if(!isbuilded(&e))
 			continue;
 		for(auto v : e.effect)
-			game.apply(v, stats, income);
+			game.apply(v, stats_cur, income_cur);
 	}
 }
 
