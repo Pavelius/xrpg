@@ -15,6 +15,7 @@ int                 draw::pausetime;
 static point		camera_drag;
 static rect			board;
 static const void*	current_hilite;
+
 extern stringbuilder tooltips_sb;
 
 namespace metrics {
@@ -42,8 +43,8 @@ bool draw::swindow(bool hilight) {
 	return rs;
 }
 
-bool draw::ishilite(int s, const void* object) {
-	if(!ishilite({caret.x - s, caret.y - s, caret.x + s, caret.y + s}))
+bool draw::ishilite(int size, const void* object) {
+	if(!ishilite({caret.x - size, caret.y - size, caret.x + size, caret.y + size}))
 		return false;
 	current_hilite = object;
 	return true;
@@ -52,12 +53,25 @@ bool draw::ishilite(int s, const void* object) {
 void draw::stext(const char* string) {
 	draw::link[0] = 0;
 	textf(string);
-	if(draw::link[0])
-		tooltips(draw::link);
+	if(draw::link[0]) {
+		if(draw::link[0] == '@')
+			tooltips(draw::link + 1);
+		else {
+			variant v = (const char*)draw::link;
+			if(v)
+				v.getinfo(tooltips_sb);
+			else {
+				tooltips_sb.addn("###%1", getnm(draw::link));
+				auto p = getdescription(draw::link);
+				if(p)
+					tooltips_sb.addn(p);
+			}
+		}
+	}
 }
 
 bool draw::window(bool hilite, const char* string, const char* resid) {
-	if((!string || string[0]==0) && !resid)
+	if((!string || string[0] == 0) && !resid)
 		return false;
 	auto text_height = 0;
 	auto image_height = 0;

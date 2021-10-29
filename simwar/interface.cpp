@@ -167,7 +167,7 @@ static void main_background() {
 static void static_text() {
 	swindow(false);
 	if(dialog_description)
-		textf(dialog_description);
+		stext(dialog_description);
 }
 
 static void textfw(const char* p) {
@@ -177,10 +177,7 @@ static void textfw(const char* p) {
 	textfs(p);
 	width = push_width;
 	swindow(false);
-	link[0] = 0;
-	textf(p);
-	if(link[0])
-		game.getinfo(tooltips_sb, link);
+	stext(p);
 	caret.y += metrics::border * 2;
 }
 
