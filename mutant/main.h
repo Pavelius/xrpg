@@ -167,7 +167,7 @@ class gamei {
 	static void			update_moving();
 	static void			worldmap_input();
 public:
-	static indext		geti(point v) { return worldmap::geti(v.x / draw::grid, v.y / draw::grid); }
+	static indext		geti(point v) { return worldmap::geti(v.x / draw::grid_size, v.y / draw::grid_size); }
 	static point		getp(indext v);
 	static character*	getplayer();
 	static void			playworld();

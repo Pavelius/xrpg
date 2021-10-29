@@ -395,6 +395,13 @@ void draw::avatar(const char* id) {
 	caret.y += p->get(0).sy + 1;
 }
 
+void draw::fog(int n) {
+	auto push_alpha = alpha;
+	alpha = n;
+	rectf();
+	alpha = push_alpha;
+}
+
 void draw::bar(int value, int maximum) {
 	if(!value || !maximum)
 		return;

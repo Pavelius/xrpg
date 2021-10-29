@@ -1,3 +1,4 @@
+#include "draw.h"
 #include "main.h"
 
 gamei	game;
@@ -12,16 +13,18 @@ gamei	game;
 
 point gamei::getp(indext v) {
 	return {
-		(short)(worldmap::getx(v) * draw::scene.grid + draw::scene.grid / 2),
-		(short)(worldmap::gety(v) * draw::scene.grid + draw::scene.grid / 2)
+		(short)(worldmap::getx(v) * draw::grid_size + draw::grid_size / 2),
+		(short)(worldmap::gety(v) * draw::grid_size + draw::grid_size / 2)
 	};
 }
 
 void gamei::render_world() {
 	game.world.paint();
 	if(game.party.ismoving()) {
-		auto pt = game.party.getdestination();
-		draw::field(pt.x, pt.y, figure::Close, 3);
+		auto push_caret = draw::caret;
+		draw::caret = game.party.getdestination();
+		draw::field(figure::Close, 3);
+		draw::caret = push_caret;
 	}
 	auto pt = game.party.getposition();
 	//auto border = ColorGreen;
@@ -37,7 +40,7 @@ void gamei::render_world() {
 }
 
 void gamei::update_moving() {
-	game.party.moving(draw::scene.grid * 4, game.rounds, game.rounds_per_day);
+	game.party.moving(draw::grid_size * 4, game.rounds, game.rounds_per_day);
 	game.setexplored(game.geti(game.party.getposition()), 1);
 	game.rounds++;
 }
@@ -62,8 +65,8 @@ void gamei::worldmap_input() {
 }
 
 void gamei::playworld() {
-	draw::scene.resurl = "map";
-	draw::scene.background = render_world;
+	draw::image_url = "map";
+	//draw:: = render_world;
 	answers an;
 	an.add(1, "Тест");
 	an.add(2, "Два");

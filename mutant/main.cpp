@@ -1,5 +1,6 @@
+#include "draw.h"
 #include "draw_color.h"
-#include "draw_input.h"
+#include "log.h"
 #include "main.h"
 
 using namespace draw;
@@ -44,7 +45,7 @@ static void avatardr(const char* id) {
 }
 
 static void avatar_line() {
-	setpositionld();
+	setposld();
 	caret.y -= 22;
 	avatardr("stalker");
 	avatardr("druid");
@@ -52,12 +53,13 @@ static void avatar_line() {
 }
 
 void gamei::main_menu() {
-	draw::scene.resurl = "mutant_title";
+	draw::image_url = "mutant_title";
 	menui::choose("Main", "city", 0);
 }
 
 int main() {
-	if(!initialize_translation("ru"))
+	initialize_translation("ru");
+	if(!log::geterrors())
 		return -1;
 	draw::initialize("Mutants: Zero point");
 	initialize_commands();

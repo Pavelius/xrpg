@@ -1,4 +1,5 @@
 #include "command.h"
+#include "draw.h"
 #include "main.h"
 #include "draw_figure.h"
 #include "draw_simple.h"
@@ -18,7 +19,7 @@ static void character_sheet() {
 		player->getname(),
 		getnm(bsdata<rolei>::elements[player->getrole()].id),
 		getnm(bsdata<genderi>::elements[gender].name));
-	sheader(temp);
+	//sheader(temp);
 	sb.clear(); sb.addn("###%Attributes");
 	for(auto& e : bsdata<attributei>()) {
 		auto id = (attribute_s)variant(&e).value;
@@ -43,5 +44,5 @@ static command commands[] = {
 {}};
 
 void initialize_commands() {
-	scene.commands = commands;
+	//pcommands = commands;
 }

@@ -1,3 +1,4 @@
+#include "draw.h"
 #include "main.h"
 
 void worldmap::set(indext i, int r, int v, bool check) {
@@ -19,10 +20,12 @@ void worldmap::set(indext i, int r, int v, bool check) {
 	}
 }
 
-point worldmap::getp(int x, int y) { return {
-	(short)(x * draw::scene.grid + draw::scene.grid/2), (short)(y * draw::scene.grid + draw::scene.grid / 2)};
+point worldmap::getp(int x, int y) {
+	return {
+		(short)(x * draw::grid_size + draw::grid_size / 2),
+		(short)(y * draw::grid_size + draw::grid_size / 2)
+	};
 }
-
 
 void worldmap::set(indext i, int v) {
 	if(i == Blocked)
@@ -36,10 +39,12 @@ void worldmap::explore(indext i) {
 }
 
 void worldmap::fow() {
+	auto push_caret = draw::caret;
 	for(auto x = 0; x < xmax; x++) {
 		for(auto y = 0; y < ymax; y++) {
 			auto v = get(geti(x, y));
-			draw::setposition(x * draw::scene.grid, y * draw::scene.grid);
+			draw::caret.x = x * draw::grid_size;
+			draw::caret.y = y * draw::grid_size;
 			switch(v) {
 			case 0: draw::fog(0xFF); break;
 			case 1: draw::fog(128); break;
@@ -47,6 +52,7 @@ void worldmap::fow() {
 			}
 		}
 	}
+	draw::caret = push_caret;
 }
 
 void worldmap::paint() {
