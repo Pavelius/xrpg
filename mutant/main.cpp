@@ -59,9 +59,10 @@ void gamei::main_menu() {
 
 int main() {
 	initialize_translation("ru");
-	if(!log::geterrors())
+	if(log::geterrors())
 		return -1;
 	draw::initialize("Mutants: Zero point");
+	simpleinitialize();
 	initialize_commands();
 	draw::setnext(game.main_menu);
 	draw::start();

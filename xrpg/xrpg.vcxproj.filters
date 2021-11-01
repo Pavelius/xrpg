@@ -449,5 +449,8 @@
     <ClCompile Include="draw_geometry.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
+    <ClCompile Include="variant_bonus.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -6,6 +6,8 @@ BSDATA(actioni) = {
 	{"BuildCapital"},
 	{"AttackProvince"},
 	{"RaidProvince"},
+	{"ChooseHeroes"},
+	{"ChooseProvinces"},
 	{"ShowBuildings"},
 	{"ShowSites"},
 	{"EndTurn"},

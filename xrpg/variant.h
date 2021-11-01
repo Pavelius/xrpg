@@ -16,7 +16,7 @@ struct varianti {
 	array*				source;
 	int                 key_count;
 	unsigned			flags;
-	constexpr bool		is(unsigned v) const { return (flags & FG(v))!=0; }
+	constexpr bool		is(unsigned v) const { return (flags & FG(v)) != 0; }
 	constexpr bool		isnamed() const { return !is(NotFoundByName); }
 };
 union variant {
@@ -46,6 +46,16 @@ union variant {
 	const char*			getname() const;
 	void				paint() const;
 	void				setvariant(variant_s t, unsigned short v) { type = t; value = v; }
+};
+struct bonusi {
+	enum { Condition };
+	const char*			id;
+	variant				type;
+	int					bonus;
+	unsigned			flags;
+	static variant		getaction(variant v);
+	static int			getbonus(variant v);
+	constexpr bool		is(int v) const { return (flags & FG(v)) != 0; }
 };
 typedef sliceu<variant> variants;
 template<> variant::variant(const char* v);

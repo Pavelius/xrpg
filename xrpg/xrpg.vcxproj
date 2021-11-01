@@ -227,6 +227,7 @@
     <ClCompile Include="string.cpp" />
     <ClCompile Include="stringact.cpp" />
     <ClCompile Include="tablecsv.cpp" />
+    <ClCompile Include="variant_bonus.cpp" />
     <ClCompile Include="widget_codetree.cpp" />
     <ClCompile Include="widget_codeview.cpp" />
     <ClCompile Include="color.cpp" />

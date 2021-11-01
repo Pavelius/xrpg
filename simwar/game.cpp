@@ -39,11 +39,11 @@ bool gamei::apply(const variants& source, bool allow_test, bool allow_apply) {
 			prefixes.set(v.value);
 			continue;
 		}
-		auto a = getaction(v);
-		auto b = getbonus(v);
+		auto a = bonusi::getaction(v);
+		auto b = bonusi::getbonus(v);
 		auto need_test = false;
 		if(v.type == Bonus)
-			need_test = allow_test && bsdata<bonusi>::get(v.value).isrequired();
+			need_test = allow_test && a.type == Cost && bsdata<costi>::get(a.value).visible;
 		if(prefixes.is(Minus))
 			b = -b;
 		switch(a.type) {
@@ -82,8 +82,8 @@ int gamei::get(variant id, const variants& source) {
 			prefixes.set(v.value);
 			continue;
 		}
-		auto a = getaction(v);
-		auto b = getbonus(v);
+		auto a = bonusi::getaction(v);
+		auto b = bonusi::getbonus(v);
 		if(prefixes.is(Minus))
 			b = -b;
 		if(a == id && !prefixes.is(Permanent))
@@ -91,18 +91,6 @@ int gamei::get(variant id, const variants& source) {
 		prefixes.clear();
 	}
 	return result;
-}
-
-variant gamei::getaction(variant v) {
-	if(v.type == Bonus)
-		return bsdata<bonusi>::elements[v.value].type;
-	return v;
-}
-
-int gamei::getbonus(variant v) {
-	if(v.type == Bonus)
-		return bsdata<bonusi>::elements[v.value].bonus;
-	return 1;
 }
 
 static const eventcasei* getnext(const eventcasei* p);
@@ -245,9 +233,9 @@ void gamei::demontage() {
 	game.province->demontage(p, true);
 }
 
-void gamei::apply(variant v, stata& stat, costa& cost) {
-	auto a = getaction(v);
-	auto b = getbonus(v);
+void gamei::apply(variant v, stata& stat, costa& cost, int multiplier) {
+	auto a = bonusi::getaction(v);
+	auto b = bonusi::getbonus(v) * multiplier;
 	switch(a.type) {
 	case Cost: cost.add(a.value, b); break;
 	case Stat: stat.add(a.value, b); break;
@@ -358,14 +346,16 @@ void gamei::playerturn() {
 		if(a == EndTurn)
 			break;
 		switch(a) {
-		case BuildProvince: game.build(); break;
-		case DestroyProvince: game.demontage(); break;
+		case BuildProvince:
+			game.build();
+			break;
+		case DestroyProvince:
+			game.demontage();
+			break;
 		}
 	}
 }
 
 void gamei::maketurn() {
-	for(auto& e : bsdata<provincei>())
-		e.update();
 	playerturn();
 }

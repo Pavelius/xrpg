@@ -53,9 +53,13 @@ CrystalGarden
 #Landscape
 
 Plains
- income Gold(5)
+ income Gold(4)
 Forest
- income Gold(3)
+ income Gold(2) Mana(1)
+Hills
+ income Gold(2)
+Swamp
+ income Mana(2)
 
 #Hero
 

@@ -10,8 +10,8 @@ BSDATA(costi) = {
 assert_enum(costi, Fame)
 
 void costa::apply(variant v, const prefixa& flags) {
-	auto a = game.getaction(v);
-	auto b = game.getbonus(v);
+	auto a = bonusi::getaction(v);
+	auto b = bonusi::getbonus(v);
 	if(a.type == Cost)
 		return;
 	add(v.value, b);

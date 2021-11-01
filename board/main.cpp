@@ -33,17 +33,17 @@ static command commands[] = {
 int main() {
 	initialize_json();
 	initialize_png();
-	if(!initialize_translation("ru"))
-		return -1;
+	initialize_translation("ru");
 	if(!tablecsvi::read("rules/dnd5/ClericSpellProgression.csv"))
 		return -1;
 	if(!tablecsvi::read("rules/dnd5/ProficiencyBonusTable.csv"))
 		return -1;
 	if(!readf("rules/dnd5/core.json"))
 		return -1;
+	draw::simpleinitialize();
 	draw::initialize("DnD5 simulator");
-	draw::scene.resurl = "cave_crystal";
-	draw::scene.commands = commands;
+	draw::image_url = "cave_crystal";
+	//draw::scene.commands = commands;
 	draw::setnext(start_menu);
 	draw::start();
 	return 0;

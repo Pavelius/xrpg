@@ -86,7 +86,8 @@ void provincei::getpresent(stringbuilder& sb) const {
 	auto range = pp->getrange();
 	auto percent = range.percent(population);
 	sb.add("$progress \"%4\" %2i %3i %1i \"Population\"\n", population, range.min, range.max, getnm(pp->id));
-	sb.add("$center ${"); add_cost(sb, income_cur, "%Income "); sb.add("}$\n");
+	//sb.add("$center ${"); add_cost(sb, income_cur, "%Income "); sb.add("}$\n");
+	sb.add("$income %1i %2i\n", get(Gold), get(Mana));
 	sb.add("$end\n");
 }
 

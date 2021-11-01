@@ -10,7 +10,8 @@
 enum action_s : unsigned char {
 	BuildProvince, DestroyProvince, BuildCapital,
 	AttackProvince, RaidProvince,
-	ShowBuildings, ShowSites, EndTurn, CancelAction
+	ChooseHeroes, ChooseProvinces, ShowBuildings, ShowSites, EndTurn,
+	CancelAction
 };
 enum stat_s : unsigned char {
 	Attack, Defend, Raid, Move, Damage, Shield, Hits, Level,
@@ -56,17 +57,11 @@ struct nationi : nameable {
 struct range {
 	int         min, max;
 	explicit constexpr operator bool() const { return max != 0; }
-	constexpr int percent(int v) const { return (max==min) ? 0 : (v - min) * 100 / (max - min); }
+	constexpr int percent(int v) const { return (max == min) ? 0 : (v - min) * 100 / (max - min); }
 	int         random() const { return xrand(min, max); }
 };
 struct costa : dataset<8, short> {
 	void        apply(variant v, const prefixa& flags);
-};
-struct bonusi {
-	const char* id;
-	variant     type;
-	int         bonus;
-	bool        isrequired() const;
 };
 struct landscapei {
 	const char* id;
@@ -81,6 +76,7 @@ struct stati {
 struct costi {
 	const char* id;
 	bool        visible;
+	int			getindex() const { return this - bsdata<costi>::elements; }
 };
 struct resourcei : nameable {
 };
@@ -124,8 +120,8 @@ struct provincei : nameable {
 	uniti*      dwellers;
 	landscapei* landscape;
 	point       position;
-	stata       stats_cur, stats; // Common province and unit stats
-	costa       income_cur, income; // Additional income
+	stata       stats; // Common province and unit stats
+	costa       income; // Additional income
 	resourcea   resources; // Known province resource
 	variant     garnison; // Contract on province garnison units.
 	variants    neightboards;
@@ -141,15 +137,15 @@ struct provincei : nameable {
 	void        generate_explored();
 	void        generate_population();
 	void        generate_units();
-	int         get(stat_s v) const { return stats_cur.get(v); }
-	int         get(cost_s v) const { return income_cur.get(v); }
+	int         get(stat_s v) const { return stats.get(v); }
+	int         get(cost_s v) const { return income.get(v); }
 	int         getbuildcount() const;
 	void		getbuildings(answers* an, stringbuilder* sb);
 	int			getbuildlimit() const { return 3; }
 	void        getpresent(stringbuilder& sb) const;
 	void        paint() const;
-//	void        set(stat_s i, int v) { stats_cur.set(i, v); }
-	void        update();
+private:
+	void		apply(const buildingi& e, int multiplier = 1);
 };
 struct hero : uniti {
 	const char* avatar;
@@ -214,7 +210,7 @@ public:
 	void        addtroop(uniti* type, provincei* province);
 	unsigned    adduid();
 	bool        apply(const variants& source, bool allow_test, bool allow_apply);
-	static void apply(variant v, stata& stat, costa& cost);
+	static void apply(variant v, stata& stat, costa& cost, int multiplier = 1);
 	static void build();
 	static void demontage();
 	static const buildingi* choose_building();
@@ -225,8 +221,6 @@ public:
 	bool		execute(action_s id, bool run);
 	static void format(stringbuilder& sb, const char* string, ...);
 	static int  get(variant v, const variants& source);
-	static variant getaction(variant v);
-	static int  getbonus(variant v);
 	void        getdate(stringbuilder& sb) const;
 	static void getinfo(stringbuilder& sb, const char* id);
 	int         getmonth() const { return (turn / 3) % 12; }

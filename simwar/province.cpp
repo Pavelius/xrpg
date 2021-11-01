@@ -54,10 +54,20 @@ void provincei::generate_population() {
 	stats.set(Population, value);
 }
 
+void provincei::apply(const buildingi& e, int multiplier) {
+	for(auto v : e.effect)
+		game.apply(v, stats, income, multiplier);
+}
+
 void provincei::initialize() {
 	generate_population();
 	generate_explored();
 	generate_units();
+	income = landscape->income;
+	for(auto& e : bsdata<buildingi>()) {
+		if(isbuilded(&e))
+			apply(e);
+	}
 }
 
 int provincei::getbuildcount() const {
@@ -95,8 +105,8 @@ bool provincei::build(const buildingi* p, bool run) {
 	}
 	if(run) {
 		buildings.set(i);
+		apply(bsdata<buildingi>::get(i));
 		owner->actions.add(BuildProvince, -1);
-		update();
 	}
 	return true;
 }
@@ -115,8 +125,8 @@ bool provincei::demontage(const buildingi* p, bool run) {
 		return false;
 	if(run) {
 		buildings.remove(i);
+		apply(bsdata<buildingi>::get(i), -1);
 		owner->actions.add(DestroyProvince, -1);
-		update();
 	}
 	return true;
 }
@@ -139,17 +149,6 @@ void provincei::getbuildings(answers* an, stringbuilder* sb) {
 			an->add((long)&e, getnm(e.id));
 		if(sb)
 			e.getpresent(*sb);
-	}
-}
-
-void provincei::update() {
-	income_cur = income;
-	stats_cur = stats;
-	for(auto& e : bsdata<buildingi>()) {
-		if(!isbuilded(&e))
-			continue;
-		for(auto v : e.effect)
-			game.apply(v, stats_cur, income_cur);
 	}
 }
 

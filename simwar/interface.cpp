@@ -57,7 +57,7 @@ static void add_status(const char* id, int value) {
 		game.getdate(sb);
 	else {
 		variant v = id;
-		if(v.type==Cost)
+		if(v.type == Cost)
 			sb.add(":%1i:%2i", v.value, value);
 		else
 			sb.add("%1: %2i", getnm(id), value);
@@ -171,7 +171,7 @@ static void static_text() {
 }
 
 static void textfw(const char* p) {
-	if(!p || p[0]==0)
+	if(!p || p[0] == 0)
 		return;
 	auto push_width = width;
 	textfs(p);
@@ -239,8 +239,7 @@ static void group(const sprite* ps, const char* tips, bool right_align = false) 
 		rectb();
 		control_hilited = ishilite();
 		caret = push_caret;
-	}
-	else {
+	} else {
 		image(ps, 0, 0);
 		rectb();
 		control_hilited = ishilite();
@@ -308,6 +307,44 @@ long draw::dialog(answers& an, const char* title, const char* description) {
 	dialog_title = title;
 	dialog_description = description;
 	return scene(choose_answers_dialog);
+}
+
+static void paint(cost_s n) {
+	switch(n) {
+	case Gold:
+		image(caret.x + 1, caret.y + 2, metrics::icons, n, 0);
+		break;
+	default:
+		image(caret.x, caret.y - 1, metrics::icons, n, 0);
+		break;
+	}
+}
+
+static void status(cost_s n, int value) {
+	auto id = bsdata<costi>::elements[n].id;
+	if(ishilite()) {
+		stringbuilder sb(link);
+		sb.add(id);
+	}
+	paint(n);
+	auto push_caret = caret;;
+	caret.x += 14;
+	char temp[260]; stringbuilder sb(temp);
+	sb.add("%+1i", value); text(temp);
+	caret = push_caret;
+}
+
+static void income_format() {
+	auto push_width = width;
+	width = 42;
+	height = texth();
+	auto push_caret = caret;
+	auto gold = text_params[0];
+	auto mana = text_params[1];
+	status(Gold, gold);
+	caret.x = push_caret.x + push_width - width;
+	status(Mana, mana);
+	caret = push_caret;
 }
 
 static void progressbar(int minimal, int maximum, int current) {
@@ -381,6 +418,7 @@ void provincei::paint() const {
 void draw::initialize() {
 	static command text_formats_commads[] = {
 		{"progress", progress_format},
+		{"income", income_format},
 		{},
 	};
 	simpleinitialize();

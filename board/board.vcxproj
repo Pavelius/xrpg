@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="condition.cpp" />
     <ClCompile Include="creature.cpp" />
+    <ClCompile Include="information.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="modifier.cpp" />
     <ClCompile Include="property.cpp" />
