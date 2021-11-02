@@ -27,7 +27,7 @@ color				colors::tips::text;
 color				colors::tips::back;
 // Color context and font context
 fnevent				draw::domodal, draw::pbackground, draw::pwindow, draw::ptips;
-fnevent				draw::pbeforemodal, draw::pleavemodal, draw::pinput, draw::psetfocus;
+fnevent				draw::pbeforemodal, draw::pleavemodal, draw::psetfocus;
 unsigned char       draw::alpha = 255;
 color				draw::fore;
 color				draw::fore_stroke;
@@ -45,6 +45,7 @@ rect				sys_static_area;
 static draw::surface default_surface;
 draw::surface*		draw::canvas = &default_surface;
 point				draw::caret;
+point				draw::camera;
 bool			    line_antialiasing = true;
 // Drag
 static const void*	drag_object;
@@ -2150,14 +2151,6 @@ static void standart_domodal() {
 	draw::hot.key = draw::rawinput();
 	if(!draw::hot.key)
 		exit(0);
-	if(pinput)
-		pinput();
-}
-
-void draw::doredraw() {
-	draw::sysredraw();
-	if(pinput)
-		pinput();
 }
 
 bool draw::ismodal() {

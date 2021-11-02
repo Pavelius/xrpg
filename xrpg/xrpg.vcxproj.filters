@@ -201,6 +201,12 @@
     <ClInclude Include="pushvalue.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="crange.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="draw_background.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -451,6 +457,9 @@
     </ClCompile>
     <ClCompile Include="variant_bonus.cpp">
       <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_background.cpp">
+      <Filter>Interface</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

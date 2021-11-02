@@ -153,6 +153,7 @@
     <ClCompile Include="landscape.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_util.cpp" />
+    <ClCompile Include="opposition.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="population.cpp" />
     <ClCompile Include="prefix.cpp" />

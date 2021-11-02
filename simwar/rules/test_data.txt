@@ -72,8 +72,10 @@ Mistra
 #Nation
 
 HumansNation avatar("Humans")
+ income Gold(2)
 OrksNation avatar("Orks")
 GoblinsNation avatar("Goblins")
+ income Gold(1)
 OgresNation avatar("Ogres")
 
 #Unit

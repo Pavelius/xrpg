@@ -67,6 +67,9 @@
     <ClCompile Include="building.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="opposition.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="errors.txt">

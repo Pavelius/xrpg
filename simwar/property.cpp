@@ -6,7 +6,7 @@ template<> struct bsdata<V> : bsdata<T> {};
 
 LNK(stat_s, stati)
 NOBSDATA(point)
-NOBSDATA(range)
+NOBSDATA(crange)
 
 BSMETA(variant) = {{}};
 BSMETA(varianti) = {BSREQ(id), {}};
@@ -81,12 +81,12 @@ BSDATAC(buildingi, 64)
 BSMETA(point) = {
     BSREQ(x), BSREQ(y),
     {}};
-BSMETA(range) = {
+BSMETA(crange) = {
     BSREQ(min), BSREQ(max),
     {}};
 BSMETA(nationi) = {
     BSREQ(id),
-    BSREQ(avatar), BSREQ(alignment),
+    BSREQ(avatar), BSREQ(alignment), BSDST(income, costi),
     {}};
 BSDATAC(nationi, 32)
 BSMETA(tactici) = {

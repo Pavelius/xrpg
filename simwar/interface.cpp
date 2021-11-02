@@ -1,4 +1,5 @@
 #include "draw.h"
+#include "draw_background.h"
 #include "draw_simple.h"
 #include "main.h"
 
@@ -13,6 +14,8 @@ bool					draw::can_choose_province = true;
 static auto				res_shields = (sprite*)gres("shields", "art/objects");
 static auto				res_units = (sprite*)gres("units", "art/objects");
 extern command*			text_formats;
+
+void set_dark_theme();
 
 static bool spanel(int size) {
 	rectpush push;
@@ -101,11 +104,10 @@ static void tooltipshilite() {
 	}
 }
 
-static fnevent def_ptips;
 static void main_ptips() {
 	tooltipshilite();
-	if(def_ptips)
-		def_ptips();
+	background::tips();
+	simpleui::tips();
 }
 
 static void paint_troops(const provincei* province) {
@@ -157,7 +159,7 @@ static void paintprovinces() {
 
 static void main_background() {
 	paintclear();
-	paintimage();
+	background::paint();
 	paintprovinces();
 	paintcommands();
 	show_status_panel();
@@ -421,7 +423,7 @@ void draw::initialize() {
 		{"income", income_format},
 		{},
 	};
-	simpleinitialize();
+	set_dark_theme();
 	initialize("Simwar game");
 	metrics::padding = 3;
 	metrics::border = 5;
@@ -430,7 +432,6 @@ void draw::initialize() {
 	def_beforemodal = pbeforemodal;
 	pbeforemodal = main_beforemodal;
 	pbackground = main_background;
-	def_ptips = ptips;
 	ptips = main_ptips;
 	text_formats = text_formats_commads;
 }

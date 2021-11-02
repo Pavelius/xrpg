@@ -5,6 +5,7 @@
 #include "flagable.h"
 #include "point.h"
 #include "pushvalue.h"
+#include "crange.h"
 #include "varianta.h"
 
 enum action_s : unsigned char {
@@ -50,23 +51,19 @@ struct nameable {
 struct actioni {
 	const char* id;
 };
+struct costa : dataset<8, short> {
+	void        apply(variant v, const prefixa& flags);
+};
 struct nationi : nameable {
 	int         alignment;
 	const char* avatar;
-};
-struct range {
-	int         min, max;
-	explicit constexpr operator bool() const { return max != 0; }
-	constexpr int percent(int v) const { return (max == min) ? 0 : (v - min) * 100 / (max - min); }
-	int         random() const { return xrand(min, max); }
-};
-struct costa : dataset<8, short> {
-	void        apply(variant v, const prefixa& flags);
+	costa		income;
+	stata		stats;
 };
 struct landscapei {
 	const char* id;
 	const char* image;
-	range       explored, population;
+	crange      explored, population;
 	costa       income; // Base income from landscape
 	void        getinfo(stringbuilder& sb) const;
 };
@@ -84,7 +81,7 @@ struct populationi {
 	const char* id;
 	int         population;
 	int         level;
-	range       getrange() const;
+	crange      getrange() const;
 	static const populationi* findbypopulation(int value);
 };
 struct tactici : nameable {
@@ -107,6 +104,16 @@ struct army : adat<variant, 18> {
 	void        damage(int hits, stringbuilder* sb = 0);
 	int         get(variant v, stringbuilder* sb = 0) const;
 };
+struct defenderi : nameable {
+	army		units;
+	costa		cost, upkeep;
+};
+struct oppositioni {
+	const defenderi* type;
+	char		percent;
+	bool		canbecancel() const { return true; }
+	void		recover(int bonus = 0);
+};
 struct buildingi : nameable {
 	buildingi*  base;
 	variants    effect;
@@ -123,10 +130,10 @@ struct provincei : nameable {
 	stata       stats; // Common province and unit stats
 	costa       income; // Additional income
 	resourcea   resources; // Known province resource
-	variant     garnison; // Contract on province garnison units.
 	variants    neightboards;
 	playeri*    owner;
 	buildinga   buildings;
+	oppositioni	guard;
 	bool        build(const buildingi* p, bool run);
 	void        canbuild(answers& an);
 	bool		demontage(const buildingi* p, bool run);
@@ -144,6 +151,7 @@ struct provincei : nameable {
 	int			getbuildlimit() const { return 3; }
 	void        getpresent(stringbuilder& sb) const;
 	void        paint() const;
+	void		refresh();
 private:
 	void		apply(const buildingi& e, int multiplier = 1);
 };
@@ -233,6 +241,7 @@ public:
 	void        passturn();
 	void        play(const eventi* event);
 	static void playerturn();
+	static void refresh();
 	void        setuidbase(unsigned char v) { uid_base = v; }
 };
 extern gamei    game;

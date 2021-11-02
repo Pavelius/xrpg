@@ -64,6 +64,8 @@ void provincei::initialize() {
 	generate_explored();
 	generate_units();
 	income = landscape->income;
+	income += dwellers->nation->income;
+	stats += dwellers->nation->stats;
 	for(auto& e : bsdata<buildingi>()) {
 		if(isbuilded(&e))
 			apply(e);
@@ -157,4 +159,8 @@ bool provincei::ismatch(variant v) const {
 	case Landscape: return landscape == v.getpointer();
 	default: return true;
 	}
+}
+
+void provincei::refresh() {
+	guard.recover();
 }

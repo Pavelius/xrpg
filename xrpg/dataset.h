@@ -7,6 +7,8 @@ public:
 	constexpr static auto maximal_element = N;
 	typedef DT		data_type;
 	constexpr dataset() : data() {}
+	constexpr void operator+=(const dataset<N, DT>& e) { for(auto i = 0; i <= N; i++) data[i] += e.data[i]; }
+	constexpr void operator-=(const dataset<N, DT>& e) { for(auto i = 0; i <= N; i++) data[i] -= e.data[i]; }
 	void			add(int i) { data[i] += 1; }
 	void			add(int i, int v) { data[i] += v; }
 	const DT*		begin() const { return data; }

@@ -6,11 +6,9 @@
 
 using namespace draw;
 
-point				draw::camera;
 int                 draw::grid_size = 32;
 const void*			draw::hilite_object;
 command*            draw::input_commands;
-const char*         draw::image_url;
 int                 draw::pausetime;
 static point		camera_drag;
 static rect			board;
@@ -193,29 +191,6 @@ void draw::paintclear() {
 	tooltips(metrics::padding * 3, metrics::padding * 3, 320);
 }
 
-void draw::paintimage() {
-	if(!image_url)
-		return;
-	auto p = gres(image_url, "art/background");
-	if(!p)
-		return;
-	auto& fr = p->get(0);
-	board.x1 = -camera.x;
-	board.y1 = -camera.y;
-	if(fr.sx < getwidth()) {
-		board.x1 = (getwidth() - fr.sx) / 2;
-		camera.x = -board.x1;
-	}
-	if(fr.sy < getheight()) {
-		board.y1 = (getheight() - fr.sy) / 2;
-		camera.y = -board.y1;
-	}
-	board.x2 = board.x1 + fr.sx;
-	board.y2 = board.y1 + fr.sy;
-	ishilite(board);
-	image(board.x1, board.y1, p, 0, 0);
-}
-
 void draw::paintcommands() {
 	if(!input_commands)
 		return;
@@ -223,40 +198,15 @@ void draw::paintcommands() {
 	windows(input_commands);
 }
 
-void draw::paintall() {
-	paintclear();
-	paintimage();
-	paintcommands();
-}
+//void draw::paintall() {
+//	paintclear();
+//	paintimage();
+//	paintcommands();
+//}
 
 void draw::set(int x, int y) {
 	caret.x = x - camera.x;
 	caret.y = y - camera.y;
-}
-
-void draw::inputcamera() {
-	const int step = 32;
-	switch(hot.key) {
-	case KeyLeft: execute(cbsetsht, camera.x - step, 0, &camera.x); break;
-	case KeyRight: execute(cbsetsht, camera.x + step, 0, &camera.x); break;
-	case KeyUp: execute(cbsetsht, camera.y - step, 0, &camera.y); break;
-	case KeyDown: execute(cbsetsht, camera.y + step, 0, &camera.y); break;
-	case MouseWheelUp: execute(cbsetsht, camera.y - step, 0, &camera.y); break;
-	case MouseWheelDown: execute(cbsetsht, camera.y + step, 0, &camera.y); break;
-	case MouseLeft:
-		if(hot.pressed && hot.hilite == board) {
-			dragbegin(&camera);
-			camera_drag = camera;
-		}
-		break;
-	default:
-		if(dragactive(&camera)) {
-			hot.cursor = cursor::All;
-			if(hot.mouse.x >= 0 && hot.mouse.y >= 0)
-				camera = camera_drag + (dragmouse - hot.mouse);
-		}
-		break;
-	}
 }
 
 static int getpassedtime(unsigned long start) {
@@ -434,11 +384,9 @@ void draw::windows(const command* source) {
 	}
 }
 
-void set_dark_theme();
-
 void tooltips_getrect();
 
-static void paintcustomtips() {
+void draw::simpleui::tips() {
 	if(!draw::font)
 		return;
 	if(tooltips_sb && !tooltips_sb.begin()[0])
@@ -450,17 +398,4 @@ static void paintcustomtips() {
 	fore = colors::tips::text;
 	textf(tooltips_sb.begin());
 	fore = push_fore;
-}
-
-void draw::inputall() {
-	inputcamera();
-	paintcustomtips();
-}
-
-void draw::simpleinitialize() {
-	set_dark_theme();
-	if(!pbackground)
-		pbackground = paintall;
-	if(!ptips)
-		ptips = inputall;
 }

@@ -1,2 +1,2 @@
-﻿In file `Names.txt`:
- Define translate for `DeadLands`
+﻿In file `rules/test_data.txt`:
+ Line 75: Not found requisit `income`

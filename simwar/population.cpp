@@ -21,7 +21,7 @@ const populationi* populationi::findbypopulation(int value) {
 	return bsdata<populationi>::elements + sizeof(bsdata<populationi>::elements) / sizeof(bsdata<populationi>::elements[0]) - 1;
 }
 
-range populationi::getrange() const {
+crange populationi::getrange() const {
 	if(bsdata<populationi>::elements == this)
 		return {-1000, -200};
 	return {this[-1].population, population};

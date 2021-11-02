@@ -156,7 +156,7 @@ struct surface {
 extern surface*			canvas;
 extern rect				clipping; // Clipping area
 extern fnevent			domodal;
-extern point			dragmouse, caret;
+extern point			dragmouse, caret, camera;
 extern color			fore, fore_stroke;
 extern unsigned char    alpha;
 extern int				width, height;
@@ -227,7 +227,6 @@ void					settimer(unsigned milleseconds);
 const char*				skiptr(const char* string);
 void					stroke(int x, int y, const sprite* e, int id, int flags, unsigned char thin = 1, unsigned char* koeff = 0);
 void					syscursor(bool enable);
-void					sysredraw();
 void					text(const char* string, int count = -1, unsigned flags = 0);
 int						text(rect rc, const char* string, unsigned state = 0, int* max_width = 0);
 void					texta(const char* string, unsigned state = 0);
@@ -256,7 +255,6 @@ extern awindowi awindow;
 void applicationinitialize();
 void applicationafterinitialize();
 void fieldsetfocus();
-void simpleinitialize();
 void statusbeforemodal();
 void statuspaint();
 void tooltipsbeforemodal();
