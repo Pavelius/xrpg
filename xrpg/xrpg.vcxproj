@@ -149,6 +149,7 @@
     <ClInclude Include="crange.h" />
     <ClInclude Include="draw_background.h" />
     <ClInclude Include="draw_color.h" />
+    <ClInclude Include="draw_commands.h" />
     <ClInclude Include="draw_geometry.h" />
     <ClInclude Include="draw_hexagon.h" />
     <ClInclude Include="event.h" />
@@ -212,6 +213,7 @@
     <ClCompile Include="dialog.cpp" />
     <ClCompile Include="draw_background.cpp" />
     <ClCompile Include="draw_color.cpp" />
+    <ClCompile Include="draw_commands_ex.cpp" />
     <ClCompile Include="draw_geometry.cpp" />
     <ClCompile Include="draw_hexagon.cpp" />
     <ClCompile Include="event.cpp" />

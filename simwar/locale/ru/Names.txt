@@ -1,4 +1,5 @@
-﻿Artifacts: Реликвии
+﻿Archers: Лучники
+Artifacts: Реликвии
 Attack: Атака
 Barbarians: Варвары
 Barn: Амбар
@@ -47,6 +48,7 @@ Pub: Трактир
 Raid: Рейд
 RaiseInProvince: Повышает %-1 на [%+2i].
 RaiseIncomeInProvince: Повышает доход %-1 на [%+2i].
+RecruitUnits: Нанять войска
 ShowBuildings: Постройки
 ShowSites: Интересные места
 SmallHamlet: Хутор

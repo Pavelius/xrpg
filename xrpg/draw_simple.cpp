@@ -8,7 +8,6 @@ using namespace draw;
 
 int                 draw::grid_size = 32;
 const void*			draw::hilite_object;
-command*            draw::input_commands;
 int                 draw::pausetime;
 static point		camera_drag;
 static rect			board;
@@ -17,7 +16,7 @@ static const void*	current_hilite;
 extern stringbuilder tooltips_sb;
 
 namespace metrics {
-unsigned char			opacity = 230;
+unsigned char		opacity = 230;
 }
 
 bool draw::swindow(bool hilight) {
@@ -180,33 +179,6 @@ void draw::customwindow() {
 	auto height = 300;
 	swindow(false);
 	tooltips(caret.x + metrics::padding, caret.y + height + metrics::padding * 4, width);
-}
-
-void draw::paintclear() {
-	hilite_object = 0;
-	auto push_fore = fore;
-	fore = colors::window;
-	rectf();
-	fore = push_fore;
-	tooltips(metrics::padding * 3, metrics::padding * 3, 320);
-}
-
-void draw::paintcommands() {
-	if(!input_commands)
-		return;
-	setposld();
-	windows(input_commands);
-}
-
-//void draw::paintall() {
-//	paintclear();
-//	paintimage();
-//	paintcommands();
-//}
-
-void draw::set(int x, int y) {
-	caret.x = x - camera.x;
-	caret.y = y - camera.y;
 }
 
 static int getpassedtime(unsigned long start) {
@@ -375,15 +347,6 @@ void draw::bar(int value, int maximum) {
 	caret.y += height;
 }
 
-void draw::windows(const command* source) {
-	for(auto p = source; *p; p++) {
-		if(pwindow == p->proc)
-			continue;
-		if(button(getnm(p->id), p->key, buttonfd))
-			execute(cbsetptr, (long)p->proc, 0, &pwindow);
-	}
-}
-
 void tooltips_getrect();
 
 void draw::simpleui::tips() {
@@ -397,5 +360,17 @@ void draw::simpleui::tips() {
 	auto push_fore = draw::fore;
 	fore = colors::tips::text;
 	textf(tooltips_sb.begin());
+	fore = push_fore;
+}
+
+void draw::simpleui::beforemodal() {
+	hilite_object = 0;
+	tooltips(metrics::padding * 3, metrics::padding * 3, 320);
+}
+
+void draw::simpleui::paint() {
+	auto push_fore = fore;
+	fore = colors::window;
+	rectf();
 	fore = push_fore;
 }

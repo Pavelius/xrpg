@@ -2312,6 +2312,11 @@ void draw::setposld() {
 	setpos(metrics::padding + metrics::border, getheight() - metrics::padding - metrics::border - texth());
 }
 
+void draw::set(int x, int y) {
+	caret.x = x - camera.x;
+	caret.y = y - camera.y;
+}
+
 bool draw::isclipped(int size) {
 	rect rc = {caret.x - size, caret.y - size, caret.x + size, caret.y + size};
 	return !rc.intersect(clipping);

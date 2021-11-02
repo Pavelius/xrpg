@@ -11,6 +11,7 @@
 enum action_s : unsigned char {
 	BuildProvince, DestroyProvince, BuildCapital,
 	AttackProvince, RaidProvince,
+	RecruitUnits,
 	ChooseHeroes, ChooseProvinces, ShowBuildings, ShowSites, EndTurn,
 	CancelAction
 };
@@ -98,6 +99,9 @@ struct uniti : nameable {
 	uniti*      encounter_tought[4];
 	uniti*      encounter_monster[4];
 	int         get(variant v) const;
+};
+struct unita : public adat<uniti*, 32> {
+	bool		choose(const char* title);
 };
 struct army : adat<variant, 18> {
 	bool        conquer(army& enemy, stringbuilder* psb, stat_s attacker_stat, stat_s defender_stat);
@@ -241,6 +245,7 @@ public:
 	void        passturn();
 	void        play(const eventi* event);
 	static void playerturn();
+	void		recruit();
 	static void refresh();
 	void        setuidbase(unsigned char v) { uid_base = v; }
 };

@@ -311,6 +311,7 @@ action_s gamei::choose_province_action() {
 		province->getpresent(sb);
 		addaction(an, ShowBuildings);
 		addaction(an, ShowSites);
+		addaction(an, RecruitUnits);
 		addaction(an, EndTurn);
 		auto result = an.choose(temp, 0, true, 0, 1, getnm(game.province->id));
 		if(result == -1)
@@ -318,6 +319,11 @@ action_s gamei::choose_province_action() {
 		return (action_s)result;
 	}
 	return CancelAction;
+}
+
+void gamei::recruit() {
+	unita source;
+	source.choose(getnm("RecruitUnits"));
 }
 
 bool gamei::execute(action_s id, bool run) {
@@ -351,6 +357,9 @@ void gamei::playerturn() {
 			break;
 		case DestroyProvince:
 			game.demontage();
+			break;
+		case RecruitUnits:
+			game.recruit();
 			break;
 		}
 	}

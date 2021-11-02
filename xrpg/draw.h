@@ -217,6 +217,7 @@ void					rectf(); // Draw rectangle area. Right and bottom side is one pixel les
 void					rectfe(rect rc, int radius);
 void					rectx();
 void					rectfocus();
+void					set(int x, int y);
 void					setcaption(const char* string);
 void					setclip(rect rc);
 inline void				setclip() { clipping.set(0, 0, getwidth(), getheight()); }

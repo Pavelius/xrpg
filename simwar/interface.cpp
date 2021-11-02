@@ -1,5 +1,7 @@
+#include "command.h"
 #include "draw.h"
 #include "draw_background.h"
+#include "draw_commands.h"
 #include "draw_simple.h"
 #include "main.h"
 
@@ -88,11 +90,9 @@ static void show_status_panel() {
 	height = push_height;
 }
 
-static fnevent def_beforemodal;
 static void main_beforemodal() {
-	if(def_beforemodal)
-		def_beforemodal();
 	tooltipsbeforemodal();
+	simpleui::beforemodal();
 }
 
 static void tooltipshilite() {
@@ -158,10 +158,10 @@ static void paintprovinces() {
 }
 
 static void main_background() {
-	paintclear();
+	simpleui::paint();
 	background::paint();
 	paintprovinces();
-	paintcommands();
+	commands::paint();
 	show_status_panel();
 	setposru();
 }
@@ -429,9 +429,33 @@ void draw::initialize() {
 	metrics::border = 5;
 	image_url = "silentseas";
 	// Overlaod controls
-	def_beforemodal = pbeforemodal;
 	pbeforemodal = main_beforemodal;
 	pbackground = main_background;
 	ptips = main_ptips;
 	text_formats = text_formats_commads;
+}
+
+static void field(const uniti* v) {
+	texta(getnm(v->id), AlignLeftCenter);
+}
+
+static unita* current_unita;
+static void choose_unita() {
+	width = 500;
+	caret.x = (getwidth() - width) / 2;
+	caret.y = 30;
+	if(dialog_title)
+		texth2w(dialog_title);
+	height = 300;
+	swindow(false);
+	width = width / 2 - metrics::padding;
+	height = texth() + metrics::border * 2;
+	field(bsdata<uniti>::elements); caret.y += height + metrics::padding;
+}
+
+bool unita::choose(const char* title) {
+	current_unita = this;
+	dialog_title = title;
+	scene(choose_unita);
+	return getresult() != 0;
 }

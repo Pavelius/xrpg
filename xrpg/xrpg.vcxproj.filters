@@ -207,6 +207,9 @@
     <ClInclude Include="draw_background.h">
       <Filter>Interface</Filter>
     </ClInclude>
+    <ClInclude Include="draw_commands.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -459,6 +462,9 @@
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="draw_background.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_commands_ex.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
   </ItemGroup>
