@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="action.cpp" />
+    <ClCompile Include="army.cpp" />
     <ClCompile Include="bonus.cpp" />
     <ClCompile Include="building.cpp" />
     <ClCompile Include="combat.cpp" />
@@ -159,7 +160,6 @@
     <ClCompile Include="prefix.cpp" />
     <ClCompile Include="property.cpp" />
     <ClCompile Include="province.cpp" />
-    <ClCompile Include="selector.cpp" />
     <ClCompile Include="stat.cpp" />
     <ClCompile Include="string.cpp" />
     <ClCompile Include="troop.cpp" />
@@ -170,6 +170,7 @@
     <Text Include="locale\ru\Descriptions.txt" />
     <Text Include="locale\ru\Names.txt" />
     <Text Include="locale\ru\NamesOf.txt" />
+    <Text Include="locale\ru\NamesPl.txt" />
     <Text Include="rules\events.txt" />
     <Text Include="rules\test_data.txt" />
   </ItemGroup>

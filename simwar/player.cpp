@@ -29,4 +29,13 @@ void playeri::refresh() {
 	actions.set(DestroyProvince, 1);
 	actions.set(AttackProvince, 2);
 	actions.set(RaidProvince, 1);
+	update_resources();
+}
+
+void playeri::update_resources() {
+	for(auto& e : bsdata<provincei>()) {
+		if(e.owner != this)
+			continue;
+		resources.add(e.resources);
+	}
 }

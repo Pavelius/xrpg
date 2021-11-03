@@ -11,12 +11,39 @@ const char*				dialog_image;
 static answers*			dialog_answers;
 static const char*		dialog_title;
 static const char*		dialog_description;
+static const int		cell_padding = 2;
 bool					draw::can_choose_province = true;
 static auto				res_shields = (sprite*)gres("shields", "art/objects");
 static auto				res_units = (sprite*)gres("units", "art/objects");
 extern command*			text_formats;
 
 void set_dark_theme();
+
+static void painthilite() {
+	auto push_fore = fore;
+	auto push_alpha = alpha;
+	fore = colors::button;
+	alpha = 128;
+	rectf();
+	alpha = push_alpha;
+	rectb();
+	fore = push_fore;
+}
+
+static void paintcurrenthilite() {
+	auto push_fore = fore;
+	auto push_alpha = alpha;
+	rectpush push;
+	fore = colors::button;
+	alpha = 128;
+	width = hot.hilite.width();
+	height = hot.hilite.height();
+	caret.x = hot.hilite.x1;
+	caret.y = hot.hilite.y1;
+	rectb();
+	alpha = push_alpha;
+	fore = push_fore;
+}
 
 static bool spanel(int size) {
 	rectpush push;
@@ -107,6 +134,8 @@ static void tips_validate() {
 
 static void main_ptips() {
 	tips_validate();
+	if(tips_sb && hot.hilite)
+		paintcurrenthilite();
 	background::tips();
 	simpleui::tips();
 }
@@ -115,13 +144,11 @@ static void paint_troops(const provincei* province) {
 	auto push_stroke = fore_stroke;
 	auto push_fore = fore;
 	selector source;
-	source.querry(province);
 	fore = colors::black;
 	fore_stroke = colors::white;
 	for(auto v : source) {
-		troop* p = v;
-		if(!p)
-			continue;
+		continue;
+		troop* p = 0;
 		textjc(getnm(p->type->id));
 		caret.y += texth();
 		break;
@@ -434,27 +461,108 @@ void draw::initialize() {
 	text_formats = text_formats_commads;
 }
 
-static void field(const uniti* v) {
-	texta(getnm(v->id), AlignLeftCenter);
+static void paintborder() {
+	auto push_fore = fore;
+	fore = colors::border;
+	rectb();
+	fore = push_fore;
 }
 
-static unita* current_unita;
-static void choose_unita() {
-	width = 500;
-	caret.x = (getwidth() - width) / 2;
-	caret.y = 30;
-	if(dialog_title)
-		texth2w(dialog_title);
-	height = 300;
-	swindow(false);
-	width = width / 2 - metrics::padding;
-	height = texth() + metrics::border * 2;
-	field(bsdata<uniti>::elements); caret.y += height + metrics::padding;
+static void addcount(stringbuilder& sb, const char* format, const char* id, int count) {
+	switch(count) {
+	case 0: break;
+	case 1: sb.add(format, count, getnm(id)); break;
+	case 2: case 3: case 4: sb.add(format, count, getnmof(id)); break;
+	default: sb.add(format, count, getnmpl(id)); break;
+	}
 }
 
-bool unita::choose(const char* title) {
-	current_unita = this;
-	dialog_title = title;
-	scene(choose_unita);
+static bool field(uniti* p, playeri* player, int count) {
+	rectpush push;
+	auto hilited = ishilite();
+	if(hilited) {
+		painthilite();
+		hilite_object = p;
+	}
+	setoffset(cell_padding, cell_padding);
+	text(getnm(p->id));
+	char temp[260]; temp[0] = 0;
+	stringbuilder sb(temp);
+	if(player) {
+		costa cost = p->cost;
+		if(player)
+			cost.modify(player->resources, p->need);
+		cost.getinfo(sb, 0);
+	} else if(count)
+		addcount(sb, "%1i %-2", "Squad", count);
+	if(temp[0]) {
+		auto push_width = width;
+		textfs(temp);
+		caret.x = caret.x + push_width - width;
+		textf(temp);
+	}
+	auto result = false;
+	if(hot.key == MouseLeft && hot.pressed && hilited)
+		result = true;
+	return result;
+}
+
+static void field(army& source, playeri* player, fnevent proc) {
+	for(auto& e : source) {
+		if(!e)
+			continue;
+		if(field(e.type, player, 0))
+			execute(proc, (long)&e, (long)player, &source);
+		caret.y += height + metrics::padding;
+	}
+}
+
+static void fieldbycount(army& source, playeri* player, fnevent proc) {
+	uniti* type = 0;
+	int count = 0;
+	for(auto& e : source) {
+		if(!e)
+			continue;
+		if(e.type == type) {
+			count++;
+			continue;
+		}
+		if(type) {
+			if(field(type, player, count))
+				execute(proc, (long)type, (long)player, &source);
+			caret.y += height + metrics::padding;
+		}
+		type = e.type;
+		count = 1;
+	}
+	if(type) {
+		if(field(type, player, count))
+			execute(proc, (long)type, (long)player, &source);
+		caret.y += height + metrics::padding;
+	}
+}
+
+bool army::choose(const char* title, const char* t1, army& a1, const char* t2, army& a2) {
+	while(ismodal()) {
+		paintstart();
+		setposct();
+		if(title)
+			texth2w(title);
+		height = 440;
+		swindow(false);
+		auto push_width = width;
+		auto push_caret = caret;
+		width = 220;
+		height = texth() + cell_padding * 2;
+		texth3a(t1, AlignCenter);
+		caret.x += metrics::border * 2;
+		field(a1, game.player, buttonok);
+		caret = push_caret;
+		caret.x = push_caret.x + push_width - width - metrics::border * 4;
+		texth3a(t2, AlignCenter);
+		caret.x += metrics::border * 2;
+		fieldbycount(a2, 0, buttonok);
+		domodal();
+	}
 	return getresult() != 0;
 }

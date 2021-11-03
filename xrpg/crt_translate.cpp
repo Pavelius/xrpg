@@ -13,6 +13,7 @@ struct translate {
 static const char* main_locale;
 static array source_name(sizeof(translate));
 static array source_nameof(sizeof(translate));
+static array source_namepl(sizeof(translate));
 static array source_text(sizeof(translate));
 
 static int compare(const void* v1, const void* v2) {
@@ -144,6 +145,7 @@ void initialize_translation(const char* locale) {
 	setfile(source_name, "Names", main_locale, false, true);
 	setfile(source_text, "Descriptions", main_locale, false, false);
 	setfile(source_nameof, "NamesOf", main_locale, false, false);
+	setfile(source_namepl, "NamesPl", main_locale, false, false);
 }
 
 const char* getnm(const char* id) {
@@ -171,6 +173,16 @@ const char* getnmof(const char* id) {
 		return "";
 	translate key = {id, 0};
 	auto p = (translate*)bsearch(&key, source_nameof.data, source_nameof.getcount(), source_nameof.getsize(), compare);
+	if(!p || !p->name || !p->name[0])
+		return id;
+	return p->name;
+}
+
+const char* getnmpl(const char* id) {
+	if(!id || id[0] == 0)
+		return "";
+	translate key = {id, 0};
+	auto p = (translate*)bsearch(&key, source_namepl.data, source_namepl.getcount(), source_namepl.getsize(), compare);
 	if(!p || !p->name || !p->name[0])
 		return id;
 	return p->name;

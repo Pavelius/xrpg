@@ -186,9 +186,9 @@ static void write_value(void* object, const bsreq* req, int index, const valuei&
 		auto pd = p2 + FO(adat<char>, data);
 		if(index > (int)req->count)
 			index = 0;
-		req->set(pd + index * req->count * req->size, v.number);
-		if(index > *pc)
-			*pc = index;
+		req->set(pd + index * req->size, v.number);
+		if(index + 1> *pc)
+			*pc = index + 1;
 	} else if(req->is(KindDSet))
 		req->set(p1, v.number);
 	else if(req->is(KindFlags)) {

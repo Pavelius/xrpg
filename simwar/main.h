@@ -27,7 +27,7 @@ enum prefix_s : unsigned char {
 };
 enum variant_s : unsigned char {
 	NoVariant,
-	Bonus, Building, Cost, Event, Hero, Landscape, Nation, Player, Prefix, Province, Resource, Stat, Tactic, Troop, Unit
+	Bonus, Building, Cost, Event, Hero, Landscape, Nation, Player, Prefix, Province, Resource, Stat, Tactic, Unit
 };
 struct playeri;
 struct prefixa : flagable<4> {
@@ -54,6 +54,8 @@ struct actioni {
 };
 struct costa : dataset<8, short> {
 	void        apply(variant v, const prefixa& flags);
+	void		getinfo(stringbuilder& sb, const char* promt) const;
+	void		modify(const resourcea& allowed, const producea& need);
 };
 struct nationi : nameable {
 	int         alignment;
@@ -77,6 +79,7 @@ struct costi {
 	int			getindex() const { return this - bsdata<costi>::elements; }
 };
 struct resourcei : nameable {
+	costa		cost;
 };
 struct populationi {
 	const char* id;
@@ -100,13 +103,23 @@ struct uniti : nameable {
 	uniti*      encounter_monster[4];
 	int         get(variant v) const;
 };
-struct unita : public adat<uniti*, 32> {
-	bool		choose(const char* title);
+struct troop {
+	uniti*		type;
+	constexpr explicit operator bool() const { return type != 0; }
+	void        clear();
+	int         get(variant id, stringbuilder* sb = 0) const;
+	static int  getbonus(variant id, const variants& source);
+	void        kill();
 };
-struct army : adat<variant, 18> {
+struct army : adat<troop, 18> {
+	void		add(uniti* p);
+	static bool	choose(const char* title, const char* t1, army& a1, const char* t2, army& a2);
 	bool        conquer(army& enemy, stringbuilder* psb, stat_s attacker_stat, stat_s defender_stat);
 	void        damage(int hits, stringbuilder* sb = 0);
 	int         get(variant v, stringbuilder* sb = 0) const;
+	void		shuffle();
+	void		select(const landscapei* v);
+	void		sort();
 };
 struct defenderi : nameable {
 	army		units;
@@ -138,6 +151,7 @@ struct provincei : nameable {
 	playeri*    owner;
 	buildinga   buildings;
 	oppositioni	guard;
+	army		garnison;
 	bool        build(const buildingi* p, bool run);
 	void        canbuild(answers& an);
 	bool		demontage(const buildingi* p, bool run);
@@ -159,22 +173,12 @@ struct provincei : nameable {
 private:
 	void		apply(const buildingi& e, int multiplier = 1);
 };
-struct hero : uniti {
+struct heroi : uniti {
 	const char* avatar;
 	provincei*  province;
 	int         golds;
+	army		troops;
 	void        getinfo(stringbuilder& sb) const;
-};
-struct troop {
-	unsigned    uid;
-	uniti*      type;
-	provincei*  province;
-	provincei*  moveto;
-	constexpr explicit operator bool() const { return uid != 0; }
-	void        clear();
-	int         get(variant id, stringbuilder* sb = 0) const;
-	static int  getbonus(variant id, const variants& source);
-	void        kill();
 };
 struct sitetypei : nameable {
 	landscapea  landscape; // Landscape types where site might generate. 0 - for all sites.
@@ -196,17 +200,18 @@ struct playeri {
 	costa       total;
 	decki       events;
 	actiona		actions; // Total count of each action per turn
+	resourcea	resources; // Allowed resources
 	int         get(variant v) const;
 	bool		isallow(action_s v) const { return actions.get(v) != 0; }
 	void        initialize();
 	void		refresh();
+	void		update_resources();
 };
 struct prefixi {
 	const char* id;
 };
 struct selector : varianta {
 	void        match(const landscapei* p, bool keep);
-	void        querry(const provincei* p);
 	void        sortunits();
 };
 class gamei {
@@ -215,11 +220,11 @@ class gamei {
 	int         turn;
 	int         start_year;
 public:
+	heroi*		hero;
 	playeri*    player;
 	provincei*  province;
 	buildingi*  building;
 	void		addaction(answers& an, action_s v);
-	void        addtroop(uniti* type, provincei* province);
 	unsigned    adduid();
 	bool        apply(const variants& source, bool allow_test, bool allow_apply);
 	static void apply(variant v, stata& stat, costa& cost, int multiplier = 1);
@@ -227,7 +232,7 @@ public:
 	static void demontage();
 	static const buildingi* choose_building();
 	action_s	choose_building_action();
-	static hero* choose_hero();
+	static heroi* choose_hero();
 	static provincei* choose_province();
 	action_s	choose_province_action();
 	bool		execute(action_s id, bool run);
@@ -240,6 +245,7 @@ public:
 	int         getyear() const { return start_year + turn / (3 * 12); }
 	int         getturn() const { return turn; }
 	void        initialize();
+	static char leadership[10][4];
 	static void	maketurn();
 	static void message(const char* string);
 	void        passturn();
@@ -262,10 +268,9 @@ VKIND(bonusi, Bonus)
 VKIND(buildingi, Building)
 VKIND(cost_s, Cost)
 VKIND(eventi, Event)
-VKIND(hero, Hero)
+VKIND(heroi, Hero)
 VKIND(landscapei, Landscape)
 VKIND(provincei, Province)
 VKIND(stat_s, Stat)
 VKIND(tactici, Tactic)
-VKIND(troop, Troop)
 VKIND(uniti, Unit)

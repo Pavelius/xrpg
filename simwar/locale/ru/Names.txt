@@ -1,4 +1,5 @@
-﻿Archers: Лучники
+﻿AllowedToHire: Доступно для найма
+Archers: Лучники
 Artifacts: Реликвии
 Attack: Атака
 Barbarians: Варвары
@@ -9,9 +10,11 @@ Builded: Построено
 CanBuildOnlyIn: Строиться только [%-1].
 Cancel: Отмена
 CancelAction: Отменить
+Cavalry: Кавалерия
 ChooseBuildingToBuild: Выбирайте постройку, которую хотите соорудить. Список органичен постройками только доступными для строительства в этой провинции.
 ChooseBuildingToDemontage: Выбирайте постройку, которую хотите снести.
 CrystalGarden: Кристальный сад
+CurrentArmy: Присутствующая армия
 Date: Дата
 DeadLands: Мертвые земли
 Defend: Защита
@@ -32,7 +35,8 @@ Hills: Холмы
 Hotel: Гостиница
 HumansNation: Люди
 Income: Доход
-LumberMill: ЛЕсопилка
+Knights: Рыцари
+LumberMill: Лесопилка
 Mana: Мана
 Mine: Шахта
 Mistra: Мистра
@@ -49,12 +53,16 @@ Raid: Рейд
 RaiseInProvince: Повышает %-1 на [%+2i].
 RaiseIncomeInProvince: Повышает доход %-1 на [%+2i].
 RecruitUnits: Нанять войска
+Riders: Всадники
 ShowBuildings: Постройки
 ShowSites: Интересные места
 SmallHamlet: Хутор
 SmallVillage: Поселение
 SouthHills: Южные холмы
+Spearmens: Копейщики
+Squad: Отряд
 StartMonth: Начало
+Swordmens: Мечники
 Tavern: Таверна
 Thugs: Бандиты
 Village: Деревня

@@ -25,23 +25,20 @@ static uniti* random(uniti** source4, uniti* def) {
 }
 
 void provincei::generate_units() {
-	selector source;
-	source.select(bsdata<uniti>::source);
-	source.match(landscape, true);
+	army source;
+	source.select(landscape);
 	source.shuffle();
 	if(!source)
 		return;
-	uniti* p = source.data[0];
-	if(!p)
-		return;
+	auto p = source.data[0].type;
 	dwellers = p;
 	for(auto count = xrand(1, 4); count > 0; count--) {
 		if(chance(75) || count == 1)
-			game.addtroop(p, this);
+			garnison.add(p);
 		else if(chance(75))
-			game.addtroop(random(p->encounter_tought, p), this);
+			garnison.add(random(p->encounter_tought, p));
 		else
-			game.addtroop(random(p->encounter_monster, p), this);
+			garnison.add(random(p->encounter_monster, p));
 	}
 }
 

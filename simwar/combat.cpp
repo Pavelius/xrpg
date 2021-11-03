@@ -1,32 +1,22 @@
 #include "main.h"
 
 void army::damage(int count, stringbuilder* sb) {
-	for(auto v : *this) {
+	for(auto& e : *this) {
 		if(count <= 0)
 			break;
-		if(!v)
-			continue;
-		troop* pt = v;
-		if(pt) {
-			auto hits = pt->get(Hits, sb);
-			if(count > hits) {
-				count -= hits;
-				pt->kill();
-			} else
-				break;
-		}
+		auto hits = e.get(Hits);
+		if(count > hits) {
+			count -= hits;
+			e.kill();
+		} else
+			break;
 	}
 }
 
 int army::get(variant v, stringbuilder* sb) const {
 	auto r = 0;
-	for(auto v : *this) {
-		if(!v)
-			continue;
-		troop* pt = v;
-		if(pt)
-			r += pt->get(v, sb);
-	}
+	for(auto& e : *this)
+		r += e.get(v, sb);
 	return r;
 }
 

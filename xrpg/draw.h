@@ -159,7 +159,7 @@ extern fnevent			domodal;
 extern point			dragmouse, caret, camera, tips_caret;
 extern color			fore, fore_stroke;
 extern unsigned char    alpha;
-extern int				width, height, tips_width;
+extern int				width, height, tips_width, dialog_width;
 extern bool				text_clipped, control_hilited;
 extern const sprite*	font; // Currently selected font
 extern double			linw;
@@ -207,6 +207,7 @@ void					image(const sprite* e, int id, int flags, color* pal);
 void					key2str(stringbuilder& sb, int key);
 void					line(int x, int y); // Draw line
 void					linet(int x, int y);
+void					paintstart();
 void					pixel(int x, int y);
 void					pixel(int x, int y, unsigned char alpha);
 unsigned char*			ptr(int x, int y);
@@ -286,7 +287,8 @@ void start();
 }
 namespace draw {
 bool isclipped(int size);
-void setposru();
-void setposlu();
+void setposct();
 void setposld();
+void setposlu();
+void setposru();
 }

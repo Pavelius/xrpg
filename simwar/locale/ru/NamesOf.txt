@@ -23,3 +23,5 @@ Forest: В лесу
 Hills: На холмах
 Plains: На равнине
 Swamp: В болотах
+
+Squad: Отряда

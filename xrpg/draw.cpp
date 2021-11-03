@@ -31,7 +31,7 @@ fnevent				draw::pbeforemodal, draw::pleavemodal, draw::psetfocus;
 unsigned char       draw::alpha = 255;
 color				draw::fore;
 color				draw::fore_stroke;
-int					draw::width, draw::height, draw::tips_width;
+int					draw::width, draw::height, draw::tips_width, draw::dialog_width = 500;
 bool				draw::text_clipped, draw::control_hilited;
 const sprite*		draw::font;
 double				draw::linw = 1.0;
@@ -2248,12 +2248,16 @@ void draw::initialize(const char* title) {
 	draw::setcaption(title);
 }
 
+void draw::paintstart() {
+	if(pbackground)
+		pbackground();
+	if(pwindow)
+		pwindow();
+}
+
 long draw::scene(fnevent proc) {
 	while(ismodal()) {
-		if(pbackground)
-			pbackground();
-		if(pwindow)
-			pwindow();
+		paintstart();
 		if(proc)
 			proc();
 		domodal();
@@ -2329,6 +2333,11 @@ void draw::setposru() {
 void draw::setposlu() {
 	setpos(metrics::padding + metrics::border, metrics::padding + metrics::border);
 	width = 400;
+}
+
+void draw::setposct() {
+	width = dialog_width;
+	setpos((canvas->width - width) / 2, 30);
 }
 
 void draw::setposld() {

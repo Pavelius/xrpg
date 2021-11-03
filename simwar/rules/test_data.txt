@@ -1,13 +1,19 @@
 #Resource
 
 Woods
+ cost Gold(4)
 Horses
+ cost Gold(6)
 Iron
+ cost Gold(15)
 Herbs
+ cost Gold(9)
 Gems
+ cost Gold(41)
 Sulfur
-Iron
+ cost Gold(19)
 Leather
+ cost Gold(6)
 
 #Tactic
 

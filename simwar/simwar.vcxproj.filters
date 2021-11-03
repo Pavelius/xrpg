@@ -49,9 +49,6 @@
     <ClCompile Include="unit.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
-    <ClCompile Include="selector.cpp">
-      <Filter>Logic</Filter>
-    </ClCompile>
     <ClCompile Include="main_util.cpp">
       <Filter>Util</Filter>
     </ClCompile>
@@ -68,6 +65,9 @@
       <Filter>Logic</Filter>
     </ClCompile>
     <ClCompile Include="opposition.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="army.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
   </ItemGroup>
@@ -88,6 +88,9 @@
       <Filter>Data</Filter>
     </Text>
     <Text Include="locale\ru\NamesOf.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="locale\ru\NamesPl.txt">
       <Filter>Data</Filter>
     </Text>
   </ItemGroup>

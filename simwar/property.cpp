@@ -13,118 +13,113 @@ BSMETA(varianti) = {BSREQ(id), {}};
 BSDATAD(variant)
 
 BSMETA(stati) = {
-    BSREQ(id),
-{}};
+	BSREQ(id),
+	{}};
 BSMETA(costi) = {
-    BSREQ(id),
-{}};
+	BSREQ(id),
+	{}};
 BSMETA(resourcei) = {
-    BSREQ(id),
-{}};
+	BSREQ(id),
+	BSDST(cost, costi),
+	{}};
 BSDATAC(resourcei, 16)
 BSMETA(populationi) = {
-    BSREQ(id),
-    BSREQ(level),
-    {}};
+	BSREQ(id),
+	BSREQ(level),
+	{}};
 BSDATAC(populationi, 16)
 BSMETA(landscapei) = {
-    BSREQ(id),
-    BSREQ(explored),
-    BSDST(income, costi),
-    {}};
+	BSREQ(id),
+	BSREQ(explored),
+	BSDST(income, costi),
+	{}};
 BSMETA(uniti) = {
-    BSREQ(id),
-    BSREQ(nation),
-    BSDST(stats, stati),
-    BSDST(cost, costi),
-    BSDST(upkeep, costi),
-    BSFLG(encounter, landscapei), BSREQ(encounter_tought), BSREQ(encounter_monster),
-    BSADT(need, resourcei),
-    {}};
+	BSREQ(id),
+	BSREQ(nation),
+	BSDST(stats, stati),
+	BSDST(cost, costi),
+	BSDST(upkeep, costi),
+	BSFLG(encounter, landscapei), BSREQ(encounter_tought), BSREQ(encounter_monster),
+	BSADT(need, resourcei),
+	{}};
 BSDATAC(uniti, 128)
 BSMETA(bonusi) = {
-    BSREQ(id),
-    BSREQ(type), BSREQ(bonus),
-    {}};
-BSMETA(troop) = {
-    BSREQ(uid),
-    BSREQ(type), BSREQ(province),
-    {}};
-BSDATAC(troop, 2048)
+	BSREQ(id),
+	BSREQ(type), BSREQ(bonus),
+	{}};
 BSMETA(playeri) = {
-    BSREQ(id),
-    BSREQ(avatar),
-    {}};
+	BSREQ(id),
+	BSREQ(avatar),
+	{}};
 BSMETA(prefixi) = {
-    BSREQ(id),
-    {}};
+	BSREQ(id),
+	{}};
 BSMETA(provincei) = {
-    BSREQ(id),
-    BSREQ(position),
-    BSREQ(owner),
-    BSDST(income, costi),
-    BSDST(stats, stati),
-    BSREQ(landscape),
-    BSREQ(neightboards),
-    BSFLG(buildings, buildingi),
-    {}};
+	BSREQ(id),
+	BSREQ(position),
+	BSREQ(owner),
+	BSDST(income, costi),
+	BSDST(stats, stati),
+	BSREQ(landscape),
+	BSREQ(neightboards),
+	BSFLG(buildings, buildingi),
+	{}};
 BSDATAC(provincei, 256)
 BSMETA(eventi) = {
-    BSREQ(id),
-    {}};
+	BSREQ(id),
+	{}};
 BSMETA(buildingi) = {
-    BSREQ(id),
-    BSREQ(base), BSREQ(effect), BSREQ(condition),
-    BSDST(cost, costi),
-    {}};
+	BSREQ(id),
+	BSREQ(base), BSREQ(effect), BSREQ(condition),
+	BSDST(cost, costi),
+	{}};
 BSDATAC(buildingi, 64)
 BSMETA(point) = {
-    BSREQ(x), BSREQ(y),
-    {}};
+	BSREQ(x), BSREQ(y),
+	{}};
 BSMETA(crange) = {
-    BSREQ(min), BSREQ(max),
-    {}};
+	BSREQ(min), BSREQ(max),
+	{}};
 BSMETA(nationi) = {
-    BSREQ(id),
-    BSREQ(avatar), BSREQ(alignment), BSDST(income, costi),
-    {}};
+	BSREQ(id),
+	BSREQ(avatar), BSREQ(alignment), BSDST(income, costi),
+	{}};
 BSDATAC(nationi, 32)
 BSMETA(tactici) = {
-    BSREQ(id),
-    BSREQ(bonus),
-    BSFLG(disable, tactici),
-    {}};
+	BSREQ(id),
+	BSREQ(bonus),
+	BSFLG(disable, tactici),
+	{}};
 BSDATAC(tactici, 32)
-BSMETA(hero) = {
-    BSREQ(id),
-    BSREQ(avatar),
-    BSREQ(nation),
-    BSDST(stats, stati),
-    BSDST(cost, costi),
-    BSDST(upkeep, costi),
-    BSFLG(encounter, landscapei), BSREQ(encounter_tought), BSREQ(encounter_monster),
-    BSREQ(province),
-    {}};
-BSDATAC(hero, 128)
+BSMETA(heroi) = {
+	BSREQ(id),
+	BSREQ(avatar),
+	BSREQ(nation),
+	BSDST(stats, stati),
+	BSDST(cost, costi),
+	BSDST(upkeep, costi),
+	BSFLG(encounter, landscapei), BSREQ(encounter_tought), BSREQ(encounter_monster),
+	BSREQ(province),
+	{}};
+BSDATAC(heroi, 128)
 
 #define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr, 1
 #define VRNOM(T) 0, bsdata<T>::source_ptr
 BSDATA(varianti) = {
 	{"NoVariant"},
-    {"Bonus", VRSTD(bonusi)},
-    {"Building", VRSTD(buildingi)},
-    {"Cost", VRSTD(costi)},
-    {"Event", VRSTD(eventi)},
-    {"Hero", VRSTD(hero)},
-    {"Landscape", VRSTD(landscapei)},
-    {"Nation", VRSTD(nationi)},
-    {"Player", VRSTD(playeri)},
-    {"Prefix", VRSTD(prefixi)},
-    {"Province", VRSTD(provincei)},
-    {"Resource", VRSTD(resourcei)},
-    {"Stat", VRSTD(stati)},
-    {"Tactic", VRSTD(tactici)},
-    {"Troop", VRSTD(troop), FG(varianti::NotFoundByName)},
-    {"Unit", VRSTD(uniti)},
+	{"Bonus", VRSTD(bonusi)},
+	{"Building", VRSTD(buildingi)},
+	{"Cost", VRSTD(costi)},
+	{"Event", VRSTD(eventi)},
+	{"Hero", VRSTD(heroi)},
+	{"Landscape", VRSTD(landscapei)},
+	{"Nation", VRSTD(nationi)},
+	{"Player", VRSTD(playeri)},
+	{"Prefix", VRSTD(prefixi)},
+	{"Province", VRSTD(provincei)},
+	{"Resource", VRSTD(resourcei)},
+	{"Stat", VRSTD(stati)},
+	{"Tactic", VRSTD(tactici)},
+	{"Unit", VRSTD(uniti)},
 };
 assert_enum(varianti, Unit)

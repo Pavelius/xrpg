@@ -3,6 +3,19 @@
 static unsigned	current_uid;
 gamei			game;
 
+char gamei::leadership[10][4] = {
+	{3},
+	{4},
+	{4, 1},
+	{5, 2},
+	{5, 2},
+	{6, 3, 1},
+	{6, 3, 2},
+	{7, 4, 2},
+	{7, 4, 3, 1},
+	{8, 5, 3, 2},
+};
+
 struct game_string : stringbuilder {
 	void addtag(const char* id) {
 		add("[");
@@ -181,14 +194,6 @@ unsigned gamei::adduid() {
 	return (uid_base << 24) | (++uid);
 }
 
-void gamei::addtroop(uniti* type, provincei* province) {
-	auto p = bsdata<troop>::addz();
-	p->clear();
-	p->uid = adduid();
-	p->type = type;
-	p->province = province;
-}
-
 void gamei::passturn() {
 	turn++;
 }
@@ -277,15 +282,15 @@ provincei* gamei::choose_province() {
 	return (provincei*)an.choose(0, getnm("Cancel"), true, 0, 1);
 }
 
-hero* gamei::choose_hero() {
+heroi* gamei::choose_hero() {
 	answers an;
-	for(auto& e : bsdata<hero>()) {
+	for(auto& e : bsdata<heroi>()) {
 		//if(e.owner != game.player)
 		//	continue;
 		an.add((long)&e, "#$left image %1 0 \"art/portraits\" \"@%1\"\n###%2", e.id, getnm(e.id));
 	}
 	pushvalue<bool> push(draw::can_choose_province, false);
-	return (hero*)an.choose(0, getnm("Cancel"), true, 0, 1);
+	return (heroi*)an.choose(0, getnm("Cancel"), true, 0, 1);
 }
 
 action_s gamei::choose_building_action() {
@@ -322,8 +327,20 @@ action_s gamei::choose_province_action() {
 }
 
 void gamei::recruit() {
-	unita source;
-	source.choose(getnm("RecruitUnits"));
+	army source, dest;
+	source.select(bsdata<landscapei>::elements);
+	dest.add(bsdata<uniti>::elements);
+	dest.add(bsdata<uniti>::elements);
+	dest.add(bsdata<uniti>::elements);
+	dest.add(bsdata<uniti>::elements);
+	dest.add(bsdata<uniti>::elements);
+	dest.add(bsdata<uniti>::elements + 1);
+	dest.add(bsdata<uniti>::elements + 1);
+	dest.add(bsdata<uniti>::elements + 1);
+	dest.add(bsdata<uniti>::elements + 2);
+	source.choose(getnm("RecruitUnits"),
+		getnm("AllowedToHire"), source,
+		getnm("CurrentArmy"), dest);
 }
 
 bool gamei::execute(action_s id, bool run) {
