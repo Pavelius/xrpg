@@ -495,6 +495,9 @@ static bool field(uniti* p, playeri* player, int count) {
 		cost.getinfo(sb, 0);
 	} else if(count)
 		addcount(sb, "%1i %-2", "Squad", count);
+	else {
+		sb.add(getnm("Regular"));
+	}
 	if(temp[0]) {
 		auto push_width = width;
 		textfs(temp);
@@ -561,7 +564,7 @@ bool army::choose(const char* title, const char* t1, army& a1, const char* t2, a
 		caret.x = push_caret.x + push_width - width - metrics::border * 4;
 		texth3a(t2, AlignCenter);
 		caret.x += metrics::border * 2;
-		fieldbycount(a2, 0, buttonok);
+		field(a2, 0, buttonok);
 		domodal();
 	}
 	return getresult() != 0;

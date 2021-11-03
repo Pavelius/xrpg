@@ -254,11 +254,17 @@ static void execute_center() {
 	auto tips = (const char*)text_params[1];
 }
 
+static void execute_tab() {
+	tab_pixels = text_params[0];
+}
+
 static void execute_command(const char* id) {
 	if(equal(id, "image"))
 		execute_image();
 	else if(equal(id, "center"))
 		execute_center();
+	else if(equal(id, "tab"))
+		execute_tab();
 	else if(text_formats) {
 		auto p = text_formats->find(id);
 		if(p) {
@@ -368,12 +374,14 @@ static const char* text_block(const char* p, int x1, int x2) {
 void draw::textf(const char* p) {
 	auto push_width = width;
 	auto push_height = height;
+	auto push_tab = tab_pixels;
 	maxcaret.clear();
 	text_start_string = 0;
 	text_start_horiz = 0;
 	auto x0 = caret.x; auto y0 = caret.y;
 	p = text_block(p, x0, x0 + width);
 	maxcaret.x -= x0; maxcaret.y -= y0;
+	tab_pixels = push_tab;
 	width = push_width;
 	height = push_height;
 }

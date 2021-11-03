@@ -43,6 +43,7 @@ struct landscapea : flagable<2> {
 struct tactica : flagable<4> {
 };
 struct stata : dataset<Happiness, short> {
+	void		getinfo(stringbuilder& sb, const char* promt) const;
 };
 struct actiona : dataset<RaidProvince, char> {
 };
@@ -102,6 +103,7 @@ struct uniti : nameable {
 	uniti*      encounter_tought[4];
 	uniti*      encounter_monster[4];
 	int         get(variant v) const;
+	void		getinfo(stringbuilder& sb) const;
 };
 struct troop {
 	uniti*		type;

@@ -14,18 +14,22 @@ static void add_description(stringbuilder& sb, const char* id) {
 		sb.addn(p);
 }
 
-static void add_line(stringbuilder& sb, const stata& source) {
+static void add_line(stringbuilder& sb, const stata& source, const char* plus = 0, const char* minus = 0) {
 	auto m = bsdata<stati>::source.getcount();
+	if(!plus)
+		plus = "[+%+2i]\t%1";
+	if(!minus)
+		minus = "[-%+2i]\t%1";
 	for(unsigned i = 0; i < m; i++) {
-		if(i == Hits || i==Level)
+		if(i==Level)
 			continue;
 		auto v = source.get(i);
 		if(!v)
 			continue;
 		if(v>0)
-			sb.addn("[+%+2i]\t%1", getnm(bsdata<stati>::get(i).id), v);
+			sb.addn(plus, getnm(bsdata<stati>::get(i).id), v);
 		else
-			sb.addn("[-%+2i]\t%1", getnm(bsdata<stati>::get(i).id), v);
+			sb.addn(minus, getnm(bsdata<stati>::get(i).id), v);
 	}
 }
 
@@ -91,6 +95,19 @@ void costa::getinfo(stringbuilder& sb, const char* promt) const {
 	}
 }
 
+void stata::getinfo(stringbuilder& sb, const char* promt) const {
+	auto m = bsdata<costi>::source.getcount();
+	auto p = sb.get();
+	for(unsigned i = 0; i < m; i++) {
+		auto v = get(i);
+		if(!v)
+			continue;
+		if(p == sb.get())
+			sb.addn(promt);
+		sb.add(":%1i:%2i", i + bsdata<costi>::source.getcount(), v);
+	}
+}
+
 void buildingi::getpresent(stringbuilder& sb) const {
 	sb.add("$left image %1 0 \"art/images\" \"%1\"\n", id);
 }
@@ -99,6 +116,12 @@ void heroi::getinfo(stringbuilder& sb) const {
 	//sb.addn("$left image %1 0 \"art/images\" \"@%2\"", id, id);
 	sb.addn("###%1", getnm(id));
 	add_line(sb, stats);
+}
+
+void uniti::getinfo(stringbuilder& sb) const {
+	sb.addn("###%1", getnm(id));
+	sb.addn("$tab 86");
+	add_line(sb, stats, "%1:\t%2i", "%1:\t%2i");
 }
 
 void tactici::getinfo(stringbuilder& sb) const {
@@ -162,6 +185,11 @@ void variant::getinfo(stringbuilder& sb) const {
 	heroi* ph = *this;
 	if(ph) {
 		ph->getinfo(sb);
+		return;
+	}
+	uniti* pu = *this;
+	if(pu) {
+		pu->getinfo(sb);
 		return;
 	}
 	auto id = getid();
