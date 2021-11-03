@@ -569,7 +569,9 @@ void table::cell(const rect& rc, int line, int column, const char* label) {
 	caret = push_caret;
 	if(text_clipped) {
 		if(ishilite(r1)) {
-			tooltips(r1.x1, r1.y1, 200);
+			tips_caret.x = r1.x1;
+			tips_caret.y = r1.y1;
+			tips_width = 200;
 			tooltips(label);
 		}
 	}

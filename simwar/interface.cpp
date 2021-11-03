@@ -7,7 +7,6 @@
 
 using namespace draw;
 
-extern stringbuilder	tooltips_sb;
 const char*				dialog_image;
 static answers*			dialog_answers;
 static const char*		dialog_title;
@@ -74,7 +73,7 @@ static void add_status(const char* id, int value) {
 	caret = push_caret;
 	caret.x += width + metrics::padding + metrics::border * 2;
 	if(hilite)
-		game.getinfo(tooltips_sb, id);
+		game.getinfo(tips_sb, id);
 }
 
 static void show_status_panel() {
@@ -91,21 +90,23 @@ static void show_status_panel() {
 }
 
 static void main_beforemodal() {
-	tooltipsbeforemodal();
 	simpleui::beforemodal();
 }
 
-static void tooltipshilite() {
-	if(hilite_object) {
-		if(tooltips_sb.begin()[0])
-			return;
-		variant v = hilite_object;
-		v.getinfo(tooltips_sb);
+static void tips_validate() {
+	variant v;
+	if(tips_sb)
+		v = tips_sb.begin();
+	if(!v && hilite_object && !tips_sb)
+		v = hilite_object;
+	if(v) {
+		tips_sb.clear();
+		v.getinfo(tips_sb);
 	}
 }
 
 static void main_ptips() {
-	tooltipshilite();
+	tips_validate();
 	background::tips();
 	simpleui::tips();
 }
@@ -169,7 +170,7 @@ static void main_background() {
 static void static_text() {
 	swindow(false);
 	if(dialog_description)
-		stext(dialog_description);
+		textf(dialog_description);
 }
 
 static void textfw(const char* p) {
@@ -179,7 +180,7 @@ static void textfw(const char* p) {
 	textfs(p);
 	width = push_width;
 	swindow(false);
-	stext(p);
+	textf(p);
 	caret.y += metrics::border * 2;
 }
 
@@ -247,7 +248,7 @@ static void group(const sprite* ps, const char* tips, bool right_align = false) 
 		control_hilited = ishilite();
 	}
 	if(tips && control_hilited)
-		game.getinfo(tooltips_sb, tips);
+		game.getinfo(tips_sb, tips);
 	if(right_align)
 		push_width -= width + metrics::border;
 	else {
@@ -324,10 +325,8 @@ static void paint(cost_s n) {
 
 static void status(cost_s n, int value) {
 	auto id = bsdata<costi>::elements[n].id;
-	if(ishilite()) {
-		stringbuilder sb(link);
-		sb.add(id);
-	}
+	if(ishilite())
+		tips_sb.add(id);
 	paint(n);
 	auto push_caret = caret;;
 	caret.x += 14;
@@ -373,7 +372,7 @@ static void progress(const char* string, int minimal, int maximum, int current, 
 	height = texth();
 	progressbar(minimal, maximum, current);
 	if(tips && control_hilited)
-		game.getinfo(tooltips_sb, tips);
+		game.getinfo(tips_sb, tips);
 	texta(string, AlignCenterCenter);
 	font = push_font;
 	fore = push_fore;

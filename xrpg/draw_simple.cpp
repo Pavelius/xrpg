@@ -13,8 +13,6 @@ static point		camera_drag;
 static rect			board;
 static const void*	current_hilite;
 
-extern stringbuilder tooltips_sb;
-
 namespace metrics {
 unsigned char		opacity = 230;
 }
@@ -47,26 +45,6 @@ bool draw::ishilite(int size, const void* object) {
 	return true;
 }
 
-void draw::stext(const char* string) {
-	draw::link[0] = 0;
-	textf(string);
-	if(draw::link[0]) {
-		if(draw::link[0] == '@')
-			tooltips(draw::link + 1);
-		else {
-			variant v = (const char*)draw::link;
-			if(v)
-				v.getinfo(tooltips_sb);
-			else {
-				tooltips_sb.addn("###%1", getnm(draw::link));
-				auto p = getdescription(draw::link);
-				if(p)
-					tooltips_sb.addn(p);
-			}
-		}
-	}
-}
-
 bool draw::window(bool hilite, const char* string, const char* resid) {
 	if((!string || string[0] == 0) && !resid)
 		return false;
@@ -96,7 +74,7 @@ bool draw::window(bool hilite, const char* string, const char* resid) {
 	}
 	height = push_height;
 	if(string)
-		stext(string);
+		textf(string);
 	caret.y += metrics::border * 2;
 	return rs;
 }
@@ -178,7 +156,6 @@ void draw::customwindow() {
 	setposlu();
 	auto height = 300;
 	swindow(false);
-	tooltips(caret.x + metrics::padding, caret.y + height + metrics::padding * 4, width);
 }
 
 static int getpassedtime(unsigned long start) {
@@ -192,7 +169,7 @@ void draw::status(const char* format, ...) {
 	while(ismodal() && getpassedtime(start_time) < pausetime) {
 		if(pbackground)
 			pbackground();
-		tooltips_sb.addv(format, xva_start(format));
+		tips_sb.addv(format, xva_start(format));
 		doredraw();
 		waitcputime(1);
 	}
@@ -347,25 +324,29 @@ void draw::bar(int value, int maximum) {
 	caret.y += height;
 }
 
-void tooltips_getrect();
-
-void draw::simpleui::tips() {
+static void tooltips_paint() {
 	if(!draw::font)
 		return;
-	if(tooltips_sb && !tooltips_sb.begin()[0])
+	if(!tips_sb)
 		return;
 	rectpush push;
-	tooltips_getrect();
+	tipspos();
 	swindow(false);
 	auto push_fore = draw::fore;
 	fore = colors::tips::text;
-	textf(tooltips_sb.begin());
+	textf(tips_sb);
 	fore = push_fore;
+}
+
+void draw::simpleui::tips() {
+	tooltips_paint();
 }
 
 void draw::simpleui::beforemodal() {
 	hilite_object = 0;
-	tooltips(metrics::padding * 3, metrics::padding * 3, 320);
+	tips_caret.x = metrics::padding + metrics::border;
+	tips_caret.y = metrics::padding + metrics::border;
+	tips_width = 320;
 }
 
 void draw::simpleui::paint() {

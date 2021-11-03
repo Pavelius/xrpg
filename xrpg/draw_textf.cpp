@@ -245,10 +245,8 @@ static void execute_image() {
 	fore = colors::border;
 	rectb();
 	fore = push_fore;
-	if(tips && ishilite()) {
-		stringbuilder sb(link);
-		sb.add(tips);
-	}
+	if(tips && ishilite())
+		tooltips(tips);
 }
 
 static void execute_center() {

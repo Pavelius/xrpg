@@ -18,7 +18,6 @@ bool				ishilite(int s, const void* object);
 void				moving(point& result, point target, int velocity = 12);
 void				fog(int n);
 void				grid();
-void				stext(const char* string);
 void                status(const char* format, ...);
 bool				swindow(bool hilight);
 void				texth2w(const char* string);

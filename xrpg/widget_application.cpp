@@ -407,8 +407,10 @@ const char* draw::getlabel(const void* object, stringbuilder& sb) {
 	}
 	if(pc->ismodified())
 		sb.add("*");
-	if(use_uppercase_label)
-		sb.begin()[0] = szupper(sb.begin()[0]);
+	if(use_uppercase_label) {
+		auto ps = (char*)sb.begin();
+		ps[0] = szupper(*ps);
+	}
 	return sb;
 }
 
@@ -1026,7 +1028,6 @@ static void exit_application() {
 static void beforemodal() {
 	controls::list::beforemodal();
 	focusbeforemodal();
-	tooltipsbeforemodal();
 	statusbeforemodal();
 }
 

@@ -31,21 +31,19 @@ fnevent				draw::pbeforemodal, draw::pleavemodal, draw::psetfocus;
 unsigned char       draw::alpha = 255;
 color				draw::fore;
 color				draw::fore_stroke;
-int					draw::width, draw::height;
+int					draw::width, draw::height, draw::tips_width;
 bool				draw::text_clipped, draw::control_hilited;
 const sprite*		draw::font;
 double				draw::linw = 1.0;
 color*				draw::palt;
 rect				draw::clipping;
-char				draw::link[4096];
 hoti				draw::hot;
 // Hot keys and menus
 rect				sys_static_area;
 // Locale draw variables
 static draw::surface default_surface;
 draw::surface*		draw::canvas = &default_surface;
-point				draw::caret;
-point				draw::camera;
+point				draw::caret, draw::camera, draw::tips_caret;
 bool			    line_antialiasing = true;
 // Drag
 static const void*	drag_object;
@@ -63,6 +61,8 @@ static bool			break_modal;
 static long			break_result;
 static fnevent		next_proc;
 extern rect			sys_static_area;
+static char			tips_text[4096];
+stringbuilder		draw::tips_sb(tips_text);
 awindowi			draw::awindow = {100, 100, 800, 600, 160, WFMinmax | WFResize};
 
 long distance(point p1, point p2) {
@@ -2153,7 +2153,7 @@ static void standart_domodal() {
 		exit(0);
 }
 
-bool draw::ismodal() {
+static void beforemodal() {
 	caret = {0, 0};
 	width = getwidth();
 	height = getheight();
@@ -2163,12 +2163,19 @@ bool draw::ismodal() {
 		hot.key = InputUpdate;
 	else
 		domodal = standart_domodal;
-	if(pbeforemodal)
-		pbeforemodal();
 	if(hot.mouse.x < 0 || hot.mouse.y < 0)
 		sys_static_area.clear();
 	else
 		sys_static_area = {0, 0, draw::getwidth(), draw::getheight()};
+	tips_sb.clear();
+	tips_caret.clear();
+	tips_width = 0;
+}
+
+bool draw::ismodal() {
+	beforemodal();
+	if(pbeforemodal)
+		pbeforemodal();
 	if(!next_proc && !break_modal)
 		return true;
 	break_modal = false;
@@ -2280,6 +2287,22 @@ bool draw::button(const char* title, unsigned key, fnbutton proc, bool vertical)
 void draw::fire(bool run, fnevent proc, long value, long value2, const void* object) {
 	if(run)
 		execute(proc, value, value2, object);
+}
+
+void draw::tipspos() {
+	width = 320;
+	textfs(tips_sb);
+	// Calculate rect
+	caret = tips_caret;
+	if(!tips_width) {
+		if(hot.hilite) {
+			caret.x = hot.hilite.x1;
+			caret.y = hot.hilite.y2 + 2;
+		} else {
+			caret.x = hot.mouse.x + 32;
+			caret.y = hot.mouse.y + 32;
+		}
+	}
 }
 
 void draw::dropshadow() {

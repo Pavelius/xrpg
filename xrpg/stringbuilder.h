@@ -18,6 +18,7 @@ public:
 	constexpr stringbuilder(char* pb, const char* pe) : p(pb), pb(pb), pe(pe) {}
 	template<unsigned N> constexpr stringbuilder(char(&result)[N]) : stringbuilder(result, result + N - 1) {}
 	constexpr operator char*() const { return pb; }
+	explicit constexpr operator bool() const { return pb[0]; }
 	void				add(const char* format, ...) { addv(format, xva_start(format)); }
 	void				add(char sym);
 	void				addby(const char* s);
@@ -36,7 +37,7 @@ public:
 	void				addx(char separator, const char* format, const char* format_param);
 	void				addx(const char* separator, const char* format, const char* format_param);
 	void				adduint(unsigned value, int precision, const int radix);
-	char*				begin() { return pb; }
+	//char*				begin() { return pb; }
 	const char*			begin() const { return pb; }
 	void				change(char s1, char s2);
 	void				change(const char* s1, const char* s2);
