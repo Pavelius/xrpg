@@ -130,12 +130,18 @@ bool provincei::demontage(const buildingi* p, bool run) {
 	return true;
 }
 
-void provincei::canbuild(answers& an) {
+buildingi* provincei::choosebuilding(bool tobuild, bool todemontage) {
+	answers an;
 	for(auto& e : bsdata<buildingi>()) {
-		if(!build(&e, false))
+		if(tobuild && !build(&e, false))
+			continue;
+		if(todemontage && !demontage(&e, false))
 			continue;
 		an.add((long)&e, getnm(e.id));
 	}
+	if(!an)
+		return 0;
+	return (buildingi*)draw::choosel(an, 0, getnm(id));
 }
 
 void provincei::getbuildings(answers* an, stringbuilder* sb) {

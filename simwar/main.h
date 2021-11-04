@@ -9,11 +9,11 @@
 #include "varianta.h"
 
 enum action_s : unsigned char {
+	CancelAction,
 	BuildProvince, DestroyProvince, BuildCapital,
 	AttackProvince, RaidProvince,
 	RecruitUnits,
-	ChooseHeroes, ChooseProvinces, ShowBuildings, ShowSites, EndTurn,
-	CancelAction
+	ChooseHeroes, ChooseProvinces, ShowBuildings, ShowSites, EndTurn
 };
 enum stat_s : unsigned char {
 	Attack, Defend, Raid, Move, Damage, Shield, Hits, Level,
@@ -52,6 +52,7 @@ struct nameable {
 };
 struct actioni {
 	const char* id;
+	fnevent		proc;
 };
 struct costa : dataset<8, short> {
 	void        apply(variant v, const prefixa& flags);
@@ -155,7 +156,7 @@ struct provincei : nameable {
 	oppositioni	guard;
 	army		garnison;
 	bool        build(const buildingi* p, bool run);
-	void        canbuild(answers& an);
+	buildingi*	choosebuilding(bool tobuild, bool todemontage);
 	bool		demontage(const buildingi* p, bool run);
 	void        initialize();
 	bool        isbuilded(const buildingi* p) const;
@@ -232,11 +233,11 @@ public:
 	static void apply(variant v, stata& stat, costa& cost, int multiplier = 1);
 	static void build();
 	static void demontage();
-	static const buildingi* choose_building();
-	action_s	choose_building_action();
+	static void choose(answers& an, const char* title, const char* header);
+	static void	buildings();
 	static heroi* choose_hero();
 	static provincei* choose_province();
-	action_s	choose_province_action();
+	static void	playermove();
 	bool		execute(action_s id, bool run);
 	static void format(stringbuilder& sb, const char* string, ...);
 	static int  get(variant v, const variants& source);
@@ -247,22 +248,23 @@ public:
 	int         getyear() const { return start_year + turn / (3 * 12); }
 	int         getturn() const { return turn; }
 	void        initialize();
+	static void	nextmove();
 	static char leadership[10][4];
-	static void	maketurn();
 	static void message(const char* string);
 	void        passturn();
 	void        play(const eventi* event);
-	static void playerturn();
-	void		recruit();
-	static void refresh();
+	static void	recruit();
+	void		refresh();
 	void        setuidbase(unsigned char v) { uid_base = v; }
 };
 extern gamei    game;
 namespace draw {
-extern bool     can_choose_province;
 long            dialog(answers& an, const char* title, const char* format);
+void			choose(answers& an, const char* title, const char* header);
+long			choosel(answers& an, const char* title, const char* header);
 void            initialize();
-void            maketurn();
+bool			isnext();
+void			setnext(fnevent proc);
 }
 inline bool     chance(int value) { return (rand() % 100) < value; }
 int             getfix(stringbuilder* sb, int v, variant id);

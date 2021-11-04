@@ -1,17 +1,17 @@
 #include "main.h"
 
 BSDATA(actioni) = {
-	{"BuildProvince"},
-	{"DestroyProvince"},
+	{"CancelAction", gamei::playermove},
+	{"BuildProvince", gamei::build},
+	{"DestroyProvince", gamei::demontage},
 	{"BuildCapital"},
 	{"AttackProvince"},
 	{"RaidProvince"},
-	{"RecruitUnits"},
+	{"RecruitUnits", gamei::recruit},
 	{"ChooseHeroes"},
 	{"ChooseProvinces"},
-	{"ShowBuildings"},
+	{"ShowBuildings", gamei::buildings},
 	{"ShowSites"},
-	{"EndTurn"},
-	{"CancelAction"},
+	{"EndTurn", gamei::nextmove},
 };
-assert_enum(actioni, CancelAction)
+assert_enum(actioni, EndTurn)

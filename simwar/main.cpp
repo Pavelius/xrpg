@@ -48,7 +48,7 @@ int main() {
     game.province = (provincei*)bsdata<provincei>::source.ptr(0);
     //eventi* pe = variant("ShamanCome");
     //game.play(pe);
-    draw::setnext(gamei::maketurn);
+    draw::setnext(gamei::playermove);
     draw::start();
     return 0;
 }

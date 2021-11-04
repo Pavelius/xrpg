@@ -120,8 +120,10 @@ void heroi::getinfo(stringbuilder& sb) const {
 
 void uniti::getinfo(stringbuilder& sb) const {
 	sb.addn("###%1", getnm(id));
-	sb.addn("$tab 86");
-	add_line(sb, stats, "%1:\t%2i", "%1:\t%2i");
+	//sb.addn("$tab 86");
+	//add_line(sb, stats, "%1:\t%2i", "%1:\t%2i");
+	stats.getinfo(sb, "%Stats");
+	//add_line(sb, stats, "%1:\t%2i", "%1:\t%2i");
 }
 
 void tactici::getinfo(stringbuilder& sb) const {

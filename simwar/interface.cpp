@@ -11,8 +11,8 @@ const char*				dialog_image;
 static answers*			dialog_answers;
 static const char*		dialog_title;
 static const char*		dialog_description;
+static bool				can_choose_province = true;
 static const int		cell_padding = 2;
-bool					draw::can_choose_province = true;
 static auto				res_shields = (sprite*)gres("shields", "art/objects");
 static auto				res_units = (sprite*)gres("units", "art/objects");
 extern command*			text_formats;
@@ -379,7 +379,7 @@ static void progressbar(int minimal, int maximum, int current) {
 	rectpush push;
 	control_hilited = ishilite();
 	auto push_fore = fore;
-	fore = colors::red;
+	fore = colors::green;
 	width = width * (current - minimal) / (maximum - minimal);
 	auto push_alpha = alpha;
 	alpha = 64;
@@ -394,14 +394,11 @@ static void progressbar(int minimal, int maximum, int current) {
 static void progress(const char* string, int minimal, int maximum, int current, const char* tips = 0) {
 	auto push_fore_stroke = fore_stroke;
 	auto push_fore = fore;
-	auto push_font = font;
-	font = metrics::h3;
 	height = texth();
 	progressbar(minimal, maximum, current);
 	if(tips && control_hilited)
 		game.getinfo(tips_sb, tips);
 	texta(string, AlignCenterCenter);
-	font = push_font;
 	fore = push_fore;
 	fore_stroke = push_fore_stroke;
 }
@@ -415,9 +412,9 @@ static void progress_format() {
 	progress(string, minimal, maximum, current, tips);
 }
 
-static void choose_game_province() {
+static void choose_province_action() {
 	game.province = (provincei*)hot.param;
-	breakmodal(-1);
+	setnext(gamei::playermove);
 }
 
 void provincei::paint() const {
@@ -426,7 +423,7 @@ void provincei::paint() const {
 	if(can_choose_province && ishilite(24)) {
 		hot.cursor = cursor::Hand;
 		if(hot.key == MouseLeft && hot.pressed)
-			execute(choose_game_province, (long)this, 0, &game.province);
+			execute(choose_province_action, (long)this, 0, &game.province);
 	}
 	auto push_font = font;
 	font = metrics::h2;
@@ -568,4 +565,19 @@ bool army::choose(const char* title, const char* t1, army& a1, const char* t2, a
 		domodal();
 	}
 	return getresult() != 0;
+}
+
+void draw::choose(answers& an, const char* title, const char* header) {
+	auto proc = (fnevent)an.choose(title, 0, true, 0, 1, header);
+	if(isnext())
+		return;
+	setnext(proc);
+}
+
+long draw::choosel(answers& an, const char* title, const char* header) {
+	auto push = can_choose_province;
+	can_choose_province = false;
+	auto result = an.choose(title, getnm("Cancel"), true, 0, 1, header);
+	can_choose_province = push;
+	return result;
 }
