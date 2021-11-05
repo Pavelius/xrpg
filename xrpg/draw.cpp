@@ -204,6 +204,21 @@ static void raw832m(unsigned char* d, int d_scan, unsigned char* s, int s_scan, 
 	}
 }
 
+static void raw32n1(unsigned char* p1, unsigned char* sb, int width) {
+	const int cbs = 3;
+	const int cbd = 4;
+	if(width <= 0)
+		return;
+	unsigned char* se = sb + width * cbs;
+	while(sb < se) {
+		p1[0] = sb[0];
+		p1[1] = sb[1];
+		p1[2] = sb[2];
+		sb += cbs;
+		p1 += cbd;
+	}
+}
+
 static void raw32(unsigned char* d, int d_scan, unsigned char* s, int s_scan, int width, int height) {
 	const int cbs = 3;
 	const int cbd = 4;

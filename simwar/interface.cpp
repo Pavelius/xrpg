@@ -147,16 +147,16 @@ static void main_ptips() {
 static void paint_troops(const provincei* province) {
 	auto push_stroke = fore_stroke;
 	auto push_fore = fore;
-	selector source;
+	auto push_font = font;
+	font = metrics::small;
 	fore = colors::black;
 	fore_stroke = colors::white;
-	for(auto v : source) {
-		continue;
-		troop* p = 0;
-		textjc(getnm(p->type->id));
+	for(auto& e : province->garnison) {
+		textjc(getnm(e.type->id));
 		caret.y += texth();
 		break;
 	}
+	font = push_font;
 	fore = push_fore;
 	fore_stroke = push_stroke;
 }
@@ -447,6 +447,7 @@ static void special_cicle(int ox, int oy, int value, color c1) {
 	alpha = 196;
 	circlef(8);
 	alpha = push_alpha;
+	fore = fore.mix(colors::form, 128);
 	circle(8);
 	fore = colors::black;
 	caret.x -= textw(temp) / 2 + 1;
@@ -473,6 +474,20 @@ static void paint_cost(const costa& cost) {
 	fore = push_fore;
 }
 
+static void paint_neightboard(const provincei* p) {
+	auto push_fore = fore;
+	fore = colors::red;
+	for(auto& v : p->neightboards) {
+		auto p1 = (provincei*)v;
+		if(!p1)
+			continue;
+		auto push_caret = caret;
+		line(p1->position.x - camera.x, p1->position.y - camera.y);
+		caret = push_caret;
+	}
+	fore = push_fore;
+}
+
 void provincei::paint() const {
 	if(owner)
 		image(caret.x, caret.y, res_shields, owner->avatar, 0);
@@ -481,6 +496,8 @@ void provincei::paint() const {
 		if(hot.key == MouseLeft && hot.pressed)
 			execute(choose_province_action, (long)this, 0, &game.province);
 	}
+	if(game.province == this)
+		paint_neightboard(this);
 	paint_cost(income);
 	auto push_font = font;
 	font = metrics::h2;
@@ -489,12 +506,10 @@ void provincei::paint() const {
 	fore = colors::black;
 	fore_stroke = colors::white;
 	textjc(getnm(id));
-	caret.y += texth();
+	caret.y += texth()/2 + 2;
 	fore = push_fore;
 	fore_stroke = push_stroke;
 	font = push_font;
-	caret.y -= texth() / 2;
-	caret.y += texth();
 	paint_troops(this);
 }
 
