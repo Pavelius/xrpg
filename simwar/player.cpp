@@ -39,3 +39,31 @@ void playeri::update_resources() {
 		resources.add(e.resources);
 	}
 }
+
+bool playeri::hire(uniti* unit, army* garnison, bool run, stringbuilder* sb) {
+	if(!unit || !garnison)
+		return false;
+	if(garnison->getcount() >= garnison->getmaximum()) {
+		game.error(sb, "GarnisonCountExceed");
+		return false;
+	}
+	costa unit_cost = unit->cost;
+	unit_cost.modify(resources, unit->need);
+	if(total < unit_cost) {
+		game.error(sb, "NotEnoughtCost");
+		return false;
+	}
+	auto level = unit->get(Level);
+	auto leadership = garnison->getleadership();
+	auto maximum_count = game.getleadership(leadership, level);
+	auto present_count = garnison->getunitcount(level);
+	if(present_count + 1 > maximum_count) {
+		game.error(sb, "NotEnoughtLeadership");
+		return false;
+	}
+	if(run) {
+		total -= unit_cost;
+		garnison->add(unit);
+	}
+	return true;
+}

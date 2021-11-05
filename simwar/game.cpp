@@ -3,19 +3,6 @@
 static unsigned	current_uid;
 gamei			game;
 
-char gamei::leadership[10][4] = {
-	{3},
-	{4},
-	{4, 1},
-	{5, 2},
-	{5, 2},
-	{6, 3, 1},
-	{6, 3, 2},
-	{7, 4, 2},
-	{7, 4, 3, 1},
-	{8, 5, 3, 2},
-};
-
 struct game_string : stringbuilder {
 	void addtag(const char* id) {
 		add("[");
@@ -38,6 +25,16 @@ struct game_string : stringbuilder {
 	}
 	game_string(stringbuilder& sb) : stringbuilder(sb) {}
 };
+
+void gamei::error(stringbuilder* psb, const char* id, ...) {
+	if(!psb)
+		return;
+	game_string sb = *psb;
+	sb.addn("[-");
+	sb.addv(getnm(id), xva_start(id));
+	sb.add("]");
+	*psb = sb;
+}
 
 void gamei::format(stringbuilder& sbr, const char* string, ...) {
 	game_string sb = sbr;
@@ -225,16 +222,14 @@ void gamei::build() {
 	auto p = game.province->choosebuilding(true, false);
 	if(p)
 		game.province->build(p, true);
-	if(!draw::isnext())
-		draw::setnext(playermove);
+	draw::setactive(playermove);
 }
 
 void gamei::demontage() {
 	auto p = game.province->choosebuilding(false, true);
 	if(p)
 		game.province->demontage(p, true);
-	if(!draw::isnext())
-		draw::setnext(playermove);
+	draw::setactive(playermove);
 }
 
 void gamei::apply(variant v, stata& stat, costa& cost, int multiplier) {
@@ -312,21 +307,19 @@ void gamei::playermove() {
 	draw::choose(an, temp, getnm(game.province->id));
 }
 
+static void hire_unit() {
+	game.player->hire(game.unit->type, game.garnison, true);
+}
+
+static void disband_unit() {
+}
+
 void gamei::recruit() {
 	army source, dest;
 	source.select(bsdata<landscapei>::elements);
-	dest.add(bsdata<uniti>::elements);
-	dest.add(bsdata<uniti>::elements);
-	dest.add(bsdata<uniti>::elements);
-	dest.add(bsdata<uniti>::elements);
-	dest.add(bsdata<uniti>::elements);
-	dest.add(bsdata<uniti>::elements + 1);
-	dest.add(bsdata<uniti>::elements + 1);
-	dest.add(bsdata<uniti>::elements + 1);
-	dest.add(bsdata<uniti>::elements + 2);
 	source.choose(getnm("RecruitUnits"),
-		getnm("AllowedToHire"), source,
-		getnm("CurrentArmy"), dest);
+		getnm("AllowedToHire"), source, hire_unit,
+		getnm("CurrentArmy"), game.province->garnison, disband_unit);
 }
 
 bool gamei::execute(action_s id, bool run) {
@@ -356,5 +349,32 @@ void gamei::refresh() {
 
 void gamei::nextmove() {
 	game.passturn();
-	draw::setnext(playermove);
+	draw::setactive(playermove);
+}
+
+int gamei::getleadership(int value, int level) {
+	static char source[10][4] = {
+		{3},
+		{4},
+		{4, 1},
+		{5, 2},
+		{5, 2},
+		{6, 3, 1},
+		{6, 3, 2},
+		{7, 4, 2},
+		{7, 4, 3, 1},
+		{8, 5, 3, 2},
+	};
+	const int maximum_level = sizeof(source) / sizeof(source[0]);
+	value -= 1;
+	level -= 1;
+	if(value >= maximum_level)
+		value = maximum_level - 1;
+	if(value < 0)
+		return 0;
+	if(level >= 4)
+		level = 3;
+	if(level < 0)
+		level = 0;
+	return source[value][level];
 }

@@ -145,7 +145,6 @@
     <ClCompile Include="army.cpp" />
     <ClCompile Include="bonus.cpp" />
     <ClCompile Include="building.cpp" />
-    <ClCompile Include="combat.cpp" />
     <ClCompile Include="cost.cpp" />
     <ClCompile Include="deck.cpp" />
     <ClCompile Include="game.cpp" />
@@ -162,6 +161,7 @@
     <ClCompile Include="province.cpp" />
     <ClCompile Include="stat.cpp" />
     <ClCompile Include="string.cpp" />
+    <ClCompile Include="tag.cpp" />
     <ClCompile Include="troop.cpp" />
     <ClCompile Include="unit.cpp" />
   </ItemGroup>

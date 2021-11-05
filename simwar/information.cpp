@@ -68,6 +68,13 @@ static void add_bonuses(stringbuilder& sb, const stata& source, const char* prom
 	}
 }
 
+void taga::getinfo(stringbuilder& sb) const {
+	for(auto i = 0; i < getmaximum(); i++) {
+		if(is(i))
+			sb.addn(getdescription(bsdata<tagi>::get(i).id));
+	}
+}
+
 void provincei::getpresent(stringbuilder& sb) const {
 	sb.add("$left image %1 0 \"art/images\" \"%1\"\n", landscape->id);
 	sb.add("$right image %1 0 \"art/images\" \"%1\"\n", dwellers->nation->id);
@@ -118,12 +125,27 @@ void heroi::getinfo(stringbuilder& sb) const {
 	add_line(sb, stats);
 }
 
+void producea::getinfo(stringbuilder& sb, const char* promt) const {
+	auto r = 0;
+	for(auto e : *this) {
+		if(!r)
+			sb.addn(promt);
+		else
+			sb.add(", ");
+		sb.add(getnm(bsdata<resourcei>::get(e).id));
+		r++;
+	}
+	if(r)
+		sb.add(".");
+}
+
 void uniti::getinfo(stringbuilder& sb) const {
-	sb.addn("###%1", getnm(id));
-	//sb.addn("$tab 86");
-	//add_line(sb, stats, "%1:\t%2i", "%1:\t%2i");
-	stats.getinfo(sb, "%Stats");
-	//add_line(sb, stats, "%1:\t%2i", "%1:\t%2i");
+	sb.addn("###%1 (%-Level %2i)", getnm(id), get(Level));
+	sb.addn("%Hits: %2i, %Damage: %3i", get(Level), get(Hits), get(Damage));
+	cost.getinfo(sb, "%Cost: ");
+	upkeep.getinfo(sb, "%Upkeep: ");
+	need.getinfo(sb, "%Need: ");
+	tags.getinfo(sb);
 }
 
 void tactici::getinfo(stringbuilder& sb) const {

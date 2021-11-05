@@ -39,6 +39,7 @@ BSMETA(uniti) = {
 	BSDST(stats, stati),
 	BSDST(cost, costi),
 	BSDST(upkeep, costi),
+	BSFLG(tags, tagi),
 	BSFLG(encounter, landscapei), BSREQ(encounter_tought), BSREQ(encounter_monster),
 	BSADT(need, resourcei),
 	{}};
@@ -85,6 +86,9 @@ BSMETA(nationi) = {
 	BSREQ(avatar), BSREQ(alignment), BSDST(income, costi),
 	{}};
 BSDATAC(nationi, 32)
+BSMETA(tagi) = {
+	BSREQ(id),
+	{}};
 BSMETA(tactici) = {
 	BSREQ(id),
 	BSREQ(bonus),

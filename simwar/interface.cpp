@@ -16,6 +16,7 @@ static const int		cell_padding = 2;
 static auto				res_shields = (sprite*)gres("shields", "art/objects");
 static auto				res_units = (sprite*)gres("units", "art/objects");
 extern command*			text_formats;
+static fnevent			active_window;
 
 void set_dark_theme();
 
@@ -394,7 +395,7 @@ static void progressbar(int minimal, int maximum, int current) {
 static void progress(const char* string, int minimal, int maximum, int current, const char* tips = 0) {
 	auto push_fore_stroke = fore_stroke;
 	auto push_fore = fore;
-	height = texth();
+	height = texth() + 1 * 2;
 	progressbar(minimal, maximum, current);
 	if(tips && control_hilited)
 		game.getinfo(tips_sb, tips);
@@ -414,7 +415,7 @@ static void progress_format() {
 
 static void choose_province_action() {
 	game.province = (provincei*)hot.param;
-	setnext(gamei::playermove);
+	setlastactive();
 }
 
 void provincei::paint() const {
@@ -474,17 +475,21 @@ static void addcount(stringbuilder& sb, const char* format, const char* id, int 
 	}
 }
 
-static bool field(uniti* p, playeri* player, int count) {
+static bool fieldex(uniti* p, playeri* player, int count, bool disabled) {
 	rectpush push;
+	char temp[260]; temp[0] = 0;
+	stringbuilder sb(temp);
 	auto hilited = ishilite();
 	if(hilited) {
-		painthilite();
+		if(!disabled)
+			painthilite();
 		hilite_object = p;
 	}
 	setoffset(cell_padding, cell_padding);
+	auto push_fore = fore;
+	if(disabled)
+		fore = fore.mix(colors::form);
 	text(getnm(p->id));
-	char temp[260]; temp[0] = 0;
-	stringbuilder sb(temp);
 	if(player) {
 		costa cost = p->cost;
 		if(player)
@@ -492,76 +497,63 @@ static bool field(uniti* p, playeri* player, int count) {
 		cost.getinfo(sb, 0);
 	} else if(count)
 		addcount(sb, "%1i %-2", "Squad", count);
-	else {
-		sb.add(getnm("Regular"));
-	}
+	else
+		sb.add("%Level %1i", p->get(Level));
 	if(temp[0]) {
 		auto push_width = width;
 		textfs(temp);
 		caret.x = caret.x + push_width - width;
 		textf(temp);
 	}
+	fore = push_fore;
 	auto result = false;
-	if(hot.key == MouseLeft && hot.pressed && hilited)
+	if(hot.key == MouseLeft && hot.pressed && hilited && !disabled)
 		result = true;
 	return result;
 }
 
-static void field(army& source, playeri* player, fnevent proc) {
+static void field(army& source, playeri* player, fnevent proc, army* garnison) {
 	for(auto& e : source) {
 		if(!e)
 			continue;
-		if(field(e.type, player, 0))
-			execute(proc, (long)&e, (long)player, &source);
+		auto allow = !garnison || player->hire(e.type, garnison, false, 0);
+		if(fieldex(e.type, player, 0, !allow)) {
+			game.unit = &e;
+			game.garnison = garnison;
+			execute(proc);
+		}
 		caret.y += height + metrics::padding;
 	}
 }
 
-static void fieldbycount(army& source, playeri* player, fnevent proc) {
-	uniti* type = 0;
-	int count = 0;
-	for(auto& e : source) {
-		if(!e)
-			continue;
-		if(e.type == type) {
-			count++;
-			continue;
-		}
-		if(type) {
-			if(field(type, player, count))
-				execute(proc, (long)type, (long)player, &source);
-			caret.y += height + metrics::padding;
-		}
-		type = e.type;
-		count = 1;
-	}
-	if(type) {
-		if(field(type, player, count))
-			execute(proc, (long)type, (long)player, &source);
-		caret.y += height + metrics::padding;
-	}
-}
-
-bool army::choose(const char* title, const char* t1, army& a1, const char* t2, army& a2) {
+bool army::choose(const char* title, const char* t1, army& a1, fnevent pr1, const char* t2, army& a2, fnevent pr2) {
 	while(ismodal()) {
 		paintstart();
-		setposct();
+		width = 500;
+		caret.x = draw::getwidth() - width - metrics::border - metrics::padding;
+		caret.y = metrics::padding + metrics::border;
 		if(title)
 			texth2w(title);
-		height = 440;
+		height = (metrics::font->height + cell_padding * 2) * 18;
 		swindow(false);
 		auto push_width = width;
+		auto push_height = height;
 		auto push_caret = caret;
 		width = 220;
 		height = texth() + cell_padding * 2;
 		texth3a(t1, AlignCenter);
 		caret.x += metrics::border * 2;
-		field(a1, game.player, buttonok);
+		field(a1, game.player, pr1, &a2);
 		caret = push_caret;
 		caret.x = push_caret.x + push_width - width - metrics::border * 4;
 		texth3a(t2, AlignCenter);
 		caret.x += metrics::border * 2;
-		field(a2, 0, buttonok);
+		field(a2, 0, pr2, 0);
+		width = 100;
+		caret = push_caret;
+		caret.y += push_height + metrics::border * 2;
+		fire(button(getnm("Cancel"), KeyEscape, buttonrd, false), game.playermove);
+		width = push_width;
 		domodal();
 	}
 	return getresult() != 0;
@@ -569,9 +561,7 @@ bool army::choose(const char* title, const char* t1, army& a1, const char* t2, a
 
 void draw::choose(answers& an, const char* title, const char* header) {
 	auto proc = (fnevent)an.choose(title, 0, true, 0, 1, header);
-	if(isnext())
-		return;
-	setnext(proc);
+	setactive(proc);
 }
 
 long draw::choosel(answers& an, const char* title, const char* header) {
@@ -580,4 +570,15 @@ long draw::choosel(answers& an, const char* title, const char* header) {
 	auto result = an.choose(title, getnm("Cancel"), true, 0, 1, header);
 	can_choose_province = push;
 	return result;
+}
+
+void draw::setactive(fnevent proc) {
+	if(proc && !isnext()) {
+		active_window = proc;
+		setnext(proc);
+	}
+}
+
+void draw::setlastactive() {
+	setactive(active_window);
 }

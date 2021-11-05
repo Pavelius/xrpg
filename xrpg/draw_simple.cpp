@@ -110,15 +110,14 @@ bool draw::buttonft(const char* title) {
 bool draw::buttonrd(const char* title) {
 	if(!title)
 		return false;
-	rect rc = {caret.x, caret.y, caret.x + width, caret.y};
-	textw(rc, title);
-	rc.y2 = rc.y2 + metrics::padding;
+	auto push_caret = caret;
 	auto push_height = height;
-	height = rc.height();
+	textfs(title);
 	auto result = swindow(true);
+	textf(title);
 	height = push_height;
-	text(rc, title, AlignCenterCenter);
-	caret.x += rc.width() + metrics::padding * 3;
+	width += metrics::border * 2;
+	caret = push_caret;
 	return result;
 }
 

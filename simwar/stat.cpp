@@ -1,14 +1,11 @@
 #include "main.h"
 
 BSDATA(stati) = {
-	{"Attack"},
-	{"Defend"},
-	{"Raid"},
-	{"Move"},
+	{"Level"},
 	{"Damage"},
 	{"Shield"},
+	{"Move"},
 	{"Hits"},
-	{"Level"},
 	{"Explored"},
 	{"Population"},
 	{"PopulationGrowth"},

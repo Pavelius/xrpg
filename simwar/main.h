@@ -8,6 +8,12 @@
 #include "crange.h"
 #include "varianta.h"
 
+enum tag_s : unsigned char {
+	Offensive, Defensive, Shooting, Looting,
+	Mobile, Fast, Flying,
+	ForestWise, SwampWise, HillsWise,
+	Hired, Summoned, Undead,
+};
 enum action_s : unsigned char {
 	CancelAction,
 	BuildProvince, DestroyProvince, BuildCapital,
@@ -16,7 +22,7 @@ enum action_s : unsigned char {
 	ChooseHeroes, ChooseProvinces, ShowBuildings, ShowSites, EndTurn
 };
 enum stat_s : unsigned char {
-	Attack, Defend, Raid, Move, Damage, Shield, Hits, Level,
+	Level, Damage, Shield, Move, Hits,
 	Explored, Population, PopulationGrowth, Rebellion, Happiness
 };
 enum cost_s : unsigned char {
@@ -34,9 +40,14 @@ struct prefixa : flagable<4> {
 };
 struct buildinga : flagable<8> {
 };
-struct resourcea : flagable<2> {
+struct resourcea : flagable<4> {
+	void		getinfo(stringbuilder& sb) const;
+};
+struct taga : flagable<4> {
+	void		getinfo(stringbuilder& sb) const;
 };
 struct producea : adat<char, 12> {
+	void		getinfo(stringbuilder& sb, const char* promt) const;
 };
 struct landscapea : flagable<2> {
 };
@@ -48,6 +59,9 @@ struct stata : dataset<Happiness, short> {
 struct actiona : dataset<RaidProvince, char> {
 };
 struct nameable {
+	const char* id;
+};
+struct tagi {
 	const char* id;
 };
 struct actioni {
@@ -101,6 +115,7 @@ struct uniti : nameable {
 	costa       cost, upkeep;
 	landscapea  encounter;
 	producea    need;
+	taga		tags;
 	uniti*      encounter_tought[4];
 	uniti*      encounter_monster[4];
 	int         get(variant v) const;
@@ -110,16 +125,22 @@ struct troop {
 	uniti*		type;
 	constexpr explicit operator bool() const { return type != 0; }
 	void        clear();
-	int         get(variant id, stringbuilder* sb = 0) const;
+	int			get(variant v) const;
+	int         get(variant id, stringbuilder* sb) const;
 	static int  getbonus(variant id, const variants& source);
 	void        kill();
 };
 struct army : adat<troop, 18> {
 	void		add(uniti* p);
-	static bool	choose(const char* title, const char* t1, army& a1, const char* t2, army& a2);
-	bool        conquer(army& enemy, stringbuilder* psb, stat_s attacker_stat, stat_s defender_stat);
+	static bool	choose(const char* title, const char* t1, army& a1, fnevent pr1, const char* t2, army& a2, fnevent pr2);
+	bool        conquer(army& enemy, stringbuilder* psb);
 	void        damage(int hits, stringbuilder* sb = 0);
 	int         get(variant v, stringbuilder* sb = 0) const;
+	int			getleadership() const { return 3; }
+	int			getstrenght(bool defensive) const;
+	int			getunitcount(int rang) const;
+	bool		is(tag_s v) const;
+	void		normalize();
 	void		shuffle();
 	void		select(const landscapei* v);
 	void		sort();
@@ -207,6 +228,7 @@ struct playeri {
 	int         get(variant v) const;
 	bool		isallow(action_s v) const { return actions.get(v) != 0; }
 	void        initialize();
+	bool		hire(uniti* unit, army* garnison, bool run, stringbuilder* sb = 0);
 	void		refresh();
 	void		update_resources();
 };
@@ -227,6 +249,8 @@ public:
 	playeri*    player;
 	provincei*  province;
 	buildingi*  building;
+	army*		garnison;
+	troop*		unit;
 	void		addaction(answers& an, action_s v);
 	unsigned    adduid();
 	bool        apply(const variants& source, bool allow_test, bool allow_apply);
@@ -238,18 +262,19 @@ public:
 	static heroi* choose_hero();
 	static provincei* choose_province();
 	static void	playermove();
+	static void error(stringbuilder* sb, const char* id, ...);
 	bool		execute(action_s id, bool run);
 	static void format(stringbuilder& sb, const char* string, ...);
 	static int  get(variant v, const variants& source);
 	void        getdate(stringbuilder& sb) const;
 	static void getinfo(stringbuilder& sb, const char* id);
+	static int	getleadership(int value, int level);
 	int         getmonth() const { return (turn / 3) % 12; }
 	int         getmonthpart() const { return turn % 3; }
 	int         getyear() const { return start_year + turn / (3 * 12); }
 	int         getturn() const { return turn; }
 	void        initialize();
 	static void	nextmove();
-	static char leadership[10][4];
 	static void message(const char* string);
 	void        passturn();
 	void        play(const eventi* event);
@@ -263,8 +288,8 @@ long            dialog(answers& an, const char* title, const char* format);
 void			choose(answers& an, const char* title, const char* header);
 long			choosel(answers& an, const char* title, const char* header);
 void            initialize();
-bool			isnext();
-void			setnext(fnevent proc);
+void			setactive(fnevent proc);
+void			setlastactive();
 }
 inline bool     chance(int value) { return (rand() % 100) < value; }
 int             getfix(stringbuilder* sb, int v, variant id);

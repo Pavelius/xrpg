@@ -18,16 +18,16 @@ Leather
 #Tactic
 
 LightingAttack
- bonus Attack2
+ bonus Level2
 MessyFight
  bonus Damage10
 CarefullyDefence
  bonus Shield10
 ShieldWall
- bonus Attack1
+ bonus Level1
  disable MessyFight LightingAttack
 HitAndRun
- bonus Shield15 AttackM1
+ bonus Shield15 LevelM1
 
 #Building
 
@@ -70,10 +70,10 @@ Swamp
 #Hero
 
 Gordek 
- stats Attack(1) Raid(1) Hits(20) Level(1)
+ stats Hits(20) Level(1)
 
 Mistra 
- stats Defend(1) Hits(12) Level(1)
+ stats Hits(12) Level(1)
 
 #Nation
 
@@ -101,81 +101,92 @@ Thugs
 WolfRiders
 
 Thugs nation(HumansNation)
- stats Attack(1) Defend(1) Raid(1) Damage(3) Hits(8) Level(1)
+ stats Damage(3) Hits(8) Level(1)
+ tags Looting
  cost Gold(15)
  upkeep Gold(2)
  encounter Plains Forest
 Spearmens nation(HumansNation)
- stats Attack(1) Defend(2) Damage(3) Hits(10) Level(1)
+ stats Damage(3) Hits(10) Level(1)
+ tags Defensive
  cost Gold(25)
  upkeep Gold(3)
- need Iron Woods
+ need Iron
  encounter Plains
  encounter_tought Swordmens
 Archers nation(HumansNation)
- stats Attack(2) Defend(1) Damage(3) Hits(8) Level(1)
+ stats Damage(3) Hits(8) Level(1)
+ tags Shooting Offensive
  cost Gold(30)
  upkeep Gold(3)
  need Woods
  encounter Plains
 Swordmens nation(HumansNation)
- stats Attack(2) Defend(2) Damage(3) Hits(12) Level(2)
+ stats Damage(3) Hits(12) Level(2)
  cost Gold(40)
  upkeep Gold(4)
  need Iron Iron
  encounter Plains
 Riders nation(HumansNation)
- stats Attack(2) Defend(1) Raid(1) Damage(3) Hits(10) Move(2) Level(2)
+ stats Damage(3) Hits(10) Move(2) Level(2)
+ tags Fast
  cost Gold(35)
  upkeep Gold(3)
  need Horses
  encounter Plains
  encounter_tought Cavalry
 Cavalry nation(HumansNation)
- stats Attack(3) Defend(2) Raid(1) Damage(4) Hits(14) Move(2) Level(3)
+ stats Damage(4) Hits(14) Move(2) Level(3)
+ tags Fast Offensive
  cost Gold(70)
  upkeep Gold(6)
  need Iron Horses
  encounter Plains
 Knights nation(HumansNation)
- stats Attack(2) Defend(3) Damage(4) Hits(18) Level(3)
+ stats Damage(4) Hits(18) Level(3)
+ tags Defensive
  cost Gold(60)
  upkeep Gold(6)
  need Iron Iron
  encounter Plains
 Barbarians nation(HumansNation)
- stats Attack(1) Defend(1) Damage(3) Hits(10) Level(1)
+ stats Damage(3) Hits(10) Level(1)
+ tags Mobile
  cost Gold(20)
  upkeep Gold(2)
  encounter Plains Hills
 Goblins nation(GoblinsNation)
- stats Attack(1) Defend(1) Damage(2) Hits(6) Level(1)
+ stats Damage(2) Hits(6) Level(1)
+ tags Mobile
  cost Gold(10)
  upkeep Gold(1)
  encounter Plains Hills Forest Swamp
  encounter_tought Orks WolfRiders
 Orks nation(OrksNation)
- stats Attack(1) Defend(1) Raid(1) Damage(4) Hits(11) Level(1)
+ stats Damage(4) Hits(11) Level(1)
+ tags Looting
  cost Gold(30)
  upkeep Gold(2)
  need Iron
  encounter Plains Hills
  encounter_tought BlackOrks
 BlackOrks nation(OrksNation)
- stats Attack(2) Defend(2) Raid(1) Damage(4) Hits(13) Level(2)
+ stats Damage(4) Hits(13) Level(2)
+ tags Looting
  cost Gold(35)
  upkeep Gold(4)
  need Iron Iron
  encounter Plains Hills
  encounter_tought Ogres
 WolfRiders nation(GoblinsNation)
- stats Attack(2) Defend(1) Raid(1) Damage(4) Move(2) Hits(12) Level(2)
+ stats Damage(4) Move(2) Hits(12) Level(2)
+ tags Fast
  cost Gold(30)
  upkeep Gold(4)
  need Horses
  encounter Plains Hills Forest
 Ogres nation(OgresNation)
- stats Attack(2) Defend(2) Damage(6) Hits(18) Level(3)
+ stats Damage(6) Hits(18) Level(3)
  cost Gold(45)
  upkeep Gold(5)
  need Iron Woods

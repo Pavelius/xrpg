@@ -13,6 +13,7 @@ CancelAction: Отменить
 Cavalry: Кавалерия
 ChooseBuildingToBuild: Выбирайте постройку, которую хотите соорудить. Список органичен постройками только доступными для строительства в этой провинции.
 ChooseBuildingToDemontage: Выбирайте постройку, которую хотите снести.
+Cost: Цена
 CrystalGarden: Кристальный сад
 CurrentArmy: Присутствующая армия
 Damage: Урон
@@ -35,16 +36,20 @@ Gold: Золото
 Gordek: Гордек
 Hills: Холмы
 Hits: Хиты
+Horses: Лошади
 Hotel: Гостиница
 HumansNation: Люди
 Income: Доход
+Iron: Железо
 Knights: Рыцари
+Level: Ранг
 LumberMill: Лесопилка
 Mana: Мана
 MiddleMonth: Середина
 Mine: Шахта
 Mistra: Мистра
 Move: Мобильность
+Need: Требует
 NoPopulated: Не заселена
 Ogres: Огры
 OgresNation: Огры
@@ -72,7 +77,9 @@ Stats: Атрибуты
 Swordmens: Мечники
 Tavern: Таверна
 Thugs: Бандиты
+Upkeep: Жалованье
 Village: Деревня
 WhiteTower: Белая башня
 WolfRiders: Наездники на волках
+Woods: Дерево
 YearOf: Года
