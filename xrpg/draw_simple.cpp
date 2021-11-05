@@ -220,7 +220,7 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 	width = push_width;
 	caret = push_caret;
 	if(columns > 1)
-		column_width = column_width / columns - metrics::padding;
+		column_width = column_width / columns - metrics::border;
 	while(ismodal()) {
 		if(pbackground)
 			pbackground();
@@ -245,7 +245,7 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 				y2 = caret.y;
 			if((index % next_column) == next_column - 1) {
 				caret.y = y1;
-				caret.x += column_width + metrics::padding * 2;
+				caret.x += column_width + metrics::border * 2;
 			}
 			index++;
 		}

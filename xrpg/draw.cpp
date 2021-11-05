@@ -1115,20 +1115,28 @@ void draw::gradh(const color c1, const color c2, int skip) {
 	fore = pf;
 }
 
+static void set32fl(int x, int y, int w) {
+	if(y < clipping.y1 || y >= clipping.y2)
+		return;
+	auto x2 = x + w;
+	if(x < clipping.x1)
+		x = clipping.x1;
+	w = x2 - x;
+	if(w > 0)
+		set32((color*)canvas->ptr(x, y), w);
+}
+
 void draw::circlef(int r) {
 	int xm = caret.x, ym = caret.y;
 	if(xm - r >= clipping.x2 || xm + r < clipping.x1 || ym - r >= clipping.y2 || ym + r < clipping.y1)
 		return;
-	int x = -r, y = 0, err = 2 - 2 * r, y1, y2 = -1000;
+	int x = -r, y = 0, err = 2 - 2 * r, y2 = -1000;
 	do {
-		y1 = ym + y;
 		if(y2 != y) {
 			y2 = y;
-			//rectf({xm + x, y1, xm - x, y1 + 1});
-			if(y != 0) {
-				y1 = ym - y;
-				//rectf({xm + x, y1, xm - x, y1 + 1});
-			}
+			set32fl(xm + x, ym + y, x * -2);
+			if(y != 0)
+				set32fl(xm + x, ym - y, x * -2);
 		}
 		r = err;
 		if(r <= y)

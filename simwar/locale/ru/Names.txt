@@ -13,6 +13,7 @@ CancelAction: Отменить
 Cavalry: Кавалерия
 ChooseBuildingToBuild: Выбирайте постройку, которую хотите соорудить. Список органичен постройками только доступными для строительства в этой провинции.
 ChooseBuildingToDemontage: Выбирайте постройку, которую хотите снести.
+Continue: Продолжить
 Cost: Цена
 CrystalGarden: Кристальный сад
 CurrentArmy: Присутствующая армия
@@ -21,6 +22,7 @@ Date: Дата
 DeadLands: Мертвые земли
 Defend: Защита
 DestroyProvince: Снести постройку
+DisbandUnit: Расформировать отряд
 EastForest: Восточный лес
 EndMonth: Конец
 EndTurn: Закончить ход
@@ -34,6 +36,8 @@ Goblins: Гоблины
 GoblinsNation: Гоблины
 Gold: Золото
 Gordek: Гордек
+Green: Кланы черной горы
+Heroes: Герои
 Hills: Холмы
 Hits: Хиты
 Horses: Лошади
@@ -50,6 +54,8 @@ Mine: Шахта
 Mistra: Мистра
 Move: Мобильность
 Need: Требует
+NeutralForces: Нейтральные силы
+No: Нет
 NoPopulated: Не заселена
 Ogres: Огры
 OgresNation: Огры
@@ -58,11 +64,14 @@ OrksNation: Орки
 Population: Население
 PopulationGrowth: Рост населения
 Price: Стоимость
+Province: Провинция
+ProvinceWrongOwner: Информация по провинции недоступна, так как ее контролируют [%province_owner].
 Pub: Трактир
 Raid: Рейд
 RaiseInProvince: Повышает %-1 на [%+2i].
 RaiseIncomeInProvince: Повышает доход %-1 на [%+2i].
 RecruitUnits: Нанять войска
+Red: Имперцы
 Regular: Опытные
 Riders: Всадники
 ShowBuildings: Постройки
@@ -83,3 +92,4 @@ WhiteTower: Белая башня
 WolfRiders: Наездники на волках
 Woods: Дерево
 YearOf: Года
+Yes: Да

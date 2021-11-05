@@ -9,18 +9,26 @@ struct game_string : stringbuilder {
 		add(getnm(id));
 		add("]");
 	}
+	void addword(const char* id) {
+		add(getnm(id));
+	}
+	void addref(playeri* player) {
+		if(player)
+			addword(player->id);
+		else
+			addv(getnm("NeutralForces"), 0);
+	}
 	void addidentifier(const char* identifier) override {
 		if(equal(identifier, "province")) {
 			if(game.province)
-				addtag(game.province->id);
+				addword(game.province->id);
 			else
 				addv("UnknownProvince", 0);
-		} else if(equal(identifier, "player")) {
-			if(game.player)
-				addtag(game.player->id);
-			else
-				addv(getnm("NeutralForces"), 0);
-		} else
+		} else if(equal(identifier, "player"))
+			addref(game.player);
+		else if(equal(identifier, "province_owner"))
+			addref(game.province ? game.province->owner : (playeri*)0);
+		else
 			stringbuilder::addidentifier(identifier);
 	}
 	game_string(stringbuilder& sb) : stringbuilder(sb) {}
@@ -212,10 +220,16 @@ void gamei::getdate(stringbuilder& sb) const {
 		getyear());
 }
 
-void gamei::message(const char* string) {
+void gamei::message(const char* header, const char* string) {
 	answers an;
 	an.add(1, getnm("Continue"));
-	an.choose(string, 0, true, 0);
+	an.choose(string, 0, true, 0, 1, header);
+}
+
+void gamei::messagef(const char* header, const char* format, ...) {
+	char temp[4096]; stringbuilder sx(temp); game_string sb(sx);
+	sb.addv(format, xva_start(format));
+	return message(header, temp);
 }
 
 void gamei::build() {
@@ -243,19 +257,13 @@ void gamei::apply(variant v, stata& stat, costa& cost, int multiplier) {
 
 void gamei::addaction(answers& an, action_s v) {
 	int n;
-	//if(v <= actiona::maximal_element && v != CancelAction) {
-	//	if(player) {
-	//		if(!player->actions.get(v))
-	//			return;
-	//	}
-	//}
-	if(!execute(v, false))
+	if(!game.execute(v, false))
 		return;
 	auto id = bsdata<actioni>::get(v).id;
 	auto proc = bsdata<actioni>::get(v).proc;
 	switch(v) {
 	case ShowBuildings:
-		n = province->getbuildcount();
+		n = game.province->getbuildcount();
 		if(n)
 			an.add((long)proc, "%ShowBuildings (%Builded %1i)", n);
 		else
@@ -265,6 +273,10 @@ void gamei::addaction(answers& an, action_s v) {
 		an.add((long)proc, getnm(id));
 		break;
 	}
+}
+
+void gamei::addaction(answers& an, const char* id, fnevent proc) {
+	an.add((long)proc, getnm(id));
 }
 
 provincei* gamei::choose_province() {
@@ -287,23 +299,32 @@ heroi* gamei::choose_hero() {
 	return (heroi*)an.choose(0, getnm("Cancel"), true, 0, 1);
 }
 
+void gamei::heroes() {
+	answers an;
+	for(auto& e : bsdata<heroi>()) {
+		an.add((long)&e, "#$left image %1 0 \"art/portraits\" \"%1\"\n###%2", e.id, getnm(e.id));
+	}
+	an.choose(0, 0, true, 0, 1, getnm("Heroes"));
+}
+
 void gamei::buildings() {
 	char temp[4096]; stringbuilder sb(temp);
 	temp[0] = 0; answers an;
 	game.province->getbuildings(0, &sb);
-	game.addaction(an, BuildProvince);
-	game.addaction(an, DestroyProvince);
-	game.addaction(an, CancelAction);
+	addaction(an, BuildProvince);
+	addaction(an, DestroyProvince);
+	addaction(an, CancelAction);
 	draw::choose(an, temp, getnm(game.province->id));
 }
 
 void gamei::playermove() {
 	char temp[4096]; stringbuilder sb(temp); answers an;
 	game.province->getpresent(sb);
-	game.addaction(an, ShowBuildings);
-	game.addaction(an, ShowSites);
-	game.addaction(an, RecruitUnits);
-	game.addaction(an, EndTurn);
+	addaction(an, ShowBuildings);
+	addaction(an, ShowSites);
+	addaction(an, RecruitUnits);
+	addaction(an, "Heroes", heroes);
+	addaction(an, EndTurn);
 	draw::choose(an, temp, getnm(game.province->id));
 }
 
@@ -312,12 +333,34 @@ static void hire_unit() {
 }
 
 static void disband_unit() {
+	char temp[260]; stringbuilder sb(temp);
+	sb.add(getdescription("DisbandUnit"), getnm(game.unit->type->id));
+	if(!draw::confirm(getnm("DisbandUnit"), temp))
+		return;
+	auto garnison = game.unit->getarmy();
+	if(!garnison)
+		return;
+	game.unit->clear();
+	garnison->normalize();
 }
 
 void gamei::recruit() {
+	if(game.province->owner != game.player) {
+		messagef(getnm(game.province->id), getnm("ProvinceWrongOwner"));
+		draw::setdefactive();
+		return;
+	}
+	auto leadership = game.province->getleadership();
+	if(!leadership) {
+		messagef(getnm(game.province->id), getnm("HireAllowOnlyInFort"));
+		draw::setdefactive();
+		return;
+	}
+	char temp[260]; stringbuilder sx(temp); game_string sb(sx);
+	sb.add("%RecruitUnits - %province");
 	army source, dest;
 	source.select(bsdata<landscapei>::elements);
-	source.choose(getnm("RecruitUnits"),
+	source.choose(temp,
 		getnm("AllowedToHire"), source, hire_unit,
 		getnm("CurrentArmy"), game.province->garnison, disband_unit);
 }

@@ -32,3 +32,13 @@ int troop::get(variant v, stringbuilder* sb) const {
 void troop::kill() {
 	clear();
 }
+
+army* troop::getarmy() {
+	auto i = bsdata<provincei>::source.indexof(this);
+	if(i != -1)
+		return &bsdata<provincei>::get(i).garnison;
+	i = bsdata<heroi>::source.indexof(this);
+	if(i != -1)
+		return &bsdata<heroi>::get(i).troops;
+	return 0;
+}

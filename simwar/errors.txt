@@ -1,2 +1,2 @@
 ﻿In file `Names.txt`:
- Define translate for `Cost`
+ Define translate for `Heroes`

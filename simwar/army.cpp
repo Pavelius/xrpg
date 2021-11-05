@@ -62,6 +62,30 @@ void army::damage(int count, stringbuilder* sb) {
 	normalize();
 }
 
+provincei* army::getownerprovince() const {
+	auto i = bsdata<provincei>::source.indexof(this);
+	if(i == -1)
+		return 0;
+	return (provincei*)bsdata<provincei>::source.ptr(i);
+}
+
+heroi* army::getownerhero() const {
+	auto i = bsdata<heroi>::source.indexof(this);
+	if(i == -1)
+		return 0;
+	return (heroi*)bsdata<heroi>::source.ptr(i);
+}
+
+int army::getleadership() const {
+	auto pr = getownerprovince();
+	if(pr)
+		return pr->getleadership();
+	auto ph = getownerhero();
+	if(ph)
+		return ph->getleadership();
+	return 0;
+}
+
 int army::get(variant v, stringbuilder* sb) const {
 	auto r = 0;
 	for(auto& e : *this)
@@ -97,12 +121,15 @@ bool army::is(tag_s v) const {
 }
 
 int army::getstrenght(bool defensive) const {
-	int result = 0;
-	for(auto& e : *this)
-		result += e.get(Level);
-	if(defensive && is(Defensive))
-		result++;
-	if(!defensive && is(Offensive))
-		result++;
+	auto result = get(Level);
+	if(defensive) {
+		result += get(Defend);
+		if(is(Defensive))
+			result++;
+	} else {
+		result += get(Attack);
+		if(is(Offensive))
+			result++;
+	}
 	return result;
 }

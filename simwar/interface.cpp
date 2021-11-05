@@ -24,10 +24,13 @@ static void painthilite() {
 	auto push_fore = fore;
 	auto push_alpha = alpha;
 	fore = colors::button;
-	alpha = 128;
+	if(!hot.pressed)
+		alpha = 128;
+	else
+		alpha = 96;
 	rectf();
 	alpha = push_alpha;
-	rectb();
+	//rectb();
 	fore = push_fore;
 }
 
@@ -257,6 +260,18 @@ static void textfc(const char* string) {
 	width = push_width;
 }
 
+static void textfce(const char* string) {
+	auto push_width = width;
+	auto push_caret = caret;
+	textfs(string);
+	if(clipping) {
+		caret.x = caret.x - width / 2;
+		textf(string);
+	}
+	caret = push_caret;
+	width = push_width;
+}
+
 static void group(const sprite* ps, const char* tips, bool right_align = false) {
 	auto push_width = width;
 	auto push_fore = fore;
@@ -418,6 +433,46 @@ static void choose_province_action() {
 	setlastactive();
 }
 
+static void special_cicle(int ox, int oy, int value, color c1) {
+	if(value <= 0)
+		return;
+	char temp[32]; stringbuilder sb(temp);
+	sb.add("%1i", value);
+	auto push_caret = caret;
+	auto push_fore = fore;
+	auto push_alpha = alpha;
+	auto push_width = width;
+	caret.x += ox; caret.y += oy;
+	fore = c1;
+	alpha = 196;
+	circlef(8);
+	alpha = push_alpha;
+	circle(8);
+	fore = colors::black;
+	caret.x -= textw(temp) / 2 + 1;
+	caret.y -= texth() / 2;
+	text(temp);
+	width = push_width;
+	fore = push_fore;
+	caret = push_caret;
+}
+
+void costa::paint() const {
+	special_cicle(-30, 0, get(Gold), colors::yellow);
+	special_cicle(30, 0, get(Mana), color(128,128,255));
+}
+
+static void paint_cost(const costa& cost) {
+	auto push_caret = caret;
+	auto push_fore = fore;
+	auto push_stroke = fore_stroke;
+	fore = colors::black;
+	caret.y -= texth();
+	cost.paint();
+	caret = push_caret;
+	fore = push_fore;
+}
+
 void provincei::paint() const {
 	if(owner)
 		image(caret.x, caret.y, res_shields, owner->avatar, 0);
@@ -426,6 +481,7 @@ void provincei::paint() const {
 		if(hot.key == MouseLeft && hot.pressed)
 			execute(choose_province_action, (long)this, 0, &game.province);
 	}
+	paint_cost(income);
 	auto push_font = font;
 	font = metrics::h2;
 	auto push_stroke = fore_stroke;
@@ -438,6 +494,7 @@ void provincei::paint() const {
 	fore_stroke = push_stroke;
 	font = push_font;
 	caret.y -= texth() / 2;
+	caret.y += texth();
 	paint_troops(this);
 }
 
@@ -507,7 +564,7 @@ static bool fieldex(uniti* p, playeri* player, int count, bool disabled) {
 	}
 	fore = push_fore;
 	auto result = false;
-	if(hot.key == MouseLeft && hot.pressed && hilited && !disabled)
+	if(hot.key == MouseLeft && !hot.pressed && hilited && !disabled)
 		result = true;
 	return result;
 }
@@ -552,7 +609,7 @@ bool army::choose(const char* title, const char* t1, army& a1, fnevent pr1, cons
 		width = 100;
 		caret = push_caret;
 		caret.y += push_height + metrics::border * 2;
-		fire(button(getnm("Cancel"), KeyEscape, buttonrd, false), game.playermove);
+		fire(button(getnm("Cancel"), KeyEscape, buttonrd, false), setdefactive);
 		width = push_width;
 		domodal();
 	}
@@ -579,6 +636,18 @@ void draw::setactive(fnevent proc) {
 	}
 }
 
+bool draw::confirm(const char* title, const char* format) {
+	answers an;
+	an.add(1, getnm("Yes"));
+	an.add(0, getnm("No"));
+	pushvalue<bool> push(can_choose_province, false);
+	return an.choose(format, 0, true, 0, 2, title) != 0;
+}
+
 void draw::setlastactive() {
 	setactive(active_window);
+}
+
+void draw::setdefactive() {
+	setactive(game.playermove);
 }

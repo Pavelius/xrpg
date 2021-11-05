@@ -22,7 +22,7 @@ enum action_s : unsigned char {
 	ChooseHeroes, ChooseProvinces, ShowBuildings, ShowSites, EndTurn
 };
 enum stat_s : unsigned char {
-	Level, Damage, Shield, Move, Hits,
+	Attack, Defend, Level, Damage, Shield, Move, Hits,
 	Explored, Population, PopulationGrowth, Rebellion, Happiness
 };
 enum cost_s : unsigned char {
@@ -35,7 +35,10 @@ enum variant_s : unsigned char {
 	NoVariant,
 	Bonus, Building, Cost, Event, Hero, Landscape, Nation, Player, Prefix, Province, Resource, Stat, Tactic, Unit
 };
+struct army;
 struct playeri;
+struct provincei;
+struct heroi;
 struct prefixa : flagable<4> {
 };
 struct buildinga : flagable<8> {
@@ -72,6 +75,7 @@ struct costa : dataset<8, short> {
 	void        apply(variant v, const prefixa& flags);
 	void		getinfo(stringbuilder& sb, const char* promt) const;
 	void		modify(const resourcea& allowed, const producea& need);
+	void		paint() const;
 };
 struct nationi : nameable {
 	int         alignment;
@@ -127,6 +131,7 @@ struct troop {
 	void        clear();
 	int			get(variant v) const;
 	int         get(variant id, stringbuilder* sb) const;
+	army*		getarmy();
 	static int  getbonus(variant id, const variants& source);
 	void        kill();
 };
@@ -136,7 +141,9 @@ struct army : adat<troop, 18> {
 	bool        conquer(army& enemy, stringbuilder* psb);
 	void        damage(int hits, stringbuilder* sb = 0);
 	int         get(variant v, stringbuilder* sb = 0) const;
-	int			getleadership() const { return 3; }
+	int			getleadership() const;
+	provincei*	getownerprovince() const;
+	heroi*		getownerhero() const;
 	int			getstrenght(bool defensive) const;
 	int			getunitcount(int rang) const;
 	bool		is(tag_s v) const;
@@ -191,6 +198,7 @@ struct provincei : nameable {
 	int         getbuildcount() const;
 	void		getbuildings(answers* an, stringbuilder* sb);
 	int			getbuildlimit() const { return 3; }
+	int			getleadership() const { return 2; }
 	void        getpresent(stringbuilder& sb) const;
 	void        paint() const;
 	void		refresh();
@@ -203,6 +211,7 @@ struct heroi : uniti {
 	int         golds;
 	army		troops;
 	void        getinfo(stringbuilder& sb) const;
+	int			getleadership() const { return 2; }
 };
 struct sitetypei : nameable {
 	landscapea  landscape; // Landscape types where site might generate. 0 - for all sites.
@@ -212,6 +221,7 @@ struct sitetypei : nameable {
 struct sitei {
 	sitetypei*  type;
 	provincei*  province;
+	oppositioni	guard;
 	char        conceal; // Percent chance of conceal site. Visible only if lower that `explored` province.
 };
 struct decki : varianta {
@@ -251,14 +261,15 @@ public:
 	buildingi*  building;
 	army*		garnison;
 	troop*		unit;
-	void		addaction(answers& an, action_s v);
+	static void addaction(answers& an, action_s v);
+	static void addaction(answers& an, const char* id, fnevent proc);
 	unsigned    adduid();
 	bool        apply(const variants& source, bool allow_test, bool allow_apply);
 	static void apply(variant v, stata& stat, costa& cost, int multiplier = 1);
 	static void build();
 	static void demontage();
-	static void choose(answers& an, const char* title, const char* header);
 	static void	buildings();
+	static void	heroes();
 	static heroi* choose_hero();
 	static provincei* choose_province();
 	static void	playermove();
@@ -275,7 +286,8 @@ public:
 	int         getturn() const { return turn; }
 	void        initialize();
 	static void	nextmove();
-	static void message(const char* string);
+	static void message(const char* header, const char* string);
+	static void messagef(const char* header, const char* foramt, ...);
 	void        passturn();
 	void        play(const eventi* event);
 	static void	recruit();
@@ -284,11 +296,13 @@ public:
 };
 extern gamei    game;
 namespace draw {
+bool			confirm(const char* title, const char* format);
 long            dialog(answers& an, const char* title, const char* format);
 void			choose(answers& an, const char* title, const char* header);
 long			choosel(answers& an, const char* title, const char* header);
 void            initialize();
 void			setactive(fnevent proc);
+void			setdefactive();
 void			setlastactive();
 }
 inline bool     chance(int value) { return (rand() % 100) < value; }
