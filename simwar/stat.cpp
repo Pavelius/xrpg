@@ -1,17 +1,20 @@
 #include "main.h"
 
 BSDATA(stati) = {
-	{"Attack"},
-	{"Defend"},
+	{"Brawn"},
+	{"Brave"},
+	{"Magic"},
+	{"Leadership"},
+	{"Siege"},
 	{"Level"},
 	{"Damage"},
 	{"Shield"},
 	{"Move"},
 	{"Hits"},
 	{"Explored"},
-	{"Population"},
 	{"PopulationGrowth"},
 	{"Rebellion"},
 	{"Happiness"},
+	{"Population"},
 };
-assert_enum(stati, Happiness)
+assert_enum(stati, Population)

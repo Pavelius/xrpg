@@ -122,5 +122,10 @@ BSDATA(bonusi) = {
 	{"PopulationGrowth3", PopulationGrowth, 3},
 	{"PopulationGrowth4", PopulationGrowth, 4},
 	{"PopulationGrowth5", PopulationGrowth, 5},
+	{"Leadership1", Leadership, 1},
+	{"Leadership2", Leadership, 2},
+	{"Leadership3", Leadership, 3},
+	{"Leadership4", Leadership, 4},
+	{"Leadership5", Leadership, 5},
 };
 BSDATAF(bonusi)

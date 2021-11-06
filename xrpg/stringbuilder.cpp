@@ -245,6 +245,20 @@ bool szpmatch(const char* text, const char* pattern) {
 	}
 }
 
+const char* stringbuilder::getbycount(const char* id, int count) {
+	switch(count) {
+	case 0: case 1: return getnm(id);
+	case 2: case 3: case 4: return getnmof(id);
+	default: return getnmpl(id);
+	}
+}
+
+void stringbuilder::addcount(const char* id, int count, const char* format) {
+	if(!format)
+		format = "%1i %2";
+	add(format, count, getbycount(id, count));
+}
+
 struct stringbuilder::grammar {
 	const char*		name;
 	const char*		change;

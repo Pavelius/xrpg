@@ -34,7 +34,7 @@ void playeri::refresh() {
 
 void playeri::update_resources() {
 	for(auto& e : bsdata<provincei>()) {
-		if(e.owner != this)
+		if(e.player != this)
 			continue;
 		resources.add(e.resources);
 	}

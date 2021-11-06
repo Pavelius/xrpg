@@ -1,7 +1,9 @@
 ﻿AllowedToHire: Доступно для найма
 Archers: Лучники
+ArmyCount: размером %1 %-2
 Artifacts: Реликвии
 Attack: Атака
+AttackerPromt: Армия %-garnison_of.
 Barbarians: Варвары
 Barn: Амбар
 BlackOrks: Черные орки
@@ -36,7 +38,7 @@ Goblins: Гоблины
 GoblinsNation: Гоблины
 Gold: Золото
 Gordek: Гордек
-Green: Кланы черной горы
+Green: Орда
 Heroes: Герои
 Hills: Холмы
 Hits: Хиты

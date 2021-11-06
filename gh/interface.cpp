@@ -372,7 +372,6 @@ static void beforemodal() {
 }
 
 void draw::initializex() {
-    simpleinitialize();
 	initialize("GH simulator");
 	pausetime = 1000;
 	image_url = "gloomhaven";

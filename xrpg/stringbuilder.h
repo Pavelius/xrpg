@@ -22,6 +22,7 @@ public:
 	void				add(const char* format, ...) { addv(format, xva_start(format)); }
 	void				add(char sym);
 	void				addby(const char* s);
+	void				addcount(const char* id, int count, const char* format = 0);
 	virtual void		addidentifier(const char* identifier);
 	void				addicon(const char* id, int value);
 	void				addint(int value, int precision, const int radix);
@@ -37,7 +38,6 @@ public:
 	void				addx(char separator, const char* format, const char* format_param);
 	void				addx(const char* separator, const char* format, const char* format_param);
 	void				adduint(unsigned value, int precision, const int radix);
-	//char*				begin() { return pb; }
 	const char*			begin() const { return pb; }
 	void				change(char s1, char s2);
 	void				change(const char* s1, const char* s2);
@@ -45,6 +45,7 @@ public:
 	void				copy(const char* v);
 	const char*			end() const { return pe; }
 	char*				get() const { return p; }
+	const char*			getbycount(const char* id, int count);
 	static int			getnum(const char* v);
 	unsigned			getlenght() const { return pb - p; }
 	unsigned			getmaximum() const { return pe - pb - 1; }

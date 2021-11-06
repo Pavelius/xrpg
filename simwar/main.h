@@ -22,8 +22,10 @@ enum action_s : unsigned char {
 	ChooseHeroes, ChooseProvinces, ShowBuildings, ShowSites, EndTurn
 };
 enum stat_s : unsigned char {
-	Attack, Defend, Level, Damage, Shield, Move, Hits,
-	Explored, Population, PopulationGrowth, Rebellion, Happiness
+	Brawn, Brave, Magic, Leadership, Siege,
+	Level, Damage, Shield, Move, Hits,
+	Explored, PopulationGrowth, Rebellion, Happiness,
+	Population,
 };
 enum cost_s : unsigned char {
 	Gold, Mana, Artifacts, Faith, Fame
@@ -33,7 +35,7 @@ enum prefix_s : unsigned char {
 };
 enum variant_s : unsigned char {
 	NoVariant,
-	Bonus, Building, Cost, Event, Hero, Landscape, Nation, Player, Prefix, Province, Resource, Stat, Tactic, Unit
+	Bonus, Building, Cost, Event, Hero, Landscape, Nation, Player, Prefix, Province, Resource, Stat, Tactic, Tag, Unit
 };
 struct army;
 struct playeri;
@@ -50,13 +52,13 @@ struct taga : flagable<4> {
 	void		getinfo(stringbuilder& sb) const;
 };
 struct producea : adat<char, 12> {
-	void		getinfo(stringbuilder& sb, const char* promt) const;
+	void		getinfo(stringbuilder& sb, const char* promt, bool new_line = true) const;
 };
 struct landscapea : flagable<2> {
 };
 struct tactica : flagable<4> {
 };
-struct stata : dataset<Happiness, short> {
+struct stata : dataset<Population, short> {
 	void		getinfo(stringbuilder& sb, const char* promt) const;
 };
 struct actiona : dataset<RaidProvince, char> {
@@ -73,7 +75,7 @@ struct actioni {
 };
 struct costa : dataset<8, short> {
 	void        apply(variant v, const prefixa& flags);
-	void		getinfo(stringbuilder& sb, const char* promt) const;
+	void		getinfo(stringbuilder& sb, const char* promt, bool new_line = true) const;
 	void		modify(const resourcea& allowed, const producea& need);
 	void		paint() const;
 };
@@ -117,11 +119,8 @@ struct uniti : nameable {
 	nationi*    nation;
 	stata       stats;
 	costa       cost, upkeep;
-	landscapea  encounter;
 	producea    need;
 	taga		tags;
-	uniti*      encounter_tought[4];
-	uniti*      encounter_monster[4];
 	int         get(variant v) const;
 	void		getinfo(stringbuilder& sb) const;
 };
@@ -136,20 +135,24 @@ struct troop {
 	void        kill();
 };
 struct army : adat<troop, 18> {
+	char		morale;
 	void		add(uniti* p);
 	static bool	choose(const char* title, const char* t1, army& a1, fnevent pr1, const char* t2, army& a2, fnevent pr2);
 	bool        conquer(army& enemy, stringbuilder* psb);
 	void        damage(int hits, stringbuilder* sb = 0);
 	int         get(variant v, stringbuilder* sb = 0) const;
+	void		getinfo(stringbuilder& sb) const;
+	int			getlimited(variant v, int limit, stringbuilder* sb = 0) const;
 	int			getleadership() const;
 	provincei*	getownerprovince() const;
 	heroi*		getownerhero() const;
+	playeri*	getplayer() const;
 	int			getstrenght(bool defensive) const;
 	int			getunitcount(int rang) const;
 	bool		is(tag_s v) const;
 	void		normalize();
+	void		selectall();
 	void		shuffle();
-	void		select(const landscapei* v);
 	void		sort();
 };
 struct defenderi : nameable {
@@ -172,17 +175,18 @@ struct buildingi : nameable {
 	void		getpresent(stringbuilder& sb) const;
 };
 struct provincei : nameable {
-	uniti*      dwellers;
-	landscapei* landscape;
+	uniti		*dwellers;
+	landscapei	*landscape;
 	point       position;
 	stata       stats; // Common province and unit stats
 	costa       income; // Additional income
 	resourcea   resources; // Known province resource
 	variants    neightboards;
-	playeri*    owner;
+	playeri		*player;
 	buildinga   buildings;
 	oppositioni	guard;
 	army		garnison;
+	void		add(stat_s id, int v) { stats.add(id, v); }
 	bool        build(const buildingi* p, bool run);
 	buildingi*	choosebuilding(bool tobuild, bool todemontage);
 	bool		demontage(const buildingi* p, bool run);
@@ -202,13 +206,14 @@ struct provincei : nameable {
 	void        getpresent(stringbuilder& sb) const;
 	void        paint() const;
 	void		refresh();
+	void		set(stat_s id, int v) { stats.set(id, v); }
 private:
 	void		apply(const buildingi& e, int multiplier = 1);
 };
 struct heroi : uniti {
 	const char* avatar;
-	provincei*  province;
-	int         golds;
+	playeri		*player;
+	provincei	*province, *moveto;
 	army		troops;
 	void        getinfo(stringbuilder& sb) const;
 	int			getleadership() const { return 2; }
@@ -255,12 +260,12 @@ class gamei {
 	int         turn;
 	int         start_year;
 public:
-	heroi*		hero;
-	playeri*    player;
-	provincei*  province;
-	buildingi*  building;
-	army*		garnison;
-	troop*		unit;
+	heroi		*hero;
+	playeri		*player;
+	provincei	*province;
+	buildingi	*building;
+	army		*attacker, *garnison;
+	troop		*unit;
 	static void addaction(answers& an, action_s v);
 	static void addaction(answers& an, const char* id, fnevent proc);
 	unsigned    adduid();
@@ -316,4 +321,5 @@ VKIND(landscapei, Landscape)
 VKIND(provincei, Province)
 VKIND(stat_s, Stat)
 VKIND(tactici, Tactic)
+VKIND(tag_s, Tag)
 VKIND(uniti, Unit)

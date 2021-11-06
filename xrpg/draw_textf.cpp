@@ -27,6 +27,7 @@ static const char* glink(const char* p, char* result, unsigned result_maximum) {
 		stringbuilder sb(result, result + result_maximum);
 		p = sb.psstr(p, sym);
 	} else if(*p == '(') {
+		p = skipspcr(p + 1);
 		auto ps = result;
 		auto pe = ps + result_maximum;
 		while(*p && *p != ')') {
@@ -140,8 +141,7 @@ static const char* textfln(const char* p, int x1, int x2, color new_fore, const 
 			}
 			p = glink(p, temp, sizeof(temp) / sizeof(temp[0]) - 1);
 		} else if(p[0] == ']') {
-			p++;
-			temp[0] = 0;
+			p++; temp[0] = 0;
 			flags &= ~TextUscope;
 			fore = new_fore;
 		}
@@ -165,6 +165,10 @@ static const char* textfln(const char* p, int x1, int x2, color new_fore, const 
 				apply_line_feed(x1, texth());
 			text(p, p2 - p, flags);
 			p = p2;
+		}
+		if(temp[0] && ishilite({caret.x, caret.y, caret.x + w, caret.y+texth()})) {
+			if(!tips_sb)
+				tips_sb.addv(temp, 0);
 		}
 		caret.x += w;
 		p = textspc(p, x1);

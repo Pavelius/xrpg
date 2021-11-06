@@ -18,6 +18,29 @@ struct game_string : stringbuilder {
 		else
 			addv(getnm("NeutralForces"), 0);
 	}
+	void addref(army* p) {
+		if(!p)
+			return;
+		auto player = p->getplayer();
+		auto hero = p->getownerhero();
+		if(player)
+			add(getnmof(player->id));
+		else
+			addv(getnmof("NeutralForces"), 0);
+		auto count = p->getcount();
+		if(count > 0) {
+			char temp[1024]; stringbuilder sb(temp);
+			sb.add("[");
+			sb.add("(");
+			p->getinfo(sb);
+			sb.add(")");
+			sb.add("%1i", count);
+			sb.add("]");
+			adds(getnm("ArmyCount"), temp, sb.getbycount("Squad", count));
+		}
+		if(hero)
+			adds(getnm("%LeadBy %1"), getnmof(hero->id));
+	}
 	void addidentifier(const char* identifier) override {
 		if(equal(identifier, "province")) {
 			if(game.province)
@@ -27,7 +50,11 @@ struct game_string : stringbuilder {
 		} else if(equal(identifier, "player"))
 			addref(game.player);
 		else if(equal(identifier, "province_owner"))
-			addref(game.province ? game.province->owner : (playeri*)0);
+			addref(game.province ? game.province->player : (playeri*)0);
+		else if(equal(identifier, "attacker_of"))
+			addref(game.attacker);
+		else if(equal(identifier, "garnison_of"))
+			addref(game.garnison);
 		else
 			stringbuilder::addidentifier(identifier);
 	}
@@ -251,7 +278,7 @@ void gamei::apply(variant v, stata& stat, costa& cost, int multiplier) {
 	auto b = bonusi::getbonus(v) * multiplier;
 	switch(a.type) {
 	case Cost: cost.add(a.value, b); break;
-	case Stat: stat.add(a.value, b); break;
+	case Stat: stat.add((stat_s)a.value, b); break;
 	}
 }
 
@@ -282,7 +309,7 @@ void gamei::addaction(answers& an, const char* id, fnevent proc) {
 provincei* gamei::choose_province() {
 	answers an;
 	for(auto& e : bsdata<provincei>()) {
-		if(e.owner != game.player)
+		if(e.player != game.player)
 			continue;
 		an.add((long)&e, getnm(e.id));
 	}
@@ -300,11 +327,13 @@ heroi* gamei::choose_hero() {
 }
 
 void gamei::heroes() {
-	answers an;
-	for(auto& e : bsdata<heroi>()) {
-		an.add((long)&e, "#$left image %1 0 \"art/portraits\" \"%1\"\n###%2", e.id, getnm(e.id));
-	}
-	an.choose(0, 0, true, 0, 1, getnm("Heroes"));
+	//answers an;
+	//for(auto& e : bsdata<heroi>()) {
+	//	an.add((long)&e, "#$left image %1 0 \"art/portraits\" \"%1\"\n###%2", e.id, getnm(e.id));
+	//}
+	//an.choose(0, 0, true, 0, 1, getnm("Heroes"));
+	game.garnison = &game.province->garnison;
+	game.messagef(getnm(game.province->id), getnm("AttackerPromt"));
 }
 
 void gamei::buildings() {
@@ -345,7 +374,7 @@ static void disband_unit() {
 }
 
 void gamei::recruit() {
-	if(game.province->owner != game.player) {
+	if(game.province->player != game.player) {
 		messagef(getnm(game.province->id), getnm("ProvinceWrongOwner"));
 		draw::setdefactive();
 		return;
@@ -359,7 +388,7 @@ void gamei::recruit() {
 	char temp[260]; stringbuilder sx(temp); game_string sb(sx);
 	sb.add("%RecruitUnits - %province");
 	army source, dest;
-	source.select(bsdata<landscapei>::elements);
+	source.selectall();
 	source.choose(temp,
 		getnm("AllowedToHire"), source, hire_unit,
 		getnm("CurrentArmy"), game.province->garnison, disband_unit);

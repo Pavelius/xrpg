@@ -19,7 +19,7 @@ int troop::get(variant v) const {
 }
 
 int troop::get(variant v, stringbuilder* sb) const {
-	auto result = type->get(v);
+	auto result = get(v);
 	if(sb) {
 		if(result > 0)
 			sb->addn("[+%+1i]\t%2", result, getnm(type->id));

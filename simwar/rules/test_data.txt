@@ -105,101 +105,83 @@ Thugs nation(HumansNation)
  tags Looting
  cost Gold(15)
  upkeep Gold(2)
- encounter Plains Forest
 Spearmens nation(HumansNation)
  stats Damage(3) Hits(10) Level(1)
  tags Defensive
  cost Gold(25)
  upkeep Gold(3)
  need Iron
- encounter Plains
- encounter_tought Swordmens
 Archers nation(HumansNation)
  stats Damage(3) Hits(8) Level(1)
  tags Shooting Offensive
  cost Gold(30)
  upkeep Gold(3)
  need Woods
- encounter Plains
 Swordmens nation(HumansNation)
  stats Damage(3) Hits(12) Level(2)
  cost Gold(40)
  upkeep Gold(4)
  need Iron Iron
- encounter Plains
 Riders nation(HumansNation)
  stats Damage(3) Hits(10) Move(2) Level(2)
  tags Fast
  cost Gold(35)
  upkeep Gold(3)
  need Horses
- encounter Plains
- encounter_tought Cavalry
 Cavalry nation(HumansNation)
  stats Damage(4) Hits(14) Move(2) Level(3)
  tags Fast Offensive
  cost Gold(70)
  upkeep Gold(6)
  need Iron Horses
- encounter Plains
 Knights nation(HumansNation)
  stats Damage(4) Hits(18) Level(3)
  tags Defensive
  cost Gold(60)
  upkeep Gold(6)
  need Iron Iron
- encounter Plains
 Barbarians nation(HumansNation)
  stats Damage(3) Hits(10) Level(1)
  tags Mobile
  cost Gold(20)
  upkeep Gold(2)
- encounter Plains Hills
 Goblins nation(GoblinsNation)
  stats Damage(2) Hits(6) Level(1)
  tags Mobile
  cost Gold(10)
  upkeep Gold(1)
- encounter Plains Hills Forest Swamp
- encounter_tought Orks WolfRiders
 Orks nation(OrksNation)
  stats Damage(4) Hits(11) Level(1)
  tags Looting
  cost Gold(30)
  upkeep Gold(2)
  need Iron
- encounter Plains Hills
- encounter_tought BlackOrks
 BlackOrks nation(OrksNation)
  stats Damage(4) Hits(13) Level(2)
  tags Looting
  cost Gold(35)
  upkeep Gold(4)
  need Iron Iron
- encounter Plains Hills
- encounter_tought Ogres
 WolfRiders nation(GoblinsNation)
  stats Damage(4) Move(2) Hits(12) Level(2)
  tags Fast
  cost Gold(30)
  upkeep Gold(4)
  need Horses
- encounter Plains Hills Forest
 Ogres nation(OgresNation)
  stats Damage(6) Hits(18) Level(3)
  cost Gold(45)
  upkeep Gold(5)
  need Iron Woods
- encounter Plains Hills
 
 #Province
 
-WhiteTower position(205 1080) landscape(Hills) owner(Red)
-SouthHills position(158 971) landscape(Hills) owner(Red)
+WhiteTower position(205 1080) landscape(Hills) player(Red)
+SouthHills position(158 971) landscape(Hills) player(Red)
  buildings Tavern Pub
 ForestTooth position(272 962) landscape(Forest)
 EastForest position(344 1034) landscape(Forest)
-FarForest position(436 976) landscape(Forest) owner(Green)
+FarForest position(436 976) landscape(Forest) player(Green)
 
 WhiteTower neightboards(SouthHills EastForest ForestTooth)
 SouthHills neightboards(WhiteTower ForestTooth)

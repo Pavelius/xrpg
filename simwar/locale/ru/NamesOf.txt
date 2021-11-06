@@ -25,3 +25,7 @@ Plains: На равнине
 Swamp: В болотах
 
 Squad: Отряда
+
+Red: Имперцев
+Green: Орды
+NeutralForces: Нейтральных сил

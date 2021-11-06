@@ -23,7 +23,7 @@ static void add_line(stringbuilder& sb, const stata& source, const char* plus = 
 	for(unsigned i = 0; i < m; i++) {
 		if(i==Level)
 			continue;
-		auto v = source.get(i);
+		auto v = source.get((stat_s)i);
 		if(!v)
 			continue;
 		if(v>0)
@@ -45,7 +45,7 @@ static void add_bonuses(stringbuilder& sb, const char* id, const costa& source) 
 
 static void add_bonuses(stringbuilder& sb, const char* id, const stata& source) {
 	auto m = bsdata<stati>::source.getcount();
-	for(unsigned i = 0; i < m; i++) {
+	for(auto i = (stat_s)0; i <= Hits; i = (stat_s)(i+1)) {
 		auto v = source.get(i);
 		if(!v)
 			continue;
@@ -56,7 +56,7 @@ static void add_bonuses(stringbuilder& sb, const char* id, const stata& source) 
 static void add_bonuses(stringbuilder& sb, const stata& source, const char* promt) {
 	auto m = bsdata<stati>::source.getcount();
 	auto p = sb.get();
-	for(unsigned i = 0; i < m; i++) {
+	for(auto i = (stat_s)0; i <= Hits; i = (stat_s)(i + 1)) {
 		auto v = source.get(i);
 		if(!v)
 			continue;
@@ -69,9 +69,14 @@ static void add_bonuses(stringbuilder& sb, const stata& source, const char* prom
 }
 
 void taga::getinfo(stringbuilder& sb) const {
+	auto count = 0;
 	for(auto i = 0; i < getmaximum(); i++) {
-		if(is(i))
-			sb.addn(getdescription(bsdata<tagi>::get(i).id));
+		if(is(i)) {
+			if(!count)
+				sb.addsep('\n');
+			sb.adds(getdescription(bsdata<tagi>::get(i).id));
+			count++;
+		}
 	}
 }
 
@@ -89,15 +94,19 @@ void provincei::getpresent(stringbuilder& sb) const {
 	sb.add("$end\n");
 }
 
-void costa::getinfo(stringbuilder& sb, const char* promt) const {
+void costa::getinfo(stringbuilder& sb, const char* promt, bool new_line) const {
 	auto m = bsdata<costi>::source.getcount();
 	auto p = sb.get();
 	for(unsigned i = 0; i < m; i++) {
 		auto v = get(i);
 		if(!v)
 			continue;
-		if(p == sb.get())
-			sb.addn(promt);
+		if(p == sb.get()) {
+			if(new_line)
+				sb.addn(promt);
+			else
+				sb.add(promt);
+		}
 		sb.add(":%1i:%2i", i, v);
 	}
 }
@@ -105,7 +114,7 @@ void costa::getinfo(stringbuilder& sb, const char* promt) const {
 void stata::getinfo(stringbuilder& sb, const char* promt) const {
 	auto m = bsdata<costi>::source.getcount();
 	auto p = sb.get();
-	for(unsigned i = 0; i < m; i++) {
+	for(auto i = (stat_s)0; i <= m; i = (stat_s)(i + 1)) {
 		auto v = get(i);
 		if(!v)
 			continue;
@@ -125,11 +134,15 @@ void heroi::getinfo(stringbuilder& sb) const {
 	add_line(sb, stats);
 }
 
-void producea::getinfo(stringbuilder& sb, const char* promt) const {
+void producea::getinfo(stringbuilder& sb, const char* promt, bool new_line) const {
 	auto r = 0;
 	for(auto e : *this) {
-		if(!r)
-			sb.addn(promt);
+		if(!r) {
+			if(new_line)
+				sb.addn(promt);
+			else
+				sb.add(promt);
+		}
 		else
 			sb.add(", ");
 		sb.add(getnm(bsdata<resourcei>::get(e).id));
@@ -140,10 +153,9 @@ void producea::getinfo(stringbuilder& sb, const char* promt) const {
 }
 
 void uniti::getinfo(stringbuilder& sb) const {
-	sb.addn("###%1 (%-Level %2i)", getnm(id), get(Level));
-	sb.addn("%Hits: %2i, %Damage: %3i", get(Level), get(Hits), get(Damage));
+	sb.addn("###%1 (%-Level %2i, %-Hits %3i, %-Damage %4i)", getnm(id), get(Level), get(Hits), get(Damage));
 	cost.getinfo(sb, "%Cost: ");
-	upkeep.getinfo(sb, "%Upkeep: ");
+	upkeep.getinfo(sb, ", %Upkeep: ", false);
 	need.getinfo(sb, "%Need: ");
 	tags.getinfo(sb);
 }
@@ -176,6 +188,11 @@ void buildingi::getinfo(stringbuilder& sb, bool show_cost) const {
 void landscapei::getinfo(stringbuilder& sb) const {
 	add_header(sb, id);
 	add_bonuses(sb, "RaiseIncomeInProvince", income);
+}
+
+void army::getinfo(stringbuilder& sb) const {
+	for(auto& e : *this)
+		sb.addn(getnm(e.type->id));
 }
 
 void gamei::getinfo(stringbuilder& sb, const char* id) {

@@ -450,7 +450,7 @@ static void special_cicle(int ox, int oy, int value, color c1) {
 	fore = fore.mix(colors::form, 128);
 	circle(8);
 	fore = colors::black;
-	caret.x -= textw(temp) / 2 + 1;
+	caret.x -= (textw(temp) + 1) / 2;
 	caret.y -= texth() / 2;
 	text(temp);
 	width = push_width;
@@ -459,8 +459,8 @@ static void special_cicle(int ox, int oy, int value, color c1) {
 }
 
 void costa::paint() const {
-	special_cicle(-30, 0, get(Gold), colors::yellow);
-	special_cicle(30, 0, get(Mana), color(128,128,255));
+	special_cicle(-27, 0, get(Gold), colors::yellow);
+	special_cicle(27, 0, get(Mana), color(128, 128, 255));
 }
 
 static void paint_cost(const costa& cost) {
@@ -489,8 +489,8 @@ static void paint_neightboard(const provincei* p) {
 }
 
 void provincei::paint() const {
-	if(owner)
-		image(caret.x, caret.y, res_shields, owner->avatar, 0);
+	if(player)
+		image(caret.x, caret.y, res_shields, player->avatar, 0);
 	if(can_choose_province && ishilite(24)) {
 		hot.cursor = cursor::Hand;
 		if(hot.key == MouseLeft && hot.pressed)
@@ -506,7 +506,7 @@ void provincei::paint() const {
 	fore = colors::black;
 	fore_stroke = colors::white;
 	textjc(getnm(id));
-	caret.y += texth()/2 + 2;
+	caret.y += texth() / 2 + 2;
 	fore = push_fore;
 	fore_stroke = push_stroke;
 	font = push_font;
@@ -538,15 +538,6 @@ static void paintborder() {
 	fore = push_fore;
 }
 
-static void addcount(stringbuilder& sb, const char* format, const char* id, int count) {
-	switch(count) {
-	case 0: break;
-	case 1: sb.add(format, count, getnm(id)); break;
-	case 2: case 3: case 4: sb.add(format, count, getnmof(id)); break;
-	default: sb.add(format, count, getnmpl(id)); break;
-	}
-}
-
 static bool fieldex(uniti* p, playeri* player, int count, bool disabled) {
 	rectpush push;
 	char temp[260]; temp[0] = 0;
@@ -568,7 +559,7 @@ static bool fieldex(uniti* p, playeri* player, int count, bool disabled) {
 			cost.modify(player->resources, p->need);
 		cost.getinfo(sb, 0);
 	} else if(count)
-		addcount(sb, "%1i %-2", "Squad", count);
+		sb.addcount("Squad", count, "%1i %-2");
 	else
 		sb.add("%Level %1i", p->get(Level));
 	if(temp[0]) {

@@ -26,20 +26,14 @@ static uniti* random(uniti** source4, uniti* def) {
 
 void provincei::generate_units() {
 	army source;
-	source.select(landscape);
+	source.selectall();
 	source.shuffle();
 	if(!source)
 		return;
 	auto p = source.data[0].type;
 	dwellers = p;
-	for(auto count = xrand(1, 4); count > 0; count--) {
-		if(chance(75) || count == 1)
-			garnison.add(p);
-		else if(chance(75))
-			garnison.add(random(p->encounter_tought, p));
-		else
-			garnison.add(random(p->encounter_monster, p));
-	}
+	for(auto count = xrand(1, 4); count > 0; count--)
+		garnison.add(p);
 }
 
 void provincei::generate_explored() {
@@ -82,9 +76,9 @@ int provincei::getbuildcount() const {
 }
 
 bool provincei::build(const buildingi* p, bool run) {
-	if(!owner)
+	if(!player)
 		return false;
-	if(!owner->isallow(BuildProvince))
+	if(!player->isallow(BuildProvince))
 		return false;
 	auto i = bsdata<buildingi>::source.indexof(p);
 	if(i == -1)
@@ -105,15 +99,15 @@ bool provincei::build(const buildingi* p, bool run) {
 	if(run) {
 		buildings.set(i);
 		apply(bsdata<buildingi>::get(i));
-		owner->actions.add(BuildProvince, -1);
+		player->actions.add(BuildProvince, -1);
 	}
 	return true;
 }
 
 bool provincei::demontage(const buildingi* p, bool run) {
-	if(!owner)
+	if(!player)
 		return false;
-	if(!owner->isallow(DestroyProvince))
+	if(!player->isallow(DestroyProvince))
 		return false;
 	auto i = bsdata<buildingi>::source.indexof(p);
 	if(i == -1)
@@ -125,7 +119,7 @@ bool provincei::demontage(const buildingi* p, bool run) {
 	if(run) {
 		buildings.remove(i);
 		apply(bsdata<buildingi>::get(i), -1);
-		owner->actions.add(DestroyProvince, -1);
+		player->actions.add(DestroyProvince, -1);
 	}
 	return true;
 }
@@ -166,4 +160,5 @@ bool provincei::ismatch(variant v) const {
 
 void provincei::refresh() {
 	guard.recover();
+	add(Population, get(PopulationGrowth));
 }

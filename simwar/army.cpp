@@ -1,5 +1,20 @@
 #include "main.h"
 
+playeri* army::getplayer() const {
+	auto p = getownerhero();
+	if(p)
+		return p->player;
+	auto pr = getownerprovince();
+	if(pr)
+		return pr->player;
+	return 0;
+}
+
+void army::selectall() {
+	for(auto& e : bsdata<uniti>())
+		add(&e);
+}
+
 static int compare_units(const void* pv1, const void* pv2) {
 	auto p1 = (troop*)pv1;
 	auto p2 = (troop*)pv1;
@@ -24,16 +39,6 @@ void army::add(uniti* pu) {
 
 void army::shuffle() {
 	zshuffle(data, count);
-}
-
-void army::select(const landscapei* v) {
-	auto i = bsdata<landscapei>::source.indexof(v);
-	if(i == -1)
-		return;
-	for(auto& e : bsdata<uniti>()) {
-		if(e.encounter.is(i))
-			add(&e);
-	}
 }
 
 void army::normalize() {
@@ -93,6 +98,13 @@ int army::get(variant v, stringbuilder* sb) const {
 	return r;
 }
 
+int army::getlimited(variant v, int limit, stringbuilder* sb) const {
+	auto r = get(v, 0);
+	if(r > limit)
+		r = limit;
+	return r;
+}
+
 bool army::conquer(army& enemy, stringbuilder* sb) {
 	auto attacker = get(Level, sb);
 	auto defender = enemy.get(Level, sb);
@@ -123,13 +135,9 @@ bool army::is(tag_s v) const {
 int army::getstrenght(bool defensive) const {
 	auto result = get(Level);
 	if(defensive) {
-		result += get(Defend);
-		if(is(Defensive))
-			result++;
+		result += getlimited(Defensive, 3);
 	} else {
-		result += get(Attack);
-		if(is(Offensive))
-			result++;
+		result += getlimited(Offensive, 3);
 	}
 	return result;
 }

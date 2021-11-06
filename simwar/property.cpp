@@ -40,7 +40,6 @@ BSMETA(uniti) = {
 	BSDST(cost, costi),
 	BSDST(upkeep, costi),
 	BSFLG(tags, tagi),
-	BSFLG(encounter, landscapei), BSREQ(encounter_tought), BSREQ(encounter_monster),
 	BSADT(need, resourcei),
 	{}};
 BSDATAC(uniti, 128)
@@ -58,7 +57,7 @@ BSMETA(prefixi) = {
 BSMETA(provincei) = {
 	BSREQ(id),
 	BSREQ(position),
-	BSREQ(owner),
+	BSREQ(player),
 	BSDST(income, costi),
 	BSDST(stats, stati),
 	BSREQ(landscape),
@@ -102,7 +101,6 @@ BSMETA(heroi) = {
 	BSDST(stats, stati),
 	BSDST(cost, costi),
 	BSDST(upkeep, costi),
-	BSFLG(encounter, landscapei), BSREQ(encounter_tought), BSREQ(encounter_monster),
 	BSREQ(province),
 	{}};
 BSDATAC(heroi, 128)
@@ -124,6 +122,7 @@ BSDATA(varianti) = {
 	{"Resource", VRSTD(resourcei)},
 	{"Stat", VRSTD(stati)},
 	{"Tactic", VRSTD(tactici)},
+	{"Tag", VRSTD(tactici)},
 	{"Unit", VRSTD(uniti)},
 };
 assert_enum(varianti, Unit)
