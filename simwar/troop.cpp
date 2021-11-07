@@ -29,7 +29,12 @@ int troop::get(variant v, stringbuilder* sb) const {
 	return result;
 }
 
-void troop::kill() {
+void troop::kill(stringbuilder* sb) {
+	if(sb) {
+		if(*sb)
+			sb->add(", ");
+		sb->add(getnm(type->id));
+	}
 	clear();
 }
 
@@ -41,4 +46,16 @@ army* troop::getarmy() {
 	if(i != -1)
 		return &bsdata<heroi>::get(i).troops;
 	return 0;
+}
+
+bool troop::survive(int hits, int& damage_count) {
+	if(!hits)
+		return false;
+	if(hits < damage_count) {
+		damage_count -= hits;
+		return false;
+	}
+	auto chance = damage_count * 100 / hits;
+	damage_count = 0;
+	return (rand() % 100) < chance;
 }

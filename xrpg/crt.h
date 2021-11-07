@@ -139,6 +139,7 @@ public:
 	unsigned						getmaximum() const { return count_maximum & 0x7FFFFFFF; }
 	unsigned						getcount() const { return count; }
 	unsigned						getsize() const { return size; }
+	constexpr bool					have(const void* element) const { return element >= data && element < ((char*)data + size * count); }
 	int								indexof(const void* element) const;
 	void*							insert(int index, const void* element);
 	bool							is(const void* e) const { return e >= data && e < (char*)data + count * size; }
@@ -181,6 +182,7 @@ template<typename T> struct bsdata {
 	static constexpr array*			source_ptr = &source;
 	static T*						add() { return (T*)source.add(); }
 	static T*						addz() { for(auto& e : bsdata<T>()) if(!e) return &e; return add(); }
+	static constexpr bool			have(const void* p) { return source.have(p); }
 	static constexpr T&				get(int i) { return begin()[i]; }
 	static constexpr T*				begin() { return (T*)source.data; }
 	static constexpr T*				end() { return (T*)source.data + source.getcount(); }

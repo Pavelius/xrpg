@@ -14,6 +14,8 @@ class answers {
 public:
 	answers() : sc(buffer) {}
 	constexpr operator bool() const { return elements.count != 0; }
+	static fnevent		beforepaint;
+	static fnevent		afterpaint;
 	void				add(long id, const char* name, ...) { addv(id, name, xva_start(name)); }
 	void				addv(long id, const char* name, const char* format);
 	const element*		begin() const { return elements.data; }

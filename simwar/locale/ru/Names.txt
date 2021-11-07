@@ -3,7 +3,7 @@ Archers: Лучники
 ArmyCount: размером %1 %-2
 Artifacts: Реликвии
 Attack: Атака
-AttackerPromt: Армия %-garnison_of.
+AttackerPromt: В провинцию [+%province] вторглась армия %-attacker_of.
 Barbarians: Варвары
 Barn: Амбар
 BlackOrks: Черные орки
@@ -23,6 +23,7 @@ Damage: Урон
 Date: Дата
 DeadLands: Мертвые земли
 Defend: Защита
+DefenderPromt: В защите находилась армия %-defender_of.
 DestroyProvince: Снести постройку
 DisbandUnit: Расформировать отряд
 EastForest: Восточный лес
@@ -34,6 +35,7 @@ Fame: Слава
 FarForest: Дальний лес
 Forest: Лес
 ForestTooth: Лес с зубом
+Garnison: Гарнизон
 Goblins: Гоблины
 GoblinsNation: Гоблины
 Gold: Золото

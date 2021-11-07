@@ -53,18 +53,18 @@ void army::normalize() {
 	count = ps - data;
 }
 
-void army::damage(int count, stringbuilder* sb) {
+int army::damage(int& damage_count, stringbuilder* sb) {
+	int result = 0;
 	for(auto& e : *this) {
-		if(count <= 0)
+		if(damage_count <= 0)
 			break;
-		auto hits = e.get(Hits);
-		if(count > hits) {
-			count -= hits;
-			e.kill();
-		} else
-			break;
+		if(!e.survive(e.get(Hits), damage_count)) {
+			e.kill(sb);
+			result++;
+		}
 	}
 	normalize();
+	return result;
 }
 
 provincei* army::getownerprovince() const {
@@ -105,16 +105,6 @@ int army::getlimited(variant v, int limit, stringbuilder* sb) const {
 	return r;
 }
 
-bool army::conquer(army& enemy, stringbuilder* sb) {
-	auto attacker = get(Level, sb);
-	auto defender = enemy.get(Level, sb);
-	auto attacker_inflict = get(Damage, sb);
-	auto defender_inflict = enemy.get(Damage, sb);
-	damage(defender_inflict);
-	enemy.damage(attacker_inflict);
-	return attacker > defender;
-}
-
 int army::getunitcount(int rang) const {
 	auto result = 0;
 	for(auto& e : *this) {
@@ -140,4 +130,57 @@ int army::getstrenght(bool defensive) const {
 		result += getlimited(Offensive, 3);
 	}
 	return result;
+}
+
+const tactici* army::gettactic() const {
+	tactici* result = 0;
+	auto ph = getownerhero();
+	if(ph)
+		result = ph->tactic;
+	return result;
+}
+
+static int army_apply_damage(army* p, int& hits, stringbuilder* sb, const char* tips_string, playeri* side) {
+	char temp[1024]; temp[0] = 0;
+	stringbuilder sbd(temp);
+	auto result = p->damage(hits, &sbd);
+	if(sb && temp[0]) {
+		auto format = getdescription("Casualty");
+		sb->addn(format, game.getnameof(side), tips_string, temp);
+	}
+	return result;
+}
+
+bool army::conquer(army& enemy, stringbuilder* sb) {
+	game.attacker = this;
+	game.garnison = &enemy;
+	if(sb) {
+		sb->adds(getnm("AttackerPromt"));
+		sb->adds(getnm("DefenderPromt"));
+	}
+	auto attacker_side = getplayer();
+	auto defender_side = enemy.getplayer();
+	auto attacker_tactic = gettactic();
+	auto defender_tactic = enemy.gettactic();
+	if(attacker_tactic == defender_tactic) {
+		if(sb)
+			sb->addn(getdescription("NoTactic"));
+	}
+	char attacker_temp[1024]; stringbuilder asb(attacker_temp); attacker_temp[0] = 0;
+	char defender_temp[1024]; stringbuilder dsb(defender_temp); defender_temp[0] = 0;
+	auto attacker_inflict = get(Damage, &asb);
+	auto defender_inflict = enemy.get(Damage, &dsb);
+	auto attacker_killed = army_apply_damage(this, defender_inflict, sb, defender_temp, attacker_side);
+	auto defender_killed = army_apply_damage(&enemy, attacker_inflict, sb, attacker_temp, defender_side);
+	if(!attacker_killed && !defender_killed) {
+		if(sb)
+			sb->adds(getdescription("NoCasualty"),
+				game.getname(attacker_side), defender_temp,
+				game.getname(defender_side), attacker_temp);
+	}
+	auto attacker = get(Level, 0);
+	auto defender = enemy.get(Level, 0);
+	damage(defender_inflict);
+	enemy.damage(attacker_inflict);
+	return attacker > defender;
 }

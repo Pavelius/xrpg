@@ -31,7 +31,7 @@ fnevent				draw::pbeforemodal, draw::pleavemodal, draw::psetfocus;
 unsigned char       draw::alpha = 255;
 color				draw::fore;
 color				draw::fore_stroke;
-int					draw::width, draw::height, draw::tips_width, draw::dialog_width = 500;
+int					draw::width, draw::height, draw::dialog_width = 500;
 bool				draw::text_clipped, draw::control_hilited;
 const sprite*		draw::font;
 double				draw::linw = 1.0;
@@ -43,7 +43,7 @@ rect				sys_static_area;
 // Locale draw variables
 static draw::surface default_surface;
 draw::surface*		draw::canvas = &default_surface;
-point				draw::caret, draw::camera, draw::tips_caret;
+point				draw::caret, draw::camera, draw::tips_caret, draw::tips_size;
 bool			    line_antialiasing = true;
 // Drag
 static const void*	drag_object;
@@ -2192,7 +2192,7 @@ static void beforemodal() {
 		sys_static_area = {0, 0, draw::getwidth(), draw::getheight()};
 	tips_sb.clear();
 	tips_caret.clear();
-	tips_width = 0;
+	tips_size.clear();
 }
 
 bool draw::ismodal() {
@@ -2317,11 +2317,16 @@ void draw::fire(bool run, fnevent proc, long value, long value2, const void* obj
 }
 
 void draw::tipspos() {
+	caret = tips_caret;
 	width = 320;
+	if(tips_size.y) {
+		width = tips_size.x;
+		height = tips_size.y;
+		return;
+	}
 	textfs(tips_sb);
 	// Calculate rect
-	caret = tips_caret;
-	if(!tips_width) {
+	if(!tips_size.x) {
 		if(hot.hilite) {
 			caret.x = hot.hilite.x1;
 			caret.y = hot.hilite.y2 + 2;

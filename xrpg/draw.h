@@ -156,10 +156,10 @@ struct surface {
 extern surface*			canvas;
 extern rect				clipping; // Clipping area
 extern fnevent			domodal;
-extern point			dragmouse, caret, camera, tips_caret;
+extern point			dragmouse, caret, camera, tips_caret, tips_size;
 extern color			fore, fore_stroke;
 extern unsigned char    alpha;
-extern int				width, height, tips_width, dialog_width;
+extern int				width, height, dialog_width;
 extern bool				text_clipped, control_hilited;
 extern const sprite*	font; // Currently selected font
 extern double			linw;

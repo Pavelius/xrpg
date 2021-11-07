@@ -571,7 +571,7 @@ void table::cell(const rect& rc, int line, int column, const char* label) {
 		if(ishilite(r1)) {
 			tips_caret.x = r1.x1;
 			tips_caret.y = r1.y1;
-			tips_width = 200;
+			tips_size.x = 200;
 			tooltips(label);
 		}
 	}

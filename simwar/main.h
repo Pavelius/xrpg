@@ -123,6 +123,7 @@ struct uniti : nameable {
 	taga		tags;
 	int         get(variant v) const;
 	void		getinfo(stringbuilder& sb) const;
+	bool		survive(int hits);
 };
 struct troop {
 	uniti*		type;
@@ -132,14 +133,15 @@ struct troop {
 	int         get(variant id, stringbuilder* sb) const;
 	army*		getarmy();
 	static int  getbonus(variant id, const variants& source);
-	void        kill();
+	static bool	survive(int hits, int& damage_count);
+	void        kill(stringbuilder* sb);
 };
 struct army : adat<troop, 18> {
 	char		morale;
 	void		add(uniti* p);
 	static bool	choose(const char* title, const char* t1, army& a1, fnevent pr1, const char* t2, army& a2, fnevent pr2);
 	bool        conquer(army& enemy, stringbuilder* psb);
-	void        damage(int hits, stringbuilder* sb = 0);
+	int			damage(int& damage_count, stringbuilder* sb = 0);
 	int         get(variant v, stringbuilder* sb = 0) const;
 	void		getinfo(stringbuilder& sb) const;
 	int			getlimited(variant v, int limit, stringbuilder* sb = 0) const;
@@ -148,6 +150,7 @@ struct army : adat<troop, 18> {
 	heroi*		getownerhero() const;
 	playeri*	getplayer() const;
 	int			getstrenght(bool defensive) const;
+	const tactici* gettactic() const;
 	int			getunitcount(int rang) const;
 	bool		is(tag_s v) const;
 	void		normalize();
@@ -215,6 +218,7 @@ struct heroi : uniti {
 	playeri		*player;
 	provincei	*province, *moveto;
 	army		troops;
+	tactici*	tactic;
 	void        getinfo(stringbuilder& sb) const;
 	int			getleadership() const { return 2; }
 };
@@ -287,6 +291,8 @@ public:
 	static int	getleadership(int value, int level);
 	int         getmonth() const { return (turn / 3) % 12; }
 	int         getmonthpart() const { return turn % 3; }
+	static const char* getname(const playeri* p);
+	static const char* getnameof(const playeri* p);
 	int         getyear() const { return start_year + turn / (3 * 12); }
 	int         getturn() const { return turn; }
 	void        initialize();

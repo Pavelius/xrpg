@@ -12,12 +12,6 @@ struct game_string : stringbuilder {
 	void addword(const char* id) {
 		add(getnm(id));
 	}
-	void addref(playeri* player) {
-		if(player)
-			addword(player->id);
-		else
-			addv(getnm("NeutralForces"), 0);
-	}
 	void addref(army* p) {
 		if(!p)
 			return;
@@ -31,9 +25,9 @@ struct game_string : stringbuilder {
 		if(count > 0) {
 			char temp[1024]; stringbuilder sb(temp);
 			sb.add("[");
-			sb.add("(");
+			sb.add("({");
 			p->getinfo(sb);
-			sb.add(")");
+			sb.add("})");
 			sb.add("%1i", count);
 			sb.add("]");
 			adds(getnm("ArmyCount"), temp, sb.getbycount("Squad", count));
@@ -48,12 +42,12 @@ struct game_string : stringbuilder {
 			else
 				addv("UnknownProvince", 0);
 		} else if(equal(identifier, "player"))
-			addref(game.player);
+			add(game.getname(game.player));
 		else if(equal(identifier, "province_owner"))
-			addref(game.province ? game.province->player : (playeri*)0);
+			add(game.getname(game.province ? game.province->player : (playeri*)0));
 		else if(equal(identifier, "attacker_of"))
 			addref(game.attacker);
-		else if(equal(identifier, "garnison_of"))
+		else if(equal(identifier, "defender_of"))
 			addref(game.garnison);
 		else
 			stringbuilder::addidentifier(identifier);
@@ -332,8 +326,15 @@ void gamei::heroes() {
 	//	an.add((long)&e, "#$left image %1 0 \"art/portraits\" \"%1\"\n###%2", e.id, getnm(e.id));
 	//}
 	//an.choose(0, 0, true, 0, 1, getnm("Heroes"));
+	char temp[4096]; stringbuilder osb(temp);
+	game_string sb(osb);
+	army attacker;
+	attacker.add(&bsdata<uniti>::get(2));
+	attacker.add(&bsdata<uniti>::get(3));
+	game.attacker = &attacker;
 	game.garnison = &game.province->garnison;
-	game.messagef(getnm(game.province->id), getnm("AttackerPromt"));
+	attacker.conquer(game.province->garnison, &sb);
+	game.message(getnm(game.province->id), temp);
 }
 
 void gamei::buildings() {
@@ -449,4 +450,18 @@ int gamei::getleadership(int value, int level) {
 	if(level < 0)
 		level = 0;
 	return source[value][level];
+}
+
+const char*	gamei::getname(const playeri* p) {
+	if(p)
+		return getnm(p->id);
+	else
+		return getnm("NeutralForces");
+}
+
+const char*	gamei::getnameof(const playeri* p) {
+	if(p)
+		return getnmof(p->id);
+	else
+		return getnmof("NeutralForces");
 }

@@ -1,5 +1,8 @@
 #include "answers.h"
 
+fnevent answers::beforepaint;
+fnevent answers::afterpaint;
+
 int answers::compare(const void* v1, const void* v2) {
 	return strcmp(((answers::element*)v1)->text, ((answers::element*)v2)->text);
 }

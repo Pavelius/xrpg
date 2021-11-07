@@ -12,6 +12,7 @@ static answers*			dialog_answers;
 static const char*		dialog_title;
 static const char*		dialog_description;
 static bool				can_choose_province = true;
+static bool				answers_test_tips;
 static const int		cell_padding = 2;
 static auto				res_shields = (sprite*)gres("shields", "art/objects");
 static auto				res_units = (sprite*)gres("units", "art/objects");
@@ -120,10 +121,6 @@ static void show_status_panel() {
 	height = push_height;
 }
 
-static void main_beforemodal() {
-	simpleui::beforemodal();
-}
-
 static void tips_validate() {
 	variant v;
 	if(tips_sb)
@@ -134,14 +131,6 @@ static void tips_validate() {
 		tips_sb.clear();
 		v.getinfo(tips_sb);
 	}
-}
-
-static void main_ptips() {
-	tips_validate();
-	if(tips_sb && hot.hilite)
-		paintcurrenthilite();
-	background::tips();
-	simpleui::tips();
 }
 
 static void paint_troops(const provincei* province) {
@@ -187,15 +176,6 @@ static void paintprovinces() {
 			continue;
 		e.paint();
 	}
-}
-
-static void main_background() {
-	simpleui::paint();
-	background::paint();
-	paintprovinces();
-	commands::paint();
-	show_status_panel();
-	setposru();
 }
 
 static void static_text() {
@@ -513,24 +493,6 @@ void provincei::paint() const {
 	paint_troops(this);
 }
 
-void draw::initialize() {
-	static command text_formats_commads[] = {
-		{"progress", progress_format},
-		{"income", income_format},
-		{},
-	};
-	set_dark_theme();
-	initialize("Simwar game");
-	metrics::padding = 3;
-	metrics::border = 5;
-	image_url = "silentseas";
-	// Overlaod controls
-	pbeforemodal = main_beforemodal;
-	pbackground = main_background;
-	ptips = main_ptips;
-	text_formats = text_formats_commads;
-}
-
 static void paintborder() {
 	auto push_fore = fore;
 	fore = colors::border;
@@ -656,4 +618,70 @@ void draw::setlastactive() {
 
 void draw::setdefactive() {
 	setactive(game.playermove);
+}
+
+static void answers_beforepaint() {
+	answers_test_tips = (tips_sb.begin()[0] == 0);
+}
+
+static void answers_afterpaint() {
+	if(answers_test_tips && (hilite_object || tips_sb.begin()[0])) {
+		auto push_width = width;
+		auto push_height = height;
+		auto push_caret = caret;
+		setposru();
+		width = 320;
+		tips_validate();
+		textfs(tips_sb);
+		tips_size.x = width;
+		tips_size.y = height;
+		tips_caret.x = caret.x - tips_size.x - metrics::padding - metrics::border * 2;
+		tips_caret.y = caret.y;
+		if(hot.hilite)
+			tips_caret.y = hot.hilite.y1;
+		caret = push_caret;
+		height = push_height;
+		width = push_width;
+	}
+}
+
+static void main_beforemodal() {
+	simpleui::beforemodal();
+}
+
+static void main_background() {
+	simpleui::paint();
+	background::paint();
+	paintprovinces();
+	commands::paint();
+	show_status_panel();
+	setposru();
+}
+
+static void main_ptips() {
+	tips_validate();
+	if(tips_sb && hot.hilite)
+		paintcurrenthilite();
+	background::tips();
+	simpleui::tips();
+}
+
+void draw::initialize() {
+	static command text_formats_commads[] = {
+		{"progress", progress_format},
+		{"income", income_format},
+		{},
+	};
+	set_dark_theme();
+	initialize("Simwar game");
+	metrics::padding = 3;
+	metrics::border = 5;
+	image_url = "silentseas";
+	// Overlaod controls
+	pbeforemodal = main_beforemodal;
+	pbackground = main_background;
+	ptips = main_ptips;
+	text_formats = text_formats_commads;
+	answers::beforepaint = answers_beforepaint;
+	answers::afterpaint = answers_afterpaint;
 }

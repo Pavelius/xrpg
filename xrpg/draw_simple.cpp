@@ -231,6 +231,8 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 		setposru();
 		if(header)
 			texth2w(header);
+		if(beforepaint)
+			beforepaint();
 		window(false, title, resid);
 		auto index = 0;
 		auto y1 = caret.y, x1 = caret.x;
@@ -256,6 +258,8 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 			if(button(cancel_text, KeyEscape, buttonfd))
 				execute(buttoncancel);
 		}
+		if(afterpaint)
+			afterpaint();
 		caret = push_caret;
 		domodal();
 	}
@@ -345,7 +349,7 @@ void draw::simpleui::beforemodal() {
 	hilite_object = 0;
 	tips_caret.x = metrics::padding + metrics::border;
 	tips_caret.y = metrics::padding + metrics::border;
-	tips_width = 320;
+	tips_size.x = 320;
 }
 
 void draw::simpleui::paint() {

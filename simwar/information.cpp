@@ -191,8 +191,14 @@ void landscapei::getinfo(stringbuilder& sb) const {
 }
 
 void army::getinfo(stringbuilder& sb) const {
+	auto ph = getownerhero();
+	if(ph)
+		sb.addn("###%Army %1", getnmof(ph->id));
+	auto pr = getownerprovince();
+	if(pr)
+		sb.addn("###%Garnison");
 	for(auto& e : *this)
-		sb.addn(getnm(e.type->id));
+		sb.addn("%1 (%-Level [%2i])", getnm(e.type->id), e.type->get(Level));
 }
 
 void gamei::getinfo(stringbuilder& sb, const char* id) {

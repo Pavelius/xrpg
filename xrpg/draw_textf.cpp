@@ -22,7 +22,21 @@ static bool match(const char** string, const char* name) {
 
 static const char* glink(const char* p, char* result, unsigned result_maximum) {
 	result[0] = 0;
-	if(*p == '\"') {
+	if(p[0] == '(' && p[1]=='{') {
+		p = skipspcr(p + 2);
+		auto ps = result;
+		auto pe = ps + result_maximum;
+		while(p[0]) {
+			if(p[0] == '}' && p[1] == ')') {
+				p = skipspcr(p + 2);
+				break;
+			}
+			if(ps < pe)
+				*ps++ = *p;
+			p++;
+		}
+		*ps++ = 0;
+	} else if(*p == '\"') {
 		auto sym = *p++;
 		stringbuilder sb(result, result + result_maximum);
 		p = sb.psstr(p, sym);
