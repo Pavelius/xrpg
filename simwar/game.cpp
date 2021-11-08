@@ -313,17 +313,19 @@ provincei* gamei::choose_province() {
 heroi* gamei::choose_hero() {
 	answers an;
 	for(auto& e : bsdata<heroi>()) {
-		//if(e.owner != game.player)
-		//	continue;
-		an.add((long)&e, "#$left image %1 0 \"art/portraits\" \"@%1\"\n###%2", e.id, getnm(e.id));
+		if(e.player != game.player)
+			continue;
+		an.add((long)&e, "#$left image %1 0 \"art/portraits\"\n###%2 (%-Level %3i, %-Hits %4i, %-Damage %5i)",
+			e.id, getnm(e.id), e.get(Level), e.get(Hits), e.get(Damage));
 	}
+	pushvalue<bool> push(answers::show_tips, false);
 	return (heroi*)an.choose(0, getnm("Cancel"), true, 0, 1);
 }
 
 void gamei::heroes() {
 	//answers an;
 	//for(auto& e : bsdata<heroi>()) {
-	//	an.add((long)&e, "#$left image %1 0 \"art/portraits\" \"%1\"\n###%2", e.id, getnm(e.id));
+	//	an.add((long)&e, "#$left image %1 0 \"art/portraits\"\n###%2", e.id, getnm(e.id));
 	//}
 	//an.choose(0, 0, true, 0, 1, getnm("Heroes"));
 	char temp[4096]; stringbuilder osb(temp);
@@ -347,13 +349,25 @@ void gamei::buildings() {
 	draw::choose(an, temp, getnm(game.province->id));
 }
 
+static void setheromove() {
+	game.hero = heroi::find(game.province);
+	draw::setactive(game.heromove);
+}
+
 void gamei::playermove() {
 	char temp[4096]; stringbuilder sb(temp); answers an;
 	game.province->getpresent(sb);
 	addaction(an, ShowBuildings);
 	addaction(an, ShowSites);
 	addaction(an, RecruitUnits);
-	addaction(an, "Heroes", heroes);
+	addaction(an, EndTurn);
+	draw::choose(an, temp, getnm(game.province->id));
+}
+
+void gamei::heromove() {
+	char temp[4096]; stringbuilder sb(temp); answers an;
+	game.hero->getpresent(sb);
+	addaction(an, "Province", playermove);
 	addaction(an, EndTurn);
 	draw::choose(an, temp, getnm(game.province->id));
 }

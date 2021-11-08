@@ -1,2 +1,2 @@
 ﻿In file `rules/test_data.txt`:
- Line 27: Can't find variant `Shield5`
+ Line 193: Not found requisit `player`

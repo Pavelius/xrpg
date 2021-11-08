@@ -70,6 +70,9 @@
     <ClCompile Include="tag.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="hero.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="errors.txt">

@@ -147,7 +147,7 @@ void draw::answerbt(int i, long id, const char* title) {
 	}
 	if(button(title, answer_hotkeys[i], proc))
 		execute(buttonparam, id);
-	if(control_hilited)
+	if(control_hilited && answers::show_tips)
 		hilite_object = (void*)id;
 }
 

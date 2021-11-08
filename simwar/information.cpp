@@ -129,9 +129,13 @@ void buildingi::getpresent(stringbuilder& sb) const {
 }
 
 void heroi::getinfo(stringbuilder& sb) const {
-	//sb.addn("$left image %1 0 \"art/images\" \"@%2\"", id, id);
-	sb.addn("###%1", getnm(id));
-	add_line(sb, stats);
+	sb.addn("###%1 (%-Level %2i, %-Hits %3i, %-Damage %4i)", getnm(id), get(Level), get(Hits), get(Damage));
+	tags.getinfo(sb);
+}
+
+void heroi::getpresent(stringbuilder& sb) const {
+	sb.addn("$left image %1 0 \"art/portraits\" \"%1\"", id, getnm(id));
+	sb.addn("###%1 (%-Level %2i, %-Hits %3i, %-Damage %4i)", getnm(id), get(Level), get(Hits), get(Damage));
 }
 
 void producea::getinfo(stringbuilder& sb, const char* promt, bool new_line) const {

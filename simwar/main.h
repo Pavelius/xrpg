@@ -219,8 +219,11 @@ struct heroi : uniti {
 	provincei	*province, *moveto;
 	army		troops;
 	tactici*	tactic;
+	static heroi* find(const provincei* v);
 	void        getinfo(stringbuilder& sb) const;
+	void        getpresent(stringbuilder& sb) const;
 	int			getleadership() const { return 2; }
+	void		paint() const;
 };
 struct sitetypei : nameable {
 	landscapea  landscape; // Landscape types where site might generate. 0 - for all sites.
@@ -279,6 +282,7 @@ public:
 	static void demontage();
 	static void	buildings();
 	static void	heroes();
+	static void heromove();
 	static heroi* choose_hero();
 	static provincei* choose_province();
 	static void	playermove();

@@ -187,8 +187,8 @@ Green avatar(1)
 
 #Hero
 
-Gordek province(WhiteTower)
- stats Hits(20) Level(1)
+Gordek province(WhiteTower) moveto(EastForest) player(Red)
+ stats Hits(20) Level(1) Damage(10)
 
-Mistra 
- stats Hits(12) Level(1)
+Mistra province(ForestTooth) player(Red)
+ stats Hits(12) Level(1) Damage(5)

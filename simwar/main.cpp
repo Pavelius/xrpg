@@ -30,8 +30,9 @@ int main() {
     game.province = (provincei*)bsdata<provincei>::source.ptr(0);
     //eventi* pe = variant("ShamanCome");
     //game.play(pe);
-    draw::setactive(gamei::playermove);
-    draw::start();
+    game.choose_hero();
+    //draw::setactive(gamei::playermove);
+    //draw::start();
     return 0;
 }
 

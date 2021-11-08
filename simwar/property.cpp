@@ -98,10 +98,11 @@ BSMETA(heroi) = {
 	BSREQ(id),
 	BSREQ(avatar),
 	BSREQ(nation),
+	BSREQ(player),
 	BSDST(stats, stati),
 	BSDST(cost, costi),
 	BSDST(upkeep, costi),
-	BSREQ(province),
+	BSREQ(province), BSREQ(moveto),
 	{}};
 BSDATAC(heroi, 128)
 

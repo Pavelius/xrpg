@@ -26,5 +26,6 @@ public:
 	int					getcount() const { return elements.getcount(); }
 	const char*			getname(long v);
 	long				random() const;
+	static bool			show_tips;
 	void				sort();
 };

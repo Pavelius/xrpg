@@ -148,6 +148,7 @@
     <ClCompile Include="cost.cpp" />
     <ClCompile Include="deck.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="hero.cpp" />
     <ClCompile Include="information.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="landscape.cpp" />

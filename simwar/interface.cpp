@@ -150,25 +150,6 @@ static void paint_troops(const provincei* province) {
 	fore_stroke = push_stroke;
 }
 
-//static void paint_troops_icons(const provincei* province) {
-//	selector source;
-//	source.querry(province);
-//	if(!source)
-//		return;
-//	const auto dx = 16;
-//	auto count = source.getcount();
-//	auto push_caret = caret;
-//	caret.x -= (count - 1) * dx / 2;
-//	for(auto v : source) {
-//		troop* p = v;
-//		if(!p)
-//			continue;
-//		image(res_units, p->type->avatar, 0);
-//		caret.x += dx;
-//	}
-//	caret = push_caret;
-//}
-
 static void paint_provinces() {
 	for(auto& e : bsdata<provincei>()) {
 		set(e.position.x, e.position.y);
@@ -178,16 +159,44 @@ static void paint_provinces() {
 	}
 }
 
+static void choose_hero_action() {
+	game.hero = (heroi*)hot.param;
+	setlastactive();
+}
+
+void heroi::paint() const {
+	auto push_fore = fore;
+	//if(moveto) {
+	//	auto push_linew = linw;
+	//	auto push_caret = caret;
+	//	fore = colors::gray;
+	//	linw = 5.0;
+	//	line(moveto->position.x - camera.x, moveto->position.y - camera.y);
+	//	linw = push_linew;
+	//	caret = push_caret;
+	//}
+	imager(caret.x, caret.y, gres(id, "art/portraits"), 0, 24);
+	if(can_choose_province && ishilite(24)) {
+		fore = colors::button;
+		hot.cursor = cursor::Hand;
+		tooltips(id);
+		if(hot.key == MouseLeft && hot.pressed)
+			execute(choose_hero_action, (long)this, 0, &game.hero);
+	} else
+		fore = colors::active;
+	circle(24);
+	fore = push_fore;
+}
+
 static void paint_heroes() {
 	for(auto& e : bsdata<heroi>()) {
 		auto province = e.province;
 		if(!province)
 			continue;
-		set(province->position.x + 48, province->position.y);
-		if(isclipped(32))
+		set(province->position.x, province->position.y - 16 - 24);
+		if(isclipped(24))
 			continue;
-		imager(caret.x, caret.y, gres(e.id, "art/portraits"), 0, 24);
-		circle(24);
+		e.paint();
 	}
 }
 
@@ -421,9 +430,27 @@ static void progress_format() {
 	progress(string, minimal, maximum, current, tips);
 }
 
+static void choose_active(fnevent event) {
+	static fnevent active;
+	if(active) {
+		breakmodal(-1);
+		active = event;
+	} else {
+		active = event;
+		while(active) {
+			active();
+			if(getresult() == -1)
+				continue;
+			if(isnext())
+				break;
+			active = (fnevent)getresult();
+		}
+	}
+}
+
 static void choose_province_action() {
 	game.province = (provincei*)hot.param;
-	setlastactive();
+	choose_active(game.playermove);
 }
 
 static void special_cicle(int ox, int oy, int value, color c1) {
@@ -484,7 +511,7 @@ static void paint_neightboard(const provincei* p) {
 void provincei::paint() const {
 	if(player)
 		image(caret.x, caret.y, res_shields, player->avatar, 0);
-	if(can_choose_province && ishilite(24)) {
+	if(can_choose_province && ishilite(16)) {
 		hot.cursor = cursor::Hand;
 		if(hot.key == MouseLeft && hot.pressed)
 			execute(choose_province_action, (long)this, 0, &game.province);
@@ -598,8 +625,8 @@ bool army::choose(const char* title, const char* t1, army& a1, fnevent pr1, cons
 }
 
 void draw::choose(answers& an, const char* title, const char* header) {
-	auto proc = (fnevent)an.choose(title, 0, true, 0, 1, header);
-	setactive(proc);
+	/*auto proc = (fnevent)*/an.choose(title, 0, true, 0, 1, header);
+	//setactive(proc);
 }
 
 long draw::choosel(answers& an, const char* title, const char* header) {
@@ -626,11 +653,11 @@ bool draw::confirm(const char* title, const char* format) {
 }
 
 void draw::setlastactive() {
-	setactive(active_window);
+	//setactive(active_window);
 }
 
 void draw::setdefactive() {
-	setactive(game.playermove);
+	//setactive(game.playermove);
 }
 
 static void answers_beforepaint() {
@@ -665,8 +692,8 @@ static void main_beforemodal() {
 static void main_background() {
 	simpleui::paint();
 	background::paint();
-	paint_heroes();
 	paint_provinces();
+	paint_heroes();
 	commands::paint();
 	show_status_panel();
 	setposru();
@@ -674,8 +701,6 @@ static void main_background() {
 
 static void main_ptips() {
 	tips_validate();
-	if(tips_sb && hot.hilite)
-		paintcurrenthilite();
 	background::tips();
 	simpleui::tips();
 }
