@@ -204,6 +204,7 @@ inline bool				ishilite(int size) { return ishilite({caret.x-size, caret.y - siz
 void					image(int x, int y, const sprite* e, int id, int flags);
 inline void				image(const sprite* e, int id, int flags) { image(caret.x, caret.y, e, id, flags); }
 void					image(const sprite* e, int id, int flags, color* pal);
+void					imager(int x, int y, const sprite* p, int id, int radius);
 void					key2str(stringbuilder& sb, int key);
 void					line(int x, int y); // Draw line
 void					linet(int x, int y);

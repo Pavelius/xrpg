@@ -55,7 +55,7 @@ bool troop::survive(int hits, int& damage_count) {
 		damage_count -= hits;
 		return false;
 	}
-	auto chance = damage_count * 100 / hits;
+	auto chance = 100 - damage_count * 100 / hits;
 	damage_count = 0;
 	return (rand() % 100) < chance;
 }

@@ -204,21 +204,6 @@ static void raw832m(unsigned char* d, int d_scan, unsigned char* s, int s_scan, 
 	}
 }
 
-static void raw32n1(unsigned char* p1, unsigned char* sb, int width) {
-	const int cbs = 3;
-	const int cbd = 4;
-	if(width <= 0)
-		return;
-	unsigned char* se = sb + width * cbs;
-	while(sb < se) {
-		p1[0] = sb[0];
-		p1[1] = sb[1];
-		p1[2] = sb[2];
-		sb += cbs;
-		p1 += cbd;
-	}
-}
-
 static void raw32(unsigned char* d, int d_scan, unsigned char* s, int s_scan, int width, int height) {
 	const int cbs = 3;
 	const int cbd = 4;
@@ -1905,6 +1890,80 @@ void draw::stroke(int x, int y, const sprite* e, int id, int flags, unsigned cha
 		}
 	}
 	fore = push_fore;
+}
+
+static void raw32n1(unsigned char* p1, unsigned char* sb, int width) {
+	const int cbs = 3;
+	const int cbd = 4;
+	if(width <= 0)
+		return;
+	unsigned char* se = sb + width * cbs;
+	while(sb < se) {
+		p1[0] = sb[0];
+		p1[1] = sb[1];
+		p1[2] = sb[2];
+		sb += cbs;
+		p1 += cbd;
+	}
+}
+
+static void raw32cr(int x, int y, int width, int x0, int y0, unsigned char* s, unsigned scanline) {
+	if(y<clipping.x1 || y > clipping.y2 || x > clipping.x2)
+		return;
+	auto x2 = x + width;
+	if(x2 < clipping.x1)
+		return;
+	if(x < clipping.x1)
+		x = clipping.x1;
+	if(x2 > clipping.x2)
+		x2 = clipping.x2;
+	width = x2 - x;
+	if(width <= 0)
+		return;
+	const auto cbs = 3;
+	const auto cbd = 4;
+	auto p1 = ptr(x, y);
+	auto sb = s + ((y - y0) * scanline + (x - x0)) * cbs;
+	auto se = sb + width * cbs;
+	while(sb < se) {
+		p1[0] = sb[0];
+		p1[1] = sb[1];
+		p1[2] = sb[2];
+		sb += cbs;
+		p1 += cbd;
+	}
+}
+
+void draw::imager(int xm, int ym, const sprite* e, int id, int r) {
+	if(!e)
+		return;
+	auto& f = e->get(id);
+	if(!f.offset)
+		return;
+	if(r > f.sx / 2)
+		r = f.sx / 2;
+	if(r > f.sy / 2)
+		r = f.sy / 2;
+	if(xm - r >= clipping.x2 || xm + r < clipping.x1 || ym - r >= clipping.y2 || ym + r < clipping.y1)
+		return;
+	auto sx = f.sx;
+	auto x1 = xm - f.sx / 2;
+	auto y1 = ym - f.sy / 2;
+	unsigned char* s = (unsigned char*)e + f.offset;
+	int x = -r, y = 0, err = 2 - 2 * r, y2 = -1000;
+	do {
+		if(y2 != y) {
+			y2 = y;
+			raw32cr(xm + x, ym + y, -2 * x, x1, y1, s, sx);
+			if(y != 0)
+				raw32cr(xm + x, ym - y, -2 * x, x1, y1, s, sx);
+		}
+		r = err;
+		if(r <= y)
+			err += ++y * 2 + 1;
+		if(r > x || err > y)
+			err += ++x * 2 + 1;
+	} while(x < 0);
 }
 
 void draw::blit(surface& ds, int x1, int y1, int w, int h, unsigned flags, const surface& ss, int xs, int ys) {

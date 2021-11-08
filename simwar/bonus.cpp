@@ -29,6 +29,7 @@ BSDATA(bonusi) = {
 	{"Damage15", Damage, 15},
 	{"Damage20", Damage, 20},
 	{"Damage25", Damage, 25},
+	{"Shield5", Shield, 5},
 	{"Shield10", Shield, 10},
 	{"Shield15", Shield, 15},
 	{"Shield20", Shield, 20},

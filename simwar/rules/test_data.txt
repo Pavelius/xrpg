@@ -24,7 +24,7 @@ MessyFight
 CarefullyDefence
  bonus Shield10
 ShieldWall
- bonus Level1
+ bonus Level1 Shield5
  disable MessyFight LightingAttack
 HitAndRun
  bonus Shield15 LevelM1
@@ -66,14 +66,6 @@ Hills
  income Gold(2)
 Swamp
  income Mana(2)
-
-#Hero
-
-Gordek 
- stats Hits(20) Level(1)
-
-Mistra 
- stats Hits(12) Level(1)
 
 #Nation
 
@@ -192,3 +184,11 @@ FarForest neightboards(ForestTooth EastForest)
 
 Red avatar(0)
 Green avatar(1)
+
+#Hero
+
+Gordek province(WhiteTower)
+ stats Hits(20) Level(1)
+
+Mistra 
+ stats Hits(12) Level(1)

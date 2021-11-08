@@ -144,10 +144,8 @@ static int army_apply_damage(army* p, int& hits, stringbuilder* sb, const char* 
 	char temp[1024]; temp[0] = 0;
 	stringbuilder sbd(temp);
 	auto result = p->damage(hits, &sbd);
-	if(sb && temp[0]) {
-		auto format = getdescription("Casualty");
-		sb->addn(format, game.getnameof(side), tips_string, temp);
-	}
+	if(sb)
+		sb->addn(getdescription("Casualty"), game.getnameof(side), tips_string, temp[0] ? temp : getnm("No"));
 	return result;
 }
 
@@ -172,12 +170,6 @@ bool army::conquer(army& enemy, stringbuilder* sb) {
 	auto defender_inflict = enemy.get(Damage, &dsb);
 	auto attacker_killed = army_apply_damage(this, defender_inflict, sb, defender_temp, attacker_side);
 	auto defender_killed = army_apply_damage(&enemy, attacker_inflict, sb, attacker_temp, defender_side);
-	if(!attacker_killed && !defender_killed) {
-		if(sb)
-			sb->adds(getdescription("NoCasualty"),
-				game.getname(attacker_side), defender_temp,
-				game.getname(defender_side), attacker_temp);
-	}
 	auto attacker = get(Level, 0);
 	auto defender = enemy.get(Level, 0);
 	damage(defender_inflict);

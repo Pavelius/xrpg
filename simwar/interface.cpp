@@ -169,12 +169,25 @@ static void paint_troops(const provincei* province) {
 //	caret = push_caret;
 //}
 
-static void paintprovinces() {
+static void paint_provinces() {
 	for(auto& e : bsdata<provincei>()) {
 		set(e.position.x, e.position.y);
 		if(isclipped(64))
 			continue;
 		e.paint();
+	}
+}
+
+static void paint_heroes() {
+	for(auto& e : bsdata<heroi>()) {
+		auto province = e.province;
+		if(!province)
+			continue;
+		set(province->position.x + 48, province->position.y);
+		if(isclipped(32))
+			continue;
+		imager(caret.x, caret.y, gres(e.id, "art/portraits"), 0, 24);
+		circle(24);
 	}
 }
 
@@ -652,7 +665,8 @@ static void main_beforemodal() {
 static void main_background() {
 	simpleui::paint();
 	background::paint();
-	paintprovinces();
+	paint_heroes();
+	paint_provinces();
 	commands::paint();
 	show_status_panel();
 	setposru();

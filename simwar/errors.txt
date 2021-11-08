@@ -1,2 +1,2 @@
-﻿In file `Names.txt`:
- Define translate for `defender_of`
+﻿In file `rules/test_data.txt`:
+ Line 27: Can't find variant `Shield5`

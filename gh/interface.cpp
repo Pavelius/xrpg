@@ -1,5 +1,6 @@
 #include "main.h"
 #include "draw.h"
+#include "draw_background.h"
 #include "draw_hexagon.h"
 #include "draw_simple.h"
 
@@ -8,6 +9,7 @@ using namespace draw;
 const int size = 50;
 static indext current_index;
 static point mouse_difference;
+static bool show_movement_cost, show_hex_grid, show_hex_coor;
 const object* draw::focused_object;
 
 point h2p(point v) {
@@ -77,10 +79,10 @@ void object::paint_creature() const {
 		if(i == Invisibility)
 			continue;
 		if(is(i)) {
-			image(
-				x + states_pos[spi].x,
-				y + states_pos[spi].y,
-				pc, i, 0);
+			//image(
+			//	x + states_pos[spi].x,
+			//	y + states_pos[spi].y,
+			//	pc, i, 0);
 			spi++;
 		}
 	}
@@ -186,16 +188,16 @@ static void painthexgrid() {
 		} else if(show_hex_coor)
 			paint_tips(pt, hex);
 	}
-	if(hot.key == (Ctrl + 'G'))
-		execute(cbsetint, show_hex_grid ? 0 : 1, 0, &show_hex_grid);
-	else if(hot.key == 'G')
-		execute(cbsetint, show_hex_coor ? 0 : 1, 0, &show_hex_coor);
-	else if(hot.key == 'M')
-		execute(cbsetint, show_movement_cost ? 0 : 1, 0, &show_movement_cost);
+	//if(hot.key == (Ctrl + 'G'))
+	//	execute(cbsetint, show_hex_grid ? 0 : 1, 0, &show_hex_grid);
+	//else if(hot.key == 'G')
+	//	execute(cbsetint, show_hex_coor ? 0 : 1, 0, &show_hex_coor);
+	//else if(hot.key == 'M')
+	//	execute(cbsetint, show_movement_cost ? 0 : 1, 0, &show_movement_cost);
 }
 
 static void painthilitehex() {
-	if(!show_movement_cost)
+//	if(!show_movement_cost)
 		return;
 	if(current_index == Blocked)
 		return;
@@ -253,26 +255,12 @@ static void paintfigures() {
 	source.paint(true, false);
 }
 
-static void paintgame() {
-	paintclear();
-	//rectf({0, 0, getwidth(), getheight()}, colors::white);
-	paintfigures();
-	painthexgrid();
-	painthilitehex();
-	paintcommands();
-}
-
 extern stringbuilder tooltips_sb;
 static void infotops() {
 	if(hilite_object) {
 		variant v = hilite_object;
 		v.getinfo(tooltips_sb);
 	}
-}
-
-static void inputgame() {
-	infotops();
-	inputall();
 }
 
 static object* create_creature(variant v, point hex, bool hostile, int level = 1) {
@@ -368,16 +356,35 @@ void start_menu() {
 }
 
 static void beforemodal() {
-    tooltipsbeforemodal();
+    simpleui::beforemodal();
 }
 
+static void paintgame() {
+	simpleui::paint();
+	//background::paint();
+	//rectf({0, 0, getwidth(), getheight()}, colors::white);
+	paintfigures();
+	painthexgrid();
+	painthilitehex();
+	//simpleui::ppaintcommands();
+}
+
+static void main_tips() {
+	simpleui::tips();
+	background::tips();
+	//inputall();
+}
+
+void set_dark_theme();
+
 void draw::initializex() {
+	set_dark_theme();
 	initialize("GH simulator");
 	pausetime = 1000;
 	image_url = "gloomhaven";
 	pbeforemodal = beforemodal;
 	pbackground = paintgame;
-	ptips = inputgame;
+	ptips = main_tips;
 	setnext(start_menu);
 	start();
 }
