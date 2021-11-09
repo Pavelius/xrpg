@@ -1,7 +1,7 @@
 #include "main.h"
 
 BSDATA(actioni) = {
-	{"CancelAction", gamei::playermove},
+	{"CancelAction", gamei::provinceinfo},
 	{"BuildProvince", gamei::build},
 	{"DestroyProvince", gamei::demontage},
 	{"BuildCapital"},

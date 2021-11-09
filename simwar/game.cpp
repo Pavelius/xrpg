@@ -257,14 +257,14 @@ void gamei::build() {
 	auto p = game.province->choosebuilding(true, false);
 	if(p)
 		game.province->build(p, true);
-	draw::setactive(playermove);
+	draw::setactive(provinceinfo);
 }
 
 void gamei::demontage() {
 	auto p = game.province->choosebuilding(false, true);
 	if(p)
 		game.province->demontage(p, true);
-	draw::setactive(playermove);
+	draw::setactive(provinceinfo);
 }
 
 void gamei::apply(variant v, stata& stat, costa& cost, int multiplier) {
@@ -318,16 +318,11 @@ heroi* gamei::choose_hero() {
 		an.add((long)&e, "#$left image %1 0 \"art/portraits\"\n###%2 (%-Level %3i, %-Hits %4i, %-Damage %5i)",
 			e.id, getnm(e.id), e.get(Level), e.get(Hits), e.get(Damage));
 	}
-	pushvalue<bool> push(answers::show_tips, false);
+	//pushvalue<bool> push(answers::show_tips, false);
 	return (heroi*)an.choose(0, getnm("Cancel"), true, 0, 1);
 }
 
-void gamei::heroes() {
-	//answers an;
-	//for(auto& e : bsdata<heroi>()) {
-	//	an.add((long)&e, "#$left image %1 0 \"art/portraits\"\n###%2", e.id, getnm(e.id));
-	//}
-	//an.choose(0, 0, true, 0, 1, getnm("Heroes"));
+static void start_battle() {
 	char temp[4096]; stringbuilder osb(temp);
 	game_string sb(osb);
 	army attacker;
@@ -345,30 +340,25 @@ void gamei::buildings() {
 	game.province->getbuildings(0, &sb);
 	addaction(an, BuildProvince);
 	addaction(an, DestroyProvince);
-	addaction(an, CancelAction);
 	draw::choose(an, temp, getnm(game.province->id));
 }
 
-static void setheromove() {
-	game.hero = heroi::find(game.province);
-	draw::setactive(game.heromove);
-}
-
-void gamei::playermove() {
+void gamei::provinceinfo() {
 	char temp[4096]; stringbuilder sb(temp); answers an;
 	game.province->getpresent(sb);
 	addaction(an, ShowBuildings);
 	addaction(an, ShowSites);
 	addaction(an, RecruitUnits);
-	addaction(an, EndTurn);
 	draw::choose(an, temp, getnm(game.province->id));
 }
 
-void gamei::heromove() {
+static void heroarmy() {
+}
+
+void gamei::heroinfo() {
 	char temp[4096]; stringbuilder sb(temp); answers an;
 	game.hero->getpresent(sb);
-	addaction(an, "Province", playermove);
-	addaction(an, EndTurn);
+	an.add((long)heroarmy, getnm("Army"));
 	draw::choose(an, temp, getnm(game.province->id));
 }
 
@@ -391,13 +381,11 @@ static void disband_unit() {
 void gamei::recruit() {
 	if(game.province->player != game.player) {
 		messagef(getnm(game.province->id), getnm("ProvinceWrongOwner"));
-		draw::setdefactive();
 		return;
 	}
 	auto leadership = game.province->getleadership();
 	if(!leadership) {
 		messagef(getnm(game.province->id), getnm("HireAllowOnlyInFort"));
-		draw::setdefactive();
 		return;
 	}
 	char temp[260]; stringbuilder sx(temp); game_string sb(sx);
@@ -436,7 +424,7 @@ void gamei::refresh() {
 
 void gamei::nextmove() {
 	game.passturn();
-	draw::setactive(playermove);
+	draw::setactive(provinceinfo);
 }
 
 int gamei::getleadership(int value, int level) {
@@ -464,6 +452,15 @@ int gamei::getleadership(int value, int level) {
 	if(level < 0)
 		level = 0;
 	return source[value][level];
+}
+
+int gamei::getleadershipex(int value, int level) {
+	if(!value)
+		return 0;
+	auto r = 0;
+	for(auto i = level; i <= 4; i++)
+		r += getleadership(value, i);
+	return r;
 }
 
 const char*	gamei::getname(const playeri* p) {

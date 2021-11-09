@@ -45,22 +45,11 @@ void provincei::generate_population() {
 	stats.set(Population, value);
 }
 
-void provincei::apply(const buildingi& e, int multiplier) {
-	for(auto v : e.effect)
-		game.apply(v, stats, income, multiplier);
-}
-
 void provincei::initialize() {
 	generate_population();
 	generate_explored();
 	generate_units();
-	income = landscape->income;
-	income += dwellers->nation->income;
-	stats += dwellers->nation->stats;
-	for(auto& e : bsdata<buildingi>()) {
-		if(isbuilded(&e))
-			apply(e);
-	}
+	update();
 }
 
 int provincei::getbuildcount() const {
@@ -98,7 +87,6 @@ bool provincei::build(const buildingi* p, bool run) {
 	}
 	if(run) {
 		buildings.set(i);
-		apply(bsdata<buildingi>::get(i));
 		player->actions.add(BuildProvince, -1);
 	}
 	return true;
@@ -118,7 +106,6 @@ bool provincei::demontage(const buildingi* p, bool run) {
 		return false;
 	if(run) {
 		buildings.remove(i);
-		apply(bsdata<buildingi>::get(i), -1);
 		player->actions.add(DestroyProvince, -1);
 	}
 	return true;
@@ -161,4 +148,17 @@ bool provincei::ismatch(variant v) const {
 void provincei::refresh() {
 	guard.recover();
 	add(Population, get(PopulationGrowth));
+}
+
+void provincei::update() {
+	op_income = income;
+	op_stats = stats;
+	op_income += dwellers->nation->income;
+	op_stats += dwellers->nation->stats;
+	op_income += landscape->income;
+	for(auto& e : bsdata<buildingi>()) {
+		if(!isbuilded(&e))
+			continue;
+		e.apply(op_stats, op_income);
+	}
 }

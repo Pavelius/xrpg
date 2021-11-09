@@ -17,7 +17,6 @@ static const int		cell_padding = 2;
 static auto				res_shields = (sprite*)gres("shields", "art/objects");
 static auto				res_units = (sprite*)gres("units", "art/objects");
 extern command*			text_formats;
-static fnevent			active_window;
 
 void set_dark_theme();
 
@@ -159,9 +158,47 @@ static void paint_provinces() {
 	}
 }
 
+static fnevent next_active;
+
+static void choose_active(fnevent event) {
+	static fnevent active;
+	if(active)
+		breakmodal(-1);
+	else {
+		active = event;
+		while(active && !isnext()) {
+			next_active = 0;
+			active();
+			if(getresult() == -1)
+				continue;
+			active = next_active;
+		}
+	}
+}
+
+static void choose_province_action() {
+	game.province = (provincei*)hot.param;
+	choose_active(game.provinceinfo);
+}
+
 static void choose_hero_action() {
 	game.hero = (heroi*)hot.param;
-	setlastactive();
+	if(game.hero->province)
+		game.province = game.hero->province;
+	choose_active(game.heroinfo);
+}
+
+void draw::setactive(fnevent event) {
+	next_active = event;
+}
+
+void draw::waitcmd() {
+	setactive((fnevent)getresult());
+}
+
+void draw::choose(answers& an, const char* title, const char* header) {
+	an.choose(title, getnm("Close"), true, 0, 1, header);
+	waitcmd();
 }
 
 void heroi::paint() const {
@@ -181,7 +218,7 @@ void heroi::paint() const {
 		hot.cursor = cursor::Hand;
 		tooltips(id);
 		if(hot.key == MouseLeft && hot.pressed)
-			execute(choose_hero_action, (long)this, 0, &game.hero);
+			execute(choose_hero_action, (long)this);
 	} else
 		fore = colors::active;
 	circle(24);
@@ -430,29 +467,6 @@ static void progress_format() {
 	progress(string, minimal, maximum, current, tips);
 }
 
-static void choose_active(fnevent event) {
-	static fnevent active;
-	if(active) {
-		breakmodal(-1);
-		active = event;
-	} else {
-		active = event;
-		while(active) {
-			active();
-			if(getresult() == -1)
-				continue;
-			if(isnext())
-				break;
-			active = (fnevent)getresult();
-		}
-	}
-}
-
-static void choose_province_action() {
-	game.province = (provincei*)hot.param;
-	choose_active(game.playermove);
-}
-
 static void special_cicle(int ox, int oy, int value, color c1) {
 	if(value <= 0)
 		return;
@@ -513,12 +527,12 @@ void provincei::paint() const {
 		image(caret.x, caret.y, res_shields, player->avatar, 0);
 	if(can_choose_province && ishilite(16)) {
 		hot.cursor = cursor::Hand;
-		if(hot.key == MouseLeft && hot.pressed)
+		if(hot.key == MouseLeft && !hot.pressed)
 			execute(choose_province_action, (long)this, 0, &game.province);
 	}
 	if(game.province == this)
 		paint_neightboard(this);
-	paint_cost(income);
+	paint_cost(op_income);
 	auto push_font = font;
 	font = metrics::h2;
 	auto push_stroke = fore_stroke;
@@ -617,16 +631,11 @@ bool army::choose(const char* title, const char* t1, army& a1, fnevent pr1, cons
 		width = 100;
 		caret = push_caret;
 		caret.y += push_height + metrics::border * 2;
-		fire(button(getnm("Cancel"), KeyEscape, buttonrd, false), setdefactive);
+		fire(button(getnm("Cancel"), KeyEscape, buttonrd, false), buttoncancel);
 		width = push_width;
 		domodal();
 	}
 	return getresult() != 0;
-}
-
-void draw::choose(answers& an, const char* title, const char* header) {
-	/*auto proc = (fnevent)*/an.choose(title, 0, true, 0, 1, header);
-	//setactive(proc);
 }
 
 long draw::choosel(answers& an, const char* title, const char* header) {
@@ -637,27 +646,12 @@ long draw::choosel(answers& an, const char* title, const char* header) {
 	return result;
 }
 
-void draw::setactive(fnevent proc) {
-	if(proc && !isnext()) {
-		active_window = proc;
-		setnext(proc);
-	}
-}
-
 bool draw::confirm(const char* title, const char* format) {
 	answers an;
 	an.add(1, getnm("Yes"));
 	an.add(0, getnm("No"));
 	pushvalue<bool> push(can_choose_province, false);
 	return an.choose(format, 0, true, 0, 2, title) != 0;
-}
-
-void draw::setlastactive() {
-	//setactive(active_window);
-}
-
-void draw::setdefactive() {
-	//setactive(game.playermove);
 }
 
 static void answers_beforepaint() {

@@ -1,5 +1,6 @@
 ﻿AllowedToHire: Доступно для найма
 Archers: Лучники
+Army: Армия
 ArmyCount: размером %1 %-2
 Artifacts: Реликвии
 Attack: Атака
@@ -15,6 +16,7 @@ CancelAction: Отменить
 Cavalry: Кавалерия
 ChooseBuildingToBuild: Выбирайте постройку, которую хотите соорудить. Список органичен постройками только доступными для строительства в этой провинции.
 ChooseBuildingToDemontage: Выбирайте постройку, которую хотите снести.
+Close: Закрыть
 Continue: Продолжить
 Cost: Цена
 CrystalGarden: Кристальный сад

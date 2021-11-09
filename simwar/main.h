@@ -189,7 +189,7 @@ struct provincei : nameable {
 	buildinga   buildings;
 	oppositioni	guard;
 	army		garnison;
-	void		add(stat_s id, int v) { stats.add(id, v); }
+	void		add(stat_s id, int v) { stats.add(id, v); update(); }
 	bool        build(const buildingi* p, bool run);
 	buildingi*	choosebuilding(bool tobuild, bool todemontage);
 	bool		demontage(const buildingi* p, bool run);
@@ -200,8 +200,8 @@ struct provincei : nameable {
 	void        generate_explored();
 	void        generate_population();
 	void        generate_units();
-	int         get(stat_s v) const { return stats.get(v); }
-	int         get(cost_s v) const { return income.get(v); }
+	int         get(stat_s v) const { return op_stats.get(v); }
+	int         get(cost_s v) const { return op_income.get(v); }
 	int         getbuildcount() const;
 	void		getbuildings(answers* an, stringbuilder* sb);
 	int			getbuildlimit() const { return 3; }
@@ -210,8 +210,10 @@ struct provincei : nameable {
 	void        paint() const;
 	void		refresh();
 	void		set(stat_s id, int v) { stats.set(id, v); }
+	void		update();
 private:
-	void		apply(const buildingi& e, int multiplier = 1);
+	costa		op_income;
+	stata		op_stats;
 };
 struct heroi : uniti {
 	const char* avatar;
@@ -281,11 +283,8 @@ public:
 	static void build();
 	static void demontage();
 	static void	buildings();
-	static void	heroes();
-	static void heromove();
 	static heroi* choose_hero();
 	static provincei* choose_province();
-	static void	playermove();
 	static void error(stringbuilder* sb, const char* id, ...);
 	bool		execute(action_s id, bool run);
 	static void format(stringbuilder& sb, const char* string, ...);
@@ -293,18 +292,21 @@ public:
 	void        getdate(stringbuilder& sb) const;
 	static void getinfo(stringbuilder& sb, const char* id);
 	static int	getleadership(int value, int level);
+	static int	getleadershipex(int value, int level);
 	int         getmonth() const { return (turn / 3) % 12; }
 	int         getmonthpart() const { return turn % 3; }
 	static const char* getname(const playeri* p);
 	static const char* getnameof(const playeri* p);
 	int         getyear() const { return start_year + turn / (3 * 12); }
 	int         getturn() const { return turn; }
+	static void heroinfo();
 	void        initialize();
 	static void	nextmove();
 	static void message(const char* header, const char* string);
 	static void messagef(const char* header, const char* foramt, ...);
 	void        passturn();
 	void        play(const eventi* event);
+	static void	provinceinfo();
 	static void	recruit();
 	void		refresh();
 	void        setuidbase(unsigned char v) { uid_base = v; }
@@ -316,9 +318,8 @@ long            dialog(answers& an, const char* title, const char* format);
 void			choose(answers& an, const char* title, const char* header);
 long			choosel(answers& an, const char* title, const char* header);
 void            initialize();
-void			setactive(fnevent proc);
-void			setdefactive();
-void			setlastactive();
+void			setactive(fnevent event);
+void			waitcmd();
 }
 inline bool     chance(int value) { return (rand() % 100) < value; }
 int             getfix(stringbuilder* sb, int v, variant id);

@@ -1,2 +1,2 @@
-﻿In file `rules/test_data.txt`:
- Line 193: Not found requisit `player`
+﻿In file `Names.txt`:
+ Define translate for `Army`
