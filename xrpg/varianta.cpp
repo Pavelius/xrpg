@@ -10,7 +10,7 @@ void varianta::select(const array& source) {
 variant varianta::choose(const char* title, const char* cancel, bool interactive, const char* resid) const {
 	answers an;
 	for(auto v : *this)
-		an.add((size_t)v.getpointer(), v.getname());
+		an.add(v.getpointer(), v.getname());
 	an.sort();
 	return (void*)an.choose(title, cancel, interactive, resid, 1);
 }

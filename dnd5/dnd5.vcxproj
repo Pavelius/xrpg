@@ -155,6 +155,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="modifier.cpp" />
     <ClCompile Include="skill.cpp" />
+    <ClCompile Include="special.cpp" />
     <ClCompile Include="statable.cpp" />
     <ClCompile Include="types.cpp" />
     <ClCompile Include="wear.cpp" />

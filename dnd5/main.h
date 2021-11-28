@@ -3,9 +3,9 @@
 #include "dice.h"
 #include "flagable.h"
 #include "gender.h"
+#include "posable.h"
 #include "stringbuilder.h"
-#include "variant.h"
-#include "varianta.h"
+#include "variantlist.h"
 
 #pragma once
 
@@ -53,7 +53,8 @@ enum itemtg_s : unsigned char {
 };
 enum variant_s : unsigned char {
 	NoVariant,
-	Ability, Advance, Alignment, Class, Damage, Item, ItemTag, Modifier, Pack, Race, Special, Skill,
+	Ability, Advance, Alignment, Class, Damage, Item, ItemTag,
+	Modifier, Pack, Race, Special, Skill,
 };
 typedef flagable<1 + Poison / 8> damagea;
 typedef flagable<1 + Persuasion / 8> skilla;
@@ -70,6 +71,7 @@ struct nameablei {
 };
 struct abilityi {
 	const char*			id;
+	ability_s			parent;
 };
 struct skilli {
 	const char*			id;
@@ -82,6 +84,7 @@ struct modifieri {
 	const char*			id;
 };
 struct racei : nameablei {
+	variant				parent;
 };
 struct weari {
 	const char*			id;
@@ -114,6 +117,9 @@ struct attacki {
 struct itemtgi {
 	const char*			id;
 };
+struct speciali {
+	const char*			id;
+};
 struct itemi : nameablei {
 	int					weight;
 	int					cost;
@@ -135,6 +141,7 @@ union item {
 		//
 		unsigned char	broken : 2;
 	};
+	const itemi&		geti() const { return bsdata<itemi>::elements[type]; }
 	creature*			getowner() const;
 	void				use();
 };
@@ -145,12 +152,20 @@ struct statable {
 	spellf				known_spells;
 	static void			copy(statable& dest, const statable& source);
 	static int			roll(int advantage, bool lucky);
+	static int			roll(dice_s v);
 };
-class creature : nameablei, public statable {
+class creature : nameablei, public statable, public posable {
 	statable			basic;
+	item				wears[LastBackpack + 1];
 public:
-	bool				attack(creature& enemy, wear_s slot, int advantages = 0, int bonus = 0);
+	bool				attack(creature& enemy, int advantages, int bonus);
+	bool				attack(ability_s attack_type, creature& enemy, item& weapon, int advantages, int bonus);
+	void				damage(damage_s type, int value);
+	void				fixmiss();
+	void				fixhit(int value);
 	int					get(ability_s i) const { return abilities[i]; }
+	const item&			get(wear_s i) const { return wears[i]; }
+	item&				get(wear_s i) { return wears[i]; }
 	constexpr bool		is(special_s v) const { return special.is(v); }
 };
 class gamei {

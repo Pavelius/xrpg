@@ -48,6 +48,9 @@
     <ClCompile Include="modifier.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="special.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">

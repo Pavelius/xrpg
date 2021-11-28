@@ -2,6 +2,8 @@
 
 Human
 Dwarf
+DwarfHill parent(Dwarf)
+DwarfMountain parent(Dwarf)
 Elf
 Halfling
 

@@ -136,7 +136,7 @@ void draw::texth2w(const char* string) {
 	font = push_font;
 }
 
-void draw::answerbt(int i, long id, const char* title) {
+void draw::answerbt(int i, const void* pv, const char* title) {
 	static char answer_hotkeys[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'};
 	if(i >= (int)(sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0])))
 		i = sizeof(answer_hotkeys) / sizeof(answer_hotkeys[0]) - 1;
@@ -146,9 +146,9 @@ void draw::answerbt(int i, long id, const char* title) {
 		proc = buttonft;
 	}
 	if(button(title, answer_hotkeys[i], proc))
-		execute(buttonparam, id);
+		execute(buttonparam, (long)pv);
 	if(control_hilited && answers::show_tips)
-		hilite_object = (void*)id;
+		hilite_object = pv;
 }
 
 void draw::customwindow() {
@@ -206,7 +206,7 @@ static int getcolumns(const answers& an) {
 	return 2;
 }
 
-long answers::choose(const char* title, const char* cancel_text, bool interactive, const char* resid, int columns, const char* header) const {
+void* answers::choose(const char* title, const char* cancel_text, bool interactive, const char* resid, int columns, const char* header) const {
 	if(!interactive)
 		return random();
 	if(!elements)
@@ -242,7 +242,7 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 		auto push_padding = metrics::padding;
 		metrics::padding = 0;
 		for(auto& e : *this) {
-			answerbt(index, e.id, e.text);
+			answerbt(index, e.value, e.text);
 			if(caret.y > y2)
 				y2 = caret.y;
 			if((index % next_column) == next_column - 1) {
@@ -263,7 +263,7 @@ long answers::choose(const char* title, const char* cancel_text, bool interactiv
 		caret = push_caret;
 		domodal();
 	}
-	return getresult();
+	return (void*)getresult();
 }
 
 void draw::grid() {

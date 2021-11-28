@@ -17,7 +17,7 @@ static void fill_array(answers& an, array* source, fnmenuallow pallow) {
 				continue;
 		}
 		auto id = *((const char**)pb);
-		an.add((long)pb, getnm(id));
+		an.add(pb, getnm(id));
 	}
 }
 
@@ -29,7 +29,7 @@ static void fill_records(answers& an, variant source, fnmenuallow pallow) {
 			if(!pallow(&e))
 				continue;
 		}
-		an.add((long)&e, getnm(e.id));
+		an.add(&e, getnm(e.id));
 	}
 }
 
@@ -81,7 +81,7 @@ static void choose_element(answers& an, const char* title, const char* parent, c
 			for(auto& e : bsdata<menui>()) {
 				if(strcmp(e.parent, parent) != 0)
 					continue;
-				an.add((long)&e, getnm(e.id));
+				an.add(&e, getnm(e.id));
 			}
 			if(!an)
 				break;

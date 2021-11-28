@@ -24,6 +24,10 @@ int statable::roll(int advantage, bool lucky) {
 	return last_roll;
 }
 
+int statable::roll(dice_s v) {
+	return bsdata<dicei>::elements[v].result.roll();
+}
+
 void statable::copy(statable& dest, const statable& source) {
 	dest = source;
 }

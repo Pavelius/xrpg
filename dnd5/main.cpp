@@ -8,10 +8,10 @@ void set_dark_theme();
 void initialize_png();
 
 static void scene_choose_race() {
-	answers an;
-	for(auto& e : bsdata<racei>())
-		an.add((long)&e, e.id);
-	an.choose("Choose **race**", "Cancel", true, 0);
+	variantlist source;
+	source.select(bsdata<racei>::source);
+	source.match(Race, "parent", variant(), true);
+	source.choose("Choose race", "Cancel", true, "generate");
 }
 
 int main(int argc, char* argv[]) {

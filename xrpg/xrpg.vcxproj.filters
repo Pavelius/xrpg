@@ -213,6 +213,9 @@
     <ClInclude Include="dice.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="variantlist.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -471,6 +474,9 @@
       <Filter>Interface</Filter>
     </ClCompile>
     <ClCompile Include="dice.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="variantlist.cpp">
       <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>

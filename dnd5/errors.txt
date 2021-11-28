@@ -1,2 +1,3 @@
 ﻿In file `rules/basic.txt`:
- Line 20: Can't find variant `HeavyArmorNotRestrictSpeed`
+ Line 5: Not found requisit `parent`
+ Line 6: Not found requisit `parent`

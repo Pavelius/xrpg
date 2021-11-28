@@ -7,7 +7,7 @@ namespace draw {
 extern int			grid_size;
 extern const void*	hilite_object;
 extern int          pausetime;
-void				answerbt(int index, long id, const char* title);
+void				answerbt(int index, const void* id, const char* title);
 void				avatar(const char* id);
 void				bar(int value, int maximum);
 bool				buttonfd(const char* title);

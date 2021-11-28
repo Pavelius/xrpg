@@ -59,31 +59,33 @@ BSMETA(packi) = {
 	BSREQ(content),
 	{}};
 BSMETA(racei) = {
-	BSREQ(id),
+	BSREQ(id), BSREQ(parent),
 	{}};
 BSDATAC(racei, 32)
 BSMETA(skilli) = {
+	BSREQ(id),
+	{}};
+BSMETA(speciali) = {
 	BSREQ(id),
 	{}};
 BSMETA(creature) = {
 	{}};
 BSDATAC(creature, 1024)
 
-#define VRSTD(T) bsmeta<T>::meta, bsdata<T>::source_ptr, 1
-#define VRSPC(T, N) bsmeta<T>::meta, bsdata<T>::source_ptr, N
+#define VRSTD(T, KN) bsmeta<T>::meta, bsdata<T>::source_ptr, KN
 BSDATA(varianti) = {
 	{"NoVariant"},
-	{"Ability", VRSTD(abilityi)},
-	{"Advance", VRSPC(advancei, 3)},
-	{"Alignment", VRSTD(abilityi)},
-	{"Class", VRSTD(classi)},
-	{"Damage", VRSTD(damagei)},
-	{"Item", VRSTD(itemi)},
-	{"ItemTag", VRSTD(itemtgi)},
-	{"Modifier", VRSTD(modifieri)},
-	{"Pack", VRSTD(abilityi)},
-	{"Race", VRSTD(racei)},
-	{"Special"},
-	{"Skill", VRSTD(abilityi)},
+	{"Ability", VRSTD(abilityi, 1)},
+	{"Advance", VRSTD(advancei, 3)},
+	{"Alignment", VRSTD(abilityi, 1)},
+	{"Class", VRSTD(classi, 1)},
+	{"Damage", VRSTD(damagei, 1)},
+	{"Item", VRSTD(itemi, 1)},
+	{"ItemTag", VRSTD(itemtgi, 1)},
+	{"Modifier", VRSTD(modifieri, 1)},
+	{"Pack", VRSTD(abilityi, 1)},
+	{"Race", VRSTD(racei, 1)},
+	{"Special", VRSTD(speciali, 1)},
+	{"Skill", VRSTD(abilityi, 1)},
 };
 assert_enum(varianti, Skill)

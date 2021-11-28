@@ -202,6 +202,7 @@
     <ClInclude Include="tablecsv.h" />
     <ClInclude Include="variant.h" />
     <ClInclude Include="varianta.h" />
+    <ClInclude Include="variantlist.h" />
     <ClInclude Include="win.h" />
   </ItemGroup>
   <ItemGroup>
@@ -234,6 +235,7 @@
     <ClCompile Include="string.cpp" />
     <ClCompile Include="stringact.cpp" />
     <ClCompile Include="tablecsv.cpp" />
+    <ClCompile Include="variantlist.cpp" />
     <ClCompile Include="variant_bonus.cpp" />
     <ClCompile Include="widget_codetree.cpp" />
     <ClCompile Include="widget_codeview.cpp" />
