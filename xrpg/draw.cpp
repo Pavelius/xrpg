@@ -921,20 +921,20 @@ void draw::line(int xt, int yt) {
 		int err = dx - dy, e2, x2; // error value e_xy
 		int ed = dx + dy == 0 ? 1 : isqrt(dx * dx + dy * dy);
 		for(;;) {
-			pixel(x0, y0, 255 * iabs(err - dx + dy) / ed);
+			pixel(x0, y0, alpha * iabs(err - dx + dy) / ed);
 			e2 = err; x2 = x0;
 			if(2 * e2 >= -dx) {// x step
 				if(x0 == x1)
 					break;
 				if(e2 + dy < ed)
-					pixel(x0, y0 + sy, 255 * (e2 + dy) / ed);
+					pixel(x0, y0 + sy, alpha * (e2 + dy) / ed);
 				err -= dy; x0 += sx;
 			}
 			if(2 * e2 <= dy) {// y step
 				if(y0 == y1)
 					break;
 				if(dx - e2 < ed)
-					pixel(x2 + sx, y0, 255 * (dx - e2) / ed);
+					pixel(x2 + sx, y0, alpha * (dx - e2) / ed);
 				err += dx; y0 += sy;
 			}
 		}
@@ -943,7 +943,7 @@ void draw::line(int xt, int yt) {
 		int dy = -iabs(y1 - y0), sy = y0 < y1 ? 1 : -1;
 		int err = dx + dy, e2;
 		for(;;) {
-			pixel(x0, y0);
+			pixel(x0, y0, alpha);
 			e2 = 2 * err;
 			if(e2 >= dy) {
 				if(x0 == x1) break;
@@ -1088,6 +1088,8 @@ void draw::gradv(const color c1, const color c2, int skip) {
 		fore.r = (unsigned char)(c1.r * k1 + c2.r * k2);
 		fore.g = (unsigned char)(c1.g * k1 + c2.g * k2);
 		fore.b = (unsigned char)(c1.b * k1 + c2.b * k2);
+		if(y1 >= clipping.y2 || y1 < clipping.y1)
+			continue;
 		set32x(canvas->ptr(caret.x, y1), canvas->scanline, width, 1);
 	}
 	fore = pf;
@@ -1110,6 +1112,8 @@ void draw::gradh(const color c1, const color c2, int skip) {
 		fore.r = (unsigned char)(c1.r * k1 + c2.r * k2);
 		fore.g = (unsigned char)(c1.g * k1 + c2.g * k2);
 		fore.b = (unsigned char)(c1.b * k1 + c2.b * k2);
+		if(x1 >= clipping.x2 || x1 < clipping.x1)
+			continue;
 		set32h(canvas->ptr(x1, caret.y), height);
 	}
 	fore = pf;

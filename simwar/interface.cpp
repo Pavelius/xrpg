@@ -17,6 +17,7 @@ static const int		cell_padding = 2;
 static auto				res_shields = (sprite*)gres("shields", "art/objects");
 static auto				res_units = (sprite*)gres("units", "art/objects");
 extern command*			text_formats;
+extern bool				line_antialiasing;
 
 void set_dark_theme();
 
@@ -510,7 +511,11 @@ static void paint_cost(const costa& cost) {
 
 static void paint_neightboard(const provincei* p) {
 	auto push_fore = fore;
-	fore = colors::red;
+	auto push_alpha = alpha;
+	auto push_aa = line_antialiasing;
+	//line_antialiasing = false;
+	alpha = 128;
+	fore = colors::active;
 	for(auto& v : p->neightboards) {
 		auto p1 = (provincei*)v;
 		if(!p1)
@@ -519,6 +524,8 @@ static void paint_neightboard(const provincei* p) {
 		line(p1->position.x - camera.x, p1->position.y - camera.y);
 		caret = push_caret;
 	}
+	line_antialiasing = push_aa;
+	alpha = push_alpha;
 	fore = push_fore;
 }
 

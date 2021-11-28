@@ -35,7 +35,7 @@ static void character_sheet() {
 	}
 	auto push_tab = draw::tab_pixels;
 	draw::tab_pixels = 120;
-	stext(temp);
+	text(temp);
 	draw::tab_pixels = push_tab;
 }
 

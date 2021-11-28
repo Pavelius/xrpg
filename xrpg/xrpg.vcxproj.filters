@@ -189,7 +189,7 @@
     <ClInclude Include="calendar.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="initialize_list_ex.h">
+    <ClInclude Include="my_initialize_list.h">
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="sprite_util.h">
@@ -209,6 +209,9 @@
     </ClInclude>
     <ClInclude Include="draw_commands.h">
       <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="dice.h">
+      <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -466,6 +469,9 @@
     </ClCompile>
     <ClCompile Include="draw_commands_ex.cpp">
       <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="dice.cpp">
+      <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

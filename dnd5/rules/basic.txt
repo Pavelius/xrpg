@@ -1,0 +1,89 @@
+#Race
+
+Human
+Dwarf
+Elf
+Halfling
+
+#Class
+
+Cleric
+Fighter
+Rogue
+Wizard
+
+#Advance
+
+Dwarf 0 AbilityScoreIncrease
+ traits Constitution Constitution
+Dwarf 0 Speed
+ traits HeavyArmorNotRestrictSpeed
+Dwarf 0 Darkvision
+ traits Darkvision
+Dwarf 0 DwarvenResilience
+ traits Advantage SaveVsPoison Resistance Poison
+Dwarf 0 DwarvenCombatTraining
+Dwarf 0 ToolsProficiency choose_count(1)
+Dwarf 0 Stonecunning
+ traits Stonecunning
+Dwarf 0 Languages
+ traits Human Dwarf
+
+#Item
+
+Club cost(10) weight(20)
+ attack damage(D1d4) type(Bludgeon)
+ tags Light
+Dagger cost(200) weight(10)
+ attack damage(D1d4) type(Piercing)
+ tags Finess Light Thrown
+GreatClub cost(20) weight(100)
+ attack damage(D1d8) type(Bludgeon)
+ tags TwoHanded
+Handaxe cost(500) weight(20)
+ attack damage(D1d6) type(Slashing)
+ tags Light Thrown
+Javelin cost(50) weight(20)
+ attack damage(D1d6) type(Piercing)
+ tags Thrown
+LightHammer cost(200) weight(20)
+ attack damage(D1d4) type(Bludgeon)
+ tags Light Thrown
+Mace cost(500) weight(40)
+ attack damage(D1d6) type(Bludgeon)
+Quaterstaff cost(20) weight(40)
+ attack damage(D1d6) type(Bludgeon)
+ tags Versatile
+Sickle cost(100) weight(20)
+ attack damage(D1d4) type(Slashing)
+ tags Light
+Spear cost(100) weight(30)
+ attack damage(D1d6) type(Piercing)
+ tags Thrown Versatile
+
+PaddedArmor cost(500) weight(80) ac(1)
+ tags DexterityBonus StealthDisadvantage
+LeatherArmor cost(1000) weight(100) ac(1)
+ tags DexterityBonus
+StuddedLeatherArmor cost(4500) weight(130) ac(2)
+ tags DexterityBonus
+
+HideArmor cost(1000) weight(120) ac(2)
+ tags DexterityBonus DexterityRestricted
+ChainShirt cost(5000) weight(200) ac(3)
+ tags DexterityBonus DexterityRestricted
+ScaleMail cost(5000) weight(450) ac(4)
+ tags DexterityBonus DexterityRestricted StealthDisadvantage
+BreastPlate cost(40000) weight(200) ac(4)
+ tags DexterityBonus DexterityRestricted
+HalfPlate cost(75000) weight(400) ac(5)
+ tags DexterityBonus DexterityRestricted StealthDisadvantage
+
+RingMail cost(3000) weight(400) ac(4)
+ tags StealthDisadvantage
+ChainMail cost(7500) weight(550) ac(6)
+ tags StealthDisadvantage NeedHightStrenght
+SplintMail cost(20000) weight(600) ac(7)
+ tags StealthDisadvantage NeedVeryHightStrenght
+FullPlate cost(150000) weight(650) ac(8)
+ tags StealthDisadvantage NeedVeryHightStrenght

@@ -21,16 +21,16 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{47f9fa45-33f1-4469-b93b-fb468f13eec3}</ProjectGuid>
-    <RootNamespace>xrpg</RootNamespace>
+    <ProjectGuid>{cebdbda5-f7dd-4b05-aa43-73941c36be17}</ProjectGuid>
+    <RootNamespace>dnd5</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>NotSet</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -72,6 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)\xrpg</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -139,158 +140,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="answers.h" />
-    <ClInclude Include="anyreq.h" />
-    <ClInclude Include="archive.h" />
-    <ClInclude Include="bsreq.h" />
-    <ClInclude Include="bstream.h" />
-    <ClInclude Include="calendar.h" />
-    <ClInclude Include="cmap.h" />
-    <ClInclude Include="crange.h" />
-    <ClInclude Include="dice.h" />
-    <ClInclude Include="draw_background.h" />
-    <ClInclude Include="draw_color.h" />
-    <ClInclude Include="draw_commands.h" />
-    <ClInclude Include="draw_geometry.h" />
-    <ClInclude Include="draw_hexagon.h" />
-    <ClInclude Include="event.h" />
-    <ClInclude Include="my_initialize_list.h" />
-    <ClInclude Include="lexer.h" />
-    <ClInclude Include="color.h" />
-    <ClInclude Include="command.h" />
-    <ClInclude Include="crt.h" />
-    <ClInclude Include="package.h" />
-    <ClInclude Include="datamap.h" />
-    <ClInclude Include="dataset.h" />
-    <ClInclude Include="datetime.h" />
-    <ClInclude Include="dialog.h" />
-    <ClInclude Include="draw.h" />
-    <ClInclude Include="draw_builder.h" />
-    <ClInclude Include="draw_button.h" />
-    <ClInclude Include="draw_clipboard.h" />
-    <ClInclude Include="draw_control.h" />
-    <ClInclude Include="draw_dockbar.h" />
-    <ClInclude Include="draw_figure.h" />
-    <ClInclude Include="draw_focus.h" />
-    <ClInclude Include="draw_scroll.h" />
-    <ClInclude Include="draw_simple.h" />
-    <ClInclude Include="draw_valuelist.h" />
-    <ClInclude Include="flagable.h" />
-    <ClInclude Include="gender.h" />
-    <ClInclude Include="handler.h" />
-    <ClInclude Include="io_stream.h" />
-    <ClInclude Include="io_plugin.h" />
-    <ClInclude Include="log.h" />
-    <ClInclude Include="markup.h" />
-    <ClInclude Include="menu.h" />
-    <ClInclude Include="metadata.h" />
-    <ClInclude Include="moveable.h" />
-    <ClInclude Include="parser.h" />
-    <ClInclude Include="point.h" />
-    <ClInclude Include="pointl.h" />
-    <ClInclude Include="posable.h" />
-    <ClInclude Include="pushvalue.h" />
-    <ClInclude Include="rect.h" />
-    <ClInclude Include="requisit.h" />
-    <ClInclude Include="screenshoot.h" />
-    <ClInclude Include="serializer.h" />
-    <ClInclude Include="setting.h" />
-    <ClInclude Include="sprite_util.h" />
-    <ClInclude Include="string.h" />
-    <ClInclude Include="stringact.h" />
-    <ClInclude Include="stringbuilder.h" />
-    <ClInclude Include="tablecsv.h" />
-    <ClInclude Include="variant.h" />
-    <ClInclude Include="varianta.h" />
-    <ClInclude Include="win.h" />
+    <ProjectReference Include="..\xrpg\xrpg.vcxproj">
+      <Project>{47f9fa45-33f1-4469-b93b-fb468f13eec3}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="answers.cpp" />
-    <ClCompile Include="anyreq.cpp" />
-    <ClCompile Include="archive.cpp" />
-    <ClCompile Include="bsreq.cpp" />
-    <ClCompile Include="bstream.cpp" />
-    <ClCompile Include="calendar.cpp" />
-    <ClCompile Include="dialog.cpp" />
+    <ClCompile Include="ability.cpp" />
+    <ClCompile Include="creature.cpp" />
+    <ClCompile Include="damage.cpp" />
     <ClCompile Include="dice.cpp" />
-    <ClCompile Include="draw_background.cpp" />
-    <ClCompile Include="draw_color.cpp" />
-    <ClCompile Include="draw_commands_ex.cpp" />
-    <ClCompile Include="draw_geometry.cpp" />
-    <ClCompile Include="draw_hexagon.cpp" />
-    <ClCompile Include="event.cpp" />
-    <ClCompile Include="io_bsreq.cpp" />
-    <ClCompile Include="io_plugin_data.cpp" />
-    <ClCompile Include="lexer.cpp" />
-    <ClCompile Include="parser.cpp" />
-    <ClCompile Include="package.cpp" />
-    <ClCompile Include="crt_file.cpp" />
-    <ClCompile Include="draw_simple.cpp" />
-    <ClCompile Include="draw_valuelist.cpp" />
-    <ClCompile Include="png.cpp" />
-    <ClCompile Include="requisit.cpp" />
-    <ClCompile Include="serializer.cpp" />
-    <ClCompile Include="sprite_util.cpp" />
-    <ClCompile Include="string.cpp" />
-    <ClCompile Include="stringact.cpp" />
-    <ClCompile Include="tablecsv.cpp" />
-    <ClCompile Include="variant_bonus.cpp" />
-    <ClCompile Include="widget_codetree.cpp" />
-    <ClCompile Include="widget_codeview.cpp" />
-    <ClCompile Include="color.cpp" />
-    <ClCompile Include="command.cpp" />
-    <ClCompile Include="crt.cpp" />
-    <ClCompile Include="datetime.cpp" />
-    <ClCompile Include="draw_builder.cpp" />
-    <ClCompile Include="draw_combobox.cpp" />
-    <ClCompile Include="draw_commands.cpp" />
-    <ClCompile Include="draw_control.cpp" />
-    <ClCompile Include="draw_button.cpp" />
-    <ClCompile Include="draw_dockbar.cpp" />
-    <ClCompile Include="draw_field.cpp" />
-    <ClCompile Include="draw_figure.cpp" />
-    <ClCompile Include="draw_focus.cpp" />
-    <ClCompile Include="draw_list.cpp" />
-    <ClCompile Include="draw_scroll.cpp" />
-    <ClCompile Include="draw_scrollable.cpp" />
-    <ClCompile Include="draw_splitter.cpp" />
-    <ClCompile Include="draw_statusbar.cpp" />
-    <ClCompile Include="draw_table.cpp" />
-    <ClCompile Include="draw_tabs.cpp" />
-    <ClCompile Include="draw_theme.cpp" />
-    <ClCompile Include="draw_toolbar.cpp" />
-    <ClCompile Include="draw_tooltips.cpp" />
-    <ClCompile Include="gender.cpp" />
-    <ClCompile Include="log.cpp" />
-    <ClCompile Include="draw.cpp" />
-    <ClCompile Include="draw_text.cpp" />
-    <ClCompile Include="draw_textf.cpp" />
-    <ClCompile Include="io_stream.cpp" />
-    <ClCompile Include="io_plugin.cpp" />
-    <ClCompile Include="io_plugin_json.cpp" />
-    <ClCompile Include="markup.cpp" />
-    <ClCompile Include="menu.cpp" />
-    <ClCompile Include="moveable.cpp" />
-    <ClCompile Include="point.cpp" />
-    <ClCompile Include="resource_dynamic.cpp" />
-    <ClCompile Include="screenshoot.cpp" />
-    <ClCompile Include="setting.cpp" />
-    <ClCompile Include="stringbuilder.cpp" />
-    <ClCompile Include="surface_serial.cpp" />
-    <ClCompile Include="szdup.cpp" />
-    <ClCompile Include="crt_translate.cpp" />
-    <ClCompile Include="variant.cpp" />
-    <ClCompile Include="varianta.cpp" />
-    <ClCompile Include="widget_application.cpp" />
-    <ClCompile Include="widget_logging.cpp" />
-    <ClCompile Include="widget_picture.cpp" />
-    <ClCompile Include="win_clipboard.cpp" />
-    <ClCompile Include="win_draw.cpp" />
-    <ClCompile Include="win_draw_shell.cpp" />
-    <ClCompile Include="win_io_file.cpp" />
-    <ClCompile Include="win_menu.cpp" />
-    <ClCompile Include="win_time.cpp" />
-    <ClCompile Include="zip.cpp" />
+    <ClCompile Include="game.cpp" />
+    <ClCompile Include="item.cpp" />
+    <ClCompile Include="itemtg.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="modifier.cpp" />
+    <ClCompile Include="skill.cpp" />
+    <ClCompile Include="statable.cpp" />
+    <ClCompile Include="types.cpp" />
+    <ClCompile Include="wear.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="errors.txt" />
+    <Text Include="rules\basic.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

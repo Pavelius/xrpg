@@ -78,8 +78,8 @@ bool gamei::apply(const variants& source, bool allow_test, bool allow_apply) {
 			prefixes.set(v.value);
 			continue;
 		}
-		auto a = bonusi::getaction(v);
-		auto b = bonusi::getbonus(v);
+		auto a = v.getaction();
+		auto b = v.getbonus();
 		auto need_test = false;
 		if(v.type == Bonus)
 			need_test = allow_test && a.type == Cost && bsdata<costi>::get(a.value).visible;
@@ -121,8 +121,8 @@ int gamei::get(variant id, const variants& source) {
 			prefixes.set(v.value);
 			continue;
 		}
-		auto a = bonusi::getaction(v);
-		auto b = bonusi::getbonus(v);
+		auto a = v.getaction();
+		auto b = v.getbonus();
 		if(prefixes.is(Minus))
 			b = -b;
 		if(a == id && !prefixes.is(Permanent))
@@ -268,8 +268,8 @@ void gamei::demontage() {
 }
 
 void gamei::apply(variant v, stata& stat, costa& cost, int multiplier) {
-	auto a = bonusi::getaction(v);
-	auto b = bonusi::getbonus(v) * multiplier;
+	auto a = v.getaction();
+	auto b = v.getbonus() * multiplier;
 	switch(a.type) {
 	case Cost: cost.add(a.value, b); break;
 	case Stat: stat.add((stat_s)a.value, b); break;

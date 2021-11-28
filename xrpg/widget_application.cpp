@@ -14,14 +14,15 @@ using namespace	draw;
 using namespace	draw::controls;
 
 typedef adat<control*>		controla;
-bool						metrics::show::statusbar;
-static bool					use_short_name_label;
-static bool					use_no_extension_label;
-static bool					use_uppercase_label;
-static bool					show_tabs_always;
-static const header*		current_header;
-static int					current_tab;
-static char					last_open_file[260];
+
+bool metrics::show::statusbar;
+static bool	use_short_name_label;
+static bool	use_no_extension_label;
+static bool	use_uppercase_label;
+static bool show_tabs_always;
+static const header* current_header;
+static int current_tab;
+static char	last_open_file[260];
 static controls::control*	current_active_control;
 static vector<controls::control*> active_controls;
 static const char* settings_file_name = "settings.json";

@@ -10,6 +10,8 @@ void initialize_png();
 void util_main();
 #endif // _DEBUG
 
+static variant test1[] = {Explored, Population, Mana};
+
 int main() {
     srand(randomseed());
     initialize_translation("ru");

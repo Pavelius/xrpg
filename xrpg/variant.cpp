@@ -8,6 +8,27 @@ static const char* match(const char* text, const char* name) {
 	return text;
 }
 
+const char* variant::getdescription() const {
+	auto& e = bsdata<varianti>::elements[type];
+	if(!e.source)
+		return 0;
+	return ::getdescription(getid());
+}
+
+const char* variant::getname() const {
+	auto& e = bsdata<varianti>::elements[type];
+	if(!e.source)
+		return "No name";
+	return getnm(getid());
+}
+
+const char* variant::getid() const {
+	auto& e = bsdata<varianti>::elements[type];
+	if(!e.source)
+		return "NoVariant";
+	return *((char**)getpointer());
+}
+
 template<> variant::variant(const void* v) : u(0) {
 	for(auto& e : bsdata<varianti>()) {
 		if(!e.source)
@@ -41,25 +62,4 @@ template<> variant::variant(const char* v) : u(0) {
 			}
 		}
 	}
-}
-
-const char* variant::getdescription() const {
-	auto& e = bsdata<varianti>::elements[type];
-	if(!e.source)
-		return 0;
-	return ::getdescription(*((char**)getpointer()));
-}
-
-const char* variant::getname() const {
-	auto& e = bsdata<varianti>::elements[type];
-	if(!e.source)
-		return "No name";
-	return getnm(*((char**)getpointer()));
-}
-
-const char* variant::getid() const {
-	auto& e = bsdata<varianti>::elements[type];
-	if(!e.source)
-		return "NoVariant";
-	return *((char**)getpointer());
 }

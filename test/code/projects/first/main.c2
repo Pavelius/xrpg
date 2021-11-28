@@ -1,5 +1,6 @@
-﻿import geo.rect;
-import core.crt;import core.string as str;
+﻿		if(y1 >= clipping.y2 || y1 < clipping.y1)
+			continue;
+;import core.string as str;
 import core.io;
 import sys.platform.ui;
 enum {

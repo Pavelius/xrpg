@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gh", "gh\gh.vcxproj", "{92E
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simwar", "simwar\simwar.vcxproj", "{6BA88FEE-C539-45B7-A928-F30F4ABC84C1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dnd5", "dnd5\dnd5.vcxproj", "{CEBDBDA5-F7DD-4B05-AA43-73941C36BE17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -81,6 +83,14 @@ Global
 		{6BA88FEE-C539-45B7-A928-F30F4ABC84C1}.Release|x64.Build.0 = Release|x64
 		{6BA88FEE-C539-45B7-A928-F30F4ABC84C1}.Release|x86.ActiveCfg = Release|Win32
 		{6BA88FEE-C539-45B7-A928-F30F4ABC84C1}.Release|x86.Build.0 = Release|Win32
+		{CEBDBDA5-F7DD-4B05-AA43-73941C36BE17}.Debug|x64.ActiveCfg = Debug|x64
+		{CEBDBDA5-F7DD-4B05-AA43-73941C36BE17}.Debug|x64.Build.0 = Debug|x64
+		{CEBDBDA5-F7DD-4B05-AA43-73941C36BE17}.Debug|x86.ActiveCfg = Debug|Win32
+		{CEBDBDA5-F7DD-4B05-AA43-73941C36BE17}.Debug|x86.Build.0 = Debug|Win32
+		{CEBDBDA5-F7DD-4B05-AA43-73941C36BE17}.Release|x64.ActiveCfg = Release|x64
+		{CEBDBDA5-F7DD-4B05-AA43-73941C36BE17}.Release|x64.Build.0 = Release|x64
+		{CEBDBDA5-F7DD-4B05-AA43-73941C36BE17}.Release|x86.ActiveCfg = Release|Win32
+		{CEBDBDA5-F7DD-4B05-AA43-73941C36BE17}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

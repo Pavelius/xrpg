@@ -187,7 +187,7 @@ static void write_value(void* object, const bsreq* req, int index, const valuei&
 		if(index > (int)req->count)
 			index = 0;
 		req->set(pd + index * req->size, v.number);
-		if(index + 1> *pc)
+		if(index + 1 > *pc)
 			*pc = index + 1;
 	} else if(req->is(KindDSet))
 		req->set(p1, v.number);
@@ -257,7 +257,7 @@ const bsreq* find_requisit(const bsreq* type, const char* id) {
 	return req;
 }
 
-static void read_dictionary(void* object, const bsreq* type, int level) {
+static void read_dictionary(void* object, const bsreq* type, int level, bool need_linefeed = true) {
 	while(allow_continue && ischa(*p)) {
 		readid();
 		auto req = find_requisit(type, temp);
@@ -265,20 +265,22 @@ static void read_dictionary(void* object, const bsreq* type, int level) {
 		read_array(object, req);
 		skipsym(')');
 	}
-	skipsymcr();
-	while(allow_continue && islevel(level + 1)) {
-		readid();
-		auto req = type->find(temp);
-		if(!req) {
-			log::error(p, "Not found requisit `%1`", temp);
-			allow_continue = false;
-		} else if(req->is(KindDSet))
-			read_dset(object, req);
-		else if(req->is(KindScalar))
-			read_dictionary(req->ptr(object), req->type, level + 1);
-		else
-			read_array(object, req);
+	if(need_linefeed) {
 		skipsymcr();
+		while(allow_continue && islevel(level + 1)) {
+			readid();
+			auto req = type->find(temp);
+			if(!req) {
+				log::error(p, "Not found requisit `%1`", temp);
+				allow_continue = false;
+			} else if(req->is(KindDSet))
+				read_dset(object, req);
+			else if(req->is(KindScalar))
+				read_dictionary(req->ptr(object), req->type, level + 1, false);
+			else
+				read_array(object, req);
+			skipsymcr();
+		}
 	}
 }
 
@@ -305,7 +307,7 @@ static void* read_object(const bsreq* type, array* source, int key_count, int le
 		clear_object(object, type);
 		fill(object, type, keys, key_count);
 	}
-	read_dictionary(object, type, level);
+	read_dictionary(object, type + key_count, level);
 	return object;
 }
 

@@ -6,12 +6,12 @@ class initializer_list {
 	const T* first;
 	const T* last;
 public:
-	typedef T			value_type;
-	typedef const T&	reference;
-	typedef const T&	const_reference;
-	typedef unsigned	size_type;
-	typedef const T*	iterator;
-	typedef const T*	const_iterator;
+	typedef T value_type;
+	typedef const T& reference;
+	typedef const T& const_reference;
+	typedef unsigned size_type;
+	typedef const T* iterator;
+	typedef const T* const_iterator;
 	constexpr initializer_list() noexcept : first(0), last(0) {}
 	constexpr initializer_list(const T* first_arg, const T* last_arg) noexcept : first(first_arg), last(last_arg) {}
 	constexpr const T*	begin() const noexcept { return first; }

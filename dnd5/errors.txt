@@ -1,0 +1,2 @@
+﻿In file `rules/basic.txt`:
+ Line 20: Can't find variant `HeavyArmorNotRestrictSpeed`

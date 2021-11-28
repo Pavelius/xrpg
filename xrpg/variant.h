@@ -6,7 +6,6 @@
 #define VKIND(T, V) template<> constexpr variant_s variant::kind<T>() { return V; }
 
 struct bsreq;
-union variant;
 enum variant_s : unsigned char;
 
 struct varianti {
@@ -24,10 +23,11 @@ union variant {
 	unsigned			u;
 	struct {
 		unsigned short	value;
+		unsigned char	counter;
 		variant_s		type;
 	};
 	constexpr variant() : u(0) {}
-	constexpr variant(variant_s t, unsigned short n) : value(n), type(t) {}
+	constexpr variant(variant_s t, unsigned short n) : value(n), counter(0), type(t) {}
 	constexpr variant(int u) : u(u) {}
 	template<class T> static constexpr variant_s kind();
 	template<class T> variant(T* v) : variant((const void*)v) {}
@@ -38,13 +38,14 @@ union variant {
 	constexpr bool operator!=(const variant& v) const { return u != v.u; }
 	template<class T> operator T*() const { return (T*)((kind<T>() == type) ? getpointer() : 0); }
 	void				clear() { u = 0; }
+	variant				getaction() const;
+	int					getbonus() const;
 	const char*			getdescription() const;
 	const char*			getid() const;
 	int					getindex(int t) const { return (type == t) ? value : 0; }
 	void				getinfo(stringbuilder& sb) const;
 	void*				getpointer() const { return bsdata<varianti>::elements[type].source->ptr(value); }
 	const char*			getname() const;
-	void				paint() const;
 	void				setvariant(variant_s t, unsigned short v) { type = t; value = v; }
 };
 struct bonusi {
@@ -53,8 +54,6 @@ struct bonusi {
 	variant				type;
 	int					bonus;
 	unsigned			flags;
-	static variant		getaction(variant v);
-	static int			getbonus(variant v);
 	constexpr bool		is(int v) const { return (flags & FG(v)) != 0; }
 };
 typedef sliceu<variant> variants;

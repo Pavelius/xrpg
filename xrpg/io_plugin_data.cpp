@@ -7,8 +7,6 @@
 
 using namespace io;
 
-static const char* error_url;
-
 BSMETA(flagable<1>) = {{}};
 BSMETA(flagable<2>) = {{}};
 BSMETA(flagable<4>) = {{}};
@@ -43,10 +41,6 @@ bool readf(const char* url) {
 			return ps->ptr(ri);
 		}
 		void warning(const char* text, ...) {
-			if(error_url) {
-				log::error("Error loading %1", error_url);
-				error_url = 0;
-			}
 			char temp[4096]; stringbuilder sb(temp);
 			sb.addv(text, xva_start(text));
 			log::error(0, temp);
@@ -67,15 +61,6 @@ bool readf(const char* url) {
 			auto type = getmetadata(e);
 			auto name = getname(e);
 			return type->find(name);
-		}
-		void testslice(const bsreq* req, serializer::node& e) {
-			if(req->is(KindSlice)) {
-				auto ps = (sliceu<int>*)e.object;
-				e.object = req->source->addz();
-				if(!ps->count)
-					ps->start = req->source->indexof(e.object);
-				ps->count++;
-			}
 		}
 		void applyvalues(serializer::node& e) {
 			const bsreq* req = 0;
@@ -180,7 +165,7 @@ bool readf(const char* url) {
 		proxy() {
 		}
 	};
-	error_url = url;
+	log::seturl(url);
 	proxy reader_proxy;
 	return io::read(url, reader_proxy) && log::geterrors() == 0;
 }

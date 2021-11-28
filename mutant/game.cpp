@@ -65,13 +65,6 @@ void gamei::worldmap_input() {
 }
 
 void gamei::playworld() {
-	draw::image_url = "map";
-	//draw:: = render_world;
-	answers an;
-	an.add(1, "Тест");
-	an.add(2, "Два");
-	an.add(3, "Печаль третья");
-	an.choose("Что делать?", "Отмена", true, 0);
 }
 
 void gamei::setexplored(indext i, int r) {

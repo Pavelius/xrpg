@@ -1,4 +1,5 @@
 #include "draw.h"
+#include "draw_background.h"
 #include "draw_color.h"
 #include "log.h"
 #include "main.h"
@@ -62,7 +63,6 @@ int main() {
 	if(log::geterrors())
 		return -1;
 	draw::initialize("Mutants: Zero point");
-	simpleinitialize();
 	initialize_commands();
 	draw::setnext(game.main_menu);
 	draw::start();

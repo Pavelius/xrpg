@@ -1,13 +1,13 @@
 #include "variant.h"
 
-variant bonusi::getaction(variant v) {
-	if(bsdata<varianti>::elements[v.type].source->data == bsdata<bonusi>::elements)
-		return bsdata<bonusi>::elements[v.value].type;
-	return v;
+variant variant::getaction() const {
+	if(bsdata<varianti>::elements[type].source->data == bsdata<bonusi>::elements)
+		return bsdata<bonusi>::elements[value].type;
+	return *this;
 }
 
-int bonusi::getbonus(variant v) {
-	if(bsdata<varianti>::elements[v.type].source->data == bsdata<bonusi>::elements)
-		return bsdata<bonusi>::elements[v.value].bonus;
+int variant::getbonus() const {
+	if(bsdata<varianti>::elements[type].source->data == bsdata<bonusi>::elements)
+		return bsdata<bonusi>::elements[value].bonus;
 	return 1;
 }

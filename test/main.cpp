@@ -7,6 +7,7 @@
 #include "draw_figure.h"
 #include "draw_simple.h"
 #include "io_stream.h"
+#include "log.h"
 #include "lexer.h"
 #include "main.h"
 #include "package.h"
@@ -30,11 +31,6 @@ static void test_table() {
 	object.addcol("Name", "Text").set(ANREQ(traiti, id));
 	object.addcol("Weight", "Number").set(ANREQ(traiti, weight));
 	while(ismodal()) {
-		rect rc = {0, 0, getwidth(), getheight()};
-		auto push_fore = fore;
-		fore = colors::form;
-		rectf(rc);
-		fore = push_fore;
 		int x = 10, y = 10;
 		buttonl(x, y, "OK", buttonok, KeyEnter);
 		buttonl(x, y, getnm("Cancel"), buttoncancel, KeyEscape);
@@ -87,18 +83,6 @@ static void test_scene() {
 void main_util();
 #endif
 
-static void common_status() {
-	static command commands[] = {
-		{"Test", test_scene},
-		{}};
-	auto push_caret = caret;
-	auto push_width = width;
-	setpositionld();
-	windows(commands);
-	width = push_width;
-	caret = push_caret;
-}
-
 static void test_appliaction() {
 	initialize_picture();
 	initialize_codeview();
@@ -120,16 +104,11 @@ int main() {
 #endif
 	//if(!test_pack())
 	//	return -1;
-	//if(!test_string())
-	//	return -1;
-	if(!initialize_speech("ru"))
+	if(!test_string())
 		return -1;
-	if(!initialize_translation("ru"))
+	initialize_speech("ru");
+	if(log::geterrors())
 		return -1;
-	//draw::setnext(test_table);
-	//draw::setnext(test_fields);
-	//test_answers();
-	//test_simpleui();
 	test_appliaction();
 	draw::start();
 	return 0;
