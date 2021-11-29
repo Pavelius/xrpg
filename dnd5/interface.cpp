@@ -1,137 +1,116 @@
-#include "crt.h"
 #include "draw.h"
+#include "draw_fix.h"
+#include "draw_background.h"
+#include "draw_simple.h"
 #include "main.h"
 
 using namespace draw;
 
-static unsigned long time_current;
+static int show_grid = 0;
+long distance(point p1, point p2);
 
-namespace {
-class effecti {
-	point			position, start, finish;
-	point*			save_position;
-	const char*		text_message;
-	color			text_color;
-	unsigned long	time_start, time_finish;
-public:
-	explicit operator bool() const { return time_start < time_finish; }
-	void clear() {
-		memset(this, 0, sizeof(*this));
-	}
-	void setgoal(point v) {
-		finish = v;
-		start = position;
-	}
-	void setposition(point v) {
-		position = v;
-	}
-	void stop() {
-		setgoal(position);
-	}
-	void setmessage(const char* format, color format_color) {
-		text_message = format;
-		text_color = format_color;
-	}
-	void setduration(int duration) {
-		time_start = time_current;
-		time_finish = time_start + duration;
-	}
-	void apply_movement() {
-		if(time_current < time_start)
-			return;
-		int dm = time_finish - time_start;
-		if(!dm)
-			return;
-		int dc = time_current - time_start;
-		if(dc > dm)
-			dc = dm;
-		position.x = (short)(start.x + (finish.x - start.x) * dc / dm);
-		position.y = (short)(start.y + (finish.y - start.y) * dc / dm);
-		if(save_position)
-			*save_position = position;
-	}
-	void update() {
-		apply_movement();
-	}
-	void paint() const {
-		caret = position /* - draw::camera*/;
-		if(!caret.in(clipping))
-			return;
-		fore = text_color;
-		if(text_message) {
-			auto push_caret = caret;
-			caret.x -= textw(text_message) / 2;
-			text(text_message);
-			caret = push_caret;
-		}
-	}
-	static bool ongoing() {
-		for(auto& e : bsdata<effecti>()) {
-			if(e.time_finish > time_current)
-				return true;
-		}
-		return false;
-	}
-};
+point draw::m2s(int x, int y) {
+	return {(short)(x * draw::grid_size + draw::grid_size / 2), (short)(y * draw::grid_size + draw::grid_size / 2)};
 }
 
-BSDATAC(effecti, 128)
-
-static void update_effects() {
-	for(auto& e : bsdata<effecti>()) {
-		if(e)
-			e.update();
-	}
+void creature::fixdamage(int value) const {
+	auto p = uieffect::add(getposition(), "%1i", colors::red, 500);
+	p->setvalue(value);
 }
 
-static void paint_effects() {
+static point getpos(point start, point goal, int range) {
+	point result;
+	//auto range = draw::grid_size / 2;
+	auto lenght = distance(start, goal);
+	auto dx = goal.x - start.x;
+	auto dy = goal.y - start.y;
+	result.x = (short)(start.x + range * dx / lenght);
+	result.y = (short)(start.y + range * dy / lenght);
+	return result;
+}
+
+void creature::fixattack(point goal, ability_s type) {
+	auto start = getposition();
+	auto lenght = distance(start, goal);
+	if(!lenght)
+		return;
+	auto p = uieffect::add();
+	p->setlinked(getreference());
+	p->setgoal(getpos(start, goal, draw::grid_size / 2));
+	p->setduration(250);
+	p->wait();
+	p->setgoal(start);
+	p->setduration(400);
+	p->wait();
+	p->clear();
+}
+
+void creature::paint() const {
+	caret = getposition() - draw::camera;
+	if(avatar[0])
+		imager(caret.x, caret.y, gres(avatar, "art/portraits"), 0, 32);
+}
+
+static void paintcreatures() {
 	auto push_caret = caret;
-	auto push_fore = fore;
-	for(auto& e : bsdata<effecti>()) {
-		if(!e)
-			continue;
+	for(auto& e : bsdata<creature>())
 		e.paint();
-	}
-	fore = push_fore;
 	caret = push_caret;
 }
 
-void ui::fixbegin() {
-	if(time_current < 1000)
-		time_current = 1000;
+static void beforemodalall() {
+	draw::simpleui::beforemodal();
 }
 
-void ui::fixend() {
-	auto tms = getcputime();
-	while(ismodal() && effecti::ongoing()) {
-		auto tm = getcputime();
-		if(tm > tms) {
-			time_current += tm - tms;
-			tms = tm;
-		}
-		update_effects();
-		if(pbackground)
-			pbackground();
-		paint_effects();
-		doredraw();
-		waitcputime(1);
-	}
+static void paintall() {
+	draw::simpleui::paint();
+	draw::background::paint();
+	if(show_grid)
+		draw::grid();
+	if(hot.key == (Ctrl + 'G'))
+		execute(cbsetint, show_grid ? 0 : 1, 0, &show_grid);
+	paintcreatures();
 }
 
-static effecti* addnew() {
-	for(auto& e : bsdata<effecti>()) {
-		if(!e)
-			return &e;
-	}
-	return (effecti*)bsdata<effecti>::source.add();
+static void tipsall() {
+	draw::simpleui::tips();
+	draw::background::tips();
 }
 
-void ui::fixtext(point start, const char* format, color fore, int duration) {
-	point pt = {0, -32};
-	auto p = addnew();
-	p->clear();
-	p->setposition(start);
-	p->setgoal(start + pt);
-	p->setmessage(format, fore);
-	p->setduration(duration);
+static void scene_choose_race() {
+	variantlist source;
+	source.select(bsdata<racei>::source);
+	source.match(Race, "parent", variant(), true);
+	source.choose("Choose race", "Cancel", true, "generate");
+}
+
+static void scene_combat() {
+	bsdata<creature>::get(0).fight();
+}
+
+static void test_characters() {
+	auto p = bsdata<creature>::add();
+	p->create(bsdata<racei>::get(1), bsdata<classi>::get(1), Male);
+	p->setavatar("gordek");
+	p->setposition(draw::m2s(10, 5));
+	auto p2 = bsdata<creature>::add();
+	p2->create(bsdata<racei>::get(0), bsdata<classi>::get(1), Male);
+	p2->setavatar("skeleton");
+	p2->setposition(draw::m2s(12, 5));
+}
+
+void draw::startmenu() {
+	metrics::padding = 4;
+	metrics::border = 6;
+	draw::initialize("DnD adventures");
+	draw::grid_size = 70;
+	draw::background::url = "hills";
+	draw::pbeforemodal = beforemodalall;
+	draw::pbackground = paintall;
+	draw::ptips = tipsall;
+	draw::setnext(scene_combat);
+	//
+	test_characters();
+	//
+	draw::start();
 }

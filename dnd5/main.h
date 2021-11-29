@@ -165,24 +165,26 @@ class creature : public actable, public statable, public posable {
 	unsigned char		race;
 	statable			basic;
 	item				wears[LastBackpack + 1];
+	char				avatar[12];
 public:
 	bool				attack(creature& enemy, int advantages, int bonus);
 	bool				attack(ability_s attack_type, creature& enemy, item& weapon, int advantages, int bonus);
 	void				clear();
 	void				create(racei& race, classi& kind, gender_s gender);
 	void				damage(damage_s type, int value);
-	void				fixmiss();
-	void				fixhit(int value);
+	void				fight();
+	void				fixattack(point goal, ability_s type);
+	void				fixdamage(int value) const;
 	int					get(ability_s i) const { return abilities[i]; }
 	const item&			get(wear_s i) const { return wears[i]; }
 	item&				get(wear_s i) { return wears[i]; }
 	constexpr bool		is(special_s v) const { return special.is(v); }
+	void				paint() const;
+	void				setavatar(const char* v);
 };
 class gamei {
 };
-namespace ui {
-void					fixbegin();
-void					fixmove(point& start, point finish, int velocity);
-void					fixtext(point start, const char* format, color fore, int duration);
-void					fixend();
+namespace draw {
+point					m2s(int x, int y);
+void					startmenu();
 }

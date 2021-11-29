@@ -1,10 +1,10 @@
 #pragma once
 
 namespace draw {
-// Image source url. Set this value to background image
-extern const char* image_url;
-// Support events
 namespace background {
+// Image source url. Set this value to background image
+extern const char* url;
+// Support events
 void tips();
 void paint();
 }

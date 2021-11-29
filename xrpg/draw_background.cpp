@@ -3,7 +3,7 @@
 
 using namespace draw;
 
-const char*		draw::image_url;
+const char*		draw::background::url;
 static point	camera_drag;
 static rect		board;
 
@@ -33,9 +33,9 @@ void draw::background::tips() {
 }
 
 void draw::background::paint() {
-	if(!image_url)
+	if(!url)
 		return;
-	auto p = gres(image_url, "art/background");
+	auto p = gres(url, "art/background");
 	if(!p)
 		return;
 	auto& fr = p->get(0);

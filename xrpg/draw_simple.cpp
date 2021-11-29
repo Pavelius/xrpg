@@ -274,13 +274,15 @@ void draw::grid() {
 	auto push_alpha = alpha;
 	alpha = 64;
 	fore = colors::border;
+	auto x1 = (camera.x / draw::grid_size) * draw::grid_size - camera.x;
+	auto y1 = (camera.y / draw::grid_size) * draw::grid_size - camera.y;
 	auto x2 = getwidth(), y2 = getheight();
 	auto sx = grid_size, sy = grid_size;
-	for(auto x = 0; x < x2; x += sx) {
+	for(auto x = x1; x < x2; x += sx) {
 		setpos(x, 0);
 		line(x, y2);
 	}
-	for(auto y = 0; y < y2; y += sy) {
+	for(auto y = y1; y < y2; y += sy) {
 		setpos(0, y);
 		line(x2, y);
 	}

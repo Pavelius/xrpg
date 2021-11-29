@@ -1,6 +1,6 @@
 #include "main.h"
 
-static creature* last_attacker;
+static creature* last_actor;
 
 void creature::clear() {
 	memset(this, 0, sizeof(*this));
@@ -20,12 +20,10 @@ bool creature::attack(creature& enemy, int advantages, int bonus) {
 }
 
 bool creature::attack(ability_s attack_type, creature& enemy, item& weapon, int advantages, int bonus) {
-	last_attacker = this;
 	bonus += get(attack_type);
-	if(!attack(enemy, advantages, bonus)) {
-		fixmiss();
+	fixattack(enemy.getposition(), attack_type);
+	if(!attack(enemy, advantages, bonus))
 		return false;
-	}
 	auto ai = weapon.geti().attack;
 	auto damage_value = roll(ai.damage);
 	enemy.damage(ai.type, damage_value);
@@ -35,8 +33,20 @@ bool creature::attack(ability_s attack_type, creature& enemy, item& weapon, int 
 void creature::damage(damage_s type, int value) {
 }
 
-void creature::fixmiss() {
+void creature::setavatar(const char* v) {
+	stringbuilder sb(avatar); sb.add(v);
 }
 
-void creature::fixhit(int value) {
+static void attack_enemy() {
+	last_actor->attack(AttackMelee, bsdata<creature>::get(1), last_actor->get(RightHand), 0, 0);
+}
+
+void creature::fight() {
+	answers an;
+	an.add(attack_enemy, "Attack");
+	auto proc = (fnevent)an.choose("What you want to do?", "Cancel", true, 0, 1);
+	if(proc) {
+		last_actor = this;
+		proc();
+	}
 }

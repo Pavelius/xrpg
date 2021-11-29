@@ -216,6 +216,9 @@
     <ClInclude Include="variantlist.h">
       <Filter>Support</Filter>
     </ClInclude>
+    <ClInclude Include="draw_fix.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">
@@ -478,6 +481,9 @@
     </ClCompile>
     <ClCompile Include="variantlist.cpp">
       <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="draw_effect.cpp">
+      <Filter>Interface</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

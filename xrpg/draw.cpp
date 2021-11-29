@@ -629,15 +629,30 @@ static void alc32(unsigned char* d, int d_scan, const unsigned char* s, int heig
 				c -= sk;
 			}
 			// visible part
-			do {
-				if(p >= clip_x2)
-					break;
-				p[0] = ((p[0] * (255 - s[0])) + (c1.b * (s[0]))) >> 8;
-				p[1] = ((p[1] * (255 - s[1])) + (c1.g * (s[1]))) >> 8;
-				p[2] = ((p[2] * (255 - s[2])) + (c1.r * (s[2]))) >> 8;
-				p += cbd;
-				s += cbs;
-			} while(--c);
+			if(alpha == 255) {
+				do {
+					if(p >= clip_x2)
+						break;
+					p[0] = ((p[0] * (255 - s[0])) + (c1.b * (s[0]))) >> 8;
+					p[1] = ((p[1] * (255 - s[1])) + (c1.g * (s[1]))) >> 8;
+					p[2] = ((p[2] * (255 - s[2])) + (c1.r * (s[2]))) >> 8;
+					p += cbd;
+					s += cbs;
+				} while(--c);
+			} else {
+				do {
+					if(p >= clip_x2)
+						break;
+					unsigned char b = (s[0] * alpha) >> 8;
+					unsigned char g = (s[1] * alpha) >> 8;
+					unsigned char r = (s[2] * alpha) >> 8;
+					p[0] = ((p[0] * (255 - b)) + (c1.b * b)) >> 8;
+					p[1] = ((p[1] * (255 - g)) + (c1.g * g)) >> 8;
+					p[2] = ((p[2] * (255 - r)) + (c1.r * r)) >> 8;
+					p += cbd;
+					s += cbs;
+				} while(--c);
+			}
 			// right clip part
 			if(c) {
 				p += c * cbd;
