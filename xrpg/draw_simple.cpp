@@ -238,6 +238,7 @@ void* answers::choose(const char* title, const char* cancel_text, bool interacti
 		auto y1 = caret.y, x1 = caret.x;
 		auto y2 = caret.y;
 		auto next_column = (elements.getcount() + columns - 1) / columns;
+		auto push_width_normal = width;
 		width = column_width;
 		auto push_padding = metrics::padding;
 		metrics::padding = 0;
@@ -253,11 +254,12 @@ void* answers::choose(const char* title, const char* cancel_text, bool interacti
 		}
 		metrics::padding = push_padding;
 		caret.x = x1; caret.y = y2;
-		width = push_width;
+		width = push_width_normal;
 		if(cancel_text) {
 			if(button(cancel_text, KeyEscape, buttonfd))
 				execute(buttoncancel);
 		}
+		width = push_width;
 		if(afterpaint)
 			afterpaint();
 		caret = push_caret;

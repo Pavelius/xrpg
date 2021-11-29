@@ -9,10 +9,10 @@ Halfling
 
 #Class
 
-Cleric
-Fighter
-Rogue
-Wizard
+Cleric best(Wisdow)
+Fighter best(Strenght)
+Rogue best(Dexterity)
+Wizard best(Intellegence)
 
 #Advance
 

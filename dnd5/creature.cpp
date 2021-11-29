@@ -2,6 +2,17 @@
 
 static creature* last_attacker;
 
+void creature::clear() {
+	memset(this, 0, sizeof(*this));
+}
+
+void creature::create(racei& race, classi& kind, gender_s gender) {
+	clear();
+	this->race = &race - bsdata<racei>::elements;
+	this->gender = gender;
+	basic.random_ability(kind);
+}
+
 bool creature::attack(creature& enemy, int advantages, int bonus) {
 	auto attack_roll = roll(advantages, is(Lucky)) + bonus;
 	auto armor_class = enemy.get(AC);

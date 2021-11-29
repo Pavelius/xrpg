@@ -2,7 +2,7 @@
 
 BSDATA(abilityi) = {
 	{"Strenght"},
-	{"Desterity"},
+	{"Dexterity"},
 	{"Constitution"},
 	{"Intellegence"},
 	{"Wisdow"},

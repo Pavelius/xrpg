@@ -1,5 +1,6 @@
 #include "answers.h"
 #include "crt.h"
+#include "color.h"
 #include "dice.h"
 #include "flagable.h"
 #include "gender.h"
@@ -79,6 +80,7 @@ struct skilli {
 struct alignmenti : nameablei {
 };
 struct classi : nameablei {
+	ability_s			best;
 };
 struct modifieri {
 	const char*			id;
@@ -151,15 +153,23 @@ struct statable {
 	speciala			special;
 	spellf				known_spells;
 	static void			copy(statable& dest, const statable& source);
+	void				random_ability(classi& kind);
 	static int			roll(int advantage, bool lucky);
 	static int			roll(dice_s v);
 };
-class creature : nameablei, public statable, public posable {
+struct actable : nameablei {
+	gender_s			gender;
+	void				actv(stringbuilder& sb, const char* format, const char* format_param);
+};
+class creature : public actable, public statable, public posable {
+	unsigned char		race;
 	statable			basic;
 	item				wears[LastBackpack + 1];
 public:
 	bool				attack(creature& enemy, int advantages, int bonus);
 	bool				attack(ability_s attack_type, creature& enemy, item& weapon, int advantages, int bonus);
+	void				clear();
+	void				create(racei& race, classi& kind, gender_s gender);
 	void				damage(damage_s type, int value);
 	void				fixmiss();
 	void				fixhit(int value);
@@ -170,3 +180,9 @@ public:
 };
 class gamei {
 };
+namespace ui {
+void					fixbegin();
+void					fixmove(point& start, point finish, int velocity);
+void					fixtext(point start, const char* format, color fore, int duration);
+void					fixend();
+}

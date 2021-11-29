@@ -7,6 +7,7 @@ template<> struct bsdata<T> : bsdata<V> {};
 NOBSDATA(attacki)
 NOBSDATA(variants)
 
+XKIND(ability_s, abilityi)
 XKIND(gender_s, genderi)
 XKIND(damage_s, damagei)
 XKIND(dice_s, dicei)
@@ -32,7 +33,7 @@ BSMETA(alignmenti) = {
 	{}};
 BSDATAC(alignmenti, 16)
 BSMETA(classi) = {
-	BSREQ(id),
+	BSREQ(id), BSREQ(best),
 	{}};
 BSDATAC(classi, 32)
 BSMETA(damagei) = {
