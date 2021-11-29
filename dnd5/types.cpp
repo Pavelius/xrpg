@@ -31,7 +31,7 @@ BSMETA(attacki) = {
 BSMETA(alignmenti) = {
 	BSREQ(id),
 	{}};
-BSDATAC(alignmenti, 16)
+BSDATAC(alignmenti, classes_maximum)
 BSMETA(classi) = {
 	BSREQ(id), BSREQ(best),
 	{}};

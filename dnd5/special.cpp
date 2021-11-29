@@ -6,6 +6,7 @@ BSDATA(speciali) = {
 	{"HeavyArmorNotRestrictSpeed"},
 	{"Stonecunning"},
 	{"Lucky"},
+	{"Hostile"},
 	{"Locale"},
 	{"Summoned"},
 };

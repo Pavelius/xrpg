@@ -71,12 +71,15 @@ void uieffect::paint() const {
 	draw::fore = fore;
 	draw::alpha = alpha;
 	if(format) {
+		auto push_font = font;
+		font = metrics::h1;
 		char temp[260]; stringbuilder sb(temp);
 		sb.add(format, value);
 		auto push_caret = caret;
 		caret.x -= textw(temp) / 2;
-		text(temp);
+		text(temp, -1, TextStroke);
 		caret = push_caret;
+		font = push_font;
 	}
 }
 

@@ -10,6 +10,8 @@
 
 #pragma once
 
+const int classes_maximum = 16;
+
 enum ability_s : unsigned char {
 	Strenght, Dexterity, Constitution, Intellect, Wisdow, Charisma,
 	AttackAll, AttackMelee, AttackRanged,
@@ -32,7 +34,7 @@ enum dice_s : unsigned char {
 };
 enum special_s : unsigned char {
 	Brave, Darkvision, HeavyArmorNotRestrictSpeed, Stonecunning, Lucky,
-	Locale, Summoned,
+	Hostile, Locale, Summoned,
 };
 enum modifier_s : unsigned char {
 	Proficiency, DoubleProficiency,
@@ -166,6 +168,7 @@ class creature : public actable, public statable, public posable {
 	statable			basic;
 	item				wears[LastBackpack + 1];
 	char				avatar[12];
+	char				classes[classes_maximum];
 public:
 	bool				attack(creature& enemy, int advantages, int bonus);
 	bool				attack(ability_s attack_type, creature& enemy, item& weapon, int advantages, int bonus);
@@ -187,4 +190,5 @@ class gamei {
 namespace draw {
 point					m2s(int x, int y);
 void					startmenu();
+void					waitanimation();
 }

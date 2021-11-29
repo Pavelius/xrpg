@@ -31,6 +31,7 @@ bool creature::attack(ability_s attack_type, creature& enemy, item& weapon, int 
 }
 
 void creature::damage(damage_s type, int value) {
+	fixdamage(value);
 }
 
 void creature::setavatar(const char* v) {
@@ -39,6 +40,7 @@ void creature::setavatar(const char* v) {
 
 static void attack_enemy() {
 	last_actor->attack(AttackMelee, bsdata<creature>::get(1), last_actor->get(RightHand), 0, 0);
+	draw::waitanimation();
 }
 
 void creature::fight() {

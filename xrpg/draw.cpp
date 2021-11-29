@@ -1927,7 +1927,7 @@ static void raw32n1(unsigned char* p1, unsigned char* sb, int width) {
 }
 
 static void raw32cr(int x, int y, int width, int x0, int y0, unsigned char* s, unsigned scanline) {
-	if(y<clipping.x1 || y > clipping.y2 || x > clipping.x2)
+	if(y >= clipping.y2 || y < clipping.y1 || x >= clipping.x2)
 		return;
 	auto x2 = x + width;
 	if(x2 < clipping.x1)
@@ -2344,7 +2344,7 @@ void draw::initialize(const char* title) {
 	draw::width = 320;
 	draw::font = metrics::font;
 	draw::fore = colors::text;
-	draw::fore_stroke = colors::active;
+	draw::fore_stroke = colors::border;
 	draw::create(awindow.x, awindow.y, awindow.width, awindow.height, awindow.flags, 32);
 	draw::setcaption(title);
 }

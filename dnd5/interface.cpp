@@ -13,6 +13,11 @@ point draw::m2s(int x, int y) {
 	return {(short)(x * draw::grid_size + draw::grid_size / 2), (short)(y * draw::grid_size + draw::grid_size / 2)};
 }
 
+void draw::waitanimation() {
+	uieffect::waitall();
+	uieffect::clearall();
+}
+
 void creature::fixdamage(int value) const {
 	auto p = uieffect::add(getposition(), "%1i", colors::red, 500);
 	p->setvalue(value);
@@ -41,8 +46,6 @@ void creature::fixattack(point goal, ability_s type) {
 	p->wait();
 	p->setgoal(start);
 	p->setduration(400);
-	p->wait();
-	p->clear();
 }
 
 void creature::paint() const {
@@ -96,7 +99,7 @@ static void test_characters() {
 	auto p2 = bsdata<creature>::add();
 	p2->create(bsdata<racei>::get(0), bsdata<classi>::get(1), Male);
 	p2->setavatar("skeleton");
-	p2->setposition(draw::m2s(12, 5));
+	p2->setposition(draw::m2s(11, 6));
 }
 
 void draw::startmenu() {
