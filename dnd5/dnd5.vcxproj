@@ -146,7 +146,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ability.cpp" />
+    <ClCompile Include="battlemap.cpp" />
     <ClCompile Include="creature.cpp" />
+    <ClCompile Include="creaturea.cpp" />
     <ClCompile Include="damage.cpp" />
     <ClCompile Include="dice.cpp" />
     <ClCompile Include="game.cpp" />
@@ -155,6 +157,7 @@
     <ClCompile Include="itemtg.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="modifier.cpp" />
+    <ClCompile Include="pathfind.cpp" />
     <ClCompile Include="skill.cpp" />
     <ClCompile Include="special.cpp" />
     <ClCompile Include="statable.cpp" />
@@ -163,9 +166,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h" />
+    <ClInclude Include="pathfind.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="errors.txt" />
+    <Text Include="locale\ru\Names.txt" />
     <Text Include="rules\basic.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

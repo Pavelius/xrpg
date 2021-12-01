@@ -1,3 +1,2 @@
-﻿In file `rules/basic.txt`:
- Line 14: Not found identifier `Dexterity`
- Line 15: Not found identifier `Intellect`
+﻿In file `Names.txt`:
+ Define translate for `Miss`

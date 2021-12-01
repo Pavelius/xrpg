@@ -5,6 +5,7 @@ BSDATA(speciali) = {
 	{"Darkvision"},
 	{"HeavyArmorNotRestrictSpeed"},
 	{"Stonecunning"},
+	{"Prone"},
 	{"Lucky"},
 	{"Hostile"},
 	{"Locale"},

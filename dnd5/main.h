@@ -10,8 +10,6 @@
 
 #pragma once
 
-const int classes_maximum = 16;
-
 enum ability_s : unsigned char {
 	Strenght, Dexterity, Constitution, Intellect, Wisdow, Charisma,
 	AttackAll, AttackMelee, AttackRanged,
@@ -20,6 +18,9 @@ enum ability_s : unsigned char {
 	SaveAll,
 	SaveVsCharm, SaveVsDisease, SaveVsIllusion, SaveVsPoison, SaveVsTrap,
 	Hits,
+};
+enum component_s : unsigned char {
+	Verbal, Somatic, Manual,
 };
 enum skill_s : unsigned char {
 	Athletics,
@@ -34,7 +35,12 @@ enum dice_s : unsigned char {
 };
 enum special_s : unsigned char {
 	Brave, Darkvision, HeavyArmorNotRestrictSpeed, Stonecunning, Lucky,
+	Prone,
 	Hostile, Locale, Summoned,
+};
+enum state_s : unsigned char {
+	Alive, NotWounded, LightWounded, HeavyWounded, Defeated,
+	Poisoned, Restrained,
 };
 enum modifier_s : unsigned char {
 	Proficiency, DoubleProficiency,
@@ -59,6 +65,10 @@ enum variant_s : unsigned char {
 	Ability, Advance, Alignment, Class, Damage, Item, ItemTag,
 	Modifier, Pack, Race, Special, Skill,
 };
+enum action_s : unsigned char {
+	StandartAction, MoveAction, BonusAction,
+};
+class creature;
 typedef flagable<1 + Poison / 8> damagea;
 typedef flagable<1 + Persuasion / 8> skilla;
 typedef flagable<1 + Lucky / 8> speciala;
@@ -66,7 +76,6 @@ typedef flagable<16> itemf;
 typedef flagable<32> spellf;
 typedef flagable<4> itemtgf;
 typedef char abilitya[DamageRanged + 1];
-class creature;
 struct nameablei {
 	const char*			id;
 	const char*			getid() const { return id; }
@@ -83,6 +92,7 @@ struct alignmenti : nameablei {
 };
 struct classi : nameablei {
 	ability_s			best;
+	char				hd;
 };
 struct modifieri {
 	const char*			id;
@@ -154,7 +164,9 @@ struct statable {
 	damagea				resistance, immunity, vulnerability;
 	speciala			special;
 	spellf				known_spells;
+	int					hp, hp_maximum;
 	static void			copy(statable& dest, const statable& source);
+	void				add(ability_s i, int v) { abilities[i] += v; }
 	void				random_ability(classi& kind);
 	static int			roll(int advantage, bool lucky);
 	static int			roll(dice_s v);
@@ -164,12 +176,14 @@ struct actable : nameablei {
 	void				actv(stringbuilder& sb, const char* format, const char* format_param);
 };
 class creature : public actable, public statable, public posable {
-	unsigned char		race;
+	unsigned char		race, kind, level, alignment;
 	statable			basic;
 	item				wears[LastBackpack + 1];
 	char				avatar[12];
-	char				classes[classes_maximum];
+	void				create_finish();
+	void				update_finish();
 public:
+	explicit operator bool() const { return avatar[0] != 0; }
 	bool				attack(creature& enemy, int advantages, int bonus);
 	bool				attack(ability_s attack_type, creature& enemy, item& weapon, int advantages, int bonus);
 	void				clear();
@@ -178,17 +192,30 @@ public:
 	void				fight();
 	void				fixattack(point goal, ability_s type);
 	void				fixdamage(int value) const;
+	void				fixmiss();
 	int					get(ability_s i) const { return abilities[i]; }
 	const item&			get(wear_s i) const { return wears[i]; }
 	item&				get(wear_s i) { return wears[i]; }
+	int					getbonus(ability_s i) const { return get(i) / 2 - 5; }
+	const classi&		getclass() const { return bsdata<classi>::elements[kind]; }
+	int					gethd() const;
+	bool				is(state_s v) const;
 	constexpr bool		is(special_s v) const { return special.is(v); }
+	constexpr bool		ismonster() const { return kind==0; }
+	void				levelup();
+	void				lookmove();
 	void				paint() const;
 	void				setavatar(const char* v);
+	void				update();
+};
+struct creaturea : public adat<creature*, 64> {
+	void				select();
 };
 class gamei {
 };
 namespace draw {
 point					m2s(int x, int y);
+point					s2m(point p);
 void					startmenu();
 void					waitanimation();
 }

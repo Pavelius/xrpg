@@ -22,11 +22,6 @@ static gender_change_string player_gender[] = {{"а", "а", "", "и"},
 	{"госпожа", "госпожа", "господин", "господа"},
 	{"женщина", "женщина", "мужчина", "господа"},
 };
-/*static gender_change_string opponent_gender_change[] = {{"А", "а", "", "и"},
-	{"ЛА", "ла", "", "ли"},
-	{"ОНА", "она", "он", "они"},
-	{"ЕЕ", "ее", "его", "их"},
-};*/
 }
 
 void stringact::addidentifier(const char* identifier) {

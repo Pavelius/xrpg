@@ -10,17 +10,22 @@ static int show_grid = 0;
 long distance(point p1, point p2);
 
 point draw::m2s(int x, int y) {
-	return {(short)(x * draw::grid_size + draw::grid_size / 2), (short)(y * draw::grid_size + draw::grid_size / 2)};
+	return {
+		(short)(x * draw::grid_size + draw::grid_size / 2),
+		(short)(y * draw::grid_size + draw::grid_size / 2)
+	};
+}
+
+point draw::s2m(point p) {
+	return {
+		(short)(p.x / draw::grid_size),
+		(short)(p.y / draw::grid_size)
+	};
 }
 
 void draw::waitanimation() {
 	uieffect::waitall();
 	uieffect::clearall();
-}
-
-void creature::fixdamage(int value) const {
-	auto p = uieffect::add(getposition(), "%1i", colors::red, 500);
-	p->setvalue(value);
 }
 
 static point getpos(point start, point goal, int range) {
@@ -32,6 +37,10 @@ static point getpos(point start, point goal, int range) {
 	result.x = (short)(start.x + range * dx / lenght);
 	result.y = (short)(start.y + range * dy / lenght);
 	return result;
+}
+
+void creature::fixmiss() {
+	uieffect::add(getposition(), getnm("Miss"), colors::gray, 500);
 }
 
 void creature::fixattack(point goal, ability_s type) {
@@ -48,10 +57,16 @@ void creature::fixattack(point goal, ability_s type) {
 	p->setduration(400);
 }
 
+void creature::fixdamage(int value) const {
+	auto p = uieffect::add(getposition(), "%1i", colors::red, 500);
+	p->setvalue(value);
+}
+
 void creature::paint() const {
 	caret = getposition() - draw::camera;
 	if(avatar[0])
 		imager(caret.x, caret.y, gres(avatar, "art/portraits"), 0, 32);
+	ishilite(20, this);
 }
 
 static void paintcreatures() {
@@ -88,7 +103,12 @@ static void scene_choose_race() {
 }
 
 static void scene_combat() {
-	bsdata<creature>::get(0).fight();
+	auto p1 = bsdata<creature>::elements + 0;
+	auto p2 = bsdata<creature>::elements + 1;
+	while(p1->is(Alive) && p2->is(Alive)) {
+		p1->fight();
+		//p2->fight();
+	}
 }
 
 static void test_characters() {

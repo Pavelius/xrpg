@@ -54,9 +54,21 @@
     <ClCompile Include="interface.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="creaturea.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="pathfind.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="battlemap.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="pathfind.h">
       <Filter>Logic</Filter>
     </ClInclude>
   </ItemGroup>
@@ -65,6 +77,9 @@
       <Filter>Data</Filter>
     </Text>
     <Text Include="errors.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="locale\ru\Names.txt">
       <Filter>Data</Filter>
     </Text>
   </ItemGroup>

@@ -1,0 +1,50 @@
+﻿About: О программе
+Attack: Атаковать
+Attributes: Атрибуты
+Back: Назад
+Cancel: Отменить
+CharacterSheet: Лист пресонажа
+ChooseAbility: Выбирайте способности
+ChooseBackground: Выбирайте прошлое
+ChooseClass: Выбирайте класс
+ChooseGender: Выберите пол вашего персонажа
+ChooseRace: Выбирайте вашу расу
+ChooseSubRace: У каждой расы есть определенные ответвления. Какую ветку представляете вы?
+Cleric: Клерик
+Close: Закрыть
+Copy: Копировать
+Cut: Вырезать
+Dwarf: Гном
+DwarfHill: Холмистый гном
+DwarfMountain: Горный гном
+Elf: Эльф
+ElfHigh: Высший эльф
+ElfWood: Лесной эльф
+Exit: Выход
+Female: Женщина
+Fighter: Воин
+Halfling: Полурослик
+HalflingLightfoot: Легконогий полурослик
+HalflingStout: Коренастый полурослик
+Heal: Лечение
+HotKey: Горячая клавиша
+Human: Человек
+Intimidate: Запугивание
+LoadGame: Загрузить игру
+Male: Мужчина
+Miss: Промах
+NewCharacter: Создать персонажа
+NewGame: Новая игра
+Next: Далее
+NoGender: Безполый
+NoItem: Нет предмета
+Paste: Вставить
+PickCharacter: Выбрать персонажа
+Rogue: Плут
+Rules: Правила
+Settings: Настройки
+Skills: Навыки
+Sound: Звук
+Strenght: Сила
+Video: Видео
+Wizard: Волшебник

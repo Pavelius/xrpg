@@ -10,9 +10,9 @@ struct uieffect {
 	const char*		format;
 	color			fore;
 	unsigned char	alpha;
-	unsigned long	time_start, time_finish;
 	int				alpha_start, alpha_finish;
-	int				value;
+	int				value; // Use with format string
+	unsigned		time_start, time_finish;
 	explicit operator bool() const { return time_start < time_finish; }
 	static uieffect* add();
 	static uieffect* add(point postition, const char* format, color fore, int duration);

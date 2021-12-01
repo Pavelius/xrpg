@@ -11,7 +11,6 @@ const void*			draw::hilite_object;
 int                 draw::pausetime;
 static point		camera_drag;
 static rect			board;
-static const void*	current_hilite;
 
 namespace metrics {
 unsigned char		opacity = 230;
@@ -41,7 +40,7 @@ bool draw::swindow(bool hilight) {
 bool draw::ishilite(int size, const void* object) {
 	if(!ishilite({caret.x - size, caret.y - size, caret.x + size, caret.y + size}))
 		return false;
-	current_hilite = object;
+	hilite_object = object;
 	return true;
 }
 
@@ -147,8 +146,16 @@ void draw::answerbt(int i, const void* pv, const char* title) {
 	}
 	if(button(title, answer_hotkeys[i], proc))
 		execute(buttonparam, (long)pv);
-	if(control_hilited && answers::show_tips)
-		hilite_object = pv;
+	if(control_hilited) {
+		if(answers::show_tips)
+			hilite_object = pv;
+	} else if(hilite_object) {
+		if(pv == hilite_object) {
+			hot.cursor = cursor::Hand;
+			if(hot.key==MouseLeft && !hot.pressed)
+				execute(buttonparam, (long)pv);
+		}
+	}
 }
 
 void draw::customwindow() {

@@ -11,6 +11,8 @@ static void test_ability() {
 }
 
 int main(int argc, char* argv[]) {
+	initialize_translation("ru");
+	check_translation();
 	bsreq::read("rules/basic.txt");
 	if(log::geterrors())
 		return -1;

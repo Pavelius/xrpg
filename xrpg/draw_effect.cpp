@@ -6,7 +6,7 @@ using namespace draw;
 
 BSDATAC(uieffect, 128)
 
-static unsigned long time_current = 1000;
+static unsigned time_current = 1000;
 
 bool uieffect::isactive() const {
 	return time_finish > time_current;
@@ -77,6 +77,7 @@ void uieffect::paint() const {
 		sb.add(format, value);
 		auto push_caret = caret;
 		caret.x -= textw(temp) / 2;
+		caret.y -= texth();
 		text(temp, -1, TextStroke);
 		caret = push_caret;
 		font = push_font;
