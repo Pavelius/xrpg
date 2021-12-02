@@ -3,10 +3,14 @@
 #include "draw_background.h"
 #include "draw_simple.h"
 #include "main.h"
+#include "pathfind.h"
 
 using namespace draw;
+using namespace map;
 
+extern short unsigned costmap[mpx * mpy];
 static int show_grid = 0;
+static indext goal_index = Blocked;
 long distance(point p1, point p2);
 
 point draw::m2s(int x, int y) {
@@ -76,6 +80,28 @@ static void paintcreatures() {
 	caret = push_caret;
 }
 
+static void paintmovement() {
+	char temp[32]; stringbuilder sb(temp);
+	auto push_alpha = alpha;
+	auto push_fore = fore;
+	auto push_caret = caret;
+	for(indext i = 0; i < mpx * mpy; i++) {
+		caret = m2s(gx(i), gy(i)) - camera;
+		alpha = 128;
+		fore = colors::gray;
+		circlef(24);
+		alpha = 128;
+		fore = colors::text;
+		sb.clear(); sb.add("%1i", costmap[i]);
+		caret.x -= textw(temp) / 2;
+		caret.y -= texth() / 2;
+		text(temp);
+	}
+	caret = push_caret;
+	fore = push_fore;
+	alpha = push_alpha;
+}
+
 static void beforemodalall() {
 	draw::simpleui::beforemodal();
 }
@@ -87,6 +113,7 @@ static void paintall() {
 		draw::grid();
 	if(hot.key == (Ctrl + 'G'))
 		execute(cbsetint, show_grid ? 0 : 1, 0, &show_grid);
+	paintmovement();
 	paintcreatures();
 }
 

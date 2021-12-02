@@ -1140,6 +1140,8 @@ static void set32fl(int x, int y, int w) {
 	auto x2 = x + w;
 	if(x < clipping.x1)
 		x = clipping.x1;
+	if(x2 > clipping.x2)
+		x2 = clipping.x2;
 	w = x2 - x;
 	if(w > 0)
 		set32((color*)canvas->ptr(x, y), w);
