@@ -40,8 +40,10 @@ NoGender: Безполый
 NoItem: Нет предмета
 Paste: Вставить
 PickCharacter: Выбрать персонажа
+Play: Играть
 Rogue: Плут
 Rules: Правила
+Save: Сохранить
 Settings: Настройки
 Skills: Навыки
 Sound: Звук

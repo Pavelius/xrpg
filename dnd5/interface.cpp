@@ -3,13 +3,14 @@
 #include "draw_background.h"
 #include "draw_simple.h"
 #include "main.h"
-#include "pathfind.h"
 
 using namespace draw;
-using namespace map;
 
+fnevent	draw::moveaction;
 static int show_grid = 0;
 static indext goal_index = Blocked;
+static indext hilite_index;
+static indext hilite_route_target;
 long distance(point p1, point p2);
 
 point draw::m2s(int x, int y) {
@@ -72,6 +73,14 @@ void creature::paint() const {
 	ishilite(20, this);
 }
 
+void creature::move(point pt) {
+	auto p = uieffect::add();
+	p->setlinked(getreference());
+	p->setgoal(pt);
+	p->setduration(300);
+	p->wait();
+}
+
 static void paintcreatures() {
 	auto push_caret = caret;
 	for(auto& e : bsdata<creature>())
@@ -85,35 +94,115 @@ static void paintmovement() {
 	auto push_fore = fore;
 	auto push_caret = caret;
 	for(indext i = 0; i < mpx * mpy; i++) {
+		if(costmap[i] >= CostPassable)
+			continue;
+		if(ishilite(16)) {
+			hilite_index = i;
+			hot.cursor = cursor::Hand;
+			if(hot.key == MouseLeft && !hot.pressed) {
+				if(moveaction)
+					execute(moveaction);
+			}
+		}
 		caret = m2s(gx(i), gy(i)) - camera;
-		alpha = 128;
-		fore = colors::gray;
-		circlef(24);
-		alpha = 128;
-		fore = colors::text;
-		sb.clear(); sb.add("%1i", costmap[i]);
-		caret.x -= textw(temp) / 2;
-		caret.y -= texth() / 2;
-		text(temp);
+		alpha = 64;
+		fore = colors::active;
+		circlef(16);
 	}
 	caret = push_caret;
 	fore = push_fore;
 	alpha = push_alpha;
 }
 
-static void beforemodalall() {
-	draw::simpleui::beforemodal();
+static void toggle_block() {
+	if(hilite_index == Blocked)
+		return;
+	if(blocks[hilite_index] != Inpassable)
+		blocks[hilite_index] = Inpassable;
+	else
+		blocks[hilite_index] = Passable;
 }
 
-static void paintall() {
+static void paintblocks() {
+	auto push_fore = fore;
+	auto push_caret = caret;
+	for(indext i = 0; i < mpx * mpy; i++) {
+		caret = m2s(gx(i), gy(i)) - camera;
+		if(ishilite(16)) {
+			hilite_index = i;
+			hot.cursor = cursor::Hand;
+		}
+		if(isblocked(i)) {
+			fore = colors::border;
+			circle(16);
+			auto push_alpha = alpha;
+			alpha = 128;
+			fore = colors::black;
+			circlef(16);
+			alpha = push_alpha;
+		}
+		if(hilite_index == i) {
+			if(hot.pressed)
+				fore = colors::active.mix(colors::form);
+			else
+				fore = colors::active;
+			circle(16);
+			if((hot.key == MouseLeft && !hot.pressed) || (hot.key == KeySpace))
+				execute(toggle_block);
+		}
+	}
+	caret = push_caret;
+	fore = push_fore;
+}
+
+static void paintroute() {
+	if(hilite_index != hilite_route_target) {
+		hilite_route_target = hilite_index;
+		routeto(hilite_route_target);
+	}
+	if(!indecies)
+		return;
+	auto push_fore = fore;
+	auto push_caret = caret;
+	auto count = 0;
+	fore = colors::green;
+	for(auto i : indecies) {
+		auto pt = m2s(gx(i), gy(i)) - camera;
+		if(count == 0) {
+			caret = pt;
+			circle(16);
+		} else
+			line(pt.x, pt.y);
+		count++;
+	}
+	caret = push_caret;
+	fore = push_fore;
+}
+
+static void beforemodalall() {
+	draw::simpleui::beforemodal();
+	hilite_index = Blocked;
+}
+
+static void paintcommon() {
 	draw::simpleui::paint();
 	draw::background::paint();
 	if(show_grid)
 		draw::grid();
 	if(hot.key == (Ctrl + 'G'))
 		execute(cbsetint, show_grid ? 0 : 1, 0, &show_grid);
+}
+
+static void paintall() {
+	paintcommon();
 	paintmovement();
+	paintroute();
 	paintcreatures();
+}
+
+void draw::painteditor() {
+	paintcommon();
+	paintblocks();
 }
 
 static void tipsall() {
@@ -128,27 +217,18 @@ static void scene_choose_race() {
 	source.choose("Choose race", "Cancel", true, "generate");
 }
 
-static void scene_combat() {
-	auto p1 = bsdata<creature>::elements + 0;
-	auto p2 = bsdata<creature>::elements + 1;
-	while(p1->is(Alive) && p2->is(Alive)) {
-		p1->fight();
-		//p2->fight();
-	}
+void draw::refreshmodal() {
+	breakmodal(0);
 }
 
-static void test_characters() {
-	auto p = bsdata<creature>::add();
-	p->create(bsdata<racei>::get(1), bsdata<classi>::get(1), Male);
-	p->setavatar("gordek");
-	p->setposition(draw::m2s(10, 5));
-	auto p2 = bsdata<creature>::add();
-	p2->create(bsdata<racei>::get(0), bsdata<classi>::get(1), Male);
-	p2->setavatar("skeleton");
-	p2->setposition(draw::m2s(11, 6));
+void draw::modalscene(fnevent paint_proc, fnevent proc) {
+	auto push_paint = draw::pbackground;
+	draw::pbackground = paint_proc;
+	do proc(); while(getresult() && !isnext());
+	draw::pbackground = push_paint;
 }
 
-void draw::startmenu() {
+void draw::initialize() {
 	metrics::padding = 4;
 	metrics::border = 6;
 	draw::initialize("DnD adventures");
@@ -157,9 +237,4 @@ void draw::startmenu() {
 	draw::pbeforemodal = beforemodalall;
 	draw::pbackground = paintall;
 	draw::ptips = tipsall;
-	draw::setnext(scene_combat);
-	//
-	test_characters();
-	//
-	draw::start();
 }

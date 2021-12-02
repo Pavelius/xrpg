@@ -1,2 +1,3 @@
 ﻿In file `Names.txt`:
- Define translate for `Miss`
+ Define translate for `Play`
+ Define translate for `Save`

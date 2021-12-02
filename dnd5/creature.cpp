@@ -79,15 +79,24 @@ static void attack_enemy() {
 	draw::waitanimation();
 }
 
+static void move_hero() {
+	auto pb = indecies.begin();
+	for(auto* pi = indecies.end() - 2; pi >= pb; pi--) {
+		auto i = *pi;
+		last_actor->move(draw::m2s(gx(i), gy(i)));
+	}
+	draw::refreshmodal();
+}
+
 void creature::fight() {
+	last_actor = this;
 	lookmove();
 	answers an;
 	an.add(attack_enemy, getnm("Attack"));
-	auto proc = (fnevent)an.choose("What you want to do?", getnm("Cancel"), true, 0, 1);
-	if(proc) {
-		last_actor = this;
-		proc();
-	}
+	auto push_action = draw::moveaction;
+	draw::moveaction = move_hero;
+	an.modal("What you want to do?", getnm("Cancel"));
+	draw::moveaction = push_action;
 }
 
 void creature::update_finish() {
@@ -95,6 +104,7 @@ void creature::update_finish() {
 	// If we aware attack add Dexterity bonus
 	add(AC, getbonus(Dexterity));
 	add(AC, 10);
+	add(Speed, 6);
 	// After all apply hit points
 	hp_maximum += getbonus(Constitution) * hit_dice;
 	if(hp_maximum < hit_dice)

@@ -5,8 +5,11 @@
 #include "flagable.h"
 #include "gender.h"
 #include "posable.h"
+#include "pathfind.h"
 #include "stringbuilder.h"
 #include "variantlist.h"
+
+using namespace map;
 
 #pragma once
 
@@ -14,7 +17,7 @@ enum ability_s : unsigned char {
 	Strenght, Dexterity, Constitution, Intellect, Wisdow, Charisma,
 	AttackAll, AttackMelee, AttackRanged,
 	DamageAll, DamageMelee, DamageRanged,
-	AC,
+	AC, Speed,
 	SaveAll,
 	SaveVsCharm, SaveVsDisease, SaveVsIllusion, SaveVsPoison, SaveVsTrap,
 	Hits,
@@ -67,6 +70,9 @@ enum variant_s : unsigned char {
 };
 enum action_s : unsigned char {
 	StandartAction, MoveAction, BonusAction,
+};
+enum terrain_s : unsigned char {
+	Inpassable, Passable,
 };
 class creature;
 typedef flagable<1 + Poison / 8> damagea;
@@ -204,7 +210,9 @@ public:
 	constexpr bool		ismonster() const { return kind==0; }
 	void				levelup();
 	void				lookmove();
+	void				move(point pt);
 	void				paint() const;
+	static unsigned		routeto(indext target);
 	void				setavatar(const char* v);
 	void				update();
 };
@@ -212,10 +220,28 @@ struct creaturea : public adat<creature*, 64> {
 	void				select();
 };
 class gamei {
+public:
+	static void			editor();
+	static void			readmap();
+	static void			runeditor();
+	static void			rungame();
+	static void			writemap();
 };
+namespace map {
+extern terrain_s		blocks[mpx * mpy];
+extern adat<indext, 1024> indecies;
+unsigned				routeto(indext target);
+bool					isblocked(indext i);
+}
 namespace draw {
+void					initialize();
 point					m2s(int x, int y);
+void					modalscene(fnevent paint_proc, fnevent proc);
+extern fnevent			moveaction;
+void					painteditor();
+void					refreshmodal();
 point					s2m(point p);
-void					startmenu();
+void					setnext(fnevent v);
+void					start();
 void					waitanimation();
 }

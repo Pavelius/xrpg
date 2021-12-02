@@ -14,6 +14,7 @@ BSDATA(abilityi) = {
 	{"DamageMelee"},
 	{"DamageRanged"},
 	{"AC"},
+	{"Speed"},
 	{"SaveAll"},
 	{"SaveVsCharm"},
 	{"SaveVsDisease"},

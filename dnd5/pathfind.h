@@ -2,7 +2,7 @@
 
 namespace map {
 enum direction_s : unsigned char {
-	Up, Left, Down, Right
+	Up, LeftUp, Left, LeftDown, Down, RightDown, Right, RightUp,
 };
 typedef short unsigned indext;
 const indext	Blocked = 0xFFFF;

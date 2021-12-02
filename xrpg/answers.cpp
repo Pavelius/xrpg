@@ -20,6 +20,12 @@ void answers::sort() {
 	qsort(elements.data, elements.count, sizeof(elements.data[0]), compare);
 }
 
+void answers::modal(const char* title, const char* cancel) const {
+	auto proc = (fnevent)choose(title, cancel, true, 0, 1);
+	if(proc)
+		proc();
+}
+
 void* answers::random() const {
 	if(!elements.count)
 		return 0;

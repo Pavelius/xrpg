@@ -10,18 +10,32 @@ static void test_ability() {
 	source.create(bsdata<racei>::get(1), bsdata<classi>::get(1), Male);
 }
 
+static void test_characters() {
+	auto p = bsdata<creature>::add();
+	p->create(bsdata<racei>::get(1), bsdata<classi>::get(1), Male);
+	p->setavatar("gordek");
+	p->setposition(draw::m2s(10, 5));
+	auto p2 = bsdata<creature>::add();
+	p2->create(bsdata<racei>::get(0), bsdata<classi>::get(1), Male);
+	p2->setavatar("skeleton");
+	p2->setposition(draw::m2s(11, 6));
+}
+
 int main(int argc, char* argv[]) {
 	initialize_translation("ru");
 	check_translation();
 	bsreq::read("rules/basic.txt");
 	if(log::geterrors())
 		return -1;
-#ifdef _DEBUG
-	test_ability();
-#endif
 	initialize_png();
 	set_dark_theme();
-	draw::startmenu();
+	draw::initialize();
+#ifdef _DEBUG
+	test_ability();
+	test_characters();
+#endif
+	draw::setnext(gamei::runeditor);
+	draw::start();
 	return 0;
 }
 

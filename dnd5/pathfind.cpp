@@ -8,7 +8,7 @@ static indext path_stack[256 * 256];
 static unsigned short path_push;
 static unsigned short path_pop;
 
-static direction_s all_around[] = {Right, Left, Up, Down};
+static direction_s all_around[] = {Right, Left, Up, Down, RightUp, RightDown, LeftUp, LeftDown};
 
 static const direction_s rotate_direction[4][4] = {
 	{Down, Left, Up, Right},
@@ -29,10 +29,34 @@ indext map::to(indext index, direction_s d) {
 		if(gx(index) == 0)
 			return Blocked;
 		return index - 1;
+	case LeftUp:
+		if(gx(index) == 0)
+			return Blocked;
+		if(gy(index) == 0)
+			return Blocked;
+		return index - 1 - mpx;
+	case LeftDown:
+		if(gx(index) == 0)
+			return Blocked;
+		if(gy(index) >= mpy - 1)
+			return Blocked;
+		return index - 1 + mpx;
 	case Right:
 		if(gx(index) >= mpx - 1)
 			return Blocked;
 		return index + 1;
+	case RightUp:
+		if(gx(index) >= mpx - 1)
+			return Blocked;
+		if(gy(index) == 0)
+			return Blocked;
+		return index + 1 - mpx;
+	case RightDown:
+		if(gx(index) >= mpx - 1)
+			return Blocked;
+		if(gy(index) >= mpy - 1)
+			return Blocked;
+		return index + 1 + mpx;
 	case Up:
 		if(gy(index) == 0)
 			return Blocked;
@@ -70,10 +94,8 @@ void map::wave(indext start) {
 	while(path_push != path_pop) {
 		auto pos = path_stack[path_pop++];
 		auto cost = costmap[pos];
-		snode(to(pos, Left), cost + 1);
-		snode(to(pos, Right), cost + 1);
-		snode(to(pos, Up), cost + 1);
-		snode(to(pos, Down), cost + 1);
+		for(auto d : all_around)
+			snode(to(pos, d), cost + 1);
 	}
 }
 

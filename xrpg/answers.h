@@ -26,6 +26,7 @@ public:
 	const element*		end() const { return elements.end(); }
 	int					getcount() const { return elements.getcount(); }
 	const char*			getname(void* v);
+	void				modal(const char* title, const char* cancel) const;
 	void*				random() const;
 	void				sort();
 };
