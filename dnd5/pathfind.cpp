@@ -3,9 +3,12 @@
 
 using namespace map;
 
+short unsigned map::costmap[mpx * mpy];
 static indext path_stack[256 * 256];
 static unsigned short path_push;
 static unsigned short path_pop;
+
+static direction_s all_around[] = {Right, Left, Up, Down};
 
 static const direction_s rotate_direction[4][4] = {
 	{Down, Left, Up, Right},
@@ -43,10 +46,10 @@ indext map::to(indext index, direction_s d) {
 	}
 }
 
-static void snode(indext index, short unsigned* pathmap, short unsigned cost) {
+static void snode(indext index, short unsigned cost) {
 	if(index == Blocked)
 		return;
-	auto a = pathmap[index];
+	auto a = costmap[index];
 	if(a >= CostInpassable)
 		return;
 	if(a <= CostPassable) {
@@ -55,21 +58,64 @@ static void snode(indext index, short unsigned* pathmap, short unsigned cost) {
 	} else
 		cost += a - CostPassable; // Variable cost for movement
 	path_stack[path_push++] = index;
-	pathmap[index] = cost;
+	costmap[index] = cost;
 }
 
-void map::wave(short unsigned* pathmap, indext start) {
-	if(start == Blocked || !pathmap)
+void map::wave(indext start) {
+	if(start == Blocked)
 		return;
 	path_push = path_pop = 0;
 	path_stack[path_push++] = start;
-	pathmap[start] = 1;
+	costmap[start] = 1;
 	while(path_push != path_pop) {
 		auto pos = path_stack[path_pop++];
-		auto cost = pathmap[pos];
-		snode(to(pos, Left), pathmap, cost + 1);
-		snode(to(pos, Right), pathmap, cost + 1);
-		snode(to(pos, Up), pathmap, cost + 1);
-		snode(to(pos, Down), pathmap, cost + 1);
+		auto cost = costmap[pos];
+		snode(to(pos, Left), cost + 1);
+		snode(to(pos, Right), cost + 1);
+		snode(to(pos, Up), cost + 1);
+		snode(to(pos, Down), cost + 1);
 	}
+}
+
+indext map::movecloser(indext start) {
+	auto i = Blocked;
+	auto a = costmap[start];
+	for(auto d : all_around) {
+		auto i1 = to(start, d);
+		if(i1 == Blocked)
+			continue;
+		if(costmap[i1] >= a)
+			continue;
+		i = i1;
+		a = costmap[i1];
+	}
+	return i;
+}
+
+indext map::moveaway(indext start) {
+	auto i = Blocked;
+	auto a = costmap[start];
+	for(auto d : all_around) {
+		auto i1 = to(start, d);
+		if(i1 == Blocked)
+			continue;
+		if(costmap[i1] <= a)
+			continue;
+		i = i1;
+		a = costmap[i1];
+	}
+	return i;
+}
+
+unsigned map::route(indext* destiation, unsigned count, indext start, fnroute proc) {
+	auto pb = destiation;
+	auto pe = pb + count;
+	auto i = start;
+	while(pb < pe) {
+		if(i == Blocked)
+			break;
+		*pb++ = i;
+		i = proc(i);
+	}
+	return pb - destiation;
 }

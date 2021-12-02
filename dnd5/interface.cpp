@@ -8,7 +8,6 @@
 using namespace draw;
 using namespace map;
 
-extern short unsigned costmap[mpx * mpy];
 static int show_grid = 0;
 static indext goal_index = Blocked;
 long distance(point p1, point p2);
