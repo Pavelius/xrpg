@@ -6,11 +6,14 @@
 
 using namespace draw;
 
-fnevent	draw::moveaction;
 static int show_grid = 0;
+static int show_movement = 0;
 static indext goal_index = Blocked;
-static indext hilite_index;
+indext draw::hilite_index;
 static indext hilite_route_target;
+static rect hilite_index_rect;
+fnevent draw::mouseaction;
+fnevent draw::tipscustom;
 long distance(point p1, point p2);
 
 point draw::m2s(int x, int y) {
@@ -25,11 +28,6 @@ point draw::s2m(point p) {
 		(short)(p.x / draw::grid_size),
 		(short)(p.y / draw::grid_size)
 	};
-}
-
-void draw::waitanimation() {
-	uieffect::waitall();
-	uieffect::clearall();
 }
 
 static point getpos(point start, point goal, int range) {
@@ -71,14 +69,21 @@ void creature::paint() const {
 	if(avatar[0])
 		imager(caret.x, caret.y, gres(avatar, "art/portraits"), 0, 32);
 	ishilite(20, this);
+	auto push_fore = fore;
+	if(is(Hostile))
+		fore = colors::red;
+	else
+		fore = colors::green;
+	circle(32);
+	fore = push_fore;
 }
 
 void creature::move(point pt) {
 	auto p = uieffect::add();
 	p->setlinked(getreference());
 	p->setgoal(pt);
-	p->setduration(300);
-	p->wait();
+	p->setduration(200);
+	waitanimation();
 }
 
 static void paintcreatures() {
@@ -88,39 +93,33 @@ static void paintcreatures() {
 	caret = push_caret;
 }
 
+static void hilite_index_test(indext i) {
+	if(ishilite(16)) {
+		hilite_index = i;
+		hilite_index_rect = hot.hilite;
+		hot.cursor = cursor::Hand;
+	}
+}
+
 static void paintmovement() {
 	char temp[32]; stringbuilder sb(temp);
 	auto push_alpha = alpha;
 	auto push_fore = fore;
 	auto push_caret = caret;
+	alpha = 64;
 	for(indext i = 0; i < mpx * mpy; i++) {
 		if(costmap[i] >= CostPassable)
 			continue;
-		if(ishilite(16)) {
-			hilite_index = i;
-			hot.cursor = cursor::Hand;
-			if(hot.key == MouseLeft && !hot.pressed) {
-				if(moveaction)
-					execute(moveaction);
-			}
-		}
 		caret = m2s(gx(i), gy(i)) - camera;
-		alpha = 64;
-		fore = colors::active;
-		circlef(16);
+		hilite_index_test(i);
+		if(show_movement) {
+			fore = colors::black;
+			circlef(16);
+		}
 	}
 	caret = push_caret;
 	fore = push_fore;
 	alpha = push_alpha;
-}
-
-static void toggle_block() {
-	if(hilite_index == Blocked)
-		return;
-	if(blocks[hilite_index] != Inpassable)
-		blocks[hilite_index] = Inpassable;
-	else
-		blocks[hilite_index] = Passable;
 }
 
 static void paintblocks() {
@@ -128,10 +127,7 @@ static void paintblocks() {
 	auto push_caret = caret;
 	for(indext i = 0; i < mpx * mpy; i++) {
 		caret = m2s(gx(i), gy(i)) - camera;
-		if(ishilite(16)) {
-			hilite_index = i;
-			hot.cursor = cursor::Hand;
-		}
+		hilite_index_test(i);
 		if(isblocked(i)) {
 			fore = colors::border;
 			circle(16);
@@ -147,8 +143,6 @@ static void paintblocks() {
 			else
 				fore = colors::active;
 			circle(16);
-			if((hot.key == MouseLeft && !hot.pressed) || (hot.key == KeySpace))
-				execute(toggle_block);
 		}
 	}
 	caret = push_caret;
@@ -191,12 +185,19 @@ static void paintcommon() {
 		draw::grid();
 	if(hot.key == (Ctrl + 'G'))
 		execute(cbsetint, show_grid ? 0 : 1, 0, &show_grid);
+	if(hot.key == (Ctrl + 'M'))
+		execute(cbsetint, show_movement ? 0 : 1, 0, &show_movement);
 }
 
 static void paintall() {
 	paintcommon();
 	paintmovement();
 	paintroute();
+	paintcreatures();
+}
+
+static void painteffect() {
+	paintcommon();
 	paintcreatures();
 }
 
@@ -210,6 +211,19 @@ static void tipsall() {
 	draw::background::tips();
 }
 
+static void beforetips() {
+	if(hilite_index_rect == hot.hilite && hilite_index != Blocked) {
+		if(!tips_sb)
+			tips_sb.add("%Cell (%1i, %2i)", gx(hilite_index), gy(hilite_index));
+		if(mouseaction) {
+			if((hot.key == MouseLeft && !hot.pressed) || hot.key == KeySpace)
+				execute(mouseaction);
+		}
+	}
+	if(tipscustom)
+		tipscustom();
+}
+
 static void scene_choose_race() {
 	variantlist source;
 	source.select(bsdata<racei>::source);
@@ -221,11 +235,26 @@ void draw::refreshmodal() {
 	breakmodal(0);
 }
 
-void draw::modalscene(fnevent paint_proc, fnevent proc) {
-	auto push_paint = draw::pbackground;
-	draw::pbackground = paint_proc;
+void draw::waitanimation() {
+	auto push_paint = pbackground;
+	pbackground = painteffect;
+	uieffect::waitall();
+	uieffect::clearall();
+	pbackground = push_paint;
+}
+
+void draw::modalscene(fnevent paint_proc, fnevent proc, fnevent mouse_proc) {
+	auto push_paint = pbackground;
+	auto push_mouse = mouseaction;
+	if(paint_proc)
+		pbackground = paint_proc;
+	if(mouse_proc)
+		mouseaction = mouse_proc;
 	do proc(); while(getresult() && !isnext());
-	draw::pbackground = push_paint;
+	mouseaction = push_mouse;
+	pbackground = push_paint;
+	hilite_route_target = Blocked;
+	indecies.clear();
 }
 
 void draw::initialize() {
@@ -237,4 +266,5 @@ void draw::initialize() {
 	draw::pbeforemodal = beforemodalall;
 	draw::pbackground = paintall;
 	draw::ptips = tipsall;
+	answers::afterpaint = beforetips;
 }

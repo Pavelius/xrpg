@@ -3,6 +3,7 @@ Attack: Атаковать
 Attributes: Атрибуты
 Back: Назад
 Cancel: Отменить
+Cell: Ячейка
 CharacterSheet: Лист пресонажа
 ChooseAbility: Выбирайте способности
 ChooseBackground: Выбирайте прошлое

@@ -117,7 +117,7 @@ void uieffect::clearall() {
 	bsdata<uieffect>::source.clear();
 }
 
-static void fixwait(const uieffect* p) {
+void uieffect::fixwait(const uieffect* p) {
 	auto tms = getcputime();
 	while(ismodal() && ongoing(p)) {
 		auto tm = getcputime();
@@ -132,14 +132,6 @@ static void fixwait(const uieffect* p) {
 		doredraw();
 		waitcputime(1);
 	}
-}
-
-void uieffect::wait() {
-	fixwait(this);
-}
-
-void uieffect::waitall() {
-	fixwait(0);
 }
 
 static uieffect* addnew() {

@@ -80,6 +80,7 @@ static void attack_enemy() {
 }
 
 static void move_hero() {
+	routeto(draw::hilite_index);
 	auto pb = indecies.begin();
 	for(auto* pi = indecies.end() - 2; pi >= pb; pi--) {
 		auto i = *pi;
@@ -88,15 +89,16 @@ static void move_hero() {
 	draw::refreshmodal();
 }
 
-void creature::fight() {
-	last_actor = this;
-	lookmove();
+static void fight_proc() {
+	last_actor->lookmove();
 	answers an;
 	an.add(attack_enemy, getnm("Attack"));
-	auto push_action = draw::moveaction;
-	draw::moveaction = move_hero;
 	an.modal("What you want to do?", getnm("Cancel"));
-	draw::moveaction = push_action;
+}
+
+void creature::fight() {
+	last_actor = this;
+	draw::modalscene(0, fight_proc, move_hero);
 }
 
 void creature::update_finish() {

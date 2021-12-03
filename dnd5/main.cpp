@@ -14,11 +14,12 @@ static void test_characters() {
 	auto p = bsdata<creature>::add();
 	p->create(bsdata<racei>::get(1), bsdata<classi>::get(1), Male);
 	p->setavatar("gordek");
-	p->setposition(draw::m2s(10, 5));
+	p->setposition(draw::m2s(14, 9));
 	auto p2 = bsdata<creature>::add();
 	p2->create(bsdata<racei>::get(0), bsdata<classi>::get(1), Male);
 	p2->setavatar("skeleton");
 	p2->setposition(draw::m2s(11, 6));
+	p2->set(Hostile);
 }
 
 int main(int argc, char* argv[]) {

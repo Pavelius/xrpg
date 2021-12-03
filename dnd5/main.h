@@ -213,6 +213,7 @@ public:
 	void				move(point pt);
 	void				paint() const;
 	static unsigned		routeto(indext target);
+	void				set(special_s v) { special.set(v); }
 	void				setavatar(const char* v);
 	void				update();
 };
@@ -235,13 +236,15 @@ bool					isblocked(indext i);
 }
 namespace draw {
 void					initialize();
+extern indext			hilite_index;
 point					m2s(int x, int y);
-void					modalscene(fnevent paint_proc, fnevent proc);
-extern fnevent			moveaction;
+void					modalscene(fnevent paint_proc, fnevent proc, fnevent mouse_proc);
+extern fnevent			mouseaction;
 void					painteditor();
 void					refreshmodal();
 point					s2m(point p);
 void					setnext(fnevent v);
 void					start();
+extern fnevent			tipscustom;
 void					waitanimation();
 }

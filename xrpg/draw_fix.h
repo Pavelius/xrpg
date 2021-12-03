@@ -18,6 +18,7 @@ struct uieffect {
 	static uieffect* add(point postition, const char* format, color fore, int duration);
 	void			clear();
 	static void		clearall();
+	static void		fixwait(const uieffect* p);
 	bool			isactive() const;
 	void			paint() const;
 	void			setduration(int duration);
@@ -30,7 +31,7 @@ struct uieffect {
 	void			setvalue(int v) { value = v; }
 	void			stop();
 	void			update();
-	void			wait();
-	static void		waitall();
+	void			wait() { fixwait(this); }
+	static void		waitall() { fixwait(0); }
 };
 }

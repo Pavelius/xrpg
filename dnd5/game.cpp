@@ -17,6 +17,15 @@ static bool serial_map(const char* name, bool writemode) {
 	return true;
 }
 
+static void toggle_block() {
+	if(draw::hilite_index == Blocked)
+		return;
+	if(blocks[draw::hilite_index] != Inpassable)
+		blocks[draw::hilite_index] = Inpassable;
+	else
+		blocks[draw::hilite_index] = Passable;
+}
+
 void gamei::readmap() {
 	serial_map(draw::background::url, false);
 }
@@ -48,6 +57,6 @@ void gamei::rungame() {
 
 void gamei::runeditor() {
 	readmap();
-	draw::modalscene(draw::painteditor, editor_proc);
+	draw::modalscene(draw::painteditor, editor_proc, toggle_block);
 }
 
