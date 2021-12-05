@@ -3,6 +3,7 @@
 #include "color.h"
 #include "dice.h"
 #include "flagable.h"
+#include "my_initialize_list.h"
 #include "gender.h"
 #include "posable.h"
 #include "pathfind.h"
@@ -38,7 +39,7 @@ enum dice_s : unsigned char {
 };
 enum special_s : unsigned char {
 	Brave, Darkvision, HeavyArmorNotRestrictSpeed, Stonecunning, Lucky,
-	Prone,
+	Prone, Disengaged,
 	Hostile, Locale, Summoned,
 };
 enum state_s : unsigned char {
@@ -46,9 +47,10 @@ enum state_s : unsigned char {
 	Poisoned, Restrained,
 };
 enum modifier_s : unsigned char {
+	Plus, Minus,
+	Advantage, Disadvantage,
 	Proficiency, DoubleProficiency,
 	Resistance, Immunity, Vulnerability,
-	Advantage, Disadvantage
 };
 enum wear_s : unsigned char {
 	Head, Neck, Body, Torso, RightHand, LeftHand, RightRing, LeftRing, Legs,
@@ -208,6 +210,8 @@ public:
 	bool				is(state_s v) const;
 	constexpr bool		is(special_s v) const { return special.is(v); }
 	constexpr bool		ismonster() const { return kind==0; }
+	bool				ismatch(variant v, modifier_s modifier) const;
+	bool				ismatch(std::initializer_list<variant> source, modifier_s modifier) const;
 	void				levelup();
 	void				lookmove();
 	void				move(point pt);
@@ -219,6 +223,7 @@ public:
 };
 struct creaturea : public adat<creature*, 64> {
 	void				select();
+	void				select(std::initializer_list<variant> source);
 };
 class gamei {
 public:
@@ -248,3 +253,5 @@ void					start();
 extern fnevent			tipscustom;
 void					waitanimation();
 }
+VKIND(special_s, Special)
+VKIND(modifier_s, Modifier)

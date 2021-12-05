@@ -1,12 +1,14 @@
 #include "main.h"
 
 BSDATA(modifieri) = {
+	{"Plus"},
+	{"Minus"},
+	{"Advantage"},
+	{"Disadvantage"},
 	{"Proficiency"},
 	{"DoubleProficiency"},
 	{"Resistance"},
 	{"Immunity"},
 	{"Vulnerability"},
-	{"Advantage"},
-	{"Disadvantage"},
 };
-assert_enum(modifieri, Disadvantage)
+assert_enum(modifieri, Vulnerability)

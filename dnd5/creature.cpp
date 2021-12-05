@@ -1,5 +1,6 @@
 #include "main.h"
 
+static creaturea enemies, allies;
 static creature* last_actor;
 
 void creature::clear() {
@@ -79,7 +80,7 @@ static void attack_enemy() {
 	draw::waitanimation();
 }
 
-static void move_hero() {
+static void move_action() {
 	routeto(draw::hilite_index);
 	auto pb = indecies.begin();
 	for(auto* pi = indecies.end() - 2; pi >= pb; pi--) {
@@ -89,16 +90,33 @@ static void move_hero() {
 	draw::refreshmodal();
 }
 
+static void dash_action() {
+}
+
+static void help_action() {
+}
+
+static void disengage_action() {
+	last_actor->set(Disengaged);
+}
+
 static void fight_proc() {
 	last_actor->lookmove();
+	enemies.select({Hostile});
+	allies.select({Minus, Hostile});
 	answers an;
-	an.add(attack_enemy, getnm("Attack"));
-	an.modal("What you want to do?", getnm("Cancel"));
+	if(enemies)
+		an.add(attack_enemy, getnm("Attack"));
+	an.add(dash_action, getnm("Dash"));
+	if(!last_actor->is(Disengaged))
+		an.add(disengage_action, getnm("Disengage"));
+	an.add(help_action, getnm("Help"));
+	an.modal(0, getnm("Cancel"));
 }
 
 void creature::fight() {
 	last_actor = this;
-	draw::modalscene(0, fight_proc, move_hero);
+	draw::modalscene(0, fight_proc, move_action);
 }
 
 void creature::update_finish() {
@@ -119,4 +137,29 @@ void creature::update() {
 
 int creature::gethd() const {
 	return level;
+}
+
+bool creature::ismatch(variant v, modifier_s modifier) const {
+	switch(v.type) {
+	case Special:
+		if(modifier==Minus)
+			return !is((special_s)v.value);
+		return is((special_s)v.value);
+	default: return false;
+	}
+}
+
+bool creature::ismatch(std::initializer_list<variant> source, modifier_s modifier) const {
+	for(auto v : source) {
+		switch(v.type) {
+		case Modifier:
+			modifier = (modifier_s)v.value;
+			continue;
+		default:
+			if(!ismatch(v, modifier))
+				return false;
+			break;
+		}
+	}
+	return true;
 }
