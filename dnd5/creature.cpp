@@ -111,7 +111,7 @@ static void fight_proc() {
 	if(!last_actor->is(Disengaged))
 		an.add(disengage_action, getnm("Disengage"));
 	an.add(help_action, getnm("Help"));
-	an.modal(0, getnm("Cancel"));
+	an.modal(0, 0);
 }
 
 void creature::fight() {

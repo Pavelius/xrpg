@@ -71,7 +71,7 @@ enum variant_s : unsigned char {
 	Modifier, Pack, Race, Special, Skill,
 };
 enum action_s : unsigned char {
-	StandartAction, MoveAction, BonusAction,
+	StandartAction, MoveAction, BonusAction, Reaction,
 };
 enum terrain_s : unsigned char {
 	Inpassable, Passable,
@@ -173,6 +173,7 @@ struct statable {
 	speciala			special;
 	spellf				known_spells;
 	int					hp, hp_maximum;
+	char				actions[Reaction + 1];
 	static void			copy(statable& dest, const statable& source);
 	void				add(ability_s i, int v) { abilities[i] += v; }
 	void				random_ability(classi& kind);
@@ -201,6 +202,7 @@ public:
 	void				fixattack(point goal, ability_s type);
 	void				fixdamage(int value) const;
 	void				fixmiss();
+	int					get(action_s i) const { return actions[i]; }
 	int					get(ability_s i) const { return abilities[i]; }
 	const item&			get(wear_s i) const { return wears[i]; }
 	item&				get(wear_s i) { return wears[i]; }
@@ -209,7 +211,7 @@ public:
 	int					gethd() const;
 	bool				is(state_s v) const;
 	constexpr bool		is(special_s v) const { return special.is(v); }
-	constexpr bool		ismonster() const { return kind==0; }
+	constexpr bool		ismonster() const { return kind == 0; }
 	bool				ismatch(variant v, modifier_s modifier) const;
 	bool				ismatch(std::initializer_list<variant> source, modifier_s modifier) const;
 	void				levelup();
@@ -218,6 +220,7 @@ public:
 	void				paint() const;
 	static unsigned		routeto(indext target);
 	void				set(special_s v) { special.set(v); }
+	void				set(action_s i, int v) { actions[i] = v; }
 	void				setavatar(const char* v);
 	void				update();
 };
