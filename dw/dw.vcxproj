@@ -92,7 +92,7 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -147,6 +147,16 @@
     <ProjectReference Include="..\xrpg\xrpg.vcxproj">
       <Project>{47f9fa45-33f1-4469-b93b-fb468f13eec3}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="property.cpp" />
+    <ClCompile Include="tag.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="errors.txt" />
+    <Text Include="locale\ru\Names.txt" />
+    <Text Include="rules\basic.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

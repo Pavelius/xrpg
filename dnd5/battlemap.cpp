@@ -3,6 +3,11 @@
 terrain_s map::blocks[mpx * mpy];
 adat<indext, 1024> map::indecies;
 
+struct combatactioni {
+	const char*			id;
+	fnaction			proc;
+};
+
 static indext m2i(point p) {
 	return p.y * mpx + p.x;
 }
@@ -56,3 +61,7 @@ void creature::lookmove() {
 	wave(m2i(draw::s2m(getposition())));
 	blockmovement(get(Speed));
 }
+
+BSDATA(combatactioni) = {
+	{"Attack", &creature::melee},
+};

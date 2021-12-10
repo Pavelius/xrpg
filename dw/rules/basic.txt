@@ -1,0 +1,44 @@
+#Item
+
+RaggedBow weight(2) coins(15)
+ tags Near NeedArrows
+FineBow weight(2) coins(60)
+ tags Near Far NeedArrows
+HunterBow weight(1) coins(100)
+ tags Near Far NeedArrows
+Crossbow weight(3) coins(35) damage(1)
+ tags Reload Near NeedArrows
+BundleArrows weight(1) coins(1) uses(3)
+ tags Arrows
+ElvenArrows weight(1) coins(20) uses(4)
+ tags Arrows
+Club weight(2) coins(1)
+ tags Close
+Staff weight(1) coins(1)
+ tags Close TwoHanded
+Dagger weight(1) coins(2)
+ tags Hand
+Knife weight(1) coins(2)
+ tags Hand
+ShortSword weight(1) coins(8)
+ tags Close
+Axe weight(1) coins(8)
+ tags Close
+Mace weight(1) coins(8)
+ tags Close
+Warhammer weight(1) coins(8)
+ tags Close
+Spear weight(1) coins(5)
+ tags Reach Thrown
+LongSword weight(2) coins(15) damage(1)
+ tags Close
+BattleAxe weight(2) coins(15) damage(1)
+ tags Close
+Flail weight(2) coins(15) damage(1)
+ tags Close
+Halberd weight(2) coins(9) damage(1)
+ tags Reach TwoHanded
+Rapier weight(1) coins(25)
+ tags Close Precise
+DuelingRapier weight(2) coins(50) pierce(1)
+ tags Close Precise

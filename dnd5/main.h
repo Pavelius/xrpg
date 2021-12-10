@@ -186,6 +186,7 @@ struct actable : nameablei {
 };
 class creature : public actable, public statable, public posable {
 	unsigned char		race, kind, level, alignment;
+	char				current_speed;
 	statable			basic;
 	item				wears[LastBackpack + 1];
 	char				avatar[12];
@@ -198,6 +199,7 @@ public:
 	void				clear();
 	void				create(racei& race, classi& kind, gender_s gender);
 	void				damage(damage_s type, int value);
+	bool				dash(bool run);
 	void				fight();
 	void				fixattack(point goal, ability_s type);
 	void				fixdamage(int value) const;
@@ -216,14 +218,18 @@ public:
 	bool				ismatch(std::initializer_list<variant> source, modifier_s modifier) const;
 	void				levelup();
 	void				lookmove();
+	bool				melee(bool run);
 	void				move(point pt);
+	bool				moveaction(bool run);
 	void				paint() const;
 	static unsigned		routeto(indext target);
 	void				set(special_s v) { special.set(v); }
 	void				set(action_s i, int v) { actions[i] = v; }
 	void				setavatar(const char* v);
 	void				update();
+	bool				use(action_s v, bool run);
 };
+typedef bool (creature::*fnaction)(bool run);
 struct creaturea : public adat<creature*, 64> {
 	void				select();
 	void				select(std::initializer_list<variant> source);

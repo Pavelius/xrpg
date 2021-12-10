@@ -1,0 +1,10 @@
+﻿Cancel: Отмена
+Close: Закрыть
+Coins: Монеты
+Cost: Цена
+Damage: Урон
+Gold: Золото
+Hits: Хиты
+Level: Ранг
+No: Нет
+Yes: Да

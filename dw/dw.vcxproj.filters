@@ -1,6 +1,38 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="main.h" />
+    <ClCompile Include="main.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="property.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="tag.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Logic">
+      <UniqueIdentifier>{e7c22051-f11c-4b11-a4e3-9a5278518bf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rules">
+      <UniqueIdentifier>{d64196ee-f460-4979-8d99-fb70ab811111}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>Logic</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="errors.txt">
+      <Filter>Rules</Filter>
+    </Text>
+    <Text Include="locale\ru\Names.txt">
+      <Filter>Rules</Filter>
+    </Text>
+    <Text Include="rules\basic.txt">
+      <Filter>Rules</Filter>
+    </Text>
   </ItemGroup>
 </Project>

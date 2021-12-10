@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
 	test_ability();
 	test_characters();
 #endif
-	draw::setnext(gamei::runeditor);
+	draw::setnext(gamei::rungame);
 	draw::start();
 	return 0;
 }

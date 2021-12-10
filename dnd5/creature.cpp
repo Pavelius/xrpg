@@ -163,3 +163,40 @@ bool creature::ismatch(std::initializer_list<variant> source, modifier_s modifie
 	}
 	return true;
 }
+
+bool creature::use(action_s v, bool run) {
+	if(!actions[v])
+		return false;
+	if(run)
+		actions[v]--;
+	return true;
+}
+
+bool creature::melee(bool run) {
+	if(!enemies)
+		return false;
+	if(!use(StandartAction, true))
+		return false;
+	if(run) {
+		auto enemy = enemies.data[0];
+		if(enemy)
+			attack(*enemy, 0, 0);
+	}
+	return true;
+}
+
+bool creature::dash(bool run) {
+	if(!use(StandartAction, true))
+		return false;
+	if(run)
+		current_speed += get(Speed);
+	return true;
+}
+
+bool creature::moveaction(bool run) {
+	if(!use(MoveAction, true))
+		return false;
+	if(run)
+		current_speed += get(Speed);
+	return true;
+}
