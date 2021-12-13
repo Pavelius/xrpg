@@ -42,3 +42,19 @@ Rapier weight(1) coins(25)
  tags Close Precise
 DuelingRapier weight(2) coins(50) pierce(1)
  tags Close Precise
+
+LeatherArmor weight(1) coins(10) armor(1)
+ScaleMailArmor weight(3) coins(50) armor(2)
+ tags Clumsy
+PlateMailArmor weight(4) coins(350) armor(3)
+ tags Clumsy
+Shield weight(2) coins(15) armor(1)
+
+Bandages weight(0) coins(5) uses(5) heal(4)
+ tags Slow
+
+PoulticesAndHerbs weight(1) coins(10) uses(2) heal(7)
+ tags Slow
+
+HealingPotion weight(0) coins(50) heal(10)
+ tags CanHealDebility

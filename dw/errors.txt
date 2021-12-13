@@ -1,1 +1,4 @@
-﻿
+﻿In file `rules/basic.txt`:
+ Line 53: Not found requisit `heal`
+ Line 56: Not found requisit `heal`
+ Line 59: Not found requisit `heal`

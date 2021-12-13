@@ -10,6 +10,7 @@ enum ability_s : unsigned char {
 };
 enum tag_s : unsigned char {
 	Arrows, CharismaMinus, Clumsy, Dangerous, Forceful, IgnoreArmor, Messy, NeedArrows, Precise, Ration, Reload, Slow, Stun, Thrown, TwoHanded,
+	CanHealDebility, CanHealPoison,
 	Hand, Close, Reach, Near, Far,
 };
 enum itemuf_s : unsigned char {
@@ -34,7 +35,7 @@ struct itemi {
 	wear_s slot;
 	taga tags;
 	char coins;
-	char weight, damage, pierce, armor, uses;
+	char weight, damage, pierce, armor, uses, heal;
 };
 union item {
 	unsigned u;

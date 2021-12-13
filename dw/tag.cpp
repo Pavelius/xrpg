@@ -16,6 +16,8 @@ BSDATA(tagi) = {
 	{"Stun"},
 	{"Thrown"},
 	{"TwoHanded"},
+	{"CanHealDebility"},	
+	{"CanHealPoison"},
 	{"Hand"},
 	{"Close"},
 	{"Reach"},
