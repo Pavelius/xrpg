@@ -219,6 +219,9 @@
     <ClInclude Include="draw_fix.h">
       <Filter>Interface</Filter>
     </ClInclude>
+    <ClInclude Include="agrw.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="win_draw.cpp">

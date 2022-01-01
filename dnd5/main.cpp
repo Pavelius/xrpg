@@ -1,3 +1,4 @@
+#include "agrw.h"
 #include "bsreq.h"
 #include "log.h"
 #include "main.h"
@@ -22,7 +23,19 @@ static void test_characters() {
 	p2->set(Hostile);
 }
 
+static void test_array() {
+	static agrw<creature> creatures;
+	auto p1 = creatures.add();
+	auto p2 = creatures.add();
+	for(auto pp = &creatures; pp; pp = pp->next) {
+		for(auto& e : *pp) {
+			e.clear();
+		}
+	}
+}
+
 int main(int argc, char* argv[]) {
+	//test_array();
 	initialize_translation("ru");
 	check_translation();
 	bsreq::read("rules/basic.txt");

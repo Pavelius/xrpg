@@ -10,6 +10,18 @@
     <ClCompile Include="tag.cpp">
       <Filter>Logic</Filter>
     </ClCompile>
+    <ClCompile Include="move.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="race.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="action.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="statable.cpp">
+      <Filter>Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Logic">

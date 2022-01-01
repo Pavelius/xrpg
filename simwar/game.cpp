@@ -204,7 +204,7 @@ void gamei::play(const eventi* event) {
 		for(auto p = find_eventcase(quest_id, current_id, 0, false); p; p = find_eventcase(quest_id, current_id, p, false)) {
 			sb.clear(); game.format(sb, p->text);
 			add_possible_lost(p, sb);
-			an.add((long)p, temp);
+			an.add(p, temp);
 		}
 		sb.clear(); game.format(sb, pe->text);
 		auto p = (eventcasei*)draw::dialog(an, getnm("RandomEvent"), temp);
@@ -243,7 +243,7 @@ void gamei::getdate(stringbuilder& sb) const {
 
 void gamei::message(const char* header, const char* string) {
 	answers an;
-	an.add(1, getnm("Continue"));
+	an.add("Continue", getnm("Continue"));
 	an.choose(string, 0, true, 0, 1, header);
 }
 
@@ -286,18 +286,18 @@ void gamei::addaction(answers& an, action_s v) {
 	case ShowBuildings:
 		n = game.province->getbuildcount();
 		if(n)
-			an.add((long)proc, "%ShowBuildings (%Builded %1i)", n);
+			an.add(proc, "%ShowBuildings (%Builded %1i)", n);
 		else
-			an.add((long)proc, getnm(id));
+			an.add(proc, getnm(id));
 		break;
 	default:
-		an.add((long)proc, getnm(id));
+		an.add(proc, getnm(id));
 		break;
 	}
 }
 
 void gamei::addaction(answers& an, const char* id, fnevent proc) {
-	an.add((long)proc, getnm(id));
+	an.add(proc, getnm(id));
 }
 
 provincei* gamei::choose_province() {
@@ -305,7 +305,7 @@ provincei* gamei::choose_province() {
 	for(auto& e : bsdata<provincei>()) {
 		if(e.player != game.player)
 			continue;
-		an.add((long)&e, getnm(e.id));
+		an.add(&e, getnm(e.id));
 	}
 	return (provincei*)an.choose(0, getnm("Cancel"), true, 0, 1);
 }
@@ -315,7 +315,7 @@ heroi* gamei::choose_hero() {
 	for(auto& e : bsdata<heroi>()) {
 		if(e.player != game.player)
 			continue;
-		an.add((long)&e, "#$left image %1 0 \"art/portraits\"\n###%2 (%-Level %3i, %-Hits %4i, %-Damage %5i)",
+		an.add(&e, "#$left image %1 0 \"art/portraits\"\n###%2 (%-Level %3i, %-Hits %4i, %-Damage %5i)",
 			e.id, getnm(e.id), e.get(Level), e.get(Hits), e.get(Damage));
 	}
 	//pushvalue<bool> push(answers::show_tips, false);
@@ -358,7 +358,7 @@ static void heroarmy() {
 void gamei::heroinfo() {
 	char temp[4096]; stringbuilder sb(temp); answers an;
 	game.hero->getpresent(sb);
-	an.add((long)heroarmy, getnm("Army"));
+	an.add(heroarmy, getnm("Army"));
 	draw::choose(an, temp, getnm(game.province->id));
 }
 

@@ -313,6 +313,8 @@ public:
 };
 extern gamei    game;
 namespace draw {
+extern provincei *hilite_province;
+extern heroi	*hilite_hero;
 bool			confirm(const char* title, const char* format);
 long            dialog(answers& an, const char* title, const char* format);
 void			choose(answers& an, const char* title, const char* header);

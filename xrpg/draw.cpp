@@ -2392,6 +2392,8 @@ bool draw::button(const char* title, unsigned key, fnbutton proc, bool vertical)
 }
 
 void draw::fire(bool run, fnevent proc, long value, long value2, const void* object) {
+	if(!proc)
+		return;
 	if(run)
 		execute(proc, value, value2, object);
 }

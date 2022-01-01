@@ -189,7 +189,7 @@ static void paintcommon() {
 		execute(cbsetint, show_movement ? 0 : 1, 0, &show_movement);
 }
 
-static void paintall() {
+static void painteffecntamove() {
 	paintcommon();
 	paintmovement();
 	paintroute();
@@ -257,6 +257,25 @@ void draw::modalscene(fnevent paint_proc, fnevent proc, fnevent mouse_proc) {
 	indecies.clear();
 }
 
+static void choose_index() {
+	goal_index = hilite_route_target;
+	breakmodal(1);
+}
+
+indext draw::chosemovement() {
+	show_movement = true;
+	auto push_proc = draw::pbackground;
+	auto push_mouse = mouseaction;
+	mouseaction = choose_index;
+	draw::pbackground = painteffecntamove;
+	draw::scene(beforetips);
+	mouseaction = push_mouse;
+	draw::pbackground = push_proc;
+	auto r = goal_index;
+	goal_index = Blocked;
+	return r;
+}
+
 void draw::initialize() {
 	metrics::padding = 4;
 	metrics::border = 6;
@@ -264,7 +283,7 @@ void draw::initialize() {
 	draw::grid_size = 70;
 	draw::background::url = "hills";
 	draw::pbeforemodal = beforemodalall;
-	draw::pbackground = paintall;
+	draw::pbackground = painteffect;
 	draw::ptips = tipsall;
 	answers::afterpaint = beforetips;
 }

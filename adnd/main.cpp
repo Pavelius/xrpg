@@ -8,9 +8,6 @@ int main(int argc, char* argv[]) {
 	check_translation();
 	if(log::geterrors())
 		return -1;
-	auto n1 = statable::rollv(2);
-	auto n2 = statable::rollv(0);
-	auto n3 = statable::rollv(-1);
 	return 0;
 }
 

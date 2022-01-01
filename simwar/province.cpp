@@ -118,7 +118,7 @@ buildingi* provincei::choosebuilding(bool tobuild, bool todemontage) {
 			continue;
 		if(todemontage && !demontage(&e, false))
 			continue;
-		an.add((long)&e, getnm(e.id));
+		an.add(&e, getnm(e.id));
 	}
 	if(!an)
 		return 0;
@@ -132,7 +132,7 @@ void provincei::getbuildings(answers* an, stringbuilder* sb) {
 		if(isupgraded(&e))
 			continue;
 		if(an)
-			an->add((long)&e, getnm(e.id));
+			an->add(&e, getnm(e.id));
 		if(sb)
 			e.getpresent(*sb);
 	}

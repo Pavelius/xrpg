@@ -52,9 +52,21 @@ Shield weight(2) coins(15) armor(1)
 
 Bandages weight(0) coins(5) uses(5) heal(4)
  tags Slow
-
 PoulticesAndHerbs weight(1) coins(10) uses(2) heal(7)
  tags Slow
+HealingPotion weight(0) coins(50) heal(10) uses(1)
+ tags HealDebility
 
-HealingPotion weight(0) coins(50) heal(10)
- tags CanHealDebility
+KegOfDwarvenStout weight(4) coins(10) uses(1)
+ moves Carouse
+ tags Slow
+BagOfBooks weight(2) coins(10) uses(5)
+ moves SpoutLore
+ tags Slow
+AdventuringGear weight(1) coins(20) uses(5)
+ tags UsableGear
+
+DungeonRations weight(1) coins(3) uses(5)
+ tags Ration
+ElvenBread weight(1) coins(10) uses(7)
+ tags Ration

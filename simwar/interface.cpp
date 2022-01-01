@@ -7,6 +7,7 @@
 
 using namespace draw;
 
+provincei*				draw::hilite_province;
 const char*				dialog_image;
 static answers*			dialog_answers;
 static const char*		dialog_title;
@@ -371,7 +372,7 @@ static void button_flat(const char* string, fnevent proc, long param = 0) {
 static void answers_block() {
 	if(dialog_answers) {
 		for(auto& e : *dialog_answers)
-			fire(button(e.text, 0, buttonfd), buttonparam, e.id);
+			fire(button(e.text, 0, buttonfd), buttonparam, (long)e.value);
 	}
 }
 
@@ -533,6 +534,7 @@ void provincei::paint() const {
 	if(player)
 		image(caret.x, caret.y, res_shields, player->avatar, 0);
 	if(can_choose_province && ishilite(16)) {
+		hilite_province = const_cast<provincei*>(this);
 		hot.cursor = cursor::Hand;
 		if(hot.key == MouseLeft && !hot.pressed)
 			execute(choose_province_action, (long)this, 0, &game.province);
@@ -650,12 +652,12 @@ long draw::choosel(answers& an, const char* title, const char* header) {
 	can_choose_province = false;
 	auto result = an.choose(title, getnm("Cancel"), true, 0, 1, header);
 	can_choose_province = push;
-	return result;
+	return (long)result;
 }
 
 bool draw::confirm(const char* title, const char* format) {
 	answers an;
-	an.add(1, getnm("Yes"));
+	an.add("Yes", getnm("Yes"));
 	an.add(0, getnm("No"));
 	pushvalue<bool> push(can_choose_province, false);
 	return an.choose(format, 0, true, 0, 2, title) != 0;
@@ -687,6 +689,7 @@ static void answers_afterpaint() {
 }
 
 static void main_beforemodal() {
+	draw::hilite_province = 0;
 	simpleui::beforemodal();
 }
 
@@ -716,7 +719,7 @@ void draw::initialize() {
 	initialize("Simwar game");
 	metrics::padding = 3;
 	metrics::border = 5;
-	image_url = "silentseas";
+	background::url = "silentseas";
 	// Overlaod controls
 	pbeforemodal = main_beforemodal;
 	pbackground = main_background;

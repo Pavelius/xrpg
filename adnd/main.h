@@ -1,16 +1,10 @@
 #include "answers.h"
 #include "crt.h"
-#include "color.h"
 #include "dice.h"
 #include "flagable.h"
-#include "my_initialize_list.h"
 #include "gender.h"
-#include "posable.h"
-#include "pathfind.h"
 #include "stringbuilder.h"
 #include "variantlist.h"
-
-using namespace map;
 
 #pragma once
 
@@ -19,27 +13,18 @@ enum ability_s : unsigned char {
 	AttackAll, AttackMelee, AttackRanged,
 	DamageAll, DamageMelee, DamageRanged,
 	AC, Speed,
-	SaveAll,
-	SaveVsCharm, SaveVsDisease, SaveVsIllusion, SaveVsPoison, SaveVsTrap,
+	SaveAll, SaveVsCharm, SaveVsDisease, SaveVsIllusion, SaveVsPoison, SaveVsTrap,
 	Hits,
 };
 enum component_s : unsigned char {
 	Verbal, Somatic, Manual,
-};
-enum skill_s : unsigned char {
-	Athletics,
-	Acrobatics, SleightOfHand, Stealth,
-	Arcana, History, Investigation, Nature, Religion,
-	AnimalHandling, Insight, Medicine, Perception, Survival,
-	Deception, Intimidation, Performance, Persuasion
 };
 enum dice_s : unsigned char {
 	NoDice,
 	D1d2, D1d3, D1d4, D1d6, D1d8, D1d10, D1d12, D1d20,
 };
 enum special_s : unsigned char {
-	Brave, Darkvision, HeavyArmorNotRestrictSpeed, Stonecunning, Lucky,
-	Prone, Disengaged,
+	Darkvision,
 	Hostile, Locale, Summoned,
 };
 enum state_s : unsigned char {
@@ -47,10 +32,7 @@ enum state_s : unsigned char {
 	Poisoned, Restrained,
 };
 enum modifier_s : unsigned char {
-	Plus, Minus,
-	Advantage, Disadvantage,
-	Proficiency, DoubleProficiency,
-	Resistance, Immunity, Vulnerability,
+	Plus, Minus
 };
 enum wear_s : unsigned char {
 	Head, Neck, Body, Torso, RightHand, LeftHand, RightRing, LeftRing, Legs,
@@ -61,9 +43,7 @@ enum damage_s : unsigned char {
 	Piercing, Poison, Psychic, Radiant, Slashing, Thunder
 };
 enum itemtg_s : unsigned char {
-	Finess, Light, Thrown, TwoHanded, Versatile,
-	DexterityBonus, DexterityRestricted, StealthDisadvantage,
-	NeedHightStrenght, NeedVeryHightStrenght
+	Thrown, TwoHanded, Versatile,
 };
 enum variant_s : unsigned char {
 	NoVariant,
@@ -78,8 +58,7 @@ enum terrain_s : unsigned char {
 };
 class creature;
 typedef flagable<1 + Poison / 8> damagea;
-typedef flagable<1 + Persuasion / 8> skilla;
-typedef flagable<1 + Lucky / 8> speciala;
+typedef flagable<1 + Darkvision / 8> speciala;
 typedef flagable<16> itemf;
 typedef flagable<32> spellf;
 typedef flagable<4> itemtgf;
@@ -101,12 +80,13 @@ struct alignmenti : nameablei {
 struct classi : nameablei {
 	ability_s			best;
 	char				hd;
+	unsigned char		classes[3];
 };
 struct modifieri {
 	const char*			id;
 };
 struct racei : nameablei {
-	variant				parent;
+	char				minimum[6], maximum[6];
 };
 struct weari {
 	const char*			id;
@@ -148,6 +128,8 @@ struct itemi : nameablei {
 	attacki				attack;
 	itemtgf				tags;
 	char				ac;
+	wear_s				slot;
+	constexpr bool		is(wear_s v) const { return slot == v; }
 };
 union item {
 	unsigned			u;
@@ -163,6 +145,8 @@ union item {
 		//
 		unsigned char	broken : 2;
 	};
+	constexpr explicit operator bool() const { return type != 0; }
+	void				clear() { u = 0; }
 	const itemi&		geti() const { return bsdata<itemi>::elements[type]; }
 	creature*			getowner() const;
 	void				use();
@@ -174,8 +158,9 @@ struct statable {
 	spellf				known_spells;
 	int					hp, hp_maximum;
 	char				actions[Reaction + 1];
-	static void			copy(statable& dest, const statable& source);
 	void				add(ability_s i, int v) { abilities[i] += v; }
+	static void			copy(statable& dest, const statable& source);
+	int					get(ability_s i) const { return abilities[i]; }
 	void				random_ability(classi& kind);
 	static int			roll(int advantage, bool lucky);
 	static int			roll(dice_s v);
@@ -184,11 +169,16 @@ struct actable : nameablei {
 	gender_s			gender;
 	void				actv(stringbuilder& sb, const char* format, const char* format_param);
 };
-class creature : public actable, public statable, public posable {
+struct wearable {
+	item				wears[LastBackpack + 1];
+	const item&			get(wear_s i) const { return wears[i]; }
+	item&				get(wear_s i) { return wears[i]; }
+	void				equip(item& v);
+};
+class creature : public actable, public statable {
 	unsigned char		race, kind, level, alignment;
 	char				current_speed;
 	statable			basic;
-	item				wears[LastBackpack + 1];
 	char				avatar[12];
 	void				create_finish();
 	void				update_finish();
@@ -199,15 +189,9 @@ public:
 	void				clear();
 	void				create(racei& race, classi& kind, gender_s gender);
 	void				damage(damage_s type, int value);
-	bool				dash(bool run);
 	void				fight();
-	void				fixattack(point goal, ability_s type);
 	void				fixdamage(int value) const;
 	void				fixmiss();
-	int					get(action_s i) const { return actions[i]; }
-	int					get(ability_s i) const { return abilities[i]; }
-	const item&			get(wear_s i) const { return wears[i]; }
-	item&				get(wear_s i) { return wears[i]; }
 	int					getbonus(ability_s i) const { return get(i) / 2 - 5; }
 	const classi&		getclass() const { return bsdata<classi>::elements[kind]; }
 	int					gethd() const;
@@ -215,13 +199,10 @@ public:
 	constexpr bool		is(special_s v) const { return special.is(v); }
 	constexpr bool		ismonster() const { return kind == 0; }
 	bool				ismatch(variant v, modifier_s modifier) const;
-	bool				ismatch(std::initializer_list<variant> source, modifier_s modifier) const;
 	void				levelup();
 	void				lookmove();
 	bool				melee(bool run);
-	void				move(point pt);
 	bool				moveaction(bool run);
-	void				moveto(indext target);
 	void				paint() const;
 	void				set(special_s v) { special.set(v); }
 	void				set(action_s i, int v) { actions[i] = v; }
@@ -232,7 +213,6 @@ public:
 typedef bool (creature::*fnaction)(bool run);
 struct creaturea : public adat<creature*, 64> {
 	void				select();
-	void				select(std::initializer_list<variant> source);
 };
 class gamei {
 public:
@@ -242,26 +222,6 @@ public:
 	static void			rungame();
 	static void			writemap();
 };
-namespace map {
-extern terrain_s		blocks[mpx * mpy];
-extern adat<indext, 1024> indecies;
-unsigned				routeto(indext target);
-bool					isblocked(indext i);
-}
 namespace draw {
 void					initialize();
-extern indext			hilite_index;
-point					m2s(int x, int y);
-indext					chosemovement();
-void					modalscene(fnevent paint_proc, fnevent proc, fnevent mouse_proc);
-extern fnevent			mouseaction;
-void					painteditor();
-void					refreshmodal();
-point					s2m(point p);
-void					setnext(fnevent v);
-void					start();
-extern fnevent			tipscustom;
-void					waitanimation();
 }
-VKIND(special_s, Special)
-VKIND(modifier_s, Modifier)

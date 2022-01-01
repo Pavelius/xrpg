@@ -90,7 +90,19 @@ static void move_action() {
 	draw::refreshmodal();
 }
 
+void creature::moveto(indext index) {
+	routeto(index);
+	auto pb = indecies.begin();
+	for(auto* pi = indecies.end() - 2; pi >= pb; pi--) {
+		auto i = *pi;
+		move(draw::m2s(gx(i), gy(i)));
+	}
+}
+
 static void dash_action() {
+	auto new_index = draw::chosemovement();
+	if(new_index!=Blocked)
+		last_actor->moveto(new_index);
 }
 
 static void help_action() {
@@ -116,7 +128,7 @@ static void fight_proc() {
 
 void creature::fight() {
 	last_actor = this;
-	draw::modalscene(0, fight_proc, move_action);
+	draw::modalscene(0, fight_proc, 0);
 }
 
 void creature::update_finish() {
