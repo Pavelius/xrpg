@@ -57,6 +57,6 @@ void gamei::rungame() {
 
 void gamei::runeditor() {
 	readmap();
-	draw::modalscene(draw::painteditor, editor_proc, toggle_block);
+	//draw::modalscene(draw::painteditor, editor_proc, toggle_block);
 }
 

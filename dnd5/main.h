@@ -253,7 +253,7 @@ void					initialize();
 extern indext			hilite_index;
 point					m2s(int x, int y);
 indext					chosemovement();
-void					modalscene(fnevent paint_proc, fnevent proc, fnevent mouse_proc);
+//void					modalscene(fnevent paint_proc, fnevent proc, fnevent mouse_proc);
 extern fnevent			mouseaction;
 void					painteditor();
 void					refreshmodal();

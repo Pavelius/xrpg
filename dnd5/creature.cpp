@@ -112,7 +112,8 @@ static void disengage_action() {
 	last_actor->set(Disengaged);
 }
 
-static void fight_proc() {
+void creature::fight() {
+	last_actor = this;
 	last_actor->lookmove();
 	enemies.select({Hostile});
 	allies.select({Minus, Hostile});
@@ -124,11 +125,6 @@ static void fight_proc() {
 		an.add(disengage_action, getnm("Disengage"));
 	an.add(help_action, getnm("Help"));
 	an.modal(0, 0);
-}
-
-void creature::fight() {
-	last_actor = this;
-	draw::modalscene(0, fight_proc, 0);
 }
 
 void creature::update_finish() {

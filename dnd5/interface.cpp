@@ -8,7 +8,6 @@ using namespace draw;
 
 static int show_grid = 0;
 static int show_movement = 0;
-static indext goal_index = Blocked;
 indext draw::hilite_index;
 static indext hilite_route_target;
 static rect hilite_index_rect;
@@ -243,22 +242,7 @@ void draw::waitanimation() {
 	pbackground = push_paint;
 }
 
-void draw::modalscene(fnevent paint_proc, fnevent proc, fnevent mouse_proc) {
-	auto push_paint = pbackground;
-	auto push_mouse = mouseaction;
-	if(paint_proc)
-		pbackground = paint_proc;
-	if(mouse_proc)
-		mouseaction = mouse_proc;
-	do proc(); while(getresult() && !isnext());
-	mouseaction = push_mouse;
-	pbackground = push_paint;
-	hilite_route_target = Blocked;
-	indecies.clear();
-}
-
 static void choose_index() {
-	goal_index = hilite_route_target;
 	breakmodal(1);
 }
 
@@ -271,8 +255,11 @@ indext draw::chosemovement() {
 	draw::scene(beforetips);
 	mouseaction = push_mouse;
 	draw::pbackground = push_proc;
-	auto r = goal_index;
-	goal_index = Blocked;
+	auto r = Blocked;
+	if(getresult())
+		r = hilite_route_target;
+	hilite_route_target = Blocked;
+	indecies.clear();
 	return r;
 }
 
