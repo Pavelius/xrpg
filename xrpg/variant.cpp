@@ -42,19 +42,24 @@ template<> variant::variant(const void* v) : u(0) {
 	}
 }
 
+int varianti::found(const char* id) const {
+	int i = -1;
+	if(isnamed())
+		i = source->find(id, 0);
+	else if(is(varianti::FoundByIndex)) {
+		auto p = match(id, this->id);
+		if(p)
+			stringbuilder::read(p, i);
+	}
+	return i;
+}
+
 template<> variant::variant(const char* v) : u(0) {
 	if(v) {
 		for(auto& e : bsdata<varianti>()) {
 			if(!e.source || !e.metadata)
 				continue;
-			int i = -1;
-			if(e.isnamed())
-				i = e.source->find(v, 0);
-			else if(e.is(varianti::FoundByIndex)) {
-				auto p = match(v, e.id);
-				if(p)
-					stringbuilder::read(p, i);
-			}
+			int i = e.found(v);
 			if(i != -1) {
 				value = i;
 				type = (variant_s)(&e - bsdata<varianti>::elements);

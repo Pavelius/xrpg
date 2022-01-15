@@ -80,16 +80,6 @@ static void attack_enemy() {
 	draw::waitanimation();
 }
 
-static void move_action() {
-	routeto(draw::hilite_index);
-	auto pb = indecies.begin();
-	for(auto* pi = indecies.end() - 2; pi >= pb; pi--) {
-		auto i = *pi;
-		last_actor->move(draw::m2s(gx(i), gy(i)));
-	}
-	draw::refreshmodal();
-}
-
 void creature::moveto(indext index) {
 	routeto(index);
 	auto pb = indecies.begin();
@@ -105,6 +95,12 @@ static void dash_action() {
 		last_actor->moveto(new_index);
 }
 
+static void move_action() {
+	auto new_index = draw::chosemovement();
+	if(new_index != Blocked)
+		last_actor->moveto(new_index);
+}
+
 static void help_action() {
 }
 
@@ -114,17 +110,21 @@ static void disengage_action() {
 
 void creature::fight() {
 	last_actor = this;
-	last_actor->lookmove();
-	enemies.select({Hostile});
-	allies.select({Minus, Hostile});
-	answers an;
-	if(enemies)
-		an.add(attack_enemy, getnm("Attack"));
-	an.add(dash_action, getnm("Dash"));
-	if(!last_actor->is(Disengaged))
-		an.add(disengage_action, getnm("Disengage"));
-	an.add(help_action, getnm("Help"));
-	an.modal(0, 0);
+	startround();
+	while(get(Speed)) {
+		lookmove();
+		enemies.select({Hostile});
+		allies.select({Minus, Hostile});
+		answers an;
+		if(enemies)
+			an.add(attack_enemy, getnm("Attack"));
+		an.add(dash_action, getnm("Dash"));
+		an.add(move_action, getnm("Dash"));
+		if(!is(Disengaged))
+			an.add(disengage_action, getnm("Disengage"));
+		an.add(help_action, getnm("Help"));
+		an.modal(0, 0);
+	}
 }
 
 void creature::update_finish() {
@@ -207,4 +207,7 @@ bool creature::moveaction(bool run) {
 	if(run)
 		current_speed += get(Speed);
 	return true;
+}
+
+void creature::startround() {
 }

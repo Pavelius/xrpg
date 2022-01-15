@@ -225,7 +225,9 @@ public:
 	void				paint() const;
 	void				set(special_s v) { special.set(v); }
 	void				set(action_s i, int v) { actions[i] = v; }
+	void				set(ability_s i, int v) { abilities[i] = v; }
 	void				setavatar(const char* v);
+	void				startround();
 	void				update();
 	bool				use(action_s v, bool run);
 };
